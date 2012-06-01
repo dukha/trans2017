@@ -1,0 +1,3 @@
+class ServersController < LocationsController
+  
+end

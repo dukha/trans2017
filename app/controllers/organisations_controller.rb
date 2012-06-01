@@ -1,0 +1,3 @@
+class OrganisationsController < LocationsController
+  
+end

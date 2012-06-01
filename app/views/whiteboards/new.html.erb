@@ -1,0 +1,6 @@
+<%=theading('new', :model=> "whiteboard", :count=>1) )%>
+
+<%= render 'form' %>
+
+<%= link_to t('new', new_whiteboard_path, :model=>  'whiteboard', :count=>1) %> |
+<%= tlink_to "back", whiteboards_path %>

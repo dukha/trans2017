@@ -1,0 +1,7 @@
+<p class="pageheading"><%= t("headings.edit_organisation.heading", :parent => @location.parent.name) %></p>
+
+<!-- previously render 'form' now brought in line with others -->
+<%=render :partial => "shared/location_form" %>
+
+<!-- < %= link_to t("formtastic.actions.back"), location_tree_path(@location.parent)%> -->
+<%= link_to t("formtastic.actions.back"), location_tree_index_path %>

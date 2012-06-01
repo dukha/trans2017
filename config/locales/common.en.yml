@@ -1,0 +1,192 @@
+# This file should be used as common to all calm applictions
+# See http://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
+
+en:
+  commons:
+    noo: No
+    yess: Yes
+    next: Next >>
+    previous: << Previous
+    no_data: Nil
+    for_user: For User %{user} 
+    changed_ago: "Changed %{change_date} ago"
+    search:
+      criteria: Search Criteria
+      operators:
+        from: From
+        to: To
+        between: Between
+        gt: Greater Than
+        gte: Greater than or equals
+        lt: Less Than
+        lte: Less than or equals
+        matches: Contains
+        does_not_match: "Doesn't' contain"
+        starts_with: Starts with
+        ends_with: Ends with
+        not_starts_with: "Doesn't start with"
+        not_ends_with: "Doesn't end with"
+        lte_date: Before
+        gte_date: After
+        in: In
+        not_in: Not in
+        eq: Equals
+        not_eq: Not Equal To
+        not_null: Is not empty
+        is_null: Is empty
+        before_something: Before %{something}
+        after_something: After %{something}
+        and: and
+        or: or
+        str_eq: Equals
+        str_not_eq: Not Equal To  
+        begins_with: Begins with
+        ends_with: Ends with
+    error:
+      one: "%{count} error"
+      other: "%{count} errors"
+    problem:
+      one: "%{count} problem"
+      other: "%{count} problems"
+  formtastic:
+    hints:
+      user:
+        password: Enter password here
+        confirm_password: Enter password again
+        login: Type either your username or email here
+    actions:
+      sign_in: &fa_si Log In
+      sign_out: &fa_so Log Out %{username}
+      show: Show
+      hide: Hide
+      edit: Edit
+      destroy: &ad Delete
+      delete: *ad
+      new: New
+      back: Back to List
+      create_model: Add %{model}
+      save: Save %{model}
+      update: Update %{model}
+      new_model: Add %{model}
+      submit: Submit
+      show_something: Show %{something}
+      hide_something: Hide %{something}
+      #log_in: *fa_si
+     # log_out: *fa_so
+      mark_deleted: Mark Deleted
+      add_child: Add Child %{location_type}
+      search: Search
+      select: Select %{model}
+  #actions:
+   
+  menus:
+    admin: Admin
+    lookups: Configuration
+    user_info: User Preferences
+    home: Home
+    contact: Contact Calm
+    help: Help
+    about: About %{app_name}
+    whiteboards: Whiteboards
+    whiteboard_types: Whiteboard Types
+  messages:
+    delete:
+      are_you_sure: 
+        warning: Deleting %{model}. Are you sure?
+      are_you_sure_value:
+        warning: Deleting %{model} with value %{value}. Are you sure?
+        success: The %{model} was successfully deleted.
+        error: The %{model} was not able to be deleted
+      deletion_rejected: 
+        error: Cannot delete this %{model}. It must have other things depending on it (e.g. cannot delete a venue that has courses)
+    create:
+      success: The %{model} was successfully created.
+      error:: The %{model} was not created
+    update:
+      success: The %{model} was successfully updated.
+      error: The %{model} was unable to be updated
+    operation:
+      error: Failed to %{operation}  ; %{count_message}.
+    no_records_found:
+      error: There were no records found in the database.
+      warning: There were no records found in the database.
+    no_records_found_with_permissions:
+      warning: There were no records found in the database for which you have permission in the current organisation.
+    application_language_change:
+      success: The application language will be changed to %{language} on next refresh or new page.
+    capslock_on:
+      warning: You are attempting to type username or password with the capslock on. Remember that username and password are case sensitive.
+    record_not_found:
+      error: Unable to find the records to (view, update or delete)
+    non_unique_singlevalue_key:
+      #error: "A field value must be unique."
+      error: "%{fieldlist} is already in the database with this value %{valuelist}. Choose a different value to complete this task."
+    non_unique_multivalue_key:
+      #error: "Two or more field values must be unique in combination."
+      error: "These fields %{fieldlist} are already in the database with these values '%{valuelist}'. Choose at least 1 different value to complete this task."
+    existence:
+      error: "%{attribute} = %{value}  does not already exist in %{target}. Add a record to  %{target} or choose another %{target} example. "
+    permission:
+      permission_denied: 
+        error: Sorry, you are not allowed to access that page.  
+    all_rolledback:
+      warning: "All %{model} on this page rolled back"    
+  links:
+    no_unlock_instructions: Didn't receive unlocking instructions?
+    no_confirmation_instructions: Didn't receive confirmation instructions?
+    forgotten_password: Forgot your password?
+    cancel_registration: Cancel account
+    unhappy: Unhappy?
+  headings:
+    new:
+      heading: "Add %{model}"
+      user: Register New User
+    edit:
+      heading: Edit %{model}
+      user: Edit User   
+    listing:
+      heading: "%{model}"
+    editable_listing:
+      heading: "View or Edit %{model}"  
+    
+    home:
+      heading: Home - Whiteboard
+  lookups:
+    whiteboard_type:
+      system: System
+      localadmin: Local Admin
+      regionaladmin: Regional Admin
+      user: User
+  activerecord:
+    models:
+      whiteboard_type:
+        one: Whiteboard Type
+        other: Whiteboard Types
+    attributes:
+      user:
+        login: User name or Password
+  errors:
+    messages:
+      # these messages are for the date_validator gem (copied from the gem for our internationalisation)
+      not_a_date: "%{value} is not a date"
+      after: "%{attribute} must be after %{date}"
+      after_or_equal_to: "%{attribute} must be after or equal to %{date}"
+      before: "%{attribute}} must be before %{date}"
+      before_or_equal_to: "%{attribute}must be before or equal to %{date}"      
+# Nested attributes are no longer supported as of rails 3.1
+#    attributes:
+#      location:
+#        name:
+#          world: Calm World
+#          au-server: "Calm server australia"
+#          eu-server: "Calm server europe"
+#          australia: Australia
+#          belgië: Belgium
+#          españa: Spain 
+#        type:
+#          World: World
+#          Server: Computer
+#          Area: Area
+#          Organisation: Organisation
+#          Venue: Venue 
+ 

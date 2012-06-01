@@ -1,0 +1,56 @@
+<script type="text/javascript">
+  /*
+ * This function facilitates the menu
+ * Note that this script depends on jquery.cookies.2.2.0_1.js (not jquery.cookie.js)
+ * This script keeps track of the last branch of the accordion to be used and ensures that the accordion remains open to the last selection in between requests.
+ * Script developed at http://jaaulde.com/test_bed/stickyaccordion/
+ */
+  var ACCORDION_HEADER_HTML ="h3";
+  var ACCORDION_ID_CSS ="#accordion";
+  $(function(){
+          var cookieName = 'stickyAccordion';
+          // Accordion
+          $(ACCORDION_ID_CSS).accordion({ 
+            header: ACCORDION_HEADER_HTML ,
+            active: 
+              //read the cookie and get the last used index
+              ( $.cookies.get( cookieName ) || 0 ),
+            change: function( e, ui ){
+              //write a cookie to remember the h3 clicked
+  						$.cookies.set( cookieName, $( this ).find( ACCORDION_HEADER_HTML ).index ( ui.newHeader[0] ) );
+  					}
+          });
+        });
+
+</script>
+<div id="accordion">
+      <div>
+        <%=taccordion_header("translations") %>
+        
+      </div>
+  <div>
+      <%=taccordion_header("developers") %>
+        
+      </div>
+      <div>
+        <%=taccordion_header("lookups") %>
+        <ul class="menu">
+				  <%if false then%>
+				  
+          <%end%>
+					<li><%= tlink_to("whiteboard_types", whiteboard_types_path, :category=>:menu) %></li>
+         
+					
+				</ul>
+      </div>
+      <div>
+
+        <%= taccordion_header("admin") %>
+        
+      </div>
+  <div>
+
+        <%= taccordion_header("user_info") %>
+        
+      </div>
+    </div>

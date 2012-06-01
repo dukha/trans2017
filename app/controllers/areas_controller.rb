@@ -1,0 +1,3 @@
+class AreasController < LocationsController
+  
+end
