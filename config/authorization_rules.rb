@@ -46,6 +46,8 @@ authorization do
   end
 =end
   standard_roles :users
+  standard_roles :profiles
+  
   role :users_read do
     has_permission_on [:users], :to => [:select]
   end
@@ -66,7 +68,7 @@ authorization do
   standard_roles :redis_instances
   
 
-  #standard_roles :locations
+  standard_roles :locations
   standard_roles :release_statuses
   standard_roles :translations
   standard_roles :uploads

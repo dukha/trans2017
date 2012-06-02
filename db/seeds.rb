@@ -85,7 +85,7 @@ log.info(" Loc world =" + Location.world.to_s)
     
     
    
-    param = {:password => pw,:password_confirmation => pw,:username => 'admin',:email => 'admin@calm.org', 
+    param = {:password => pw,:password_confirmation => pw,:username => 'sysadmin',:email => 'admin@calm.org', 
               :actual_name=> 'admin',:current_permission_id => current_perm.id}
     #puts "current permission i d= " +current_perm.id.to_s
     admin = User.create! param

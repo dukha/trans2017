@@ -21,7 +21,13 @@ module ApplicationHelper
   $REDIS_PW='123456'
   $TM="translation missing:"
 =end
+  $CALM ="CALM"
+  $APPLICATION_NAME = I18n.t("application.translator")
+  $APPLICATION_VERSION ="1.0.0 M2"
   
+  $title =  I18n.t( "application.app_title", :app_name=> $APPLICATION_NAME, :app_version=> $APPLICATION_VERSION, :calm=> $CALM  )
+
+    
   
   def titler
     if @title.nil?

@@ -1,4 +1,8 @@
 en:
+  application:
+    translator: Translator
+    app_sub_name: Translation Module for CALM Applications
+    version: Version %{version}
   formtastic:
     labels:
       redis_db_index: Redis Database Index
@@ -46,6 +50,7 @@ en:
   menus:
     translations: Translations
     translator_index: Translate in Table
+    profiles: Profiles
     #translation_uploads: Translation Uploads
     #translation_file_lines: English Translation
     calmapps: Calm Applications
@@ -104,6 +109,9 @@ en:
       user_preference:
         one: User Preferences
         other: User Preferences
+      profile:
+        one: User Profiles
+        other: User Profiles
     attributes:
       calmapp:
         new_redis_dev_db: Add Redis Developers Database

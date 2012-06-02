@@ -32,7 +32,7 @@ gem 'will_paginate','3.0.pre2'
 
 
 # using jquery for ajax, not prototype > rails g jquery:install
-gem 'jquery-rails', '~>1.0.12' #, '0.2.7'
+gem 'jquery-rails'#, '~>1.0.12' #, '0.2.7'
 
 #helps with I18n not used at present
 gem 'routing-filter', '0.2.3'

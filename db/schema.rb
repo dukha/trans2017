@@ -64,6 +64,9 @@ ActiveRecord::Schema.define(:version => 201204041046086) do
     t.string   "username",                               :null => false
     t.string   "actual_name",                            :null => false
     t.integer  "current_permission_id"
+    t.integer  "failed_attempts",        :default => 0
+    t.string   "unlock_token"
+    t.datetime "locked_at"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true

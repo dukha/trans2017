@@ -23,13 +23,14 @@ Translator::Application.routes.draw do
    end
    
    match '/auth_user/set_permission_by_ajax' => 'permissions#set_current_by_ajax', :as => :set_permission_by_ajax
-   #match '/users_select' => 'users#select',      :as => :users_select
+   match '/users_select' => 'users#select',      :as => :users_select
     
    #devise_for :users
    resources :languages
 
    resources :whiteboard_types
    resources :whiteboards
+   resources :location_tree, :only => [:index, :show]
 =begin
    resources :calmapps
    resources :calmapp_versions
@@ -55,7 +56,10 @@ Translator::Application.routes.draw do
    #get "calmapps/all_in_one_new/" => "calmapps#all_in_one_new", :as => "all_in_one_new"
    #get "calmapps/all_in_one_create" => "calmapps#all_in_one_create"
    #match "upload"
-=end   
+=end 
+  match '/contact', :to => 'static_pages#contact'
+    match '/about',   :to => 'static_pages#about'
+    match '/help',    :to => 'static_pages#help' 
   end
   # The priority is based upon order of creation:
   # first created -> highest priority.

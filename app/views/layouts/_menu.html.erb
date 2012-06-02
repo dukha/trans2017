@@ -26,31 +26,49 @@
 <div id="accordion">
       <div>
         <%=taccordion_header("translations") %>
-        
+        <ul class="menu">
+          
+        </ul>
       </div>
-  <div>
+      <div>
       <%=taccordion_header("developers") %>
-        
+        <ul class="menu">
+          
+        </ul>
       </div>
       <div>
         <%=taccordion_header("lookups") %>
         <ul class="menu">
-				  <%if false then%>
 				  
-          <%end%>
-					<li><%= tlink_to("whiteboard_types", whiteboard_types_path, :category=>:menu) %></li>
-         
-					
 				</ul>
       </div>
       <div>
 
         <%= taccordion_header("admin") %>
-        
+        <ul class="menu"> 
+          <%=link_menu(:profiles)%>
+          <li><%= tlink_to("whiteboard_types", whiteboard_types_path, :category=>:menu) %></li>  
+          <li><%= link_to "Users", users_select_path %></li>
+
+        <li><%= link_to "Change password or email", edit_user_registration_path %></li>
+        <li><%= link_to "Locations", location_tree_index_path, :action => "index" %></li>
+        </ul>
       </div>
   <div>
 
         <%= taccordion_header("user_info") %>
-        
+        <ul class="menu">
+          
+        </ul>
+      </div>
+       <div>
+
+        <%= taccordion_header("help") %>
+        <ul class="menu">
+        <li><%= tlink_to "home", root_path, :category=>:menu %></li>
+        <li><%= tlink_to "contact", contact_path, :category=>:menu %></li>
+        <li><%= tlink_to "help", help_path, :category=>:menu %></li>
+        <li><%= tlink_to "about", about_path, :category=>:menu, :app_name=> $APPLICATION_NAME %></li>
+      </ul>
       </div>
     </div>

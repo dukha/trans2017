@@ -5,7 +5,8 @@ class ProfilesController < ApplicationController
   # GET /profiles
   # GET /profiles.xml
   def index
-    @profiles = Profile.paginate :page => params[:page], :per_page => 15 do |format|
+    @profiles = Profile.paginate :page => params[:page], :per_page => 15 
+    respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @profiles }
     end

@@ -69,8 +69,8 @@ class ApplicationController < ActionController::Base
   end
   rescue_from Exception, :with => :rescue_all_exceptions  if Rails.env == 'production'
 
-  $application_name = "CALM Translator"
-  $application_version ="0.0.0 M1"
+  #$APPLICATION_NAME = "CALM Translator"
+  #$APPLICATION_VERSION ="0.0.0 M1"
   
 
   # Is Authorization.current_user the same as current_user???

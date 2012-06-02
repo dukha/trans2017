@@ -222,7 +222,7 @@ DEPENDENCIES
   execjs
   factory_girl_rails (= 1.0.1)
   formtastic
-  jquery-rails (~> 1.0.12)
+  jquery-rails
   json
   launchy
   nifty-generators (= 0.4.6)
