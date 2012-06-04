@@ -1,9 +1,8 @@
 module SearchHelper
-   def all_operators
-     %w(eq str_eq not_eq str_not_eq matches does_not_match gt gte gte_date lt lte lte_date in not_in str_in str_not_in is_null not_null)
-   end
+   # This function just for documentation.
+   # You actually wouldn't use all operators at once
    def all_operators translated = nil
-       ar = all_operators 
+       ar = %w(eq not_eq eq_str not_eq_str matches does_not_match gt gte gte_date lt lte lte_date in not_in is_null not_null empty_string starts_with ends_with) 
       if translated then
         return translate_operators ar 
       else 
@@ -14,6 +13,14 @@ module SearchHelper
     
     def equal_operator translated = nil
       ar = %w(eq) 
+      if translated then
+        return translate_operators ar
+      else 
+        return ar  
+      end
+    end
+    def equal_str_operator translated = nil
+      ar = %w(eq_str) 
       if translated then
         return translate_operators ar
       else 
@@ -38,7 +45,6 @@ module SearchHelper
         return ar  
       end
     end
-=begin   
     def operators_to_options array#, options={}
       texts = translate_operators array
       values= array
@@ -47,12 +53,13 @@ module SearchHelper
       i=0
       array.each{|op| 
         options << "<option value='"+ values[i] + "'>" + texts[i] + "</options>\n"
-        i=+1
+        i += 1
       }
       return options.html_safe
     end 
-=end    
+    
      def operators_2_options array#, options={}
+      # debugger
       texts = translate_operators array
       values= array
       options =[]
@@ -65,7 +72,18 @@ module SearchHelper
     end
       
     def string_operators translated = nil
-      ar = %w(eq not_eq begins_with ends_with matches does_not_match in not_in is_null not_null)
+      # note that eq and not_eq will give case sensitive result. The eq_str, not_eq_str will do case insensitive
+      ar = %w(eq_str not_eq_str matches does_not_match in not_in is_null not_null starts_with ends_with empty_string)
+      if translated then
+        return translate_operators ar 
+      else 
+        return ar  
+      end
+    end
+    
+    def easy_string_operators translated = nil
+      # note that eq and not_eq will give case sensitive result. The eq_str, not_eq_str will do case insensitive
+      ar = %w(eq_str matches is_null not_null starts_with ends_with empty_string)
       if translated then
         return translate_operators ar 
       else 
@@ -75,13 +93,15 @@ module SearchHelper
     
     def translate_operators ar
        arx=[]
-       #debugger
        ar.each{|op| arx.push(I18n.t("commons.search.operators." +op))}
        return arx
     end
     
+    # Just documentation
+    # Remember that =~ operator translates in ilike in postgresql. You have to add your own wildcards at the right places
     def squeel_operator op
-      operators = {"eq"=>"==", "not_eq"=>"!=", "matches"=>"=~", "does_not_match"=>"!~", "gt"=>">", "gte"=>">=", "lt"=>"<", "lte"=>"<=", "in"=>">>", "not_in" => "<<", "is_null" => "== nil", "not_null"=>"!= nil"}
+      operators = {"eq"=>"==", "not_eq"=>"!=", "matches"=>"=~", "does_not_match"=>"!~", "gt"=>">", "gte"=>">=", "lt"=>"<", "lte"=>"<=", "in"=>">>", "not_in"=>"<<", "is_null"=>"== nil", "not_null"=>"!= nil",
+        'starts_with' => '=~', 'ends_with' => '=~', 'empty_string' => '==', 'eq_str' => '=~', 'not_eq_str' => '!~'}
       return operators[op]
     end
 =begin    
@@ -97,10 +117,14 @@ module SearchHelper
   # A trickier example of a belongs_to: Venue < Location, so to reference venues.name you have to use locations.name 
   # (Note the plurals used in course_types.translation_code and locations.name) 
   # usage: sortable("locations.name","course","venue_id")
-  def sortable(column_to_sort_by, model, translation_code = nil)  
+  def sortable(column_to_sort_by, model, link_ok, translation_code = nil)  
     #debugger
     header  = translation_code.nil? ? tlabel(column_to_sort_by.to_s, model) : tlabel(translation_code, model) 
     direction = (column_to_sort_by.to_s == params[:sort] && params[:direction] == "asc") ? "desc" : "asc"    
-    link_to header, params.merge(:sort => column_to_sort_by, :direction => direction)
+    if link_ok
+      link_to header, params.merge(:sort => column_to_sort_by, :direction => direction)
+    else
+      header
+    end  
   end 
 end

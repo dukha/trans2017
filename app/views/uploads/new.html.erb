@@ -1,0 +1,4 @@
+<%=theading('new', :model=> 'upload', :count=>1)%>
+<%= render 'form', :locals => {:state=>"new"} %>
+<%= tlink_to('new_model', new_upload_path, :model=> 'upload', :count=>1) %> |
+<%= tlink_to "back", uploads_path %>

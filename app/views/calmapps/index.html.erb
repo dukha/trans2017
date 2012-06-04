@@ -1,0 +1,34 @@
+<%=theading("listing", :model => "calmapp", :count=>10) %>
+<% if Calmapp.count==0 then %>
+  <%=tflash( "no_records_found", :warning)%><br/>
+<%  else %>
+<%= twill_paginate %>
+  <table class="data">
+    <tr class="dataheader">
+
+      <th class ="dataheader"><%=tlabel('name') %></th>
+
+
+
+      <th class="linkheader"></th>
+      <th class="linkheader"></th>
+
+    </tr>
+
+  <% row_class="data" %>
+  <% cell_class = "data" %>
+  <% link_cell_class="link"%>
+  <% @calmapps.each do |calmapp| %>
+
+    <tr class = "<%= cycle('dataeven', 'dataodd', :name => row_class) %>" >
+      <td class="<%= cell_class %>"><%= calmapp.name %></td>
+      <td class="<%= link_cell_class %>"><%= tlink_to  'edit', edit_calmapp_path(calmapp) %></td>
+      <td class="<%= link_cell_class %>"><%= tlink_to 'destroy',  calmapp , :confirm => 'delete.are_you_sure', :model => "calmapp", :value=>calmapp.name, :method => :delete %></td>
+    </tr>
+
+  <% end %>
+  </table>
+  <%= will_paginate %>
+  <br/>
+<%end%>
+<%= tlink_to('new_model', new_calmapp_path, :model=> 'calmapp', :category=>:action) %>

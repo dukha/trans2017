@@ -1,5 +1,9 @@
 module ButtonLinkHelper
-   include Search
+   include SearchController
+   #Needs to be deleted when we add auth
+   def permitted_to? action, resource
+     return true
+   end
   # emit html for n link headers
   def link_header n
     html = " "
@@ -88,7 +92,7 @@ module ButtonLinkHelper
   def link_back(url, options={})
     
     html=' '
-    html = tlink_to('formtastic.actions.back', url, options)
+    html = tlink_to('back', url, options)
     return html.html_safe
     
   end 
@@ -104,6 +108,7 @@ module ButtonLinkHelper
     # need to add back the sqlinjection protection here
     #css_class =  "current #{sort_direction}" 
     direction = (column == sort_column && sort_direction == "asc") ? "desc" : "asc"
+    # render the same page with different query
     link_to tlabel(column_translation_code), {:sort => column, :direction => direction}, {:class => css_class}
   end
   # creates a link to the index page of the resource

@@ -1,0 +1,13 @@
+<p id="notice"><%%= notice %></p>
+
+<% for attribute in attributes -%>
+<p>
+  <b><%%= tlabel('<%=attribute.name%>') %>:</b>
+  <%%= @<%= singular_table_name %>.<%= attribute.name %> %>
+</p>
+
+<% end -%>
+
+<%%=link_edit('edit', edit_<%=singular_table_name %>_path(@<%=singular_table_name %>)) %> |
+<%%= link_back(<%=index_helper %>_path) %>
+

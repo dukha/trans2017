@@ -27,19 +27,27 @@
       <div>
         <%=taccordion_header("translations") %>
         <ul class="menu">
-          
+          <li><%= tlink_to("translations", translations_path, :category=>:menu) %></li>
+           <!-- This should url should become edit_user_preference_path(current_user.id) when we get the login working -->
+           <li><%= tlink_to("translation_parameters", edit_user_work_path(1), :category=>:menu) %></li>
+           <!-- ><li>< %= tlink_to("translator_index", translators_index_path, :category=>:menu) %></li> -->
         </ul>
       </div>
       <div>
       <%=taccordion_header("developers") %>
         <ul class="menu">
-          
+          <li><%= tlink_to("developers_new_translation", dev_new_translation_path, :category=>:menu) %></li>
+           <!-- This should url should become edit_user_preference_path(current_user.id) when we get the login working -->
+           <li><%= tlink_to("translation_parameters", edit_user_work_path(1), :category=>:menu) %></li>
         </ul>
       </div>
       <div>
         <%=taccordion_header("lookups") %>
         <ul class="menu">
-				  
+          <li><%= tlink_to("whiteboard_types", whiteboard_types_path, :category=>:menu) %></li>
+          <li><%= tlink_to("release_statuses", release_statuses_path, :category=>:menu) %></li>
+          
+				    
 				</ul>
       </div>
       <div>
@@ -52,6 +60,17 @@
 
         <li><%= link_to "Change password or email", edit_user_registration_path %></li>
         <li><%= link_to "Locations", location_tree_index_path, :action => "index" %></li>
+         <li><%= tlink_to("languages", languages_path, :category=>:menu) %></li>
+        <li><%= tlink_to("calmapps", calmapps_path, :category=>:menu) %></li>
+      
+        <li><%= tlink_to("calmapp_versions", calmapp_versions_path, :category=>:menu) %></li>
+        <li><%= tlink_to("redis_instances", redis_instances_path, :category=>:menu) %></li>
+        <li><%= tlink_to("redis_databases", redis_databases_path, :category=>:menu) %></li>
+        <li><%= tlink_to("uploads", uploads_path, :category=>:menu) %></li>
+        
+        <% if false then %>
+          <li><%= tlink_to("redis_admins", redis_admins_path, :category=>:menu) %></li>
+        <%end%>
         </ul>
       </div>
   <div>

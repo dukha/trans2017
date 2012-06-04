@@ -13,35 +13,35 @@ en:
     search:
       criteria: Search Criteria
       operators:
-        from: From
-        to: To
-        between: Between
-        gt: Greater Than
-        gte: Greater than or equals
-        lt: Less Than
-        lte: Less than or equals
-        matches: Contains
-        does_not_match: "Doesn't' contain"
-        starts_with: Starts with
-        ends_with: Ends with
-        not_starts_with: "Doesn't start with"
-        not_ends_with: "Doesn't end with"
-        lte_date: Before
-        gte_date: After
-        in: In
-        not_in: Not in
-        eq: Equals
-        not_eq: Not Equal To
-        not_null: Is not empty
-        is_null: Is empty
-        before_something: Before %{something}
-        after_something: After %{something}
+        from: from
+        to: to
+        between: between
+        gt: greater Than
+        gte: greater than or equals
+        lt: less Than
+        lte: less than or equals
+        matches: contains
+        does_not_match: "doesn't' contain"
+        starts_with: starts with
+        ends_with: ends with
+        not_starts_with: "doesn't start with"
+        not_ends_with: "doesn't end with"
+        lte_date: before
+        gte_date: after
+        in: is in group
+        not_in: is not in group
+        eq: is
+        not_eq: is not
+        eq_str: is
+        not_eq_str: is not
+        not_null: is Anything
+        is_null: is Nothing
+        before_something: before %{something}
+        after_something: after %{something}
         and: and
         or: or
-        str_eq: Equals
-        str_not_eq: Not Equal To  
-        begins_with: Begins with
-        ends_with: Ends with
+        empty_string: is Empty Text
+        
     error:
       one: "%{count} error"
       other: "%{count} errors"
@@ -55,6 +55,7 @@ en:
         confirm_password: Enter password again
         login: Type either your username or email here
     actions:
+      apply: Apply for Course
       sign_in: &fa_si Log In
       sign_out: &fa_so Log Out %{username}
       show: Show
@@ -63,6 +64,7 @@ en:
       destroy: &ad Delete
       delete: *ad
       new: New
+      letters: Letters
       back: Back to List
       create_model: Add %{model}
       save: Save %{model}
@@ -77,17 +79,16 @@ en:
       add_child: Add Child %{location_type}
       search: Search
       select: Select %{model}
-  #actions:
    
   menus:
     admin: Admin
     lookups: Configuration
     user_info: User Preferences
-    help: Help 
     home: Home
-    contact: Contact Calm
+    contact: Contact CALM
     help: Help
-    about: About %{app_name}
+    about: "About CALM" 
+    #%{app_name}"
     whiteboards: Whiteboards
     whiteboard_types: Whiteboard Types
   messages:
@@ -131,7 +132,9 @@ en:
       permission_denied: 
         error: Sorry, you are not allowed to access that page.  
     all_rolledback:
-      warning: "All %{model} on this page rolled back"    
+      warning: "All %{model} on this page rolled back"  
+    invalid_at_code:
+      warning: "This code is an invalid AT code."    
   links:
     no_unlock_instructions: Didn't receive unlocking instructions?
     no_confirmation_instructions: Didn't receive confirmation instructions?
@@ -165,7 +168,7 @@ en:
         other: Whiteboard Types
     attributes:
       user:
-        login: User name or Password
+        login: User name or email address
   errors:
     messages:
       # these messages are for the date_validator gem (copied from the gem for our internationalisation)

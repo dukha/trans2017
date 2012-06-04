@@ -1,6 +1,6 @@
 <%=theading('listing', :model=>'language', :count=>10 )%>
 <% if Language.count==0 then %>
-  <%=t($MS + "no_records_found")%><br/>
+  <%=tflash( "no_records_found", :warning)%><br/>
 <%  else %>
 <%= twill_paginate %>
 <table class="data">

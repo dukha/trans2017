@@ -1,0 +1,10 @@
+<%= semantic_form_for(@calmapp) do |f| %>
+	<%= f.inputs do %>
+    <%= f.input :name %>
+   
+   <%end%>
+	<%= f.buttons do %>
+      <%= f.commit_button :button_html => {:id=>"submit"} %>
+  <% end %>
+<% end %>
+

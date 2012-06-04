@@ -24,6 +24,7 @@ module TranslationsHelper
   $SC=$S + "criteria"
   $SO=$S + "operators."
   $DF="date.formats."
+  $TB="tabs."
   #This is not a language translation but rather to put a date into a format acceptable for use in a db query
   $DB_DF = "%Y-%b-%d" #I18n.t("date.formats.db")
 
@@ -165,6 +166,7 @@ just substitute twill_paginate for will_paginate
       return ret_val
   end
   def tflash message_code,  category=:error, options ={}, now=false
+    debugger
     if ! category.is_a? Symbol then
       category = category.to_s.to_sym
     end
@@ -197,5 +199,9 @@ just substitute twill_paginate for will_paginate
 
   def tmenu( menu)
      I18n.t($M + menu)
+  end
+
+  def tinterpolation translation_code, interpolations={}
+    I18n.t("pform_xml_200." + translation_code.to_s, interpolations)
   end
 end

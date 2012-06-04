@@ -1,0 +1,40 @@
+<%=theading("listing", :model=>"upload", :count=>10 )%></p>
+<% if Upload.count==0 then %>
+  <%=tflash( "no_records_found", :warning)%><br/>
+<%  else %>
+<%= twill_paginate %>
+<table class="data">
+  <tr class="dataheader">
+
+    <th class ="dataheader"><%=tlabel('upload_file_name', 'upload') %></th>
+
+    <th class ="dataheader"><%=tlabel('language', 'upload') %></th>
+   
+    
+
+    <th class="linkheader"></th>
+    <th class="linkheader"></th>
+    <th class="linkheader"></th>
+    
+  </tr>
+
+  
+<% cell_class = "data" %>
+<% link_cell_class="link"%>  
+<% @uploads.each do |upload| %>
+
+  <tr class = "<%= cycle('dataeven', 'dataodd') %>" >
+  
+    <td class="<%= cell_class %>"><%= upload.upload_file_name %></td>
+    <td class="<%= cell_class %>"><%= upload.language.name %></td>
+    
+    <td class="<%= link_cell_class %>"><%= tlink_to  'edit', edit_upload_path(upload) %></td>
+    <td class="<%= link_cell_class %>"><%= tlink_to 'destroy',  upload , :confirm => 'delete.are_you_sure', :model => "upload", :value=>("'" + upload.upload_file_name + "'"), :count=>1, :method => :delete %></td>
+    <td class="<%= link_cell_class %>"><%= tlink_to  'to_redis', select_to_redis_path(upload) %></td>
+  </tr>
+<% end %>
+</table>
+<%= twill_paginate %>
+<%end%>
+<br />
+<%= tlink_to('new_model', new_upload_path, :model=> 'upload', :count=>1) %>

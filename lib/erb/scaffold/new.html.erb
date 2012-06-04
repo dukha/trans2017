@@ -1,0 +1,4 @@
+<%%=theading("new", :model=>'<%=singular_table_name%>', :count=>1) %>
+<%%= render 'form' %>
+<%%=link_new( new_<%=singular_table_name%>_path, :<%=singular_table_name %>)  %> | 
+<%%=link_back(<%= index_helper %>_path )%>

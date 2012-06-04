@@ -1,0 +1,17 @@
+<%=theading('edit', :model=> "translation", :count=>1)%>
+
+
+<%= semantic_form_for [@upload], :url => { :action => to_redis_path(params[:id]), :controller => "uploads"  } do |f| %> 
+  <%=semantic_fields_for @database do |t| %>>
+    <% t.inputs do  %>
+      <%= t.input :id, :as=>:select,:collection=> Database.all.collect {|t| [ t.name, t.id ]} %>
+    <% end %>
+  <%end%>
+  <%= f.buttons do %>
+      <%= f.commit_button  :select%>
+  <% end %>
+ <%end%>
+          
+
+<%= tlink_to('new_model', databases_path, :model=>  'translation', :count=>1) %> |
+<%= link_to t($FA + "back"), databases_path %>

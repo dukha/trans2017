@@ -59,14 +59,6 @@ gem 'acts_as_tree','0.1.1'
 # paperclip uploads a file and writes the file name etc to the database
 gem 'paperclip', '2.3.11'
 
-#gem 'psych'
-#Eliminates need to use sql by give extra functions/operators for querying in activerecord
-#gem "meta_where"
-# Allows QBE with activerecord
-#gem "meta_search"
-# this gem checks RI in a belongs_to relationship (create th FK anyway)
-# Didn't have good i18n and seemed tio double up error messages, so copied the validation to our validations.rb and modified,
-#gem "validates_existence"
 
 gem "redis" #, :git => "git://github.com/ezmobius/redis-rb.git"
 # foreigner is a gem that allows the insertion of foreign keys into migrations.

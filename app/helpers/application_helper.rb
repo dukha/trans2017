@@ -31,9 +31,9 @@ module ApplicationHelper
   
   def titler
     if @title.nil?
-      $application_name
+      $APPLICATION_NAME
     else
-      "#{$application_name} : #{@title}"
+      "#{$APPLICATION_NAME} : #{@title}"
     end
   end
 

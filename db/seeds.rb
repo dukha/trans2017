@@ -1,6 +1,6 @@
 log=Logger.new(STDOUT)
 User.delete_all
-=begin
+
 UserWork.delete_all
 
 #UploadsRedisDatabase.delete_all 
@@ -8,11 +8,11 @@ RedisDatabase.delete_all
 RedisInstance.delete_all
 CalmappVersion.delete_all
 Calmapp.delete_all
-=end
+
 Language.delete_all
 
 Whiteboard.delete_all
-#ReleaseStatus.delete_all
+ReleaseStatus.delete_all
 WhiteboardType.delete_all
 Location.delete_all
 Profile.delete_all    
@@ -25,12 +25,12 @@ localWBType = WhiteboardType.create(:name_english=>"local admin", :translation_c
 userWBType = WhiteboardType.create(:name_english=>"user", :translation_code=>"user")
 log.info("Whiteboard Type data inserted successfully.")
 
-=begin
+
 vs_dev = ReleaseStatus.create!(:status => "development")
 vs_test = ReleaseStatus.create!(:status => "test")
 ReleaseStatus.create!(:status => "production")
 log.info("Release Status data inserted successfully.")
-=end
+
 
 Whiteboard.create!(:whiteboard_type_id=> systemWBType.id, :info=>"Translator application under development." )
 Whiteboard.create!(:whiteboard_type_id=> userWBType.id, :info=>"We need translators for Russian.")
@@ -41,7 +41,7 @@ en = Language.create!(:iso_code=> "en", :name=>"English")
 nl = Language.create!(:iso_code=> "nl", :name=>"Nederlands")
 log.info("Languages inserted")
 
-=begin
+
 reg = Calmapp.create!( :name=>"calm_registrar")
 trans = Calmapp.create!(:name=>"calm_translator")
 log.info("Calm applications inserted")
@@ -61,7 +61,7 @@ red_reg4_loc_test = RedisDatabase.create!(:calmapp_version_id => reg4.id, :redis
 red_trans1_int_dev = RedisDatabase.create!(:calmapp_version_id => trans1.id, :redis_instance_id => ri_integration.id, :redis_db_index => 1, :release_status_id => vs_dev.id)
 red_trans1_int_test = RedisDatabase.create!(:calmapp_version_id => trans1.id, :redis_instance_id => ri_integration.id, :redis_db_index => 2, :release_status_id => vs_test.id)
 log.info("Redis databases inserted")
-=end
+
 
 Profile.seed
 log.info("profiles seeded")

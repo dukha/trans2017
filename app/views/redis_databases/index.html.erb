@@ -1,0 +1,52 @@
+<%=theading("listing", :model=>"redis_database", :count=>10) %>
+<% if RedisDatabase.count==0 then %>
+  <%=tflash( "no_records_found", :warning)%><br/>
+<%  else %>
+<%= twill_paginate %>
+<table class="data">
+  <tr class="dataheader">
+
+    <th class ="dataheader"><%=tlabel('redis_db_index', 'redis_database') %></th>
+
+    <th class ="dataheader"><%=tlabel('calmapp_version_id', 'redis_database' ) %></th>
+
+    <th class ="dataheader"><%=tlabel('redis_instance_id', 'redis_database') %></th>
+    <th class ="dataheader"><%=tlabel('release_status_id', 'redis_database') %></th>
+
+    
+
+    <th class="linkheader"></th>
+    <th class="linkheader"></th>
+    <th class="linkheader"></th>
+    
+  </tr>
+
+  
+<% cell_class = "data" %>
+<% link_cell_class="link"%>  
+<% @redis_databases.each do |redis_database| %>
+
+  <tr class = "<%= cycle('dataeven', 'dataodd') %>" >
+  
+      <td class="<%= cell_class %>"><%= redis_database.redis_db_index %></td>
+
+  
+      <td class="<%= cell_class %>"><%= CalmappVersion.find(redis_database.calmapp_version_id).calmapp_name_with_version %></td>
+
+  
+      <td class="<%= cell_class %>"><%= RedisInstance.find(redis_database.redis_instance_id).description %></td>
+      
+       <td class="<%= cell_class %>"><%=ReleaseStatus.find(redis_database.release_status_id).status %></td>
+  
+    
+    <td class="<%= link_cell_class %>"><%= tlink_to  'edit', edit_redis_database_path(redis_database) %></td>
+    <td class="<%= link_cell_class %>"><%= tlink_to 'destroy',  redis_database , :confirm => 'delete.are_you_sure', :model => "redis_database", :value=>('Index: '+ redis_database.redis_db_index.to_s), :method => :delete %></td>
+    <td class="<%= link_cell_class %>"><%= tlink_to 'redis_to_yaml',  redis_database  %></td>
+  </tr>
+<% end %>
+</table>
+<%= twill_paginate %>
+<%end%>
+<br />
+
+<%= tlink_to 'new_model', new_redis_database_path, :model=> 'redis_database' %>

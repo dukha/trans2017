@@ -1,6 +1,7 @@
 en:
   application:
     translator: Translator
+    app_title: "%{calm}: %{app_name}"
     app_sub_name: Translation Module for CALM Applications
     version: Version %{version}
   formtastic:
@@ -37,10 +38,10 @@ en:
         release_status_id: "The status of the the translation database that you are adding: 'development' will only be used by developers for English. 'test' will be used by most translators. 'production will be a copy of test to be used by users."
         redis_instance_id: "Choose computer ip address on which the redis server is running that you want to use."
       redis_instance:  
-        max_databases: Each instance has a maximum number of databases. It is set in redis.conf. Don't put anything here that is not already.in redis.conf
-        host: Enter the technical name of the computer where the Redis database server is running
+        max_databases: Each instance has a maximum number of databases. It is set in redis.conf. Don't put anything here that is not already.in redis.conf. Default is 16.
+        host: Enter the technical name(ip address or hostname) of the computer where the Redis database server is running
         port: Enter the computer port number used by the Redis database.
-        password: Enter the actual password for this Redis Instance. If you don't know it then don't add a new record or change an exisitng password.
+        password: Enter the actual password for this Redis Instance. If you don't know it then don't add a new record or change an exisitng password. For production the password should be greater than 100 characters.
         description: User Friendly name to indentify the host.
     actions:
       create_and_upload: Create and Upload
@@ -159,7 +160,7 @@ en:
         to
             key<colon> [array_element1,array_element2..]
         This problem is around line %{line_number} in the file .
-        Edit (or have someone technical  edit) the file and try uploading again.
+        Edit (or have someone technical)  edit the file and try uploading again.
         Deleted this file from database.
     #incorrect_indentation_in_yaml_file:
       #error: |+

@@ -3,7 +3,7 @@ class ApplicationController < ActionController::Base
   #include TranslationsHelper
   
   include Exceptions
-  include Search
+  include SearchModel
   protect_from_forgery
   before_filter  :set_locale
   #rescue_from ActiveRecord::RecordInvalid, :with => :record_invalid

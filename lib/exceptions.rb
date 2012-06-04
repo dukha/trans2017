@@ -26,36 +26,7 @@ module Exceptions
 
 
 
-  class IncorrectArrayFormatInYamlFileException < AbstractInternationalizedStandardError
-    #include TranslationsHelper
-    @@Translation_code = $MS + "array_in_yaml_wrong_format.error"#$MSE + "array_in_yaml_wrong_format"
-    def initialize  line_number, upload_id
-      super(@@Translation_code)
-      @line_number = line_number
-      @translation_file_id =translation_file_id
-    end
-    def file_name
-        return Upload.find(@upload_id).upload_file_name
-    end
-
-    def message
-      m =   I18n.t(super,  :line_number=>@line_number, :file_name=>file_name)
-      return m
-    end
-  end
-=begin
-  class IncorrectIndentationInYamlLineException < AbstractInternationalizedStandardError
-    @@Translation_code = $MSE + "incorrect_indentation_in_yaml_file"
-    def initialize line_number
-      super @@Translation_code
-      @line_number = line_number
-    end
-
-    def message
-      m  =   I18n.t(super,  :line_number=>@line_number)
-    end
-  end
-=end
+  
   class InvalidBelongsToAssociation < AbstractInternationalizedStandardError
     #include TranslationsHelper
     @@Translation_code = I18n.t($MSE + "existence")
@@ -74,6 +45,9 @@ module Exceptions
       @record.errors[@attribute]= I18n.t(super , :attribute => @attribute, :value=>@value, :target=>@target )
       return @record.errors[@attribute]
     end
+  end
+
+  class SubClassShouldImplement < NotImplementedError
   end
 
 end
