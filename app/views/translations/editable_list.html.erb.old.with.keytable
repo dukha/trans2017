@@ -70,13 +70,13 @@
 </script>
 <%=theading("editable_listing", :model=>"translation", :count=>10) %>
 <!-- < % if Translation.count==0 then %>
-  < %=t($MS + "no_records_found")%><br/>
+  < %=tflash( "no_records_found", :warning)%><br/>
 < %  else %> -->
 <%full_key_display='none'%>
 <%wrapped_key_display='table_cell'%>
 <%short_key_display='table-cell'%>
 <% if Language.count==0 then %>
-  <%=t($MS + "no_records_found")%><br/>
+  <%=tflash( "no_records_found", :warning)%><br/>
 <%  else %>
 <%= twill_paginate %>
 <table class="display" id= "translations-table">

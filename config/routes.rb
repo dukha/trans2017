@@ -30,8 +30,21 @@ Translator::Application.routes.draw do
 
    resources :whiteboard_types
    resources :whiteboards
-   resources :location_tree, :only => [:index, :show]
+   #resources :location_tree, :only => [:index, :show]
+   resources :locations
+   resources :areas
 
+    resources :venues
+
+    resources :organisations
+
+    resources :servers
+   # to create a new child we need the parent_id
+    match '/organisations/new/:parent_id(.:format)' => 'organisations#new', :as => :new_child_organisation
+    match '/venues/new/:parent_id(.:format)' => 'venues#new',               :as => :new_child_venue
+    match '/areas/new/:parent_id(.:format)' => 'areas#new',                 :as => :new_child_area
+    match '/servers/new/:parent_id(.:format)' => 'servers#new',             :as => :new_child_server
+    
    resources :calmapps
    resources :calmapp_versions
    resources :release_statuses

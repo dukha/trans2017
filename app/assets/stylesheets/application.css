@@ -3,6 +3,7 @@
 *= require sunny/jquery-ui-1.8.20.css
 *= require formtastic.css
 *= require formtastic_changes.css
+*= require jquery.treeview.css
 *= require simple-dropdown-index.css
 *= require_self
 *= require trans

@@ -57,7 +57,7 @@ authorization do
 
 
   standard_roles :profiles
-
+  #standard_roles :locations
   standard_roles :languages
   standard_roles :calmapp_versions
   

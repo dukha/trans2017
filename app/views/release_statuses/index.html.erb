@@ -1,6 +1,6 @@
 <%=theading("listing", :model=>"release_status", :count=>10 )%>
 <% if ReleaseStatus.count==0 then %>
-  <%=t($MS + "no_records_found")%><br/>
+  <%=tflash( "no_records_found", :warning)%><br/>
 <%  else %>
 <%= twill_paginate %>
 <table class="data">

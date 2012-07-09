@@ -19,17 +19,29 @@ ul.dropdown-calm                  { list-style: none; }
 	LEVEL ONE
 */
 ul.dropdown-calm                         { position: relative; 
+                                            
                                            list-style: none;
                                            padding-left: 0px;
                                            margin-top:0px;
                                            margin-bottom:0px;
                                           }
-ul.dropdown-calm li                      { font-weight: bold; 
-                                           float: left; 
-                                           position: relative;
-                                          left: 20px;
+ul.dropdown-calm li                      { /*font-weight: bold;*/ 
+                                           float: left;
+                                          position: relative;
+                                          /*left: 20px;*/ 
                                           /* zoom: 1;*/ 
-                                           background: #ccc; }
+                                           /*background: #ccc; */
+                                           /*color: #FF0000;*/}
+ul.dropdown-calm li:first-child a         {color: #CC0000;}                                
+/*ul.dropdown-calm li:last-child a         { border-right: none; }  Doesn't work in IE  */
+ul.dropdown-calm li.hover,
+ul.dropdown-calm li:hover                { background: #cccccc;/*#F3D673; */
+                                           /*color: black;*/ 
+                                            }
+/* The line below is correct(I think), but doesn't seem to work!! */                                            
+ul.dropdownl-calm li:not(:first-child)  { position:relative;
+                                          left:20px;
+                                         }                                          
 ul.dropdown-calm a:hover		            { color: #000; }
 ul.dropdown-calm a:active                { color: #ffa500; }
 ul.dropdown-calm li a                    { /*display: block;*/ 
@@ -37,12 +49,7 @@ ul.dropdown-calm li a                    { /*display: block;*/
                                           /* border-right: 1px solid #333;*/
 	 								                         color: #222;
 	 								                         text-decoration: none; }
-/*ul.dropdown-calm li:last-child a         { border-right: none; } /* Doesn't work in IE * / */
-ul.dropdown-calm li:first-child a         {color: #CC0000;}
-ul.dropdown-calm li.hover,
-ul.dropdown-calm li:hover                { background: #F3D673; 
-                                           /*color: black;*/ 
-                                           position: relative; }
+
 /*ul.dropdown-calm li.hover a              { color: black; }*/
 
 ul.context-sub-menu            {
@@ -63,7 +70,7 @@ ul.dropdown-calm ul 						{ /*width: 220px;*/
                                   list-style: none; }
 ul.dropdown-calm ul li 					{ font-weight: normal; 
                                   /*background: #f6f6f6;*/ 
-                                  background: #F3D673;
+                                  background: #cccccc;/*#F3D673;*/
                                   /*color: #ffffff;*/
                                   
                                   /*border-bottom: 1px solid #ccc; */

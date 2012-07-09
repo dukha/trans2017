@@ -49,13 +49,14 @@ ActiveRecord::Schema.define(:version => 201204041046086) do
   add_index "languages", ["name"], :name => "iu_languages_name", :unique => true
 
   create_table "locations", :force => true do |t|
-    t.string   "name",             :null => false
-    t.string   "type",             :null => false
+    t.string   "name",                                :null => false
+    t.string   "type",                                :null => false
     t.integer  "parent_id"
     t.string   "translation_code"
     t.string   "fqdn"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "marked_deleted",   :default => false
   end
 
   create_table "permissions", :force => true do |t|

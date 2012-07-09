@@ -72,7 +72,7 @@
 
 </div>
 <!-- < % if Translation.count==0 then %>
-  < %=t($MS + "no_records_found")%><br/>
+  < %=tflash( "no_records_found", :warning)%><br/>
 < %  else %> -->
 
 <%= twill_paginate %>

@@ -24,7 +24,7 @@ class LocationsController < ApplicationController
   def model_sym
     model_name.downcase.to_sym
   end
-
+=begin
   def index
     @locations = model_class.paginate(:page => params[:page], :per_page=>15)    #model_class.all
 
@@ -33,7 +33,10 @@ class LocationsController < ApplicationController
       format.xml  { render :xml => @locations }
     end
   end
-
+=end
+  def index
+    @root_node = current_user.current_organisation
+  end
   # GET /locations/1
   # GET /locations/1.xml
   def show

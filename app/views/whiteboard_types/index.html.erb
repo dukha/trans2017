@@ -1,6 +1,6 @@
 <%=t("listing", :model=>"whiteboard_type", :count=>10 )%>
 <% if WhiteboardType.count==0 then %>
-  <%=t($MS + "no_records_found")%><br/>
+  <%=tflash( "no_records_found", :warning)%><br/>
 <%  else %>
 <%= twill_paginate %>
 <table class="data">
