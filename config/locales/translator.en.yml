@@ -47,6 +47,10 @@ en:
       create_and_upload: Create and Upload
       to_redis: Write to Database
       redis_to_yaml: Save Database as YAML
+      add_translation_language: Add Translation_language
+      add_organisation: Add Organisation
+      add_area: Add Area
+      add_server: Add Server
       #new_translation: New English Translation
   menus:
     translations: Translations
@@ -83,6 +87,9 @@ en:
       upload:
         one: Upload
         other: Uploads
+      location:
+        one: Location
+        other: Locations  
       release_status:
         one: Release Status
         other: Release Statuses
