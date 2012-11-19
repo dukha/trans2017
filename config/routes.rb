@@ -34,14 +34,14 @@ Translator::Application.routes.draw do
    resources :locations
    resources :areas
 
-    resources :venues
+    resources :translation_languages
 
     resources :organisations
 
     resources :servers
    # to create a new child we need the parent_id
     match '/organisations/new/:parent_id(.:format)' => 'organisations#new', :as => :new_child_organisation
-    match '/venues/new/:parent_id(.:format)' => 'venues#new',               :as => :new_child_venue
+    match '/translation_languages/new/:parent_id(.:format)' => 'translation_languages#new', :as => :new_child_translation_language
     match '/areas/new/:parent_id(.:format)' => 'areas#new',                 :as => :new_child_area
     match '/servers/new/:parent_id(.:format)' => 'servers#new',             :as => :new_child_server
     
@@ -52,7 +52,7 @@ Translator::Application.routes.draw do
    resources :redis_instances
    match 'unused_redis_database_indexes' => 'redis_instances#unused_redis_database_indexes', :as => 'unused_redis_dbs'
 
-   resources :user_works, :only=>[:edit, :show]
+   resources :user_works#, :only=>[:edit, :show]
 
    resources :translations #, :except=>:show#, :only=> [:new, :index]
    match "translations/dev_new" => "translations#dev_new", :as => "dev_new_translation"

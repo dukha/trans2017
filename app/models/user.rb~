@@ -8,7 +8,7 @@ class User < ActiveRecord::Base
   #attr_accessible :email, :password, :password_confirmation, :remember_me
   # Include default devise modules. Others available are:
   # :token_authenticatable, :confirmable, omniauthable:, Confirmable, :rememberable, :validatable, :encryptable, :recoverable
-  devise  :database_authenticatable, :registerable,
+  devise :invitable, :database_authenticatable, :registerable,
          :trackable, :validatable,
          :timeoutable, :lockable #,:timeout_in => 10.minutes use value from  config/initializers/devise.rb
 
@@ -179,16 +179,15 @@ class User < ActiveRecord::Base
        puts "Your new password: '#{pw}'"
     else
      
-      param = {:password => pw,:password_confirmation => pw,:username => username,:email => 'root@localhost.localdomain', :actual_name=> 'root'}
-      puts "creating user"
+      param = {:password => pw,:password_confirmation => pw,:username => username,:email => 'root@localhost.localdomain'}
+      puts "**************"
       u = User.create! param
-      puts "creating permission"
+      puts "**************^^^^^^^^^^"
       u.add_permission location: Location.world, profile: Profile.sysadmin, make_current: true
       u.reload
 
-      puts "Added user #{username} with permission "
+      puts "Adding user #{username} with permission "
       puts "Password: '#{pw}'"
-      puts "end of create_root_user"
     end
   end
    

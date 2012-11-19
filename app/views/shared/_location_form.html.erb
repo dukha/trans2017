@@ -1,0 +1,19 @@
+
+<%= semantic_form_for(@location) do |f| %>
+  <% f.inputs do %>
+    <!--% if @location.allow_name_edit? % --> 
+      <%= f.input :name %>
+    <!--% else % -->
+      <p>Changing name is not allowed</p>
+    <!--% end% -->
+    <!--% if @location.allow_fqdn_edit? %  -->
+      <%= f.input :fqdn %>
+    <!--% end%  -->
+    <!--% if !@location.is_a?(Server) and !(@location == Location.world) % -->
+      <%= f.input :parent_id, :as => :select, :collection => @location.move_targets, :value => @location.parent %>
+    <!--% end% -->  
+  <% end%>
+  <%= f.actions do %>
+    <%= f.action(:submit) %>
+  <% end%>  
+​<% end%>

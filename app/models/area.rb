@@ -2,7 +2,7 @@
  Represents an area
  @deprecated
 =end
-class Area <  Location
+class Area < Location
 end
 
 # == Schema Information

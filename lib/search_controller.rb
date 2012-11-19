@@ -23,9 +23,15 @@ module SearchController
       if criteria_symbols.include?(attr) then
         operator_key = attr_2_operator_sym(attr)
         if params[operator_key] then
-              operators[attr]=params[operator_key]
+          if ! params[operator_key].blank?
+            operators[attr]=params[operator_key]
+          else
+           # should raise an exception 
+           operators[attr]='matches'
+          end 
         else
-              operators[attr]='eq'  
+          # should raise an exception
+          operators[attr]='matches'  
         end  
       end     
     }
@@ -37,7 +43,8 @@ module SearchController
   # @param searchable_attr are a hash of attribtes of the primary model which are searchable. usually accessed from the model like accessible_attr
   # @param formats is a hash of formats(primarily dates strftime )  , keyed by criterion where a date is in a format other than default  
   def criterion_list searchable_attr = {}, formats ={}
-    #debugger
+    
+    #binding.pry
     criteria = {}
     searchable_attr.each{|attr|
       criterion_key = attr_2_criterion_sym(attr)
@@ -75,4 +82,19 @@ module SearchController
     end
     return ret_val
   end
+  
+  def init_search(current_user, searchable_attr={}, sortable_attr={})
+     #searchable_attr = AssistantTeacher.searchable_attr
+    
+    criteria=criterion_list(searchable_attr)
+    operators=operator_list( searchable_attr, criteria)
+    
+    #sortable_attr=AssistantTeacher.sortable_attr
+    sorting=sort_list(sortable_attr)
+    info = {}
+    info[:criteria] = criteria
+    info[:operators] = operators
+    info[:sorting] = sorting
+    return info
+   end
 end

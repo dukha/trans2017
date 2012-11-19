@@ -1,30 +1,58 @@
-# == Schema Information
-# Schema version: 20110629065550
-#
-# Table name: languages
-#
-#  id         :integer         not null, primary key
-#  iso_code   :string(255)     not null
-#  name       :string(255)     not null
-#  created_at :datetime
-#  updated_at :datetime
-#
+=begin
+
+ Represents a (virtual)location used for all translations in a specific language
+ 
+=end
 
 class Language < ActiveRecord::Base
+  #set_table_name :language
   has_many :calmapp_versions_languages
   has_many :calmapp_versions, :through => :calmapp_versions_language
 
   validates :iso_code, :name, :presence => true,:uniqueness => true
   validates :name, :presence => true, :uniqueness => true
 
-  attr_accessible :iso_code, :name #,  :calm_reg_language, :course_language, :left_to_right
+  attr_accessible :iso_code, :name #,  :calm_reg_language, :course_l
   
-  cattr_reader :per_page
-  @@per_page = 10
-=begin
-  helper method
+  #validates_with VenueValidator
+  
+=begin 
+  def allow_organisation_child?
+    false
+  end
+
+  def allow_area_child?
+    false
+  end
+
+  def allow_translation_language_child?
+    false
+  end
+
+  # return false if self would not be under an organisation
+  def allow_to_be_translation_language?
+    has_organisation_ancestor?
+  end
+
+  
+  def self.accessible_translation_languages(current_user)
+    return current_user.current_organisation.accessible_translation_languages
+  end
 =end
-  #def self.find_calm_languages
-    #return Language.find_all_by_calm_reg_language(true)
-  #end
+  
 end
+
+# == Schema Information
+#
+# Table name: locations
+#
+#  id               :integer         not null, primary key
+#  name             :string(255)     not null
+#  type             :string(255)     not null
+#  parent_id        :integer
+#  translation_code :string(255)
+#  created_at       :datetime
+#  updated_at       :datetime
+#  marked_deleted   :boolean         default(FALSE)
+#
+

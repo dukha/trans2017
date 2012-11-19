@@ -3,7 +3,7 @@
 =end
 class Server < Location
 
-  def allow_venue_child?
+  def allow_translation_language_child?
     false
   end
 

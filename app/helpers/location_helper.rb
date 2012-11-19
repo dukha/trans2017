@@ -37,17 +37,17 @@ module LocationHelper
         html << ( link_destroy(location, location.type.to_sym,{:category=>'menu'}, 'li'))
         #tlink_to("delete", location_path(location), :method => :delete, :confirm => "delete.are_you_sure", :model=>location.name, :value=>location.to_s) +"</li>\n")
       end
-      if location.class.name != "Venue" then
+      if location.class.name != "TranslationLanguage" then
         if location.allow_area_child? and permitted_to? :create, Area.new then
           html << ("<li>" + tlink_to( "add_area", new_child_area_path(location), :method => :get, :model=>location.name) + "</li>\n")
         end 
-=begin 
-        if location.allow_venue_child? and permitted_to? :create, Venue.new then
+#=begin 
+        if location.allow_translation_language_child? and permitted_to? :create, TranslationLanguage.new then
           #debugger
-          link = tlink_to("add_venue", new_child_venue_path(location), :method => :get, :model=>location.name) 
+          link = tlink_to("add_translation_language", new_child_translation_language_path(location), :method => :get, :model=>location.name) 
           html << ("<li>"  + link + "</li>\n")
         end
-=end
+#=end
         if location.allow_organisation_child? and permitted_to? :create, Organisation.new then
           html << ("<li>" + tlink_to("add_organisation",new_child_organisation_path(location), :method => :get, :model=>location.name) + "</li>\n")
         end

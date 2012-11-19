@@ -85,7 +85,7 @@ class Location < ActiveRecord::Base
     name != Location.root_name
   end
 
-  def allow_venue_child?
+  def allow_translation_language_child?
     # only if an ancestor is an organisation, not counting world
     if has_organisation_ancestor?
       return true
@@ -166,12 +166,12 @@ class Location < ActiveRecord::Base
   # a venue never has children, it is a leaf of the tree
   # example all venues accessible for the signed in user: 
   #   current_user.current_organisation.accessible_venues
-  def accessible_venues
+  def accessible_translation_languages
     answer ||= []
-    if is_a? Venue
+    if is_a? TranslationLanguage
       answer << self
     else
-      children.each {|node| answer += node.accessible_venues}
+      children.each {|node| answer += node.accessible_TranslationLanguages}
     end
     answer
   end
@@ -248,7 +248,7 @@ class Location < ActiveRecord::Base
   end
 =end
   scope :non_root, lambda { |root| where( "id != ? ", root.id) }
-  scope :non_venue,  where( "type != 'Venue'")
+  scope :non_translation_language,  where( "type != 'TranslationLanguage'")
 
   def move_targets
     # if self is root or a server then moving is impossible
@@ -256,7 +256,7 @@ class Location < ActiveRecord::Base
     return [self.parent] if self.is_a? Server
     # root is not an eligible target
     # no venue is an eligible target
-    targets = Location.non_root(Location.root).non_venue
+    targets = Location.non_root(Location.root).non_translation_language
     targets.delete Location.empty_organisation  # never move anything there
     # remote hosts are no targets
     targets = targets.reject {|each| each.is_a? Server and each.name != 'localhost'}
@@ -272,7 +272,7 @@ class Location < ActiveRecord::Base
     #else  not self and none of its descendents is an organisation then 
     else
     # if subtree of self has a venue
-      if !self.accessible_venues.empty?
+      if !self.accessible_translation_languages.empty?
     #   then only organisations and their subtrees are eligible
         # remove all nodes above an organisation from target
         targets = remove_above_organistions targets

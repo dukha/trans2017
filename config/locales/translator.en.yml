@@ -47,7 +47,7 @@ en:
       create_and_upload: Create and Upload
       to_redis: Write to Database
       redis_to_yaml: Save Database as YAML
-      add_translation_language: Add Translation_language
+      add_translation_language: Add Translation Language
       add_organisation: Add Organisation
       add_area: Add Area
       add_server: Add Server
@@ -120,6 +120,9 @@ en:
       profile:
         one: User Profiles
         other: User Profiles
+      user_work:
+        one: User Work
+        other: User Works  
     attributes:
       calmapp:
         new_redis_dev_db: Add Redis Developers Database

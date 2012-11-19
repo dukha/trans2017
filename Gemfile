@@ -1,9 +1,9 @@
 source 'http://rubygems.org'
 
-gem 'rails', '3.1.3'
+
 
 source 'http://rubygems.org'
-gem 'rails', '3.1.3'
+gem 'rails', '~>3.1.3'
 
 # postgresql connector
 gem 'pg', '~>0.12.2'
@@ -104,7 +104,18 @@ group :development, :test do
 c(ontinue) etc to look at code at breakpoint break to set a breakpoint, where for stack, restart,
 display/undisplay
 =end
-  gem 'ruby-debug19', '0.11.6'
+  #gem 'ruby-debug19', '0.11.6'
+  
+  # =============  debugging tools
+  # to set breakpoint add line:  binding.pry
+  # more at http://pry.github.com/
+  gem 'pry-rails'
+  gem 'pry-doc'
+  gem 'pry-nav'
+
+  # watchr runs rspec, similar to autotest
+  gem 'watchr'
+  gem 'webrat'#,'0.7.3'
 =begin
  generate test data
  exclude faker except when you need to use it as it will turn up lots of fake locales and translations in:

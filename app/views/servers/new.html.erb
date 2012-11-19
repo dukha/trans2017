@@ -1,0 +1,13 @@
+<!-- .pageheading
+  = "#{t("headings.new.heading", :model=>t($ARM + "server", :count=>1))}  will belong to #{@location.parent.name}"
+= render :partial => "shared/location_form"
+
+= link_to t("formtastic.actions.back"), location_tree_path(@location.parent)
+-->
+<div class="pageheading">
+  <%= "#{t("headings.new.heading", :model=>t($ARM + "server", :count=>1))}  will belong to #{@location.parent.name}" %>
+</div>
+<%= render :partial => "shared/location_form" %>
+<%= link_to t("formtastic.actions.back"), location_tree_path(@location.parent).pageheading  = "#{t("headings.new.heading", :model=>t($ARM + "server", :count=>1))}  will belong to #{@location.parent.name}" %>
+<%= render :partial => "shared/location_form" %>
+<%= link_to t("formtastic.actions.back"), location_tree_path(@location.parent) %>

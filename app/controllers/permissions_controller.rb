@@ -41,7 +41,7 @@ class PermissionsController < ApplicationController
 
   def set_current
     @selected_permission = Permission.find params[:id]
-    @selected_permission.be_current_permission_for current_user
+    current_user.current_permission = @selected_permission
     current_user.save
     Rails.logger.info "**** In action permissions#set_current: #{current_user.greeting} #{current_user.object_id}"
     
@@ -53,7 +53,7 @@ class PermissionsController < ApplicationController
     # from layouts/_header.html.erb,  data:       { id:  permissionId },
 
     @selected_permission = Permission.find params[:id]  #todo use both user id and from route
-    @selected_permission.be_current_permission_for current_user
+    current_user.current_permission = @selected_permission
     current_user.save
     Rails.logger.info "**** In action permissions#set_current: #{current_user.greeting} #{current_user.object_id}"
 

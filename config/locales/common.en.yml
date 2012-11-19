@@ -100,7 +100,7 @@ en:
         success: The %{model} was successfully deleted.
         error: The %{model} was not able to be deleted
       deletion_rejected: 
-        error: Cannot delete this %{model}. It must have other things depending on it (e.g. cannot delete a venue that has courses)
+        error: Cannot delete this %{model}. It must have other things depending on it (e.g. cannot delete a Translation_languages that has translations)
     create:
       success: The %{model} was successfully created.
       error:: The %{model} was not created

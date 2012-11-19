@@ -2,7 +2,7 @@
  Represents a calm instance. This is where most users will login.
  Registrars work primarily in an organisation.
 =end
-class Organisation <  Location
+class Organisation < Location
   
   validates_with SubOrganisationValidator
 

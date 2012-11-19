@@ -6,6 +6,7 @@ class TranslationsController < ApplicationController
   rescue_from ActiveRecord::RecordNotUnique, :with => :record_not_unique
   #rescue_from ActiveRecord::RecordInvalid, :with => :record_not_unique
   @@model='translation'
+  
   def new
   end
    def dev_new

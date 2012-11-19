@@ -38,7 +38,11 @@ class UserWorksController < ApplicationController
 
   # GET /redis_databases/1/edit
   def edit
-    @user_work = UserWork.find(params[:id])
+    #binding.pry
+    unless @user_work = UserWork.find_by_id(params[:id]) then
+      flash[:notice]= "No User Works for " + current_user.username
+      new()
+    end
   end
 
   # POST /redis_databases

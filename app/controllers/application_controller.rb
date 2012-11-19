@@ -1,9 +1,12 @@
 class ApplicationController < ActionController::Base
   #require 'translations_helper'
   #include TranslationsHelper
+  require File.join(Rails.root, "app", "/helpers" "/translations_helper.rb" )
+  include TranslationsHelper
   
+  include SearchController
   include Exceptions
-  include SearchModel
+  #include SearchModel
   protect_from_forgery
   before_filter  :set_locale
   #rescue_from ActiveRecord::RecordInvalid, :with => :record_invalid

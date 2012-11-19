@@ -37,9 +37,9 @@ Whiteboard.create!(:whiteboard_type_id=> userWBType.id, :info=>"We need translat
 log.info("Whiteboards data inserted successfully.")
 #User.create!(  :email=> 'translator@calm.org', :password=>'123456', :confirm_password=>'123456', :actual_name=> 'joe smith', :username => "joe",:current_permission_id=>1)
 
-en = Language.create!(:iso_code=> "en", :name=>"English")
-nl = Language.create!(:iso_code=> "nl", :name=>"Nederlands")
-log.info("Languages inserted")
+#en = Language.create!(:iso_code=> "en", :name=>"English")
+#nl = Language.create!(:iso_code=> "nl", :name=>"Nederlands")
+#log.info("Languages inserted")
 
 
 reg = Calmapp.create!( :name=>"calm_registrar")
@@ -67,13 +67,18 @@ Profile.seed
 log.info("profiles seeded")
 Location.seed
 log.info("Locations seeded")
+User.create_root_user
 #global = Area.create :name => "Global" , :parent_id => Location.localhost.id
-vipassana =  Organisation.create :name => "Vipassana" , :parent_id => Location.find_by_name(Location.localhost_name).id
-log.info("Global area and vipassana org inserted")
-current_perm = Permission.create!  :organisation => Location.world, :profile => Profile.root
-log.info(" Loc world =" + Location.world.to_s)
-    log.info(" Profile root=" + Profile.root.to_s)
-     log.info("current permission create id = " +current_perm.id.to_s)
+vipassana =  Area.create :name => "Vipassana" , :parent_id => Location.find_by_name(Location.localhost_name).id
+translation_organisation = Organisation.create :name=>"translation_organisation", :parent_id => vipassana.id
+en = Language.create!(:iso_code=> "en", :name=>"English") #, :parent_id=>translation_organisation.id)
+nl = Language.create!(:iso_code=> "nl", :name=>"Nederlands")  #, :parent_id=>translation organisation.id)
+
+#log.info("Global area and vipassana org inserted")
+#current_perm = Permission.create!  :organisation => Location.world, :profile => Profile.root
+#log.info(" Loc world =" + Location.world.to_s)
+    #log.info(" Profile root=" + Profile.root.to_s)
+     #log.info("current permission create id = " +current_perm.id.to_s)
 # ceate users which can log-in
     #this block is not needed as root user is not created
     #User.all.each do |each|
@@ -86,16 +91,16 @@ log.info(" Loc world =" + Location.world.to_s)
     
    
     param = {:password => pw,:password_confirmation => pw,:username => 'sysadmin',:email => 'admin@calm.org', 
-              :actual_name=> 'admin',:current_permission_id => current_perm.id}
+              :actual_name=> 'admin'}
     #puts "current permission i d= " +current_perm.id.to_s
     admin = User.create! param
    
-    admin.add_permission current_perm
+    #admin.add_permission current_perm
 
-    prof_guest = Profile.create! :name => 'guest', :roles => ['guest']
-    perm = Permission.create!  :organisation => vipassana,  :profile => prof_guest
-    admin.add_permission perm
-    param[:organisation]=vipassana
+    #prof_guest = Profile.create! :name => 'guest', :roles => ['guest']
+    #perm = Permission.create!  :organisation => vipassana,  :profile => prof_guest
+    #admin.add_permission perm
+    #param[:organisation]=translationLanguages
     param[:username]='translator'
     param[:email]= 'translator@calm.org'
     param[:actual_name] = 'trannie'
@@ -112,7 +117,7 @@ log.info(" Loc world =" + Location.world.to_s)
 #User.create!( :username=>'developer', :email=> 'developer@calm.org', :password=>'123456', :confirm_password=>'123456')
 log.info("Users inserted")
 
-#UserWork.create!(:user_id=> User.find_by_username('translator'), :translation_language_id => nl.id, :current_redis_database_id=> red_reg4_loc_test.id)
-#UserWork.create!(:user_id=> User.find_by_username('developer'), :translation_language_id => en.id, :current_redis_database_id=> red_trans1_int_dev.id)
+UserWork.create!(:user_id=> User.find_by_username('translator'), :translation_language_id => nl.id, :current_redis_database_id=> red_reg4_loc_test.id)
+UserWork.create!(:user_id=> User.find_by_username('developer'), :translation_language_id => en.id, :current_redis_database_id=> red_trans1_int_dev.id)
 log.info("User works inserted")
 #=end
