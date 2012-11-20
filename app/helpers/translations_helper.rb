@@ -1,6 +1,7 @@
 module TranslationsHelper
   include WillPaginate::ViewHelpers
   include I18n
+  
 =begin
   These global constants are used as partial keys in yaml translation files
 =end
@@ -16,15 +17,20 @@ module TranslationsHelper
   $LU="lookups."
   $M="menus."
   $MS="messages."
-  $MSE=$MS+"errors."
-  $MSN=$MS+"notices"
-  $MSW=$MS+"warnings"
-  $MSS = $MS+ 'success'
+  $W ="warning"
+  $N = 'notice'
+  $S = 'success'
+  $E = 'error'
+  $MSE=$MS+"error."
+  #$MSN=$MS+"notice."
+  #$MSW=$MS+"warning."
+  #$MSS = $MS+ 'success.'
   $S="commons.search."
   $SC=$S + "criteria"
   $SO=$S + "operators."
   $DF="date.formats."
   $TB="tabs."
+  $P="placeholders."
   #This is not a language translation but rather to put a date into a format acceptable for use in a db query
   $DB_DF = "%Y-%b-%d" #I18n.t("date.formats.db")
 
@@ -75,7 +81,7 @@ module TranslationsHelper
        if options[:confirm] then
          # can't use :count for a translation of a message unless it is expected.
          options.delete(:count)
-         options[:confirm] = tmessage( options[:confirm], options) 
+         options[:confirm] = tmessage( options[:confirm], $W, options) 
        end
 
      link_to tlabel, url, options
@@ -166,14 +172,14 @@ just substitute twill_paginate for will_paginate
       return ret_val
   end
   def tflash message_code,  category=:error, options ={}, now=false
-    debugger
+    #debugger
     if ! category.is_a? Symbol then
       category = category.to_s.to_sym
     end
     if options[:model] then
       options[:model] = tmodel(options[:model], options)
     end
-    msg = tmessage( message_code + '.' + category.to_s, options)
+    msg = tmessage( message_code, category.to_s, options)
     if now then
       flash.now[category] = msg
     else
@@ -191,9 +197,9 @@ just substitute twill_paginate for will_paginate
     I18n.t($ARM + model_name, options )
   end
 
-  def tmessage(subkey, interpolations={})
+  def tmessage(subkey, category, interpolations={})
     #debugger
-    I18n.t($MS + subkey, interpolations)
+    I18n.t($MS + subkey + "." + category,  interpolations)
   end
   
 

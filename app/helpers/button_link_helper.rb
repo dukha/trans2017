@@ -24,6 +24,7 @@ module ButtonLinkHelper
   # link_display display_public_schedule_path(public_schedule),  :public_schedules
   def link_display url, resource, options={}
     html = " "
+    #binding.pry
     if permitted_to? :display, table_symbol_from(resource)
       html =  "<td class='link'>"+ 
         tlink_to("display", url, options)+
@@ -36,7 +37,7 @@ module ButtonLinkHelper
  #Usage in dropdown menu : <%=link_edit(edit_course_path(course), :courses, {:category=>'menu'}, 'li' )%> 
   def link_edit url, resource, options={}, html_container='td'
      html = " "
-     #debugger
+     #binding.pry
     if permitted_to? :update, table_symbol_from(resource)
       a =  tlink_to("edit", url, options)
       #debugger
@@ -50,7 +51,7 @@ module ButtonLinkHelper
   # Usage in dropdown menu : <%=link_destroy(course, :courses, {:category=>'menu'}, 'li') %> 
   def link_destroy obj, resource, options={}, html_container='td'
      html = " "
-     #debugger
+     binding.pry
      if permitted_to? :destroy, table_symbol_from(resource)
         if options[:confirm].nil? then
           options[:confirm] = 'delete.are_you_sure.warning'
@@ -62,8 +63,9 @@ module ButtonLinkHelper
           #options[:count]=1
         #end
         options[:method] = :delete   
+        #binding.pry
         a= tlink_to("destroy", obj, options) 
-        #debugger
+       
         html = wrap_in_html_container(a, html_container, 'link')
      end
     html.html_safe
@@ -90,12 +92,11 @@ module ButtonLinkHelper
   end
  
   def link_back(url, options={})
-    
     html=' '
     html = tlink_to('back', url, options)
     return html.html_safe
-    
   end 
+
   # this doesnt lin in with search button. Need deprecation
   def link_sort_header(column_translation_code )
     #title ||= column.titleize

@@ -29,7 +29,7 @@
   
 </script>
 <%%=theading("listing", :model=>'<%=singular_table_name%>', :count=>11) %>
-<%%if <%= class_name %>.respond_to?( :searchable_attr ) and <%= class_name %>.searchable_attr.any? %>
+<%%if <%= class_name %>.respond_to?( :searchable_attr ) and <%= class_name %>.searchable_attr.any? then %>
 <button id="showHideCriteria" type='button'>x</button>
 <div id='criteria' class="criteria" >
   <!-- Use form_tag here because we are not going to work with a new AR model. form_tag doesn't work with formtastic either -->

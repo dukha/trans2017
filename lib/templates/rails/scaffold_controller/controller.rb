@@ -60,7 +60,9 @@ class <%= controller_class_name %>Controller < ApplicationController
 if searchable_attr.empty?
   @<%= plural_table_name %> = <%=class_name%>.paginate(:page => params[:page], :per_page=>15)
 else
-  @<%= plural_table_name %> = <%=class_name%>.search(current_user, criterion_list(searchable_attr), operator_list( searchable_attr, criterion_list(searchable_attr)),sort_list(sortable_attr)).paginate(:page => params[:page], :per_page=>15)
+  search_info = init_search(criterion_list(searchable_attr), operator_list( searchable_attr, criterion_list(searchable_attr)),sort_list(sortable_attr))
+  #@<%= plural_table_name %> = <%=class_name%>.search(current_user, criterion_list(searchable_attr), operator_list( searchable_attr, criterion_list(searchable_attr)),sort_list(sortable_attr)).paginate(:page => params[:page], :per_page=>15)
+  @<%= plural_table_name %> = <%=class_name%>.search(current_user, search_info).paginate(:page => params[:page], :per_page=>15)
 end
 
 
