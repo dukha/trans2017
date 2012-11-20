@@ -159,6 +159,7 @@ class User < ActiveRecord::Base
       # this role is not assigned anywhere else!
       [:guest]
     else
+      #binding.pry
       current_permission.profile.roles.collect {|role|role.to_sym}
     end   
   end

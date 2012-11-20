@@ -61,7 +61,7 @@ authorization do
   standard_roles :languages
   standard_roles :calmapp_versions
   
-
+  standard_roles :permissions
 
   standard_roles :calmapps
   standard_roles :redis_databases

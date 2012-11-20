@@ -94,7 +94,17 @@ nl = Language.create!(:iso_code=> "nl", :name=>"Nederlands")  #, :parent_id=>tra
               :actual_name=> 'admin'}
     #puts "current permission i d= " +current_perm.id.to_s
     admin = User.create! param
-   
+    admin.add_permission location: Location.world, profile: Profile.sysadmin, make_current: true
+    param = {:password => pw,:password_confirmation => pw,:username => 'albert',:email => 'albert@calm.org', 
+              :actual_name=> 'albert'}
+    #puts "current permission i d= " +current_perm.id.to_s
+    albert = User.create! param
+   albert.add_permission location: Location.world, profile: Profile.sysadmin, make_current: true
+    param = {:password => pw,:password_confirmation => pw,:username => 'a',:email => 'a@calm.org', 
+              :actual_name=> 'a'}
+    #puts "current permission i d= " +current_perm.id.to_s
+    a = User.create! param
+    a.add_permission location: Location.world, profile: Profile.sysadmin, make_current: true
     #admin.add_permission current_perm
 
     #prof_guest = Profile.create! :name => 'guest', :roles => ['guest']
@@ -105,11 +115,13 @@ nl = Language.create!(:iso_code=> "nl", :name=>"Nederlands")  #, :parent_id=>tra
     param[:email]= 'translator@calm.org'
     param[:actual_name] = 'trannie'
     translator=User.create! param
+    translator.add_permission location: Location.world, profile: Profile.guest, make_current: true
     log.info("trannie created")
     param[:username]='developer'
     param[:actual_name] = 'devvie'
     param[:email]= 'developer@calm.org'
-    translator=User.create! param
+    developer=User.create! param
+    developer.add_permission location: Location.world, profile: Profile.guest, make_current: true
     log.info("devvie created")
 
 #User.create!( :username=>'translator', :email=> 'translator@calm.org', :password=>'123456', :confirm_password=>'123456')

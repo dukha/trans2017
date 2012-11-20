@@ -5,13 +5,20 @@ en:
   commons:
     noo: No
     yess: Yes
+    none: None
     next: Next >>
     previous: << Previous
     no_data: Nil
+    to: to
     for_user: For User %{user} 
     changed_ago: "Changed %{change_date} ago"
+    visibility:
+      default_visibility: Default Visibility
+      column_visibility: Visible Columns
+      criteria_visibility: Critieria
     search:
       criteria: Search Criteria
+      clear: Clear Search
       operators:
         from: from
         to: to
@@ -50,10 +57,11 @@ en:
       other: "%{count} problems"
   formtastic:
     hints:
-      user:
-        password: Enter password here
-        confirm_password: Enter password again
-        login: Type either your username or email here
+      #user:
+        #password: Enter password here
+        #confirm_password: Enter password again
+        #login: Type either your username or email here
+        #current_password: Your current password is also needed
     actions:
       apply: Apply for Course
       sign_in: &fa_si Log In
@@ -65,7 +73,7 @@ en:
       delete: *ad
       new: New
       letters: Letters
-      back: Back to List
+      back: Back
       create_model: Add %{model}
       save: Save %{model}
       update: Update %{model}
@@ -79,10 +87,17 @@ en:
       add_child: Add Child %{location_type}
       search: Search
       select: Select %{model}
+      to_operator: Send to operator
+      reset_password: Reset Password
+      edit_permissions: Edit Permissions
+      display: "Display"
+      show_original: "Original"
+      back: "Back"
    
   menus:
     admin: Admin
     lookups: Configuration
+    my_settings: Edit My Settings, including Password
     user_info: User Preferences
     home: Home
     contact: Contact CALM
@@ -97,10 +112,10 @@ en:
         warning: Deleting %{model}. Are you sure?
       are_you_sure_value:
         warning: Deleting %{model} with value %{value}. Are you sure?
-        success: The %{model} was successfully deleted.
-        error: The %{model} was not able to be deleted
       deletion_rejected: 
-        error: Cannot delete this %{model}. It must have other things depending on it (e.g. cannot delete a Translation_languages that has translations)
+        error: Cannot delete this %{model}. It must have other things depending on it (e.g. cannot delete a venue that has courses)
+      success: The %{model} was successfully deleted.
+      error: The %{model} was not able to be deleted  
     create:
       success: The %{model} was successfully created.
       error:: The %{model} was not created
@@ -112,6 +127,9 @@ en:
     no_records_found:
       error: There were no records found in the database.
       warning: There were no records found in the database.
+    no_records_found_for_criteria:
+      error: There were no records found in the database that match the given criteria.
+      warning: There were no records found in the database that match the given criteria.
     no_records_found_with_permissions:
       warning: There were no records found in the database for which you have permission in the current organisation.
     application_language_change:
@@ -120,6 +138,10 @@ en:
       warning: You are attempting to type username or password with the capslock on. Remember that username and password are case sensitive.
     record_not_found:
       error: Unable to find the records to (view, update or delete)
+      warning: Unable to find the records to (view, update or delete)
+    
+    too_many_records_found:
+      warning: More than %{count} records found. Add to search criteria to narrow the search and try again.
     non_unique_singlevalue_key:
       #error: "A field value must be unique."
       error: "%{fieldlist} is already in the database with this value %{valuelist}. Choose a different value to complete this task."
@@ -134,7 +156,10 @@ en:
     all_rolledback:
       warning: "All %{model} on this page rolled back"  
     invalid_at_code:
-      warning: "This code is an invalid AT code."    
+      warning: "This code is an invalid AT code." 
+    location:
+      no_name_edit: 
+        notice: Cannot edit name of this location     
   links:
     no_unlock_instructions: Didn't receive unlocking instructions?
     no_confirmation_instructions: Didn't receive confirmation instructions?
@@ -152,7 +177,8 @@ en:
       heading: "%{model}"
     editable_listing:
       heading: "View or Edit %{model}"  
-    
+    process: 
+      heading: Process %{model}
     home:
       heading: Home - Whiteboard
   lookups:

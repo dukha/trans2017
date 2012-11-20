@@ -120,6 +120,12 @@ en:
       profile:
         one: User Profiles
         other: User Profiles
+      permission:
+        one:  "Access permission"
+        other: "Access permissions"
+      user:
+        one: User
+        other: Users  
       user_work:
         one: User Work
         other: User Works  

@@ -26,6 +26,11 @@ Translator::Application.routes.draw do
    match '/users_select' => 'users#select',      :as => :users_select
     
    devise_for :users
+   
+   get "users/:id/edit_password",   :to => "users#edit",   :as => :edit_password  
+    put "users/:id/update_password", :to => "users#update", :as => :update_password  
+    # for unlocking another user
+    put "users/:id/unlock_user",     :to => "users#unlock_user", :as => :unlock_user  
    resources :languages
 
    resources :whiteboard_types
