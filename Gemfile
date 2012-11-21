@@ -3,7 +3,7 @@ source 'http://rubygems.org'
 
 
 source 'http://rubygems.org'
-gem 'rails', '~>3.1.3'
+gem 'rails', '~>3.2.8'
 
 # postgresql connector
 gem 'pg', '~>0.12.2'
@@ -34,8 +34,8 @@ gem 'will_paginate','3.0.pre2'
 # using jquery for ajax, not prototype > rails g jquery:install
 gem 'jquery-rails'#, '~>1.0.12' #, '0.2.7'
 
-#helps with I18n not used at present
-gem 'routing-filter', '0.2.3'
+#helps with I18n not used at present. We need to use it to get pagination in the urls, I think
+gem 'routing-filter', '~>0.3.1'
 
 # acts as tree provides access to parents and children without coding more than parent_id (i.e. no has_many needed)
 gem 'acts_as_tree','0.1.1'
@@ -129,7 +129,10 @@ display/undisplay
 
 end # end group dev, test
 group :assets do
-    gem 'sass-rails', " ~> 3.1.0"
-    gem 'coffee-rails', "~> 3.1.0"
-    gem 'uglifier'
+    gem 'sass-rails', " ~> 3.2.5"
+    gem 'coffee-rails', "~> 3.2.1"
+    gem 'uglifier', "~>1.0.3"
+end
+group :development do
+  gem 'capistrano'
 end

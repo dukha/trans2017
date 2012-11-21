@@ -1,15 +1,14 @@
 /*
-* require ui-lightness/jquery-ui-1.8.6.custom.css
-*= require sunny/jquery-ui-1.8.20.css
-*= require formtastic.css
-*= require formtastic_changes.css
-*= require jquery.treeview.css
-*= require simple-dropdown-index.css
+*=require sunny/jquery-ui-1.8.20
+*=require formtastic
+*=require formtastic_changes
+*=require jquery.treeview
+*=require simple-dropdown-index
+*=require trans
 *= require_self
-*= require trans
 */
 
-/* form nifty */
+/* form nifty   * require ui-lightness/jquery-ui-1.8.6.custom.css*/
 body {
   background-color: #4B7399;
   font-family: Verdana, Helvetica, Arial;

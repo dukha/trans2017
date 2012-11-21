@@ -9,10 +9,11 @@ require 'rails/all'
   if defined?(Bundler)
 
      # If you precompile assets before deploying to production,
-     Bundler.require *Rails.groups(:assets => %w(development test))
+     
+      Bundler.require(*Rails.groups(:assets => %w(development test)))
      # If you want your assets lazily compiled in production,
      #  use this line instead
-     # Bundler.require(:default, :assets, Rails.env)
+     #Bundler.require(:default, :assets, Rails.env)
 
   end
   
@@ -67,6 +68,8 @@ module Translator
     config.assets.enabled = true
     # 3.1 Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.0'
+    #Put in to take are of a "stack too deep bug introduced in rails 3.1.5"Put in to take are of a "stack too deep bug introduced in rails 3.1.5"
+    config.assets.initialize_on_precompile = false
   end
 
 

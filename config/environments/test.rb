@@ -38,4 +38,7 @@ Translator::Application.configure do
   config.static_cache_control = "public, max-age=3600"
   # 3.1 Allow pass debug_assets=true as a query parameter to load pages with unpackaged assets
   config.assets.allow_debugging = true
+  
+  # Allow pass debug_assets=true as a query parameter to load pages with unpackaged assets
+config.assets.allow_debugging = true
 end

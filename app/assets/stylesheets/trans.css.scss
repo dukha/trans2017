@@ -1,5 +1,5 @@
 $margin:2px;
-$padding:2px;	
+$padding:2px; 
 $footerheight:70px;
 $menuwidth:250px; 
 $headingcolor:#C6E5E7;
@@ -11,11 +11,11 @@ $data-odd-color: #CAEAFF;
 
 html,body{
     /* overrides what is in application.css (from nifty)*/
-  	background-color:#cd923f;
-		height:100%;
-		margin:0px;
-		padding:0px;
-  	}
+    background-color:#cd923f;
+    height:100%;
+    margin:0px;
+    padding:0px;
+    }
 img.logo{
   height:40px;
   padding:3px;
@@ -104,8 +104,8 @@ footer{
 }
 #buttonpanel{
     background-color:#444444;
-	position:relative;
-	left:300px;
+  position:relative;
+  left:300px;
 }
 table.data{
      border-color:#637897; 
@@ -142,7 +142,7 @@ ul.menu{
   margin:0px;
 }
 #signoutbutton{
-	
+  
 }
 table.whiteboard{
   border-style:none;
@@ -180,20 +180,20 @@ td.whiteboard{
  }
  
  td.link{
- 	 
+   
  }
  #firelanguagechange{
- 	display:none;
+  display:none;
  }
  
  /* for will_paginate */
 .next_page, .previous_page{
-	font-size:smaller;
-	font-weight:600;
+  font-size:smaller;
+  font-weight:600;
 }
 .pagination em, .pagination a{
-	font-size:smaller;
-	font-weight:600;
+  font-size:smaller;
+  font-weight:600;
 }
 /* @ deprecated for new rails 3 error handler (set up in application helper) */
 div.errorHeaderCount{
