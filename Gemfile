@@ -27,7 +27,7 @@ gem 'json'
 gem 'declarative_authorization', '0.5.3'
 
 # paginate all index views
-gem 'will_paginate','3.0.pre2'
+gem 'will_paginate','~>3.0.3'
 
 
 
