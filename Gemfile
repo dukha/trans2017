@@ -1,44 +1,45 @@
 source 'http://rubygems.org'
 
-
-
-source 'http://rubygems.org'
 gem 'rails', '~>3.2.8'
 
 # postgresql connector
-gem 'pg', '~>0.12.2'
+gem 'pg'#, '~>0.12.2'
 
 # layout of all forms
 gem 'formtastic'#, '1.2.3'
 
 # used for layout only of application
-gem 'nifty-generators', '0.4.6'
+gem 'nifty-generators'#, '0.4.6'
 
 # authentication
-gem 'devise', '~>2.0.4' 
+gem 'devise'#, '~>2.0.4' 
 
 #xml parser
-gem 'nokogiri', '1.5.0'
+gem 'nokogiri'#, '1.5.0'
 
 # json parser
 gem 'json'
 
 # authorisation
-gem 'declarative_authorization', '0.5.3'
+gem 'declarative_authorization'#, '0.5.3'
 
 # paginate all index views
+
 gem 'will_paginate','~>3.0.3'
+
 
 
 
 # using jquery for ajax, not prototype > rails g jquery:install
 gem 'jquery-rails'#, '~>1.0.12' #, '0.2.7'
 
+
 #helps with I18n not used at present. We need to use it to get pagination in the urls, I think
 gem 'routing-filter', '~>0.3.1'
 
+
 # acts as tree provides access to parents and children without coding more than parent_id (i.e. no has_many needed)
-gem 'acts_as_tree','0.1.1'
+gem 'acts_as_tree'#,'0.1.1'
 
 =begin
  haml contains sass
@@ -57,7 +58,7 @@ gem 'acts_as_tree','0.1.1'
 =end
 #gem 'babilu', '0.2.2'
 # paperclip uploads a file and writes the file name etc to the database
-gem 'paperclip', '2.3.11'
+gem 'paperclip'#, '2.3.11'
 
 
 gem "redis" #, :git => "git://github.com/ezmobius/redis-rb.git"
@@ -74,7 +75,7 @@ gem 'best_in_place'
 gem 'squeel'
 
 group :development, :test do
-  gem 'rspec-rails', '2.8.0'
+  gem 'rspec-rails'#, '2.8.0'
   # webrat or capybara can be used to simulate a browser. rspec doesn't care which one.
   gem 'capybara', :git =>'git://github.com/jnicklas/capybara.git'
   #gem 'webrat','0.7.3'
@@ -83,11 +84,11 @@ group :development, :test do
   gem 'database_cleaner'
   
   gem 'launchy'
-  gem 'autotest', '4.4.6'
+  gem 'autotest'#, '4.4.6'
     # rspec advises not to install autotest-rails (but says nothing about autotest-rails-pure). rspec advises only autotest
-  gem 'autotest-rails-pure','4.1.2'
+  gem 'autotest-rails-pure'#,'4.1.2'
   # test server for rspec
-  gem 'spork', '~> 0.9.0'
+  gem 'spork'#, '~> 0.9.0'
 
   # will document model according to migrations (actually according to schema)
   #gem 'annotate-models', '1.0.4'
@@ -104,6 +105,7 @@ group :development, :test do
 c(ontinue) etc to look at code at breakpoint break to set a breakpoint, where for stack, restart,
 display/undisplay
 =end
+
   #gem 'ruby-debug19', '0.11.6'
   
   # =============  debugging tools
@@ -116,6 +118,7 @@ display/undisplay
   # watchr runs rspec, similar to autotest
   gem 'watchr'
   gem 'webrat'#,'0.7.3'
+
 =begin
  generate test data
  exclude faker except when you need to use it as it will turn up lots of fake locales and translations in:
@@ -129,9 +132,11 @@ display/undisplay
 
 end # end group dev, test
 group :assets do
+
     gem 'sass-rails', " ~> 3.2.5"
     gem 'coffee-rails', "~> 3.2.1"
-    gem 'uglifier', "~>1.0.3"
+    gem 'uglifier'
+
 end
 group :development do
   gem 'capistrano'
