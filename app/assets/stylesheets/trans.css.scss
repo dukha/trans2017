@@ -68,12 +68,15 @@ img.logo{
   margin:$margin;
   width:$menuwidth;
   padding:$padding;
-  background-color:#E2F2FF;
+  /*background-color:#E2F2FF;*/
 }
 #appmenutd, #appmaintd{
   vertical-align:top
 }
-
+div#container{
+  
+  border-radius: 4px;
+}
 #spacer{
   position:relative;
 }

@@ -51,7 +51,7 @@ module ButtonLinkHelper
   # Usage in dropdown menu : <%=link_destroy(course, :courses, {:category=>'menu'}, 'li') %> 
   def link_destroy obj, resource, options={}, html_container='td'
      html = " "
-     binding.pry
+     #binding.pry
      if permitted_to? :destroy, table_symbol_from(resource)
         if options[:confirm].nil? then
           options[:confirm] = 'delete.are_you_sure.warning'

@@ -1,7 +1,7 @@
 Translator::Application.routes.draw do
  
 
-  devise_for :users
+
 
   
 
@@ -11,9 +11,11 @@ Translator::Application.routes.draw do
 
   scope "(/:locale)" do
    resources :profiles
+   #devise_for :users
+
 
    # root will check permission and if ok redirect to whiteboards
-   root :to => "whiteboards#index"
+   #root :to => "whiteboards#index"
    root :to => "permissions#select" 
 
    scope "/auth_user/:user_id" do
