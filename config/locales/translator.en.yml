@@ -5,11 +5,51 @@ en:
     app_sub_name: Translation Module for CALM Applications
     version: Version %{version}
   formtastic:
+    actions:
+      apply: Apply
+      sign_in: &fa_si Log In
+      sign_out: &fa_so Log Out %{username}
+      show: Show
+      hide: Hide
+      edit: Edit
+      destroy: &ad Delete
+      delete: *ad
+      new: New
+      back: Back
+      create_model: Add %{model}
+      save: Save %{model}
+      update: Update %{model}
+      new_model: Add %{model}
+      submit: Submit
+      show_something: Show %{something}
+      hide_something: Hide %{something}
+      mark_deleted: Mark Deleted
+      add_child: Add Child %{location_type}
+      search: Search
+      select: Select %{model}
+      select2: Select
+      to_operator: Send to operator
+      reset_password: Reset Password
+      edit_permissions: Edit Permissions
+      display: "Display"
+      show_original: "Original"
+      back: "Back"
+      remove: Remove
+      publish: Publish 
+      #
+      create_and_upload: Create and Upload
+      to_redis: Write to Database
+      redis_to_yaml: Save Database as YAML
+      add_translation_language: Add Translation Language
+      add_organisation: Add Organisation
+      add_area: Add Area
+      add_server: Add Server
+      add_calmapp_version: Add Calm App Version 
     labels:
-      redis_db_index: Redis Database Index
-      port: Linux Port
-      host: Computer with Database
-      name: Name
+      #redis_db_index: Redis Database Index
+      #port: Linux Port
+      #host: Computer with Redis Database
+      #name: Name
       #calmapp: Calm Application
       #line_sequence: &fl_ls Line Number
       #yaml_partial_key: &fl_ypk Partial Key
@@ -38,19 +78,13 @@ en:
         release_status_id: "The status of the the translation database that you are adding: 'development' will only be used by developers for English. 'test' will be used by most translators. 'production will be a copy of test to be used by users."
         redis_instance_id: "Choose computer ip address on which the redis server is running that you want to use."
       redis_instance:  
-        max_databases: Each instance has a maximum number of databases. It is set in redis.conf. Don't put anything here that is not already.in redis.conf. Default is 16.
-        host: Enter the technical name(ip address or hostname) of the computer where the Redis database server is running
-        port: Enter the computer port number used by the Redis database.
-        password: Enter the actual password for this Redis Instance. If you don't know it then don't add a new record or change an exisitng password. For production the password should be greater than 100 characters.
+        max_databases: Each instance has a maximum number of databases. It is set in redis/redis.conf(or redis/<port>.config). Don't put anything here that is not already.in redis.conf. Default(for Redis new installation) is 16.
+        host: Enter the technical name(ip address or hostname) of the computer where the Redis database server is running.
+        port: Enter the computer port number used by the Redis database. (Default is 6379)
+        password: Enter the actual password for this Redis Instance. If you don't know it then don't add a new record or change an existing password. For production the password should be greater than 100 characters, otherwise a te force attack on Redis is too easy.
         description: User Friendly name to indentify the host.
-    actions:
-      create_and_upload: Create and Upload
-      to_redis: Write to Database
-      redis_to_yaml: Save Database as YAML
-      add_translation_language: Add Translation Language
-      add_organisation: Add Organisation
-      add_area: Add Area
-      add_server: Add Server
+#    actions:
+
       #new_translation: New English Translation
   menus:
     translations: Translations
@@ -61,7 +95,7 @@ en:
     calmapps: Calm Applications
     calmapp_all_in_one_new: "New App, Version, Database"
     calmapp_versions: Calm Application Versions
-    uploads: Translation Uploads
+    translation_uploads: Translation Uploads
     redis_databases: Redis Databases
     redis_instances: Redis Instances
     languages: Translation Languages
@@ -71,6 +105,7 @@ en:
     developers: Developers
     developers_new_translation: Developers Translation
     #redis_admins: Redis Administration
+    translations_uploads: Translation Uploads
   headings:
     application_subheading: Calm Translator M1
     write_to_database:
@@ -84,9 +119,9 @@ en:
         zero: Calm Applications
         one: Calm Application
         other: Calm Applications
-      upload:
-        one: Upload
-        other: Uploads
+      translations_upload:
+        one: Translations Upload
+        other: Translations Uploads
       location:
         one: Location
         other: Locations  
@@ -105,9 +140,9 @@ en:
       redis_instance:
         one: Redis Instance
         other: Redis Instances
-      upload:
-        one: Upload
-        other: Uploads
+      #upload:
+        #one: Upload
+        #other: Uploads
       translation:
         one: Translation
         other: Translations
@@ -154,17 +189,18 @@ en:
         release_status_id: Release Status
       redis_instance:
         port: Linux Port
-        host: Computer with Database
+        host: Computer with Redis Database
         password: Password
-        max_databases: Maximum Permitted Databases
+        max_databases: Maximum Permitted Redis Databases on this server
         description: Description
       language:
         name: Translation Language
-      upload:
-        upload: File Name
-        upload_file_name: Uploaded File Name
-        language: Language
-    
+      translations_upload:
+        #upload: File Name
+        #upload_file_name: Uploaded File Name
+        description: Description
+        translation_language: Translation Language
+        calmapp_version_id: Version 
   messages:  
     array_in_yaml_wrong_format:
       error: |+

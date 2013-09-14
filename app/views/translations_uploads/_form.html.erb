@@ -1,0 +1,14 @@
+<%= semantic_form_for(@translations_upload, :html => { :multipart => true }) do |f| %>
+	<%= f.inputs do %>
+				   <%= f.input :translation_language_id, :as=>:select,:collection=> TranslationLanguage.all.collect {|p| [ p.name, p.id ]}  %> 
+				   <%= f.input :calmapp_version_id, :as=>:select,:collection=> CalmappVersion.all.collect {|p| [ p.name, p.id ]}  %>     
+				   <%= f.input :description  %>   
+		       <%= f.file_field :yaml_upload %>
+	<% end %>	
+
+        <%= f.actions do %>
+          <%= f.action(:submit) %>
+
+        <% end %>
+<% end %>
+

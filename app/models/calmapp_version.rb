@@ -4,7 +4,7 @@ class CalmappVersion < ActiveRecord::Base
   #languages available is a virtual attribute to allow languages_available to be used in the new form
   # :add_languages, :new_redis_db are virtual attributes for the user to indicate that a languages and redis database are to be added at the same time as a new version
   attr_accessor :languages_available, :add_languages, :new_redis_dev_db
-  attr_accessible   :calmapp_id, :version,  :redis_database, :language_ids, :new_redis_dev_db
+  attr_accessible   :calmapp_id, :version,  :redis_database#, :language_ids, :new_redis_dev_db
   
   belongs_to :calmapp #, :class_name => "Application", :foreign_key => "calmapp_id"
   
@@ -12,17 +12,16 @@ class CalmappVersion < ActiveRecord::Base
   
  
   validates  :version,  :presence=>true
-  validates :version, :numericality=> {:only_integer=>false, :allow_nil =>true}
+  validates :version, :numericality=>true#=> {:only_integer=>false, :allow_nil =>false}
   
   validates :calmapp_id, :presence=>true
 
-  has_many :calmapp_versions_languages, :dependent => :destroy
-  has_many :languages , :through => :calmapp_versions_languages
+  #has_many :calmapp_versions_languages, :dependent => :destroy
+  #has_many :languages , :through => :calmapp_versions_languages
   validates :calmapp_id, :existence=>true
   
   
   
-
 =begin
 @return a collection of all calmapp names with versions
 =end

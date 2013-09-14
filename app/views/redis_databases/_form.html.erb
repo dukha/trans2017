@@ -48,13 +48,14 @@
 	    if(isRedisInstanceSelected()){
 	      if( type== 'instancechange'){
     	    disableDbIndex(false);
+    	    populateDbIndexSelect();
     	    //console.log( "if disable from status edit"  );
   	    }else{
   	      disableDbIndex(true);
-  	    }
+  	    }// end if instancechange
 	    }else{
 	      disableDbIndex(true);
-	    }
+	    } //end if redisInstanceSelected
 	  }else{ 
 	    //This is status new
   	  if(isRedisInstanceSelected()){
@@ -65,8 +66,8 @@
           disableDbIndex(true);
           //console.log( "else disable"  );
       }
-    }
-	}
+    } //end if status edit
+	}//end fn checkDbIndex
 	
 	function disableDbIndex(disable){
 	  $(redisDatabaseIndex).prop('disabled', disable);
@@ -160,8 +161,8 @@
 	<% end %>
 
 
-	<%= f.buttons do %>
-      <%= f.commit_button  %>    
+	<%= f.actions do %>
+      <%= f.action(:submit)  %>    
   <% end %>
 <% end %>
 

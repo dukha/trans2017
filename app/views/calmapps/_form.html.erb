@@ -1,10 +1,19 @@
 <%= semantic_form_for(@calmapp) do |f| %>
 	<%= f.inputs do %>
     <%= f.input :name %>
-   
+    <div id='calmapp-versions' class= 'data-table'>
+              
+             <%= f.semantic_fields_for :calmapp_versions do |cav| %>  
+               
+               <%= render :partial=>'shared/calmapp_version_details', :locals=>{:f=> cav}  %>            
+             <%end%> 
+            <div class='add-tablecell'  >
+              <%= link_to_add_association t($FA + 'add_calmapp_version'), f, :calmapp_versions, :partial => 'shared/calmapp_version_details', :render_options => {:locals => { }} %>
+            </div>
+          </div><!-- end sp handling layout div -->
    <%end%>
-	<%= f.buttons do %>
-      <%= f.commit_button :button_html => {:id=>"submit"} %>
+	<%= f.actions do %>
+      <%= f.action :submit, :button_html => {:id=>"submit"} %>
   <% end %>
 <% end %>
 

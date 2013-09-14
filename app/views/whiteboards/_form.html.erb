@@ -4,7 +4,7 @@
     <%= f.input :whiteboard_type_id,  :as => :select, :collection =>  WhiteboardType.all.collect {|p| [ t($LU+"whiteboard_type."+p.translation_code), p.id ]}%>
     <%= f.input :info %>
   <% end %>
-  <%= f.buttons do %>
-    <%= f.commit_button  %>
+  <%= f.actions do %>
+    <%= f.action(:submit)  %>
   <% end %>
 <% end %>

@@ -5,6 +5,12 @@ Translator::Application.routes.draw do
 
   
 
+  
+
+
+
+
+
   #resources :redis_admins
  
  
@@ -13,7 +19,7 @@ Translator::Application.routes.draw do
    resources :profiles
    #devise_for :users
 
-
+   resources :translations_uploads
    # root will check permission and if ok redirect to whiteboards
    #root :to => "whiteboards#index"
    root :to => "permissions#select" 

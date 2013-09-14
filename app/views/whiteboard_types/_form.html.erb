@@ -11,7 +11,7 @@
    <p class="inline-hints" ><%=  t($FH+ "translated_field" , :key=>$LU +"whiteboard_type" ) %></p>
 </li>
 	<% end %>
-  <%= f.buttons do %>
-      <%= f.commit_button  %>    
+  <%= f.actions do %>
+      <%= f.action(:submit)  %>    
   <% end %>
 <% end %>

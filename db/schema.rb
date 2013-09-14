@@ -15,20 +15,19 @@ ActiveRecord::Schema.define(:version => 201204041046086) do
 
   create_table "calmapp_versions", :force => true do |t|
     t.integer  "calmapp_id", :null => false
-    t.integer  "version",    :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "version"
   end
 
-  add_index "calmapp_versions", ["calmapp_id", "version"], :name => "iu_calmapp_versions_calmapp_id_version", :unique => true
   add_index "calmapp_versions", ["calmapp_id"], :name => "i_calmapp_versions_appliction_id"
 
-  create_table "calmapp_versions_languages", :force => true do |t|
-    t.integer "calmapp_version_id", :null => false
-    t.integer "language_id",        :null => false
+  create_table "calmapp_versions_translation_languages", :force => true do |t|
+    t.integer "calmapp_version_id",      :null => false
+    t.integer "translation_language_id", :null => false
   end
 
-  add_index "calmapp_versions_languages", ["calmapp_version_id", "language_id"], :name => "iu_calmapp_versions_languages_calmapp_id_lanugage_id", :unique => true
+  add_index "calmapp_versions_translation_languages", ["calmapp_version_id", "translation_language_id"], :name => "iu_calmapp_versions_languages_calmapp_id_lanugage_id", :unique => true
 
   create_table "calmapps", :force => true do |t|
     t.string   "name",       :null => false
@@ -41,8 +40,8 @@ ActiveRecord::Schema.define(:version => 201204041046086) do
   create_table "languages", :force => true do |t|
     t.string   "iso_code",   :null => false
     t.string   "name",       :null => false
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   add_index "languages", ["iso_code"], :name => "iu_languages_iso_code", :unique => true
@@ -54,24 +53,24 @@ ActiveRecord::Schema.define(:version => 201204041046086) do
     t.integer  "parent_id"
     t.string   "translation_code"
     t.string   "fqdn"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.boolean  "marked_deleted",   :default => false
+    t.boolean  "marked_deleted",   :default => false, :null => false
+    t.datetime "created_at",                          :null => false
+    t.datetime "updated_at",                          :null => false
   end
 
   create_table "permissions", :force => true do |t|
     t.integer  "user_id"
     t.integer  "organisation_id", :null => false
     t.integer  "profile_id",      :null => false
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
   end
 
   create_table "profiles", :force => true do |t|
     t.text     "roles"
     t.string   "name",       :null => false
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   create_table "redis_databases", :force => true do |t|
@@ -79,8 +78,8 @@ ActiveRecord::Schema.define(:version => 201204041046086) do
     t.integer  "redis_instance_id"
     t.integer  "redis_db_index",     :null => false
     t.integer  "release_status_id",  :null => false
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",         :null => false
+    t.datetime "updated_at",         :null => false
   end
 
   create_table "redis_instances", :force => true do |t|
@@ -99,16 +98,38 @@ ActiveRecord::Schema.define(:version => 201204041046086) do
     t.datetime "updated_at"
   end
 
+  create_table "translation_languages", :force => true do |t|
+    t.string   "iso_code",   :null => false
+    t.string   "name",       :null => false
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "translation_languages", ["iso_code"], :name => "iu_tlanguages_iso_code", :unique => true
+  add_index "translation_languages", ["name"], :name => "iu_tlanguages_name", :unique => true
+
   create_table "translations", :force => true do |t|
     t.string   "dot_key_code",       :null => false
     t.text     "translation",        :null => false
     t.integer  "calmapp_version_id", :null => false
     t.integer  "upload_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",         :null => false
+    t.datetime "updated_at",         :null => false
   end
 
   add_index "translations", ["dot_key_code"], :name => "iu_translations_dot_key_code", :unique => true
+
+  create_table "translations_uploads", :force => true do |t|
+    t.integer  "translation_language_id"
+    t.string   "description"
+    t.datetime "created_at",               :null => false
+    t.datetime "updated_at",               :null => false
+    t.string   "yaml_upload_file_name"
+    t.string   "yaml_upload_content_type"
+    t.integer  "yaml_upload_file_size"
+    t.datetime "yaml_upload_updated_at"
+    t.integer  "calmapp_version_id"
+  end
 
   create_table "uploads", :force => true do |t|
     t.integer  "language_id",              :null => false
@@ -123,12 +144,23 @@ ActiveRecord::Schema.define(:version => 201204041046086) do
 
   add_index "uploads", ["upload_file_name"], :name => "iu_uploads_upload_file_name", :unique => true
 
+  create_table "uploads2s", :force => true do |t|
+    t.integer  "translation_language_id"
+    t.string   "description"
+    t.datetime "created_at",              :null => false
+    t.datetime "updated_at",              :null => false
+    t.string   "upload_file_name"
+    t.string   "upload_content_type"
+    t.integer  "upload_file_size"
+    t.datetime "upload_updated_at"
+  end
+
   create_table "user_works", :force => true do |t|
     t.integer  "user_id"
     t.integer  "translation_language_id",   :null => false
     t.integer  "current_redis_database_id", :null => false
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                :null => false
+    t.datetime "updated_at",                :null => false
   end
 
   create_table "users", :force => true do |t|
@@ -142,14 +174,11 @@ ActiveRecord::Schema.define(:version => 201204041046086) do
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
     t.string   "last_sign_in_ip"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                             :null => false
+    t.datetime "updated_at",                             :null => false
     t.string   "username",                               :null => false
     t.string   "actual_name",                            :null => false
     t.integer  "current_permission_id"
-    t.integer  "failed_attempts",        :default => 0
-    t.string   "unlock_token"
-    t.datetime "locked_at"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
@@ -158,15 +187,15 @@ ActiveRecord::Schema.define(:version => 201204041046086) do
   create_table "whiteboard_types", :force => true do |t|
     t.string   "name_english"
     t.string   "translation_code"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
   end
 
   create_table "whiteboards", :force => true do |t|
     t.text     "info",               :null => false
     t.integer  "whiteboard_type_id", :null => false
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",         :null => false
+    t.datetime "updated_at",         :null => false
   end
 
   add_index "whiteboards", ["whiteboard_type_id"], :name => "iu_whiteboards_whiteboard_type", :unique => true

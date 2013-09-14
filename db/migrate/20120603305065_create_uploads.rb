@@ -11,29 +11,31 @@ class CreateUploads < ActiveRecord::Migration
     t.datetime "updated_at"
 
   end
-
+=begin
   execute <<-SQL
        Alter table uploads
-        drop constraint  IF EXISTS fk_uploads_languages
+        drop constraint  IF EXISTS fk_uploads_translation_languages
     SQL
 
   execute <<-SQL
       ALTER TABLE uploads
-        ADD CONSTRAINT fk_uploads_languages
+        ADD CONSTRAINT fk_uploads_translation_languages
         FOREIGN KEY (language_id)
         REFERENCES languages(id)
         ON DELETE CASCADE
     SQL
-
+=end
   add_index :uploads, :upload_file_name, {:unique=>true, :name=> "iu_uploads_upload_file_name"}
 
   end
 
   def down
+=begin    
     execute <<-SQL
        Alter table uploads
-        drop constraint  IF EXISTS fk_uploads_languages
+        drop constraint  IF EXISTS fk_uploads_translation_languages
     SQL
+=end
     drop_table :uploads
   end
 end

@@ -22,8 +22,8 @@
 
     <tr class = "<%= cycle('dataeven', 'dataodd', :name => row_class) %>" >
       <td class="<%= cell_class %>"><%= calmapp.name %></td>
-      <td class="<%= link_cell_class %>"><%= tlink_to  'edit', edit_calmapp_path(calmapp) %></td>
-      <td class="<%= link_cell_class %>"><%= tlink_to 'destroy',  calmapp , :confirm => 'delete.are_you_sure', :model => "calmapp", :value=>calmapp.name, :method => :delete %></td>
+      <%=link_edit(edit_calmapp_path(calmapp), :calmapps)%><!--%= tlink_to  'edit', edit_calmapp_path(calmapp) %></td -->
+      <%=link_destroy(calmapp, :calmapps)%><!--%= tlink_to 'destroy',  calmapp , :confirm => 'delete.are_you_sure', :model => "calmapp", :value=>calmapp.name, :method => :delete %></td -->
     </tr>
 
   <% end %>

@@ -8,7 +8,7 @@ class Upload < ActiveRecord::Base
 
   validates :language_id,  :presence=>true
   validates :language_id, :existence => true
-  validates_attachment_presence :upload
+  #validates_attachment_presence :upload
 
 =begin
   def save
@@ -18,7 +18,8 @@ class Upload < ActiveRecord::Base
 =end
   has_attached_file :upload, #:styles => { :iso_code => "en" },
      :url => "/uploads/upload/:id/:style/:basename.:extension",
-     :path => ":rails_root/public/uploads/uploads/:id/:basename.:extension"
+     #:path => ":rails_root/public/uploads/uploads/:id/:basename.:extension"
+     :path => :rails_root/public/system/:class/:attachment/:id_partition/:style/:filename
   # We are uploading yaml files with the name format <name>.<language_code>.yml
   def file_name_prefix
     return upload.path.split("/").last.split(".").first

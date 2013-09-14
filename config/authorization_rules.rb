@@ -71,8 +71,8 @@ authorization do
   standard_roles :locations
   standard_roles :release_statuses
   standard_roles :translations
-  standard_roles :uploads
-  standard_roles :user_works
+  standard_roles :translations_uploads
+  #standard_roles :user_works
  
   standard_roles :whiteboard_types
   standard_roles :whiteboards

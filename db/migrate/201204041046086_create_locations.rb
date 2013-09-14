@@ -7,6 +7,7 @@ class CreateLocations < ActiveRecord::Migration
       # not all locations need to be translated as you go down the tree
       t.string :translation_code, :null => true
       t.string :fqdn
+      t.boolean :marked_deleted, :null=> false, :default=> false
       t.timestamps
     end
   end

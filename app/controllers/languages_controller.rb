@@ -96,7 +96,7 @@ class LanguagesController < ApplicationController
     #debugger
     
     session[:locale] = @language.iso_code
-    log = Logger.new (STDOUT)
+    log = Logger.new(STDOUT)
     log.debug "set locale in session " + session[:locale].to_s
     if request.xhr?
         # return language data to js calling routine (success)

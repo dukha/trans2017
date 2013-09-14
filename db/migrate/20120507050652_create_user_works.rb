@@ -6,7 +6,7 @@ class CreateUserWorks < ActiveRecord::Migration
     t.references :current_redis_database, :null=> false
     t.timestamps
   end
-  
+=begin  
   execute <<-SQL
        Alter table user_works
         drop constraint  IF EXISTS  fk_user_works_language
@@ -32,9 +32,11 @@ class CreateUserWorks < ActiveRecord::Migration
         REFERENCES redis_databases(id)
         ON DELETE RESTRICT
     SQL
+=end
   end
 
   def down
+=begin
     execute <<-SQL
        Alter table user_works
         drop constraint  IF EXISTS  fk_user_works_language
@@ -43,7 +45,8 @@ class CreateUserWorks < ActiveRecord::Migration
        Alter table user_works
         drop constraint  IF EXISTS  fk_user_works_language
     SQL
+=end 
     drop_table :user_works
-    
+   
   end
 end

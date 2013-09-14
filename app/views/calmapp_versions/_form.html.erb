@@ -7,8 +7,8 @@
 				   <!--%= f.input :release_status_id, :as=>:select,:collection=> ReleaseStatus.all.collect {|p| [ p.status, p.id ]}    % -->
 		      
 	<% end %>	
-	<%= f.buttons do %>
-      <%= f.commit_button  %>    
+	<%= f.actions do %>
+      <%= f.action(:submit)  %>    
   <% end %>
 <% end %>
 

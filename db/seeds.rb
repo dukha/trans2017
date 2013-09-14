@@ -10,7 +10,7 @@ CalmappVersion.delete_all
 Calmapp.delete_all
 
 Language.delete_all
-
+TranslationLanguage.delete_all
 Whiteboard.delete_all
 ReleaseStatus.delete_all
 WhiteboardType.delete_all
@@ -26,9 +26,10 @@ userWBType = WhiteboardType.create(:name_english=>"user", :translation_code=>"us
 log.info("Whiteboard Type data inserted successfully.")
 
 
-vs_dev = ReleaseStatus.create!(:status => "development")
-vs_test = ReleaseStatus.create!(:status => "test")
-ReleaseStatus.create!(:status => "production")
+vs_dev = ReleaseStatus.create!(:status => "Development")
+vs_test = ReleaseStatus.create!(:status => "Test")
+vs_integration = ReleaseStatus.create!(:status => "Integration")
+ReleaseStatus.create!(:status => "Production")
 log.info("Release Status data inserted successfully.")
 
 
@@ -52,7 +53,7 @@ reg4 = CalmappVersion.create!(:calmapp_id => reg.id, :version => 4)
 trans1=CalmappVersion.create!(:calmapp_id => trans.id, :version => 1)
 log.info("Calm application version inserted")
 
-ri_local = RedisInstance.create!(:host=>"localhost", :password => '123456', :port => '6379', :max_databases=>16, :description=> 'Local Desktop Computer')
+ri_local = RedisInstance.create!(:host=>"localhost", :password => '123456', :port => '6379', :max_databases=>16, :description=> "Developer's Desktop Computer(only)")
 ri_integration = RedisInstance.create!(:host=>"31.222.138.180", :password => '123456', :port => '6379', :max_databases=>32, :description=>'Integration Server')
 log.info("Redis instances inserted")
 
@@ -71,8 +72,9 @@ User.create_root_user
 #global = Area.create :name => "Global" , :parent_id => Location.localhost.id
 vipassana =  Area.create :name => "Vipassana" , :parent_id => Location.find_by_name(Location.localhost_name).id
 translation_organisation = Organisation.create :name=>"translation_organisation", :parent_id => vipassana.id
-en = Language.create!(:iso_code=> "en", :name=>"English") #, :parent_id=>translation_organisation.id)
-nl = Language.create!(:iso_code=> "nl", :name=>"Nederlands")  #, :parent_id=>translation organisation.id)
+en = TranslationLanguage.create!(:iso_code=> "en", :name=>"English") #, :parent_id=>translation_organisation.id)
+nl = TranslationLanguage.create!(:iso_code=> "nl", :name=>"Nederlands")  #, :parent_id=>translation organisation.id)
+Language.create!(:iso_code=> "en", :name=>"English") #, :parent_id=>translation_organisation.id)
 
 #log.info("Global area and vipassana org inserted")
 #current_perm = Permission.create!  :organisation => Location.world, :profile => Profile.root
@@ -128,8 +130,11 @@ nl = Language.create!(:iso_code=> "nl", :name=>"Nederlands")  #, :parent_id=>tra
 #User.create!( :username=>'admin', :email=> 'admin@calm.org', :password=>'123456', :confirm_password=>'123456')
 #User.create!( :username=>'developer', :email=> 'developer@calm.org', :password=>'123456', :confirm_password=>'123456')
 log.info("Users inserted")
-
-UserWork.create!(:user_id=> User.find_by_username('translator'), :translation_language_id => nl.id, :current_redis_database_id=> red_reg4_loc_test.id)
-UserWork.create!(:user_id=> User.find_by_username('developer'), :translation_language_id => en.id, :current_redis_database_id=> red_trans1_int_dev.id)
+#binding.pry
+#user_id = User.find_by_username('translator').id
+#nl_id = nl.id
+#c_rd_db_id = red_reg4_loc_test.id 
+UserWork.create!(:user_id=> User.find_by_username('translator').id, :translation_language_id => nl.id, :current_redis_database_id=> red_reg4_loc_test.id )
+UserWork.create!(:user_id=> User.find_by_username('developer').id, :translation_language_id => en.id, :current_redis_database_id=> red_trans1_int_dev.id)
 log.info("User works inserted")
 #=end

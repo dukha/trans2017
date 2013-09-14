@@ -7,8 +7,8 @@
       <%= t.input :id, :as=>:select,:collection=> Database.all.collect {|t| [ t.name, t.id ]} %>
     <% end %>
   <%end%>
-  <%= f.buttons do %>
-      <%= f.commit_button  :select%>
+  <%= f.actions do %>
+      <%= f.action(:submit)  :select%>
   <% end %>
  <%end%>
           

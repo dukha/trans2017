@@ -9,6 +9,7 @@ module TranslationsHelper
   $AR="activerecord."
   $ARA=$AR + "attributes."
   $ARM= $AR + "models."
+  
   $F="formtastic."
   $FL= $F+"labels."
   $FH=$F+"hints."
@@ -16,19 +17,29 @@ module TranslationsHelper
   #$L="links."
   $LU="lookups."
   $M="menus."
-  $MS="messages."
-  $W ="warning"
-  $N = 'notice'
-  $S = 'success'
-  $E = 'error'
-  $MSE=$MS+"error."
+  $MS="messages." #Uased in the context of messages.<situation>[<.situation>].<$E | $W | $N | $S>
+    $W ="warning"
+    $N = 'notice'
+    $S = 'success'
+    $E = 'error'
+  $EM = "errors.messages."  #Used for model specific errors errors.messages.<model><.attribute>.error_name  
+  #$MSE=$MS+"error."
   #$MSN=$MS+"notice."
   #$MSW=$MS+"warning."
   #$MSS = $MS+ 'success.'
   $S="commons.search."
   $SC=$S + "criteria"
   $SO=$S + "operators."
-  $DF="date.formats."
+  
+  $D="date."
+  $DF=$D + "formats."
+  
+  $DT ="datetime."
+  $DTP= $DT +"prompts."
+  $T='time.'
+  #$TP="commons.timepicker."
+  $TF = "time.formats."
+  $DTF= $DT + "formats."
   $TB="tabs."
   $P="placeholders."
   #This is not a language translation but rather to put a date into a format acceptable for use in a db query
@@ -36,6 +47,7 @@ module TranslationsHelper
 
   #$REDIS_PW='123456'
   $TM="translation missing:"
+  
   
   #def tmodel model_name, count = 1
     #I18n.t($ARM + model_name, :count=>count )
@@ -51,8 +63,6 @@ module TranslationsHelper
 =end
 
    def tlink_to(translation_code, url, options = {})
-     #count = options[:count]
-     #debugger
      options[:count] = 1 if options[:model] && options[:count].nil?
      model = options[:model]
      if !model.nil?
@@ -81,6 +91,7 @@ module TranslationsHelper
        if options[:confirm] then
          # can't use :count for a translation of a message unless it is expected.
          options.delete(:count)
+         #binding.pry
          options[:confirm] = tmessage( options[:confirm], $W, options) 
        end
 
@@ -134,6 +145,7 @@ translation_type are either "name" or "description". Defaults to name
     elsif translation_type["description"] then
       return I18n.t($LU +model_name + '.description.'+lookup_object.translation_code)
     else
+      #binding.pry
       return $TM + " for " + lookup_object.to_s + " " + (translation_type.nil? ? "" : translation_type)
     end
   end
@@ -198,7 +210,7 @@ just substitute twill_paginate for will_paginate
   end
 
   def tmessage(subkey, category, interpolations={})
-    #debugger
+    #binding.pry
     I18n.t($MS + subkey + "." + category,  interpolations)
   end
   
@@ -207,7 +219,27 @@ just substitute twill_paginate for will_paginate
      I18n.t($M + menu)
   end
 
-  def tinterpolation translation_code, interpolations={}
+  def tinterpolation_pform translation_code, interpolations={}
     I18n.t("pform_xml_200." + translation_code.to_s, interpolations)
   end
+ 
+ # format type is either Jquery_time, strftime or timepicker
+ def time_format format_type=nil
+    #binding.pry
+    format =I18n.t("time.formats.default_time_only")
+    if format_type=="jquery_time" then
+      return strftime_format_2_js_format_simple(format)
+    elsif format_type=="strftime" then
+      return format
+    #elsif format_type=="timepicker" then
+      #if format.include?("%l") || format.include?("%k") then 
+        #return 'tt'
+      #else
+        #return ''
+      # end    
+    else
+      return format  
+    end
+  end
+  
 end

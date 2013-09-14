@@ -51,7 +51,7 @@ class RedisInstance < ActiveRecord::Base
   end
   
   def unused_redis_database_indexes() 
-    ar = (1..(max_databases - 1)).to_a
+    ar = (0..(max_databases - 1)).to_a
     RedisDatabase.select{redis_db_index}.each{ |ri| ar.delete(ri.redis_db_index)}
     return ar
   end

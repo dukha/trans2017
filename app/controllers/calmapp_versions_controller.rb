@@ -90,4 +90,8 @@ class CalmappVersionsController < ApplicationController
       format.xml  { head :ok }
     end
   end
+  
+  def publish_to_redis
+    
+  end
 end

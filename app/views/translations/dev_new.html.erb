@@ -246,8 +246,8 @@
   <% end %>
 
 
-  <%= f.buttons do %>
-      <%= f.commit_button  %>    
+  <%= f.actions do %>
+      <%= f.action(:submit)  %>    
   <% end %>
 <% end %>
 <%= tlink_to('new_model', new_translation_path, :model=> 'translation', :count=>1) %> |

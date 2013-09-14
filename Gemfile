@@ -74,10 +74,20 @@ gem 'best_in_place'
 # for doing searches with criteria. Replaces meta_where for rails 3.1
 gem 'squeel'
 
+gem 'passenger' #, '~>3.0.11'
+
+# nested forms
+gem 'cocoon','~>1.1.2'
+# thin is a faster dev webserver than webrick
+gem 'thin'
+
+# email notification of exceptions (if sendmail is installed)
+gem 'exception_notification_rails3', :require => 'exception_notifier'
+
 group :development, :test do
   gem 'rspec-rails'#, '2.8.0'
   # webrat or capybara can be used to simulate a browser. rspec doesn't care which one.
-  gem 'capybara', :git =>'git://github.com/jnicklas/capybara.git'
+  gem 'capybara'#, :git =>'git://github.com/jnicklas/capybara.git'
   #gem 'webrat','0.7.3'
  # gem 'cucumber'
   #gem 'cucumber-rails'
@@ -116,8 +126,8 @@ display/undisplay
   gem 'pry-nav'
 
   # watchr runs rspec, similar to autotest
-  gem 'watchr'
-  gem 'webrat'#,'0.7.3'
+  #gem 'watchr'
+  #gem 'webrat'#,'0.7.3'
 
 =begin
  generate test data
@@ -126,7 +136,7 @@ display/undisplay
   2. rake i18n:missing translations
 =end
   #gem 'faker'
-
+  gem 'guard'
   # generate test data
   gem 'factory_girl_rails', '1.0.1'
 

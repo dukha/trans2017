@@ -13,8 +13,8 @@
              <%= f.input :upload, :as=>:string, :input_html => {:disabled => true } %>
 		       <% end %>
     <% end %>
-    <%= f.buttons do %>
-        <%= f.commit_button :create_and_upload %>
+    <%= f.actions do %>
+        <%= f.action(:submit) :create_and_upload %>
     <% end %>
 
 	<% end %>

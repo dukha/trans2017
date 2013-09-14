@@ -8,7 +8,7 @@ class UploadsController < ApplicationController
   @@model =  "upload" 
   def index
     @uploads = Upload.paginate(:page => params[:page], :per_page=>15)
-
+    binding.pry
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @uploads }

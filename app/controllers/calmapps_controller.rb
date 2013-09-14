@@ -16,7 +16,7 @@ class CalmappsController < ApplicationController
   #include Exceptions
   
   @@model ="calmapp"
-  @@model = "calmapp"
+  #@@model = "calmapp"
   def index
     #@applications = Calmapp.all
     @calmapps =  Calmapp.paginate(:page => params[:page], :per_page=>15)
@@ -29,6 +29,7 @@ class CalmappsController < ApplicationController
   # GET /calmapps/1
   # GET /applications/1.xml
   def show
+    #binding.pry
     @calmapp = Calmapp.find(params[:id])
 
     respond_to do |format|
@@ -87,10 +88,21 @@ class CalmappsController < ApplicationController
   end
   def create
     @calmapp = Calmapp.new(params[:calmapp])
+    
+    respond_to do |format|
+      if @calmapp.save
+        format.html { redirect_to calmapps_url, notice: 'Calmapp was successfully created.' }
+        format.json { render action: 'show', status: :created, location: @calmapp }
+      else
+        format.html { render action: 'new' }
+        format.json { render json: @calmapp.errors, status: :unprocessable_entity }
+      end
+    end
     #debugger
     #When a checkbox comes back to the controller the params has a value of either '1' or '0' for true and false.
     # Hence we have to test this differently here and 2 lines further
     #debugger
+=begin   
     if params[:calmapp][:new_version] != '0' then
       @calmapp_version =CalmappVersion.new(params[:calmapp_version])
       if params[:calmapp_version][:add_languages] != '0' then
@@ -149,6 +161,7 @@ class CalmappsController < ApplicationController
     #    tflash[:error] = "Save of calmapp name = " + @calmapp.name + " version = " + @calmapp_version.major_version.to_s + ' failed.'
     #    render :action => "new", :controller => "calmapps"
     # end
+=end    
   end
   # GET /calmapps/1/edit
   def edit
@@ -158,6 +171,7 @@ class CalmappsController < ApplicationController
 
   # POST /calmapps
   # POST /applications.xml
+=begin
   def all_in_one_create
     @calmapp = Calmapp.new(params[:calmapp])
     #puts @calmapp
@@ -189,18 +203,19 @@ class CalmappsController < ApplicationController
       end
     end
   end
-
+=end
   # PUT /applications/1
   # PUT /calmapps/1.xml
   def update
     @calmapp = Calmapp.find(params[:id])
+=begin
     if params[:calmapp][:language_ids]==nil then
       params[:calmapp][:language_ids] = Array.new
     end
-   
+=end   
     respond_to do |format|
-
-      if @calmapp.update_attributes(params[:calmapp])
+      #binding.pry
+      if @calmapp.update_attributes(params[:calmapp], without_protection: true)
         tflash('update', :success, {:model=>@@model, :count=>1})
         format.html { redirect_to(:action=>:index) }
         format.xml  { head :ok }
@@ -214,8 +229,11 @@ class CalmappsController < ApplicationController
   # DELETE /applications/1
   # DELETE /calmapps/1.xml
   def destroy
+    #binding.pry
     @calmapp = Calmapp.find(params[:id])
+    #binding.pry
     @calmapp.destroy
+    
     tflash('delete', :success, {:model=>@@model, :count=>1})
     respond_to do |format|
       tflash('delete', :success, {:model=>@@model, :count=>1})
@@ -224,6 +242,10 @@ class CalmappsController < ApplicationController
     end
   end
 
+  # rails 4 Strong Params needs this: Not tested yet
+  def calmapp_params
+    params.require(:calmapp).permit(:name,  calmapp_versions_attributes: [:id, :version, :_destroy])
+  end
   private
 =begin
     def record_not_found exception

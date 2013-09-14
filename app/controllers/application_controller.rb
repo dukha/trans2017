@@ -19,7 +19,7 @@ class ApplicationController < ActionController::Base
 
       render :action => (exception.record.new_record? ? :new : :edit)
   end
-  #Rescuing a violation of DB unique contstaint 
+  #Rescuing a violation of DB unique constraint 
   rescue_from ActiveRecord::RecordNotUnique do |not_unique|
      message = not_unique.message
     if pgerror? not_unique then
@@ -102,15 +102,16 @@ This function, together with the scope in routes.rb allows the setting of urls l
     request.env['HTTP_ACCEPT_LANGUAGE'].split(",").first
   end
 
-def pgerror? exception
+  def pgerror? exception
     exception.message.start_with? "PGError:"
-end
+  end
  
 
 =begin
   Use this function to rescue all situations
   Add exception for no
 =end
+=begin
   def rescue_all_exceptions(exception)
     case exception
       when ActiveRecord::RecordNotFound
@@ -123,6 +124,7 @@ end
         #render :text => "An internal error occurred. Sorry for inconvenience", :status => :internal_server_error
     end
   end
+=end
 =begin
  def record_invalid(exception)
     flash[:error] = exception.message + " " + exception.record.to_s

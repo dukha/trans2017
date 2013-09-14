@@ -1,0 +1,64 @@
+/* Stuff for cocoon nested rows using divs
+ *  like a table without floating. Not using table headers at present also. 
+ * th tags are likely to be problematic
+ */
+@mixin div-cell-error-appearance{
+  display:table-cell;
+  padding:2px; 
+}
+
+@mixin div-cell-appearance{
+  @include div-cell-error-appearance;
+  border-style:solid; 
+  border-width: thin;
+}
+@mixin div-row-appearance{
+  display: table-row;
+  font-size:x-small;
+}
+/* 
+ * nested_fields is the class name used by cocoon partials. We don't want to preclude other designs so we use the id of
+ * the surrounding div to localise the style to where we want it
+ */
+/*div#default_calm30-quota-categories-layout div.nested-fields, div#calm30-quota-categories-layout div.nested-fields{*/
+div.data-table > div.nested-fields{
+  @include div-row-appearance;
+}  
+div.data-tablecell{
+  @include div-cell-appearance;
+}
+div.link-tablecell{
+  @include div-cell-appearance;
+} 
+div.add-tablecell{}
+div.cell-error-display{
+  @include div-cell-error-appearance;
+}
+
+div.data-table{
+  display:table;
+}
+
+div.data-tablecell input.calm30-quota{
+  width:50px;
+}
+/*div.data-table > div.header-tablerow{
+  @include div-row-appearance;
+  font-weight: 700;
+ 
+}
+header-tablecell{
+  @include div-cell-appearance;
+}*/
+div.data-block{
+  display:block;
+}
+div.data-block > div.nested-fields{
+  font-size: small;
+  display:block; 
+  border-style:solid;
+  border-width:thin; 
+  margin-left:25%; 
+  padding:3px;
+  margin-bottom:3px;
+} 

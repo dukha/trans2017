@@ -19,6 +19,8 @@ class Calmapp < ActiveRecord::Base
   attr_accessor :new_version#,  :new_redis_db#, :add_languages
 
   has_many :calmapp_versions, :dependent => :restrict
+  accepts_nested_attributes_for :calmapp_versions, :reject_if => :all_blank, :allow_destroy => true
+  
   
 =begin
   These attributes permit the adding of version and languages info in the calmapp screen in a new record
@@ -28,13 +30,13 @@ class Calmapp < ActiveRecord::Base
   language_ids is a collection of the language i's for the non english languages to be added
 =end
   #attr_accessor :add_first_version, :version_name, :add_non_english_languages, :language_ids
-  attr_accessible :name, :new_version  #,  :new_redis_db  #, :language_ids
+  attr_accessible :name, :calmapp_versions#:new_version  #,  :new_redis_db  #, :language_ids
 
 
   #validates :languages, :associated => true
   #validates :calmapp_versions, :associated => true
-  validates :name, :presence=>true
-  validates :name, :uniqueness=>true
+  validates :name, :presence=>true, :uniqueness=>true
+  #validates :name, :uniqueness=>true
   
   
   def save_app_version_database_languages(version=nil, redis_database=nil, languages=nil )

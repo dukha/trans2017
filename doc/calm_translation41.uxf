@@ -1,0 +1,387 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="12.1">
+  <help_text>// Uncomment the following line to change the fontsize:
+// fontsize=14
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+// Welcome to UMLet!
+//
+// Double-click on UML elements to add them to the diagram, or to copy them
+// Edit elements by modifying the text in this panel
+// Hold Ctrl to select multiple elements
+// Use Ctrl+mouse to select via lasso
+//
+// Use Â± or Ctrl+mouse wheel to zoom
+// Drag a whole relation at its central square icon
+//
+// Press Ctrl+C to copy the whole diagram to the system clipboard (then just paste it to, eg, Word)
+// Edit the files in the "palettes" directory to create your own element palettes
+//
+// Select "Custom Elements &gt; New..." to create new element types
+//////////////////////////////////////////////////////////////////////////////////////////////
+
+
+// This text will be stored with each diagram;  use it for notes.</help_text>
+  <zoom_level>10</zoom_level>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>40</x>
+      <y>290</y>
+      <w>370</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>*Upload*
+id:integer
+translation_language_id:integer
+translation_file_name:string (paperclip attributes)
+description:string
+bg=orange</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>570</x>
+      <y>840</y>
+      <w>300</w>
+      <h>130</h>
+    </coordinates>
+    <panel_attributes>*Versions*
+In translation we will only refer
+to the major  of the application
+(Patches and minor versions don't change 
+translation database but translation 
+can be corrected  in a fix.).
+bg=blue</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>70</x>
+      <y>10</y>
+      <w>190</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>*TranslationLanguage*
+id:integer
+iso_code:string
+name:string
+bg=orange</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>60</x>
+      <y>130</y>
+      <w>300</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes>*CalmappVersionTranslationLanguage*
+id:integer
+calmapp_version_id:integer
+language_id:integer
+bg=orange</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>390</x>
+      <y>160</y>
+      <w>200</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>*CalmappVersion*
+id:integer
+version:string
+calmapp_id:integer
+bg=orange</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>500</x>
+      <y>0</y>
+      <w>230</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes>*ReleaseStatus*
+id:integer
+status:string
+[development|test|integration|production]
+bg=orange</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>760</x>
+      <y>30</y>
+      <w>180</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>*RedisInstance*
+id:integer
+host:string
+description:string
+port:integer 
+password:string
+bg=orange</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>670</x>
+      <y>180</y>
+      <w>240</w>
+      <h>160</h>
+    </coordinates>
+    <panel_attributes>*RedisDatabase*
+//This models a redis database 
+//containing many languages
+id:integer
+redis_instance_id:integer
+redis_db_index:integer
+release_status_id:integer 
+calmapp_version_id
+bg=orange</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>750</x>
+      <y>740</y>
+      <w>220</w>
+      <h>110</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;deprecated&gt;&gt;
+UploadRedisDatabase
+id:integer
+upload_id:integer
+redis_database_id:integer
+bg=green</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>450</x>
+      <y>80</y>
+      <w>80</w>
+      <h>100</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>30;30;60;80</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>590</x>
+      <y>50</y>
+      <w>140</w>
+      <h>150</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>30;30;120;130</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>330</x>
+      <y>150</y>
+      <w>80</w>
+      <h>50</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>60;30;30;30</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>50</x>
+      <y>70</y>
+      <w>100</w>
+      <h>240</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>30;30;80;220</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>550</x>
+      <y>370</y>
+      <w>350</w>
+      <h>110</h>
+    </coordinates>
+    <panel_attributes>//Each object represents the translation*
+//Of 1 key in 1 language for 
+//one calmapp_version 
+//The translation may or may not 
+//have been uploaded
+*Translation*
+id: integer
+dot_key_code: string
+translation: string
+//iso_code (translationlanguage) is part 
+//of dot_key_code
+calmapp_version_translation_language_id: integer
+upload_id:integer nullable 
+//translation may not have come from 
+//an upload
+bg=orange
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>280</x>
+      <y>180</y>
+      <w>470</w>
+      <h>210</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>30;30;450;190</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>380</x>
+      <y>310</y>
+      <w>190</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>30;30;170;60</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>560</x>
+      <y>170</y>
+      <w>130</w>
+      <h>100</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>30;80;110;30</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Note</type>
+    <coordinates>
+      <x>20</x>
+      <y>410</y>
+      <w>540</w>
+      <h>510</h>
+    </coordinates>
+    <panel_attributes>*Admins*
+* Setup Redis instances
+* Enter calm app
+* Enter calmapp version
+* Enter calmapp version languages
+* Upload any prewritten yaml files
+* Write any prewritten  yaml files to the Relational 
+database (from uploads index)
+* Add a redis database to a server. Each calmapp_version will eventually 
+need a development, a test and a production redis instance.
+
+*Developers*
+* While developing add english dot_key_codes 
+and translation_items via a developer's index
+* All these translation_items are written to the relational 
+database on the server and 
+a developer's redis database on the server
+* Redis database is accessed when running 
+the application in development mode
+
+*Admin and Developers*
+*Every time a developer or admin enters adds a translation_item
+is written then records with blank translation are written 
+for all languages
+
+*Admin*
+*Everytime a new language is added all translation_items in English are 
+copied with blank translation for the new language.
+
+*Translators*
+* Use a screen with dot_key_code and english translation 
+and a field for the new translation item
+* As each translation_item is written a record is created in 
+the relational database. 
+
+Admin
+* Publish a language means write all translation_items from 
+the relational database it to the redis database on the server. 
+bg=blue
+fg=white</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>830</x>
+      <y>120</y>
+      <w>50</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>30;30;30;60</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>640</x>
+      <y>600</y>
+      <w>310</w>
+      <h>210</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;deprecated&gt;&gt;
+UserWork
+user_id
+language_id
+redis_database_id
+ 
+Don't need this any more 
+as user can only edit 
+in Relational db
+
+May need to restrict user to 1 language and 
+1 translation but not first version
+bg=green
+
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>140</x>
+      <y>70</y>
+      <w>60</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>30;30;40;60</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>400</x>
+      <y>20</y>
+      <w>100</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>*Calmapp*
+id:integer
+name:string
+bg=orange</panel_attributes>
+    <additional_attributes/>
+  </element>
+</diagram>

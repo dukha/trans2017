@@ -1,0 +1,28 @@
+apt-get install imagemagick
+Then add to config/environments/development.rb
+Paperclip.options[:command_path] = "/usr/bin/" 
+#See paperclip docs iof this does not work
+
+add to gemfile
+gem 'rubyracer'
+gem 'rspec-rails'
+gem 'devise_invitable', :github => 'scambra/devise_invitable'
+
+# authorisation
+gem 'declarative_authorization'
+
+bundle install
+(normal app):  
+  rails generate devise:install
+  rails generate devise_invitable:install
+  
+  rails generate devise_invitable MODEL
+  OR
+  rails generate devise MODEL
+(devise_example): 
+  rake devise:setup
+  
+rails generate rspec:install
+
+# add to application.js
+//= require cocoon
