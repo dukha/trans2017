@@ -134,7 +134,7 @@ log.info("Users inserted")
 #user_id = User.find_by_username('translator').id
 #nl_id = nl.id
 #c_rd_db_id = red_reg4_loc_test.id 
-UserWork.create!(:user_id=> User.find_by_username('translator').id, :translation_language_id => nl.id, :current_redis_database_id=> red_reg4_loc_test.id )
-UserWork.create!(:user_id=> User.find_by_username('developer').id, :translation_language_id => en.id, :current_redis_database_id=> red_trans1_int_dev.id)
+UserWork.create!(:user_id=> User.find_by(username: 'translator').id, :translation_language_id => nl.id, :current_redis_database_id=> red_reg4_loc_test.id )
+UserWork.create!(:user_id=> User.find_by(username: 'developer').id, :translation_language_id => en.id, :current_redis_database_id=> red_trans1_int_dev.id)
 log.info("User works inserted")
 #=end

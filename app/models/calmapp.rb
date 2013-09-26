@@ -63,5 +63,7 @@ class Calmapp < ActiveRecord::Base
     return self
   end #save_app_version_database
 
- 
+  def can_destroy?
+    return calmapp_versions.empty?
+  end
 end

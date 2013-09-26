@@ -3,7 +3,9 @@ class WhiteboardTypesController < ApplicationController
   include TranslationsHelper
   # GET /whiteboard_types
   # GET /whiteboard_types.xml
-  before_filter :authenticate_user!
+  before_action :authenticate_user!
+  filter_access_to :all
+  
   @@model ="whiteboard_type"
   
   def index

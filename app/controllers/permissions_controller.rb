@@ -1,6 +1,7 @@
 class PermissionsController < ApplicationController
 
-  before_filter :authenticate_user!
+  before_action :authenticate_user!
+  
   filter_access_to :set_current_by_ajax do
     true                  # anyone can select from the permissions they were granted
   end
@@ -8,8 +9,8 @@ class PermissionsController < ApplicationController
     true                  # anyone can select from the permissions they were granted
   end
   filter_access_to :all   # deny anything not mentioned above
-  filter_access_to :all
-
+  #filter_access_to :all
+=begin
   # GET /permissions
   # GET /permissions.xml
   # after successful authetication devise redirects to 
@@ -22,6 +23,7 @@ class PermissionsController < ApplicationController
 
   # after devise has authenticated it has set current_user and it redirects to root
   # route root invokes this action
+=end
   def select
     
     if !current_user.nil? and !current_user.current_permission.nil?
@@ -65,7 +67,10 @@ class PermissionsController < ApplicationController
   # this resource is nested in users: params[:user_id]
   # show only permissions with locations in subtree of current_user.current_organisation
   def index
+=begin rails 4
     @user = User.find_by_id!(params[:user_id])
+=end
+    @user = User.find_by!(:id => params[:user_id])
     @permissions = Permission.for_user(@user).under_location(current_user.current_organisation).paginate(:page => params[:page], :per_page => 15)
     respond_to do |format|
       format.html # index.html.erb
@@ -76,7 +81,10 @@ class PermissionsController < ApplicationController
   # GET /permissions/1
   # GET /permissions/1.xml
   def show
+=begin rails 4
     @permission = Permission.find_by_id_and_user_id!(params[:id],params[:user_id])
+=end
+    @permission = find_by_id_and_user_id( ) #Permission.where(:id=>params[:id]).where(:user_id => params[:user_id]).first
 
     respond_to do |format|
       format.html # show.html.erb
@@ -98,7 +106,10 @@ class PermissionsController < ApplicationController
 
   # GET /permissions/1/edit
   def edit
+=begin rails 4    
     @permission = Permission.find_by_id_and_user_id!(params[:id],params[:user_id])
+=end
+  @permission = find_by_id_and_user_id( )   
   end
 
   # POST /permissions
@@ -155,5 +166,9 @@ class PermissionsController < ApplicationController
       format.html { redirect_to(permissions_path) }
       format.xml  { head :ok }
     end
+  end
+  
+  def find_by_id_and_user_id( )
+    return @permission = Permission.where(:id=>params[:id]).where(:user_id => params[:user_id]).take!
   end
 end

@@ -10,7 +10,7 @@ class User < ActiveRecord::Base
   # :token_authenticatable, :confirmable, omniauthable:, Confirmable, :rememberable, :validatable, :encryptable, :recoverable
   devise  :database_authenticatable, :registerable,
          :trackable, :validatable,
-         :timeoutable#, :lockable #,:timeout_in => 10.minutes use value from  config/initializers/devise.rb
+         :timeoutable, :lockable #,:timeout_in => 10.minutes use value from  config/initializers/devise.rb
 
   # Setup accessible (or protected) attributes for your model
   attr_accessible :email, :password, :password_confirmation, :remember_me,
@@ -44,7 +44,7 @@ class User < ActiveRecord::Base
 
   # return nil or a Permission for self
   def permission_at_organisation_named (name)
-    org = Organisation.find_by_name name
+    org = Organisation.find_by(name: name)
     if org.nil?
       return nil
     end

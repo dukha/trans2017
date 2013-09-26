@@ -1,0 +1,40 @@
+Do as in railscasts 400 and 415
+Check out at http://ready4rails4.net/gems/
+
+h3.routing-filters
+Upgrade 
+gem 'routing-filter' to atleast '0.4.0.pre'
+
+h3.devise
+add to config/initializers/devise.rb
+config.secret_key = '53208f12c368ad272f70fc5a402bf95fededd7c143ad0c1afd5a26b918d9298fe97e1b8731eff1d9ffd3d399bd8f1dfd07c93037407cfd10878e652eebe6c73e'
+
+
+
+h3.declarative_auth or 
+any other authorization solution is ready for rails4.
+h3.cancan
+CanCan looks like being first cab off the rank.
+Most fall over at strong params
+
+h4.declarative_auth workaround
+To get declarative_auth to work with rails4, use the protected_attributes gem and don't bother with strong params at this point.
+
+
+h3.cocoon
+When using strong parameters (default in rails 4), you need to explicitly add :_destroy to the list of permitted parameters.
+h4. example of using strong params with cocoon
+ def project_params
+    params.require(:project).permit(:name, :description, tasks_attributes: [:id, :description, :done, :_destroy])
+  end
+
+h4.cocoon and validation of presence of foreign key
+It looks like all validations of prescence of foreign keys connecting the forms will have to be renmoved: it looks like the validation doesn't work in v4
+h3.javascript
+changes in javascript files will not be seen unless, in config/environments/development.rb
+# Debug mode disables concatenation and preprocessing of assets.
+  # This option may cause significant delays in view rendering with a large
+  # number of complex assets.
+  config.assets.debug = true  
+  
+Once back to ruby then set to false

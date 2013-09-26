@@ -1,0 +1,6 @@
+<%=theading("edit", :model=>"translation_language", :count=>1, :class=>'pageheading' )%>
+
+<%= render 'form' %>
+
+<%= tlink_to( 'new_model', new_translation_language_path, :model=>  'translation_language') %> |
+<%= tlink_to( "back", translation_languages_path )%>

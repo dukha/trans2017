@@ -62,19 +62,15 @@ module SearchModel
   # param activerecord_relation is a preliminary instance of ActiveRecordRelation. 
   # Only necessary for special criteria not implementable via this method 
   def search(current_user, search_info={}, activerecord_relation=nil)
-    #search(current_user, search_info[:criteria], search_info[:operators], search_info[:sorting], activerecord_relation)
-  #end
-  
-  #def search(current_user, criteria, operators, sorting, activerecord_relation=nil)
-           #binding.pry
-           if activerecord_relation == nil then
-             # Make a default activerecord_relation
-             lazy_loader = order("id asc")
-           else
-             lazy_loader = activerecord_relation  
-           end
-           lazy_loader = build_lazy_loader(lazy_loader, search_info[:criteria], search_info[:operators])
-           lazy_loader =  build_lazy_loading_sorter(lazy_loader, search_info[:sorting])
-           return lazy_loader
+     if activerecord_relation == nil then
+       # Make a default activerecord_relation
+       lazy_loader = order("id asc")
+     else
+       lazy_loader = activerecord_relation  
+     end
+     binding.pry
+     lazy_loader = build_lazy_loader(lazy_loader, search_info[:criteria], search_info[:operators])
+     lazy_loader =  build_lazy_loading_sorter(lazy_loader, search_info[:sorting])
+     return lazy_loader
   end
 end

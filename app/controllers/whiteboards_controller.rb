@@ -4,6 +4,7 @@ class WhiteboardsController < ApplicationController
   # GET /whiteboards
   # GET /whiteboards.xml
   before_filter :authenticate_user!
+  filter_access_to :edit, :create, :new, :delete, :update
   # almost replaced with global handler
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 

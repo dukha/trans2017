@@ -1,0 +1,12 @@
+<%= semantic_form_for @translation_language do |f| %>  
+  
+
+	<%= f.inputs do %>
+	  <%= f.input :iso_code %>
+	  <%= f.input :name %>
+    
+	<% end %>
+	<%= f.actions do %>
+      <%= f.action(:submit)  %>    
+  <% end %>
+<% end %>

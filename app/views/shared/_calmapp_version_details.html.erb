@@ -28,9 +28,11 @@
          */
     </script>
 
-        <div id="calmapp-versions-table" class='nested-fields' style='display:table'>
+        <!--div id="calmapp-versions-table" class='nested-fields' style='display:table' -->
+        <div id="calmapp-versions-table" class='nested-fields' style='border:1px solid; margin:1px;padding-top:2px;padding-bottom:2px;"}'>  
                 <%= f.inputs do%>
-                <div style= 'display:table-row'>
+                <!--div style= 'display:table-row' -->
+                  
                     <!--div style='display:table-cell'>
                       <fieldset class="inputs"> <label>< %=t("activerecord.calmapp_version.languages_available")%></label><br>
                             <span id="availableLanguagesFilterSpan"><!-- < %= t("formtastic.labels.filter")%> -- >  <input type="text" id="availableLanguagesFilter" /><!--<button type="button" id="availableLanguageFilterClear">X</button></span>-->
@@ -54,11 +56,17 @@
                         <select id="box2Storage">
                         </select>
                     </div -->
-                    <div style='display:table-cell'>
-                      <%= f.input :version%>
-                    </div>
-                </div>
+                    <!--div style='display:table-cell' -->
+                      
+                      <%= f.input :version, label: false , required: false, input_html: {style: "margin-left:25%"}%>
+                      <span style='padding-left:25%'><%= link_to_remove_association t($FA +"remove_version"), f   %></span> 
+                
                 <%end%>
+                
+                <%=f.semantic_errors :calmapp_id%>
+                <%=f.semantic_errors :calmapp%>
+                   
+                   
        </div>
       <!-- < %if ! @redis_database.nil? then %>
          < %= version.input :new_redis_dev_db, :as=>:boolean %>

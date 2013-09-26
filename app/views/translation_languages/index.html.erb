@@ -1,0 +1,36 @@
+<%=theading('listing', :model=>'translation_language', :count=>10 )%>
+<% if TranslationLanguage.count==0 then %>
+  <%=tflash( "no_records_found", :warning)%><br/>
+<%  else %>
+<%= twill_paginate %>
+<table class="data">
+  <tr class="dataheader">
+    <th class ="dataheader"><%=t($ARA + "translation_language.iso_code")%></th>
+    <th class ="dataheader"><%=t($ARA + "translation_language.name")%></th>
+    
+    <th class="linkheader"></th>
+    <th class="linkheader"></th>
+ </tr>
+
+<% cell_class = "data" %>
+<% link_cell_class="link"%>
+  
+<% @translation_languages.each do |tl| %>
+
+  <tr class = "<%= cycle('dataeven', 'dataodd') %>" >
+    <td class="<%= cell_class %>"><%= tl.iso_code %></td>
+    <td class="<%= cell_class %>"><%= tl.name %></td>
+    
+    <!--td class="< %= link_cell_class %>">< %= tlink_to 'edit', edit_translation_language_path(tl) %></td -->
+    <!--td class="< %= link_cell_class %>">< %= tlink_to 'destroy', tl, :confirm => 'delete.are_you_sure', :model => 'translation_language', :value=>tl.name, :count=>1, :method => :delete %></td-->
+    <%= link_edit edit_translation_language_path(tl), :translation_languages  %>
+    <%= link_destroy tl, :translation_languages  %>
+    
+  </tr>
+	
+<% end %>
+</table>
+<%= twill_paginate %>
+<br />
+<% end %>
+<%= tlink_to('new_model', new_language_path, :model=> 'language', :count=>1) %>

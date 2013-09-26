@@ -3,7 +3,8 @@ class LanguagesController < ApplicationController
   include TranslationsHelper
   # GET /languages
   # GET /languages.xml
-  #before_filter :authenticate_user!, :except=> :change_application_language
+  before_action :authenticate_user!#, :except=> :change_application_language
+  filter_access_to :all
   @@model ="language"
   
   def index
@@ -92,7 +93,10 @@ class LanguagesController < ApplicationController
 =end
   def change_calmapp_language
     #check that the iso_code is valid
+=begin rails 4
     @language =Language.find_by_iso_code(params[:iso_code])
+=end
+    @language =Language.find_by( :iso_code => params[:iso_code])
     #debugger
     
     session[:locale] = @language.iso_code

@@ -1,8 +1,7 @@
 class UserWorksController < ApplicationController
-  
-  # GET /translations
-  # GET /translations.xml
-  #before_filter :authenticate_user!
+
+  before_action :authenticate_user!
+  filter_access_to :all
   @@model ="user_work"
   def index
     @user_works = UserWork.paginate(:page => params[:page], :per_page=>15)
@@ -39,7 +38,7 @@ class UserWorksController < ApplicationController
   # GET /redis_databases/1/edit
   def edit
     #binding.pry
-    unless @user_work = UserWork.find_by_id(params[:id]) then
+    unless @user_work = UserWork.find(params[:id]) then
       flash[:notice]= "No User Works for " + current_user.username
       new()
     end

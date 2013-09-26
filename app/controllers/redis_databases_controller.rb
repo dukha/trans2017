@@ -3,7 +3,8 @@ class RedisDatabasesController < ApplicationController
   include TranslationsHelper
   # GET /translations
   # GET /translations.xml
-  #before_filter :authenticate_user!
+  before_action :authenticate_user!
+  filter_access_to :all
   @@model ="redis_database"
   def index
     @redis_databases = RedisDatabase.paginate(:page => params[:page], :per_page=>15)

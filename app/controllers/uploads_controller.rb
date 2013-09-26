@@ -1,10 +1,10 @@
+#@deprecated
 class UploadsController < ApplicationController
-  # GET /uploads
-  # GET /uploads.xml
-  #before_filter :authenticate_user!
   require 'translations_helper'
   include TranslationsHelper
   
+  before_action :authenticate_user!
+  filter_access_to :all
   @@model =  "upload" 
   def index
     @uploads = Upload.paginate(:page => params[:page], :per_page=>15)

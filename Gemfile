@@ -1,6 +1,6 @@
 source 'http://rubygems.org'
 
-gem 'rails', '~>3.2.8'
+gem 'rails', '~>4.0.0'#'~>3.2.8'
 
 # postgresql connector
 gem 'pg'#, '~>0.12.2'
@@ -20,22 +20,25 @@ gem 'nokogiri'#, '1.5.0'
 # json parser
 gem 'json'
 
-# authorisation
+# authorisation No authorization solution compatible with rails 4: CanCan looks closest
 gem 'declarative_authorization'#, '0.5.3'
 
 # paginate all index views
 
-gem 'will_paginate','~>3.0.3'
+gem 'will_paginate','~>3.0.4'
 
-
+# rails 4 use this gem until you have implemented strong params
+gem 'protected_attributes'
 
 
 # using jquery for ajax, not prototype > rails g jquery:install
 gem 'jquery-rails'#, '~>1.0.12' #, '0.2.7'
 
+# Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
+gem 'turbolinks'
 
 #helps with I18n not used at present. We need to use it to get pagination in the urls, I think
-gem 'routing-filter', '~>0.3.1'
+gem 'routing-filter', '0.4.0.pre'
 
 
 # acts as tree provides access to parents and children without coding more than parent_id (i.e. no has_many needed)
@@ -69,7 +72,7 @@ gem "redis" #, :git => "git://github.com/ezmobius/redis-rb.git"
 gem 'execjs'
 gem 'therubyracer'
 # in place editing
-gem 'best_in_place'
+gem 'best_in_place', '~>2.1.0', :git => "git://github.com/bernat/best_in_place"
 
 # for doing searches with criteria. Replaces meta_where for rails 3.1
 gem 'squeel'
@@ -77,7 +80,7 @@ gem 'squeel'
 gem 'passenger' #, '~>3.0.11'
 
 # nested forms
-gem 'cocoon','~>1.1.2'
+gem 'cocoon','~>1.2.0'
 # thin is a faster dev webserver than webrick
 gem 'thin'
 
@@ -104,7 +107,9 @@ group :development, :test do
   #gem 'annotate-models', '1.0.4'
   gem 'annotate'
   # Pretty printed test output
-  gem 'turn', '0.8.2', :require => false
+  gem 'turn', '~>0.9.6', :require => false
+  
+  #gem 'activerecord_deprecated_finders'
 =begin
  debug that works with ruby 1.9
  place
@@ -138,16 +143,23 @@ display/undisplay
   #gem 'faker'
   gem 'guard'
   # generate test data
-  gem 'factory_girl_rails', '1.0.1'
+  gem 'factory_girl_rails', '~> 4.2.1'
 
 end # end group dev, test
-group :assets do
 
-    gem 'sass-rails', " ~> 3.2.5"
-    gem 'coffee-rails', "~> 3.2.1"
-    gem 'uglifier'
 
-end
+  gem 'sass-rails', '~>4.0.0' #:git=> "git://github.com/rails/sass-rails"#, " ~> 3.2.5"
+  gem 'coffee-rails', '~>4.0.0'#, "~> 3.2.1"
+  gem 'uglifier','~>2.2.1'
+
+
 group :development do
   gem 'capistrano'
+  
+  # better display of exception stuff
+  gem 'better_errors'
+  # allows display of variables etc by better_errors
+  gem 'binding_of_caller'
+  # works with RailsPanel app in chrome (when installed) to display request info
+  gem 'meta_request'
 end

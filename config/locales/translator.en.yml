@@ -36,6 +36,7 @@ en:
       back: "Back"
       remove: Remove
       publish: Publish 
+      no_delete: Undeletable
       #
       create_and_upload: Create and Upload
       to_redis: Write to Database
@@ -45,6 +46,7 @@ en:
       add_area: Add Area
       add_server: Add Server
       add_calmapp_version: Add Calm App Version 
+      remove_version: Remove Version
     labels:
       #redis_db_index: Redis Database Index
       #port: Linux Port
@@ -66,7 +68,7 @@ en:
       filter: Filter
     hints:
       calmapp_version:
-        version: Enter the major version here. This is an integer, 1,2,3 or 4 etc
+        version: Enter the version here. Format is <major_version>.<minor_version> e.g. 12.23 (There is no distinct translation for maintenance versions)
         add_languages: If this checkbox is not checked then no language will be written to the database
       calmapp:
         name: Enter the application name.
@@ -83,6 +85,8 @@ en:
         port: Enter the computer port number used by the Redis database. (Default is 6379)
         password: Enter the actual password for this Redis Instance. If you don't know it then don't add a new record or change an existing password. For production the password should be greater than 100 characters, otherwise a te force attack on Redis is too easy.
         description: User Friendly name to indentify the host.
+      translation_language:
+        iso_code: "ISO Code comes in a format of <language_code [+ underscore + REGION]> language_code is 2 chars, always lowercase. Look this up if you don't know it. REGION is always in upper case. eg. fr_CA refers to French as used in Canada"   
 #    actions:
 
       #new_translation: New English Translation
@@ -98,7 +102,8 @@ en:
     translation_uploads: Translation Uploads
     redis_databases: Redis Databases
     redis_instances: Redis Instances
-    languages: Translation Languages
+    languages: Languages
+    translation_languages: Translation Languages
     release_statuses: Release Statuses
     translations: Translations
     translation_parameters: Translation Parameters
@@ -146,6 +151,9 @@ en:
       translation:
         one: Translation
         other: Translations
+      translation_language:
+        one: Translation Language
+        other: Translations Languages
       translation_parameter:
         one: Translation Parameter
         other: Translation Parameters
@@ -194,14 +202,19 @@ en:
         max_databases: Maximum Permitted Redis Databases on this server
         description: Description
       language:
-        name: Translation Language
+        name: Language
+      translation_language:
+        name: Language Name
+        iso_code: ISO Code
       translations_upload:
         #upload: File Name
         #upload_file_name: Uploaded File Name
         description: Description
         translation_language: Translation Language
         calmapp_version_id: Version 
-  messages:  
+  messages: 
+    no_delete_if_versions_exist:
+      notice: Delete all versions first before you can delete the application 
     array_in_yaml_wrong_format:
       error: |+
         Unsuccessful upload of translation file.

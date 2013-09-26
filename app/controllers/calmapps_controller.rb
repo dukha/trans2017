@@ -1,6 +1,8 @@
 class CalmappsController < ApplicationController
   require 'translations_helper'
   include TranslationsHelper
+  before_action :authenticate_user!
+  filter_access_to :all
   #after_create do |record|
    # @calmapp_version.id = record.id
   #end
@@ -75,7 +77,7 @@ class CalmappsController < ApplicationController
     @calmapp_version = CalmappVersion.new
     #statuses = ReleaseStatus.all
     @redis_database=RedisDatabase.new
-    @redis_database.release_status_id = ReleaseStatus.where{status=='development'}.limit(1)[0].id
+    @redis_database.release_status_id = ReleaseStatus.where{status =~  'development'}.limit(1)[0].id
     #statuses.each{|s|
       #rdb= RedisDatabase.new
       #rdb.release_status_id=s.id
@@ -87,13 +89,14 @@ class CalmappsController < ApplicationController
     end
   end
   def create
-    @calmapp = Calmapp.new(params[:calmapp])
-    
+    @calmapp = Calmapp.new(params[:calmapp],without_protection: true)
+    #binding.pry
     respond_to do |format|
-      if @calmapp.save
+      if @calmapp.save( )
         format.html { redirect_to calmapps_url, notice: 'Calmapp was successfully created.' }
         format.json { render action: 'show', status: :created, location: @calmapp }
       else
+        #binding.pry
         format.html { render action: 'new' }
         format.json { render json: @calmapp.errors, status: :unprocessable_entity }
       end
@@ -213,9 +216,11 @@ class CalmappsController < ApplicationController
       params[:calmapp][:language_ids] = Array.new
     end
 =end   
+    
     respond_to do |format|
       #binding.pry
       if @calmapp.update_attributes(params[:calmapp], without_protection: true)
+        
         tflash('update', :success, {:model=>@@model, :count=>1})
         format.html { redirect_to(:action=>:index) }
         format.xml  { head :ok }
@@ -232,13 +237,19 @@ class CalmappsController < ApplicationController
     #binding.pry
     @calmapp = Calmapp.find(params[:id])
     #binding.pry
-    @calmapp.destroy
-    
-    tflash('delete', :success, {:model=>@@model, :count=>1})
-    respond_to do |format|
-      tflash('delete', :success, {:model=>@@model, :count=>1})
-      format.html { redirect_to(calmapps_url) }
-      format.xml  { head :ok }
+    begin
+      @calmapp.destroy
+      #tflash('delete', :success, {:model=>@@model, :count=>1})
+      respond_to do |format|
+        tflash('delete', :success, {:model=>@@model, :count=>1})
+        format.html { redirect_to(calmapps_url) }
+        format.xml  { head :ok }
+      end 
+    rescue ActiveRecord::DeleteRestrictionError => e
+      # We need to do this here as an calmapp cannot be deleted whilst it has dependent versions
+      @calmapp.errors.add(:base, e)
+      #redirect_to calmapps_path
+      render :action=> "index"
     end
   end
 

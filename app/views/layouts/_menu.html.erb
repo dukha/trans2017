@@ -59,12 +59,12 @@
         <%= taccordion_header("admin") %>
         <ul class="menu"> 
           <%=link_menu(:profiles)%>
-          <li><%= tlink_to("whiteboard_types", whiteboard_types_path, :category=>:menu) %></li>  
+          <!--li><%= tlink_to("whiteboard_types", whiteboard_types_path, :category=>:menu) %></li -->  
           <li><%= link_to "Users", users_select_path %></li>
 
         <li><%= link_to "Change password or email", edit_user_registration_path %></li>
-        <li><%= link_to "Locations", locations_path, :action => "index" %></li>
-         <li><%= tlink_to("languages", languages_path, :category=>:menu) %></li>
+        <!--li>< %= link_to "Locations", locations_path, :action => "index" %></li -->
+         <li><%= tlink_to("translation_languages", translation_languages_path, :category=>:menu) %></li>
         <li><%= tlink_to("calmapps", calmapps_path, :category=>:menu) %></li>
       
         <li><%= tlink_to("calmapp_versions", calmapp_versions_path, :category=>:menu) %></li>

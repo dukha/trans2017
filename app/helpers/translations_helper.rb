@@ -17,11 +17,12 @@ module TranslationsHelper
   #$L="links."
   $LU="lookups."
   $M="menus."
-  $MS="messages." #Uased in the context of messages.<situation>[<.situation>].<$E | $W | $N | $S>
+  $MS="messages." #Used in the context of messages.<situation>[<.situation>].<$E | $W | $N | $S>
     $W ="warning"
     $N = 'notice'
     $S = 'success'
     $E = 'error'
+  $MSDS = $MS + 'delete.are_you_sure.' +$W
   $EM = "errors.messages."  #Used for model specific errors errors.messages.<model><.attribute>.error_name  
   #$MSE=$MS+"error."
   #$MSN=$MS+"notice."
@@ -88,17 +89,31 @@ module TranslationsHelper
        #if options[:title] then
          #options[:title] = t(options[:title])
        #end
+       
+       
+       
+     link_to tlabel, url, options
+   end
+
+   def tconfirm_option options
+     if options[:data].nil? then
+         options[:data] = {}
+       end
+       #binding.pry
+       if options[:data][:confirm] then
+         options.delete(:count)
+         options[:data][:confirm] = tmessage( options[:data][:confirm], $W, options)
+       end
        if options[:confirm] then
          # can't use :count for a translation of a message unless it is expected.
          options.delete(:count)
          #binding.pry
-         options[:confirm] = tmessage( options[:confirm], $W, options) 
+         
+         options[:data][:confirm] =  tmessage( options[:confirm], $W, options)
        end
-
-     link_to tlabel, url, options
+       options.delete(:confirm)  
+       return options
    end
-
-
   # e.g. <%=theading("listing", :model=> "course_type",:count => 2) %>
   # translation_code can be "new, "edit" or "listing" or "home"  according to yaml paths
   def theading(translation_code, options = {})

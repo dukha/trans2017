@@ -3,8 +3,8 @@ class CalmappVersionsController < ApplicationController
   include TranslationsHelper
   # GET /application_versions
   # GET /application_versions.xml
-  #before_filter :authenticate_user!
-
+  before_action :authenticate_user!
+  filter_access_to :all
   @@model="calmapp_version"
   
   def index

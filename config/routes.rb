@@ -15,7 +15,7 @@ Translator::Application.routes.draw do
  
  
 
-  scope "(/:locale)" do
+  scope "/:locale" do
    resources :profiles
    #devise_for :users
 
@@ -26,66 +26,66 @@ Translator::Application.routes.draw do
 
    scope "/auth_user/:user_id" do
       resources :permissions
-      match '/permissions_select' => 'permissions#select',      :as => :permissions_select
-      match '/set_permission/:id' => 'permissions#set_current', :as => :set_permission
+      get '/permissions_select' => 'permissions#select',      :as => :permissions_select, via: :all
+      get '/set_permission/:id' => 'permissions#set_current', :as => :set_permission, via: :all
    end
    
-   match '/auth_user/set_permission_by_ajax' => 'permissions#set_current_by_ajax', :as => :set_permission_by_ajax
-   match '/users_select' => 'users#select',      :as => :users_select
+   get '/auth_user/set_permission_by_ajax' => 'permissions#set_current_by_ajax', :as => :set_permission_by_ajax, via: :all
+   get '/users_select' => 'users#select',      :as => :users_select, via: :all
     
    devise_for :users
    
    get "users/:id/edit_password",   :to => "users#edit",   :as => :edit_password  
-    put "users/:id/update_password", :to => "users#update", :as => :update_password  
+    patch "users/:id/update_password", :to => "users#update", :as => :update_password  
     # for unlocking another user
-    put "users/:id/unlock_user",     :to => "users#unlock_user", :as => :unlock_user  
+    patch "users/:id/unlock_user",     :to => "users#unlock_user", :as => :unlock_user  
    resources :languages
 
    resources :whiteboard_types
    resources :whiteboards
    #resources :location_tree, :only => [:index, :show]
-   resources :locations
-   resources :areas
+   #resources :locations
+   #resources :areas
 
     resources :translation_languages
 
-    resources :organisations
+    #resources :organisations
 
-    resources :servers
+    #resources :servers
    # to create a new child we need the parent_id
-    match '/organisations/new/:parent_id(.:format)' => 'organisations#new', :as => :new_child_organisation
-    match '/translation_languages/new/:parent_id(.:format)' => 'translation_languages#new', :as => :new_child_translation_language
-    match '/areas/new/:parent_id(.:format)' => 'areas#new',                 :as => :new_child_area
-    match '/servers/new/:parent_id(.:format)' => 'servers#new',             :as => :new_child_server
+    #get '/organisations/new/:parent_id(.:format)' => 'organisations#new', :as => :new_child_organisation, via: :all
+    #get '/translation_languages/new/:parent_id(.:format)' => 'translation_languages#new', :as => :new_child_translation_language, via: :all
+    #get '/areas/new/:parent_id(.:format)' => 'areas#new',                 :as => :new_child_area, via: :all
+    #get '/servers/new/:parent_id(.:format)' => 'servers#new',             :as => :new_child_server, via: :all
     
    resources :calmapps
    resources :calmapp_versions
    resources :release_statuses
    resources :redis_databases
    resources :redis_instances
-   match 'unused_redis_database_indexes' => 'redis_instances#unused_redis_database_indexes', :as => 'unused_redis_dbs'
+   get 'unused_redis_database_indexes' => 'redis_instances#unused_redis_database_indexes', :as => 'unused_redis_dbs', via: :all
 
    resources :user_works#, :only=>[:edit, :show]
 
    resources :translations #, :except=>:show#, :only=> [:new, :index]
-   match "translations/dev_new" => "translations#dev_new", :as => "dev_new_translation"
-   match "translations/dev_create" => "translations#dev_create", :as => "dev_create_translation"
+   get "translations/dev_new" => "translations#dev_new", :as => "dev_new_translation", via: :all
+   get "translations/dev_create" => "translations#dev_create", :as => "dev_create_translation", via: :all
    #match "translations_editable_list" => "translations#editable_list", :as => "translators_index"
    #match "redis_translations/edito" => "redis_translations#edito", :as => "edito_translation"
    resources :translation_parameters, :only=> [ :new, :index]
    #match "translation_parameters/save" => "translation_parameters#save", :as => "save_translation_params"
-   resources :uploads
-   match "uploads/file_to_redis/:id" => "uploads#file_to_redis", :as => "to_redis"
-   match "uploads/select_translation_to_redis/:id" => "uploads#select_translation_to_redis", :as => "select_to_redis"
+   #resources :uploads
+   get "translations_uploads/file_to_redis/:id" => "translations_uploads#file_to_redis", :as => "to_redis", via: :all
+   get "translations_uploads/select_translation_to_redis/:id" => "translations_uploads#select_translation_to_redis", :as => "select_to_redis", via: :all
 
-   match "redis_databases/redis_to_yaml/:id" => "redis_databases#redis_to_yaml", :as => "redis_to_yaml"
+   get "redis_databases/redis_to_yaml/:id" => "redis_databases#redis_to_yaml", :as => "redis_to_yaml", via: :all
    #get "calmapps/all_in_one_new/" => "calmapps#all_in_one_new", :as => "all_in_one_new"
    #get "calmapps/all_in_one_create" => "calmapps#all_in_one_create"
    #match "upload"
 
-  match '/contact', :to => 'static_pages#contact'
-    match '/about',   :to => 'static_pages#about'
-    match '/help',    :to => 'static_pages#help' 
+   get '/contact', :to => 'static_pages#contact'
+   get '/about',   :to => 'static_pages#about'
+   get '/help',    :to => 'static_pages#help' 
   end
   # The priority is based upon order of creation:
   # first created -> highest priority.

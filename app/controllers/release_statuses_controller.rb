@@ -3,8 +3,8 @@ class ReleaseStatusesController < ApplicationController
   include TranslationsHelper
   # GET /release_statuses
   # GET /release_statuses.xml
-  #before_filter :authenticate_user!
-
+  before_action :authenticate_user!
+  filter_access_to :all
   @@model = "release_status"
   
   def index

@@ -1,0 +1,16 @@
+ http://www.manas.com.ar/spalladino/2012/01/31/how-to-check-if-object-can-be-destroyed-if-it-has-dependent-destroy-associations/
+
+class ActiveRecord::Base
+  def can_destroy?
+    self.class.reflect_on_all_associations.all? do |assoc|
+      assoc.options[:dependent] != :restrict ||
+        (assoc.macro == :has_one && self.send(assoc.name).nil?) ||
+        (assoc.macro == :has_many && self.send(assoc.name).empty?)
+    end
+  end
+end
+That’s it! Now you can simply make a small helper method that renders a destroy link if can_destroy?, or a plain span notifying the user why she cannot destroy the object.
+
+
+:restrict_with_exception causes an exception to be raised if there are any associated records
+:restrict_with_error causes an error to be added to the owner if there are any associated objects

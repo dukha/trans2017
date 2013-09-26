@@ -5,18 +5,19 @@ require 'rails/all'
 
 # If you have a Gemfile, require the gems listed there, including any gems
 # you've limited to :test, :development, or :production.
-#Bundler.require(:default, Rails.env) if defined?(Bundler)
-  if defined?(Bundler)
-
-     # If you precompile assets before deploying to production,
-     
-      Bundler.require(*Rails.groups(:assets => %w(development test)))
-     # If you want your assets lazily compiled in production,
-     #  use this line instead
-     #Bundler.require(:default, :assets, Rails.env)
-
-  end
-  
+#puts Bundler.require
+#puts Rails.env
+#Bundler.require(:default, "config/environments/" + Rails.env) if defined?(Bundler)
+=begin
+if defined?(Bundler)
+  # If you precompile assets before deploying to production,
+  Bundler.require *Rails.groups(:assets => %w(development test))
+  # If you want your assets lazily compiled in production,
+  #  use this line instead
+  # Bundler.require(:default, :assets, Rails.env)
+end  
+=end
+Bundler.require(:default, Rails.env)
     
 module Translator
   #attr_accessor :max_redis_databases
@@ -63,11 +64,14 @@ module Translator
     # The other choice is :ruby which is default.
     # Configuring :sql means that for postgres, the schema will be created by pg_dump
     config.active_record.schema_format :sql
-    
+    # set this to false whilst transitioning to rails 4
+    config.active_record.whitelist_attributes=false  
     # 3.1 Enable the asset pipeline
     config.assets.enabled = true
+=begin
     # 3.1 Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.0'
+=end
     #Put in to take are of a "stack too deep bug introduced in rails 3.1.5"Put in to take are of a "stack too deep bug introduced in rails 3.1.5"
     config.assets.initialize_on_precompile = false
   end

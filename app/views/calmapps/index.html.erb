@@ -23,7 +23,17 @@
     <tr class = "<%= cycle('dataeven', 'dataodd', :name => row_class) %>" >
       <td class="<%= cell_class %>"><%= calmapp.name %></td>
       <%=link_edit(edit_calmapp_path(calmapp), :calmapps)%><!--%= tlink_to  'edit', edit_calmapp_path(calmapp) %></td -->
-      <%=link_destroy(calmapp, :calmapps)%><!--%= tlink_to 'destroy',  calmapp , :confirm => 'delete.are_you_sure', :model => "calmapp", :value=>calmapp.name, :method => :delete %></td -->
+      <!--%if can_destroy?% -->
+      <% if calmapp.can_destroy?%>
+      <!--%options={:title=>t($MS + "no_delete_if_versions_exist." +$N)}%>
+      < %options[:style] = "pointer-events: none; cursor: default;" if not calmapp.can_destroy? %>
+      < %options[:tabindex] = "-1" if not calmapp.can_destroy? % -->  
+        <%=link_destroy(calmapp, :calmapps)%>
+      <%else%>
+         <td class = "<%=link_cell_class%>">
+           <a href="#" title = "<%=t($MS + "no_delete_if_versions_exist." +$N)%>"><%=t($FA +"no_delete")%></a>
+         </td>
+      <%end%>
     </tr>
 
   <% end %>

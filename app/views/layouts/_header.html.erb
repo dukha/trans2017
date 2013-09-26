@@ -29,7 +29,9 @@
           <input name="authenticity_token" type="hidden" value="w6vNLpWrzKTDWsn5XgKbt/HNQE89f3N1jezG8CdTo40=" />
           </div>
         </form> -->
-         <%= button_to t($FA + 'sign_out', :username=>current_user.username), destroy_user_session_path, :method => :delete ,:form_class => "button_to_fake", :id => 'signout', :confirm => 'Are you sure?' %>
+         <!-- %= button_to t($FA + 'sign_out', :username=>current_user.username), destroy_user_session_path, :method => :delete ,:form_class => "button_to_fake", :id => 'signout', :confirm => 'Are you sure?' % -->
+         <!--%= button_to t($FA + 'sign_out', :username=>current_user.username), destroy_user_session_path, :method => :delete ,:form_class => "button_to_fake", :id => 'signout', data: {confirm: t($MSDS)} % -->
+         <%= button_to t($FA + 'sign_out', :username=>current_user.username), destroy_user_session_path, :method => :delete ,:form_class => "button_to_fake", :id => 'signout' %>
       <% end %>  
         
         <script type ="text/javascript">

@@ -1,8 +1,8 @@
 # Actions are defined here, Subclass controllers only define 
 class LocationsController < ApplicationController
 
-  before_filter :authenticate_user!
-  filter_access_to :all
+  before_action :authenticate_user!
+  #filter_access_to :all
 
   @@model = $ARM + "location"+".one"
 

@@ -2,13 +2,16 @@ class Translation < ActiveRecord::Base
   # needed for self.search
   extend SearchModel
   
-  validates :dot_key_code, :uniqueness=>true#, :presence=>true 
+  
   #validates :translation, :presence=>true
   
   # for developers  we want to be able to process up to 3 translations from 1 form: thus extra virtual attributes
   # to be saved as separate translations
   attr_accessor  :dot_key_code0, :translation0, :translation_message0, :dot_key_code1, :translation1, :translation_message1, :dot_key_code2, :translation2,  :translation_message2#, :developer_params
-  scope :all, order('dot_key_code asc')
+  
+ 
+  #scope :all, -> {order('dot_key_code asc')}
+  validates :dot_key_code, :uniqueness=>true#, :presence=>true 
   
   def english_translation 
     new_locale = replace_locale_in_dot_key_code('en')
@@ -33,7 +36,14 @@ class Translation < ActiveRecord::Base
       end
     end
   end
-  
+=begin
+   def self.searchable_attr 
+    return %w[dot_key_code0 translation0 translation_message dot_key_code1 translation1 translation_message1 dot_key_code2 translation2  translation_message2]
+  end
+  def self.sortable_attr 
+    return %w[dot_key_code0 translation0 translation_message dot_key_code1 translation1 translation_message1 dot_key_code2 translation2  translation_message2]
+  end
+=end
   def self.searchable_attr
     %w(iso_code dot_key_code translation)
   end
@@ -48,10 +58,13 @@ class Translation < ActiveRecord::Base
     %w(begins_with ends_with matches  does_not_match equals is_null is_not_null)
   end
   # need a model as param
-  def self.search(current_user, criteria={}, operators={}, sorting={})
-    
+  # overrides search() in search_model.rb
+  def self.search(current_user, search_info={}, ar_relation = nil)
+    criteria = search_info[:criteria]
+    operators = search_info[:operators]
+    sorting= search_info[:sorting]
     translations= all
-    puts translations.class.name
+    #puts translations.class.name
     #debugger
     #@val=nil
     if ! criteria['iso_code'].nil? then
@@ -81,8 +94,8 @@ class Translation < ActiveRecord::Base
         end
       end
     end
-    debugger
-    
+
+    #binding.pry
     translations = build_lazy_loader(translations, criteria, operators)
     #puts translations.class.name
     return translations

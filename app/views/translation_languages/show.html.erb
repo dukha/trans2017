@@ -1,0 +1,15 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Iso code:</b>
+  <%= @translation_language.iso_code %>
+</p>
+
+<p>
+  <b>Name:</b>
+  <%= @translation_language.name %>
+</p>
+
+
+<%= link_to 'Edit', edit_translation_language_path(@translation_language) %> |
+<%= link_to t("formtastic.actions.back"), translation_languages_path %>

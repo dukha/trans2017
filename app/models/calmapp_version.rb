@@ -14,11 +14,11 @@ class CalmappVersion < ActiveRecord::Base
   validates  :version,  :presence=>true
   validates :version, :numericality=>true#=> {:only_integer=>false, :allow_nil =>false}
   
-  validates :calmapp_id, :presence=>true
+  #validates :calmapp, :presence=>true
 
   #has_many :calmapp_versions_languages, :dependent => :destroy
   #has_many :languages , :through => :calmapp_versions_languages
-  validates :calmapp_id, :existence=>true
+  #validates :calmapp_id, :existence=>true
   
   
   

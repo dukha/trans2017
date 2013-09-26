@@ -131,7 +131,7 @@ class Location < ActiveRecord::Base
   # if we create a user without givin any permission then they will be a guest of Location.empty_organisation
   def self.empty_organisation
     name = 'Empty organisation'
-    l = Location.find_by_name name
+    l = Location.find_by(name: name)
     if l ; return l; end
     Organisation.create :name => name, :translation_code => "empty_organisation"
   end
@@ -248,7 +248,7 @@ class Location < ActiveRecord::Base
   end
 =end
   scope :non_root, lambda { |root| where( "id != ? ", root.id) }
-  scope :non_translation_language,  where( "type != 'TranslationLanguage'")
+  scope :non_translation_language,  ->{where( "type != 'TranslationLanguage'")}
 
   def move_targets
     # if self is root or a server then moving is impossible

@@ -52,7 +52,8 @@ module SearchController
         if ! params[criterion_key].blank? then
           if criterion_key.to_s.ends_with?('_date') || criterion_key.to_s.ends_with?('_at') then
             # This is  a bit shakey: duck programming at its "best" providing you know ath all date attributes must end with "_date"
-            criteria[attr] = DateTime.strptime(params[criterion_key], ((formats[criterion_key].nil?)?t($DF + "default") : t(formats[criterion_key])))
+            #criteria[attr] = DateTime.strptime(params[criterion_key], ((formats[criterion_key].nil?)?t($DF + "default") : t(formats[criterion_key])))
+            criteria[attr] = DateTime.strptime(params[criterion_key], ((formats[criterion_key].nil?)?$DATE_TRANSFER_FORMAT : t(formats[criterion_key])))
           else
             criteria[attr] =params[criterion_key]
           end  
@@ -67,6 +68,7 @@ module SearchController
   end  
   
   def attr_2_criterion_sym attribute
+    #binding.pry
      ("criterion_" + attribute).to_sym
   end 
   
@@ -85,7 +87,7 @@ module SearchController
   
   def init_search(current_user, searchable_attr={}, sortable_attr={})
      #searchable_attr = AssistantTeacher.searchable_attr
-    
+    #binding.pry
     criteria=criterion_list(searchable_attr)
     operators=operator_list( searchable_attr, criteria)
     

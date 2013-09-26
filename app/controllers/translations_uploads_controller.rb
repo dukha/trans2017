@@ -5,7 +5,7 @@ class TranslationsUploadsController < ApplicationController
   # delete these comments after generation
 
   # Comment out the next 2 lines if not using authentication and authorisation
-  before_filter :authenticate_user!
+  before_action :authenticate_user!
   filter_access_to :all
 
   @@model ="translations_upload"

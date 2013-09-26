@@ -1,4 +1,6 @@
 class TranslationsController < ApplicationController
+  before_action :authenticate_user!
+  filter_access_to :all
   # RecordInvalid is thrown when a constaint is violated (e.g. uniqueness)
   rescue_from ActiveRecord::RecordInvalid, :with => :record_invalid
   #RecordNotUnique is thrown when the database unique constraint is violated. 
@@ -34,6 +36,7 @@ class TranslationsController < ApplicationController
   end
 
   def index
+    
     #@translation_redises = TranslationRedis.find(@redis_connection, @language_id).paginate(:page => params[:page], :per_page=>25)  #Translation.all
     # We now do all our primary io via activerecord/postgres and only publish to redis....
    
@@ -42,6 +45,9 @@ class TranslationsController < ApplicationController
     # Thus use to use will_paginate we eagerly load, giving an array by using .all 
     # The array will still paginate provided we have will_paginate/array
     # messy but it works!! 
+    
+=begin
+    sorting=sort_list(sortable_attr)
     searchable_attr = Translation.searchable_attr
     criteria=criterion_list(searchable_attr)
   
@@ -49,13 +55,17 @@ class TranslationsController < ApplicationController
   
     sortable_attr=Translation.sortable_attr
     sorting=sort_list(sortable_attr)
-  
+=end
+    #binding.pry
     require 'will_paginate/array'
-    
+    search()
+    #binding.pry
+    @translations =@translations.paginate(:page => params[:page], :per_page => 7)
     # Fix this when we get devise
    # current_user = UserWork.current_user_id
     # We need current_user for auth
-    @translations = Translation.search(current_user, criteria, operators, sorting).paginate(:page => params[:page], :per_page=>25) 
+    #@translations = Translation.search(current_user, criteria, operators, sorting).paginate(:page => params[:page], :per_page=>25)
+     
     #puts "@translations: " + @translations.first.dot_key_code
     respond_to do |format|
       format.html # index.html.erb
@@ -162,10 +172,42 @@ class TranslationsController < ApplicationController
   def destroy
   end
   
+  def search
+    # We need to make a preliminary ar relation so that we can do the join. The selects are important so that we can get the region (for translation) 
+    activerecord_relation = Translation.all #, @language)
+    #binding.pry
+    if Translation.respond_to? :searchable_attr  
+      searchable_attr = Translation.searchable_attr 
+    else 
+      searchable_attr = [] 
+    end
+
+    criteria=criterion_list(searchable_attr)
+    operators=operator_list( searchable_attr, criteria)
+
+    if Translation.respond_to? :sortable_attr  
+      sortable_attr = Translation.sortable_attr     
+    else   
+      sortable_attr = []   
+    end
+    
+    # because registrars is a many to many aqssociation with course, we have to do this part of the search customized
+=begin
+    if ! params[:registrars_criterion].blank?
+      registrars_array= Array.new(1,params[:registrars_criterion])
+      activerecord_relation = activerecord_relation.joins{courses_user}.joins{registrars}.where{registrars.id >> my{registrars_array} }.uniq
+    end
+=end
+    # Uses params to prepare the criteria and operators for the search  
+    search_info = init_search(current_user, searchable_attr, sortable_attr)
+    
+    # Does the search
+    @translations = Translation.search(current_user, search_info, activerecord_relation)
+  end
   protected
     # This method called when the DB uniqueness constraint is violated
     def record_not_unique exception
-      debugger 
+      #debugger 
       
       flash.now[:error] = exception.message
       tflash("all_rolledback", :warning, {:model=>@@model, :count=>10}, true )
@@ -203,4 +245,6 @@ class TranslationsController < ApplicationController
       @developer_param.key_helper=params[:developer_param][:key_helper]
       @rollbacked = true
     end
+    
+   
 end

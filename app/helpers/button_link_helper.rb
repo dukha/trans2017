@@ -56,17 +56,24 @@ module ButtonLinkHelper
   # <td class='link'><a href="/de/course_types/31" data-confirm="Sind Sie sicher?" data-method="delete" rel="nofollow">Löschen</a></td>
   # Usage in dropdown menu : <%=link_destroy(course, :courses, {:category=>'menu'}, 'li') %> 
   def link_destroy obj, resource, options={}, html_container='td'
+    #binding.pry
     html = " "
     #binding.pry
     if permitted_to? :destroy, table_symbol_from(resource)
-      if options[:confirm].nil? then
-        options[:confirm] = 'delete.are_you_sure'
-      end
+      #if options[:confirm].nil? && options[:data][:confirm].nil? then
+        #options[:data][:confirm] = 'delete.are_you_sure' 
+        
+        #options[:confirm] = 'delete.are_you_sure'
+      #end
+      options[:data] = {} if options[:data].nil?
+      options[:data][:confirm] = 'delete.are_you_sure' if options[:data][:confirm].nil?
+      
       if options[:model].nil? then 
         #options[:model]= singular_table_name_from(obj.class.name)
         #this is not actually the model class name (LetterTranslation) but a string (letter translation) to show in the confirm pop up !
         options[:model]= resource.to_s.singularize.humanize.downcase
       end
+      options = tconfirm_option options
       #if options[:count].nil? then
       #options[:count]=1
       #end

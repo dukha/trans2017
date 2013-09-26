@@ -71,12 +71,12 @@ class Profile < ActiveRecord::Base
 
   # profile to use for root user
   def self.sysadmin
-    Profile.find_by_name "sysadmin"
+    Profile.find_by(name: "sysadmin")
   end
 
   # profile to use for guest user
   def self.guest
-    Profile.find_by_name "guest"
+    Profile.find_by(name: "guest")
   end
   
   
