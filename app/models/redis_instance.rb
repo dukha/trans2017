@@ -25,7 +25,7 @@
 class RedisInstance < ActiveRecord::Base
   
   include Validations
-  
+  has_many :redis_databases
   
   
   validates :host,:presence=>true
@@ -44,7 +44,7 @@ class RedisInstance < ActiveRecord::Base
 
 
   def database_supports_language? language
-    if language.is_a(Language) then
+    if language.is_a(TranslationLanguage) then
       language = language.id
     end
     return calmapp_version.language_ids.include? language
@@ -52,7 +52,8 @@ class RedisInstance < ActiveRecord::Base
   
   def unused_redis_database_indexes() 
     ar = (0..(max_databases - 1)).to_a
-    RedisDatabase.select{redis_db_index}.each{ |ri| ar.delete(ri.redis_db_index)}
+    #binding.pry
+    redis_databases.each{|rdb| ar.delete(rdb.redis_db_index)}
     return ar
   end
   

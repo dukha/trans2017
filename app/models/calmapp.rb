@@ -18,7 +18,7 @@ class Calmapp < ActiveRecord::Base
   
   attr_accessor :new_version#,  :new_redis_db#, :add_languages
 
-  has_many :calmapp_versions, :dependent => :restrict
+  has_many :calmapp_versions, :dependent => :restrict_with_exception
   accepts_nested_attributes_for :calmapp_versions, :reject_if => :all_blank, :allow_destroy => true
   
   

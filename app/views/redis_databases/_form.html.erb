@@ -89,7 +89,7 @@
 	       var redisInstanceId= $(redisInstanceSelect).val();
 	       console.log("instance_id = " + redisInstanceId );
 	       $.ajax( {
-                       url:        "<%= unused_redis_dbs_path %>",
+                       url:        "<%= redis_databases_getunused_path %>",
                        async : false,
                        type:       "GET", 
                        dataType:   "json",

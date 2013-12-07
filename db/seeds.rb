@@ -73,7 +73,15 @@ User.create_root_user
 vipassana =  Area.create :name => "Vipassana" , :parent_id => Location.find_by_name(Location.localhost_name).id
 translation_organisation = Organisation.create :name=>"translation_organisation", :parent_id => vipassana.id
 en = TranslationLanguage.create!(:iso_code=> "en", :name=>"English") #, :parent_id=>translation_organisation.id)
-nl = TranslationLanguage.create!(:iso_code=> "nl", :name=>"Nederlands")  #, :parent_id=>translation organisation.id)
+nl = TranslationLanguage.create!(:iso_code=> "nl", :name=>"Dutch")  
+
+
+
+
+
+
+
+
 Language.create!(:iso_code=> "en", :name=>"English") #, :parent_id=>translation_organisation.id)
 
 #log.info("Global area and vipassana org inserted")

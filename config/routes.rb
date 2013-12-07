@@ -1,20 +1,4 @@
 Translator::Application.routes.draw do
- 
-
-
-
-  
-
-  
-
-
-
-
-
-  #resources :redis_admins
- 
- 
-
   scope "/:locale" do
    resources :profiles
    #devise_for :users
@@ -63,7 +47,7 @@ Translator::Application.routes.draw do
    resources :release_statuses
    resources :redis_databases
    resources :redis_instances
-   get 'unused_redis_database_indexes' => 'redis_instances#unused_redis_database_indexes', :as => 'unused_redis_dbs', via: :all
+   get 'unused_redis_database_indexes' => 'redis_instances#unused_redis_database_indexes', :as => 'redis_databases_getunused', via: :all
 
    resources :user_works#, :only=>[:edit, :show]
 

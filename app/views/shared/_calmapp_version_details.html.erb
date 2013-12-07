@@ -1,8 +1,3 @@
-<!--< %=semantic_fields_for(@calmapp_version) do |version| %>
-        < %= version.input :version %>
-        
-        < %= version.input :add_languages,   :as=>:boolean%>
--->
 <script language="javascript" type="text/javascript">
         //<!-- This script sets up dual list boxes with the appropriate ids -->
         /*
@@ -29,46 +24,37 @@
     </script>
 
         <!--div id="calmapp-versions-table" class='nested-fields' style='display:table' -->
-        <div id="calmapp-versions-table" class='nested-fields' style='border:1px solid; margin:1px;padding-top:2px;padding-bottom:2px;"}'>  
+        <div id="calmapp-versions-table" class='nested-fields' style='border:1px solid;border-color:grey; margin-left:20px;margin-right:1px margin-top:1px; margin-bottom:1px;padding-top:2px;padding-bottom:2px;"}'>  
                 <%= f.inputs do%>
-                <!--div style= 'display:table-row' -->
-                  
-                    <!--div style='display:table-cell'>
-                      <fieldset class="inputs"> <label>< %=t("activerecord.calmapp_version.languages_available")%></label><br>
-                            <span id="availableLanguagesFilterSpan"><!-- < %= t("formtastic.labels.filter")%> -- >  <input type="text" id="availableLanguagesFilter" /><!--<button type="button" id="availableLanguageFilterClear">X</button></span>-->
-                            <!--ul>< %=  f.input :languages_available, :label=>false, :input_html =>{:id =>"availableLanguagesBox"},  :as=>:select, :collection=>@calmapp_version.available_languages.collect {|lang| [lang.name, lang.id ]},  :multiple=>"multiple"%></ul -->
-                            <!--<span id="availableLanguagesCounter" class="countLabel"></span> -- > </fieldset>
-                            <select id="box1Storage">
-                            </select>
-                    </div>
-                    <div style='display:table-cell'>
-                      <ul><li><button id="to2" type="button" class="toFrom">&nbsp;>&nbsp;</button></li>
-                        <li><button id="allTo2" type="button" class="toFrom">&nbsp;>>&nbsp;</button></li>
-                        <li><button id="allTo1" type="button" class="toFrom">&nbsp;<<&nbsp;</button></li>
-                        <li><button id="to1" type="button" class="toFrom">&nbsp;<&nbsp;</button></li>
-                      </ul>
-                    </div>
-                    <div style='display:table-cell'>
-                        <fieldset class="inputs">< %=t("activerecord.calmapp_version.languages")%><br>
-                        <span id="selectedLanguagesFilterSpan"><!--  < %= t("formtastic.labels.filter")%>-- >  <input type="text" id="selectedLanguagesFilter" /><!--<button type="button" id="selectedLanguagesFilterClear">X</button></span> -->
-                        <!--ul>< %=  f.input :languages, :label=>false, :as=>:select, :collection=>@calmapp_version.languages.collect {|lang| [lang.name,lang.id]},  :multiple=>"multiple", :input_html => { :class => "dualBox2", :id => "selectedLanguagesBox" }  %></ul -- >
-                        <!--<span id="selectedLanguagesCounter" class="countLabel"></span></fieldset> -- >
-                        <select id="box2Storage">
-                        </select>
-                    </div -->
-                    <!--div style='display:table-cell' -->
+                      <!--%= f.input :version, label: false, required: false, input_html: {style: "margin-left:25%"}% -->
+                      <%= f.input :version,  required: true,wrapper_html: {style: "margin-left:20px"}%>
+                      <p style="font-size:13px; font-weight:700;margin-left:20px;"><%=t($ARM + "translation_language", :count=>3)%></p>
+                      <%= f.semantic_fields_for :calmapp_versions_translation_languages do |cavtl| %> 
+                      <!--%= f.semantic_fields_for :translation_languages do |cavtl| %--> 
+                           <%TranslationLanguage.order("name ASC").all.each do |tl|%>
+                           
+                              <%=check_box_tag("calmapp[calmapp_versions][translation_languages][]", tl.id, f.object.translation_languages.include?(tl))%> &nbsp; <%=tl.name%>           
+                           <%end%>     
+                          <!--%= render :partial=>'calmapp_versions_translation_language_fields', :locals=>{:f=> cavtl}  %-->            
+                      <%end%> 
                       
-                      <%= f.input :version, label: false , required: false, input_html: {style: "margin-left:25%"}%>
-                      <span style='padding-left:25%'><%= link_to_remove_association t($FA +"remove_version"), f   %></span> 
-                
-                <%end%>
-                
+                      <div class='add-tablecell'>
+                        
+                          <%= link_to_add_association(t($FA + 'add_translation_language'), f, :calmapp_versions_translation_languages, 
+                          :partial => 'calmapp_versions_translation_language_fields', :render_options => {:locals => { }}, :style=> "margin-left:20px;font-size: smaller;") %>
+                          
+                     </div>
+                     <span><%= link_to_remove_association t($FA +"remove_version"), f, :style => "font-size: smaller;"   %></span> 
+                  <%end%>      
+            
+                      
+                       <!--%= f.input :translation_languages, :as => :check_boxes, :collection => TranslationLanguage.order('name ASC').all  % -->
+                       
+                       
+                 
                 <%=f.semantic_errors :calmapp_id%>
                 <%=f.semantic_errors :calmapp%>
                    
                    
        </div>
-      <!-- < %if ! @redis_database.nil? then %>
-         < %= version.input :new_redis_dev_db, :as=>:boolean %>
-       < %end%>
-     < %end%  -->
+      

@@ -3,7 +3,7 @@ class ApplicationController < ActionController::Base
   #include TranslationsHelper
   require File.join(Rails.root, "app", "/helpers" "/translations_helper.rb" )
   include TranslationsHelper
-  
+
   include SearchController
   include Exceptions
   #include SearchModel
@@ -19,7 +19,7 @@ class ApplicationController < ActionController::Base
 
       render :action => (exception.record.new_record? ? :new : :edit)
   end
-  #Rescuing a violation of DB unique constraint 
+  #Rescuing a violation of DB unique constraint
   rescue_from ActiveRecord::RecordNotUnique do |not_unique|
      message = not_unique.message
     if pgerror? not_unique then
@@ -48,7 +48,7 @@ class ApplicationController < ActionController::Base
             end
           end
         end
-        debugger
+        #debugger
         translated_fields = fieldlist.split(",").collect{|f| tlabel(f.strip, model)}
         single_value = (translated_fields.split.length == 1)
         if  single_value then
@@ -74,7 +74,7 @@ class ApplicationController < ActionController::Base
 
   #$APPLICATION_NAME = "CALM Translator"
   #$APPLICATION_VERSION ="0.0.0 M1"
-  
+
 
   # Is Authorization.current_user the same as current_user???
   #qq before_filter {|contr| Authorization.current_user = contr.current_user}
@@ -96,7 +96,7 @@ This function, together with the scope in routes.rb allows the setting of urls l
   This function will fall over if called outside the browser (like in rspec, for example)
 =end
   def extract_locale_from_accept_language_header
-    
+
     logger.info 'HTTP_ACCEPT_LANGUAGE = ' + request.env['HTTP_ACCEPT_LANGUAGE']
      request.env['HTTP_ACCEPT_LANGUAGE'].scan(/^[a-z]{2}/).first
     request.env['HTTP_ACCEPT_LANGUAGE'].split(",").first
@@ -105,7 +105,7 @@ This function, together with the scope in routes.rb allows the setting of urls l
   def pgerror? exception
     exception.message.start_with? "PGError:"
   end
- 
+
 
 =begin
   Use this function to rescue all situations
@@ -131,4 +131,3 @@ This function, together with the scope in routes.rb allows the setting of urls l
   end
 =end
 end
-

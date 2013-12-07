@@ -54,7 +54,9 @@ authorization do
   role :users_write do
     has_permission_on [:users], :to => [:unlock_user]
   end
-
+  role :redis_databases_getunused do
+    has_permission_on [:redis_instances],  :to=>[:unused_redis_database_indexes]
+  end
 
   standard_roles :profiles
   #standard_roles :locations

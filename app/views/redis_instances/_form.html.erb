@@ -8,7 +8,8 @@
 				   <%= f.input :description  %>
            <%= f.input :port  %>
            <%= f.input :max_databases %>
-           <%= f.input :password,  :as => :string%>
+           <!--%= f.input :password,  :as => (Rails.env =='development'?:string : :password), input_html: {size: 110}%-->
+           <%= f.input :password,  :as => :text,input_html: {cols: 40, rows: 5}%>
 		
 	<% end %>
 

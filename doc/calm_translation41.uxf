@@ -32,7 +32,7 @@
       <w>370</w>
       <h>120</h>
     </coordinates>
-    <panel_attributes>*Upload*
+    <panel_attributes>*TranslationUpload*
 id:integer
 translation_language_id:integer
 translation_file_name:string (paperclip attributes)

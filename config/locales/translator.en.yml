@@ -42,6 +42,7 @@ en:
       to_redis: Write to Database
       redis_to_yaml: Save Database as YAML
       add_translation_language: Add Translation Language
+      remove_translation_language: Remove Translation Language
       add_organisation: Add Organisation
       add_area: Add Area
       add_server: Add Server
@@ -68,7 +69,7 @@ en:
       filter: Filter
     hints:
       calmapp_version:
-        version: Enter the version here. Format is <major_version>.<minor_version> e.g. 12.23 (There is no distinct translation for maintenance versions)
+        version: "Enter the version here. Format is <major_version>.<minor_version> e.g. 12.23 (There is no distinct translation for maintenance versions, such as 1.20.3, so don't enter them here.)"
         add_languages: If this checkbox is not checked then no language will be written to the database
       calmapp:
         name: Enter the application name.
@@ -83,13 +84,34 @@ en:
         max_databases: Each instance has a maximum number of databases. It is set in redis/redis.conf(or redis/<port>.config). Don't put anything here that is not already.in redis.conf. Default(for Redis new installation) is 16.
         host: Enter the technical name(ip address or hostname) of the computer where the Redis database server is running.
         port: Enter the computer port number used by the Redis database. (Default is 6379)
-        password: Enter the actual password for this Redis Instance. If you don't know it then don't add a new record or change an existing password. For production the password should be greater than 100 characters, otherwise a te force attack on Redis is too easy.
+        password: "Enter the actual password for this Redis Instance. If you don't know it then don't add a new record or change an existing password. For production the password should be greater than 100 characters, otherwise a brute force attack on Redis is too easy. If the password is left blank when editing then it will remain unchanged." 
         description: User Friendly name to indentify the host.
       translation_language:
         iso_code: "ISO Code comes in a format of <language_code [+ underscore + REGION]> language_code is 2 chars, always lowercase. Look this up if you don't know it. REGION is always in upper case. eg. fr_CA refers to French as used in Canada"   
 #    actions:
 
       #new_translation: New English Translation
+  roles:
+    actions:
+      read: Read
+      write: Write
+      create: Create
+      destroy: Destroy
+      lookup: Lookup 
+      confirm: Confirm
+      search: Search
+      import: Import 
+      change: Change
+      getunused: Get Unused
+      invite: Invite
+    miscellaneous: Miscellaneous
+    redis_instances: Redis Instances
+    redis_databases: Redis Databases
+    translation_languages: Translation Languages
+    calmapps: Applications
+    calmapp_versions: Application Versions
+    translation_uploads: Translation Uploads
+    release_statuses: Release Statuses
   menus:
     translations: Translations
     translator_index: Translate in Table

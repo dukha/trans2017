@@ -8,7 +8,7 @@ class CalmappVersion < ActiveRecord::Base
   
   belongs_to :calmapp #, :class_name => "Application", :foreign_key => "calmapp_id"
   
-  has_one :redis_database
+  has_many :redis_databases
   
  
   validates  :version,  :presence=>true
@@ -16,8 +16,9 @@ class CalmappVersion < ActiveRecord::Base
   
   #validates :calmapp, :presence=>true
 
-  #has_many :calmapp_versions_languages, :dependent => :destroy
-  #has_many :languages , :through => :calmapp_versions_languages
+  has_many :calmapp_versions_translation_languages, :dependent => :destroy
+  accepts_nested_attributes_for :calmapp_versions_translation_languages, :reject_if => :all_blank, :allow_destroy => true
+  has_many :translation_languages , :through => :calmapp_versions_translation_languages
   #validates :calmapp_id, :existence=>true
   
   

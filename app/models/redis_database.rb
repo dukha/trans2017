@@ -58,7 +58,7 @@ class RedisDatabase < ActiveRecord::Base
   end
 
   def database_supports_language? language
-    if language.is_a(Language) then
+    if language.is_a?(TranslationLanguage) then
       language = language.id
     end
     return calmapp_version.language_ids.include? language
