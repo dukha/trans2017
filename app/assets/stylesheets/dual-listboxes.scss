@@ -1,0 +1,55 @@
+/*select.dualBox1{
+  height:300px;
+  width:50px;
+}
+
+select.dualBox2{
+  height:300px;
+  width:50px;
+}*/
+/*this dual boxes stuff needs to be transfered to  reg.css.scss since it is all generic now */
+$dualBoxWidth : 100%;/* in a table cell now 100px; */
+$filterBoxWidth: $dualBoxWidth /*- 5px*/ ;
+$dualBoxHeight : 120px;
+$filtermargintopbottom: 3px;
+$filtermarginright:0px;
+
+select.dual-listboxes-available-data{
+  height:$dualBoxHeight;
+  width:$dualBoxWidth;
+  
+}
+select.dual-listboxes-selected-data{
+  height:$dualBoxHeight;
+   width: $dualBoxWidth;
+}
+td.dual-listboxes-main-label{
+  width:40%;
+}
+td.dual-listboxes-data{
+  width:25%;
+}
+td.dual-listboxes-filter{
+  margin-top:$filtermargintopbottom;
+   margin-bottom:$filtermargintopbottom;
+   margin-right:$filtermarginright;
+}
+li.dual-listboxes-button-list{
+  padding-left:25%;
+}
+
+input.dual-listboxes-available-filter{
+   
+   width: $filterBoxWidth;
+}
+input.dual-listboxes-selected-filter{
+   margin-top:$filtermargintopbottom;
+   margin-bottom:$filtermargintopbottom;
+   /*margin-right:$filtermarginright;*/
+   width: $filterBoxWidth;
+}
+
+button.toFrom{
+ width: 30px;
+ font-size: x-small;
+}

@@ -3,33 +3,41 @@
   /**
    * This script allows the proper editing of redis instance and redis database index
    * Since we are not following Mr Codd here we need complex js to ensure that the index is permitted
-   * for that instance of redis (within the max number of databases) and that the index that is chosen is not
+   * for that instance of redis (within the max number of databases) and that the index that is chosen 
+   * is not
    * being used by another app version.
-   * If the user is in an edit situation then and changes instance and then changes back to the original instance then the
+   * If the user is in an edit situation then and changes instance and then changes back to 
+   * the original instance then the
    * same database is still used.
-   * If the user wants to change the index of a database then he must delete the first database (use delete function in the index)
+   * If the user wants to change the index of a database then he must delete the first database 
+   * (use delete function in the index page)
    * and recreate a new database.
    * 
    * The data is cleared from a redis database on insert of a new database from this form.
-   * It is not a big deal if a redis database is lost as the data will always be publishable from the postgres db.
+   * It is not a big deal if a redis database is lost as the data will always be publishable 
+   * from the postgres db.
    * redis db 0 is used to store admin info: 
    */
-  var redisDatabaseIndex = '#redis_database_redis_db_index';
-  var redisInstanceSelect ='#redis_database_redis_instance_id';
-	var selectDbIndex = '#redis_database_redis_db_index'; //"select[name='redis-database[redis_db_index]']";
-	var selectDbIndexAllOptions =selectDbIndex + ">option";
-	var dbIndex = -1;
+  var RDB = namespace("translator.redis_database");
+  RDB.Form= function(){
+    
+  };
+  var RDB.Form.redisDatabaseIndex = '#redis_database_redis_db_index';
+  var RDB.Form.redisInstanceSelect ='#redis_database_redis_instance_id';
+	var RDB.Form.selectDbIndex = '#redis_database_redis_db_index'; //"select[name='redis-database[redis_db_index]']";
+	var RDB.Form.selectDbIndexAllOptions =RDB.Form.selectDbIndex + ">option";
+	var RDB.Form.dbIndex = -1;
 	var instanceId = -1;
 	$(document).ready(function(){
-	  $(redisInstanceSelect).change(function(){
+	  $(RDB.Form.redisInstanceSelect).change(function(){
 	    console.log( "change1");
 	    checkDbIndex('instancechange');
 	    populateDbIndexSelect();
 	    //console.log( "dbIndex " + dbIndex);
 	  });
 	  //In an edit situation, we preserve the original instande and db, so that we can put it back if the user changes his mind
-	  dbIndex = $(redisDatabaseIndex).val();
-	  instanceId = $(redisInstanceSelect).val(); 
+	  dbIndex = $(RDB.Form.redisDatabaseIndex).val();
+	  instanceId = $(RDB.Form.redisInstanceSelect).val(); 
 	  checkDbIndex('');
     
     if( $('#status').val() == 'new' ){
@@ -40,7 +48,7 @@
 	});
 	
 	function isRedisInstanceSelected(){
-	  return $(redisInstanceSelect + " option:selected").text()!="";
+	  return $(RDB.Form.redisInstanceSelect + " option:selected").text()!="";
 	}
 	
 	function checkDbIndex(type){
@@ -70,21 +78,21 @@
 	}//end fn checkDbIndex
 	
 	function disableDbIndex(disable){
-	  $(redisDatabaseIndex).prop('disabled', disable);
+	  $(RDB.Form.redisDatabaseIndex).prop('disabled', disable);
 	}   
 	
 	function populateDbIndexSelect(){
 	  var unusedIndexArray = null;
 	  //var redisInstanceId '';
-	  console.log($(redisInstanceSelect).val() + "xxx");
+	  console.log($(RDB.Form.redisInstanceSelect).val() + "xxx");
 	  //if($(selectDbIndex).length==0){
 	    //console.log(" select box doesn't exist");
 	  //}else{
-	  $(selectDbIndexAllOptions).remove();  
+	  $(RDB.Form.selectDbIndexAllOptions).remove();  
 	  console.log( "options removed");
 	  if(isRedisInstanceSelected()){  
 	    //console.log("instance_selected");
-	    if( $(redisInstanceSelect).val()){
+	    if( $(RDB.Form.redisInstanceSelect).val()){
 	       console.log("instance has val");
 	       var redisInstanceId= $(redisInstanceSelect).val();
 	       console.log("instance_id = " + redisInstanceId );
@@ -121,16 +129,16 @@
         // current value (in the iteration) and then
         // add this value to the list.
         //console.log("options " + objValue);
-        $(selectDbIndex).append($( "<option ></option>" ).val(objValue).html(objValue));
+        $(RDB.Form.selectDbIndex).append($( "<option ></option>" ).val(objValue).html(objValue));
         //); 
                }//end function
 	       );//end each
 	        //We must be caredul to set the index back to what it was if the user sets the same instance again
-	       if($(redisInstanceSelect).val()==instanceId){
-               $(redisDatabaseIndex).val(dbIndex);
+	       if($(RDB.Form.redisInstanceSelect).val()==instanceId){
+               $(RDB.Form.redisDatabaseIndex).val(dbIndex);
                disableDbIndex(true);
          }else{
-            $(redisDatabaseIndex).val('');
+            $(RDB.Form.redisDatabaseIndex).val('');
          }
 	      }//end val 
 	    }else{

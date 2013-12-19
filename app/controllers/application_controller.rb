@@ -20,12 +20,14 @@ class ApplicationController < ActionController::Base
       render :action => (exception.record.new_record? ? :new : :edit)
   end
   #Rescuing a violation of DB unique constraint
+=begin
   rescue_from ActiveRecord::RecordNotUnique do |not_unique|
      message = not_unique.message
     if pgerror? not_unique then
         # We have a postgres non_unique error. This should only happen for multicolumn unique indexes
         # which cannot be properly trapped by active record.
-        # We make a translatable more user friendly index
+        # We make a translatable more user friendly inde
+        binding.pry
         message.gsub!("PGError:","")
         messages = message.split("\n")
         opening_bracket1_index = messages[1].index("(")
@@ -66,10 +68,11 @@ class ApplicationController < ActionController::Base
       #user_friendly_message
       #puts user_friendly_message
       flash[:error]= user_friendly_message
-      debugger
+      binding.pry
       render :action => ((messages.length > 2) && (messages[2].index("INSERT INTO"))) ? :new : :edit
       #render :action => "new", :controller => "calmapps"
-  end
+  end 
+=end
   rescue_from Exception, :with => :rescue_all_exceptions  if Rails.env == 'production'
 
   #$APPLICATION_NAME = "CALM Translator"

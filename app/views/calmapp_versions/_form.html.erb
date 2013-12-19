@@ -5,7 +5,107 @@
 				   <%= f.input :version  %>
 				   <!-- release_status_id moved to RedisDatabase-->
 				   <!--%= f.input :release_status_id, :as=>:select,:collection=> ReleaseStatus.all.collect {|p| [ p.status, p.id ]}    % -->
-		      
+		       <script language="javascript" type="text/javascript">
+        //<!-- This script sets up dual list boxes with the appropriate ids -->
+        
+        $(function() {
+            $.configureBoxes({box1View : "available-translation-languages-box",
+                              box2View : "assigned-translation-languages-box",
+                              box1Filter : "available-translation-languages-filter",
+                              box2Filter : "assigned-translation-languages-filter",
+                              box1Clear : "available-translation-languages-filter-clear",
+                              box2Clear : "assigned-translation-languages-filter-clear",
+                              box1Counter : "available-translation-languages-counter",
+                              box2Counter :  "assigned-translation-languages-counter",
+                              box1Storage :   "box1Storage-tl",
+                              box2Storage :   "box2Storage-tl",
+                              to1 : "to1-tl",
+                              to2 : "to2-tl",
+                              allTo1 : "allTo1-tl",
+                              allTo2 : "allTo2-tl"});
+        });
+         //This function ensures that all values in the receiving listbox are extracted and written. They must be selected for this.
+         $(document).ready(function(){
+          deleteBlanksFromSelectBox('#availableLanguagesBox');
+         });//end ready
+
+         //This function is necessary to remove a blank that formtastic leaves in the first listbox.
+         function deleteBlanksFromSelectBox(boxId){
+           $(boxId + " :empty").remove();
+         }
+         
+    </script>
+
+        <!--div id="calmapp-versions-table" class='nested-fields' style='display:table' -->
+        <p style="font-size:15px; font-weight:700;margin-left:0px;"><%=t($ARM + "translation_language", :count=>3)%></p>
+        <!--div id="calmapp-versions-table" class='nested-fields' style='display:table; border:1px solid;border-color:grey; margin-left:20px;margin-right:1px margin-top:1px; margin-bottom:1px;padding-top:2px;padding-bottom:2px;width:80%;"}' -->
+                <!--%= f.inputs do% -->
+                      <!--%= f.input :version, label: false, required: false, input_html: {style: "margin-left:25%"}% -->
+                      <!--%= f.input :version,  required: true,wrapper_html: {style: "margin-left:20px"}% -->
+                      
+                      <!--li id="translation-languages" style=" width:80%;" class="string input required"-->
+     <!-- Table just for layout of 2 listboxes filters and buttons -->
+        <table id="translation-languages-table" style="width:80%; margin-left:10px;" >
+           <tr>
+             <!--td class="dual-listboxes-main-label" ><label class='label' id="translation-languages-label">< %=t($ARA + 'calmapp_version.translation_languages')%></label></div -->
+             <td> </td> 
+             <td ><label><%=t($ARA + "calmapp_version.translation_languages_available")%></label></td> 
+             <td> </td> 
+             <td ><label><%=t($ARA + "calmapp_version.translation_languages_assigned")%></label></td>
+           </tr>
+           <tr>
+               <td ></td>
+               <td ><input type="text" id="available-translation-languages-filter" class="dual-listboxes-available-filter" style="width:98%"/></td>
+               <td style="width:10%" ></td>
+               <td ><input type="text" id="assigned-available-translation-languages-filter" class="dual-listboxes-selected-filter" style="width:98%"/>
+                 <select id="box1Storage-tl"></select>
+               </td>
+           </tr>
+           <tr>
+             <td ></td>
+             <!--%binding.pry% -->
+             <td   class="dual-listboxes-data">
+               <%=  f.input :translation_languages_available, :label=>false, 
+               :input_html =>{:id =>"available-translation-languages-box",:class => "dual-listboxes-available-data", :style=>"width:100%; height:100%;", :size=>'10'},  
+               :as=>:select, :collection=>f.object.available_translation_languages.collect {|tl| [tl.name, tl.id ]},  :multiple=>"multiple" %>
+             </td>
+             <!--div style = "display:table-cell;width:10%;padding-left:5px;" -->
+             <!--div style='  padding-top:1px; margin-top:1px;  position:relative; width:40px;height:75px;' -->
+             <td style= "width:10%;"> 
+                      <table style="margin-top:1px; padding-top:1px; margin-left:5%; ">
+                        <tr style="text-align:center; ">
+                          <td class="dual-listboxes-button-list" ><button id="to2-tl" type="button" class="toFrom" >&nbsp;>&nbsp;</button></td>
+                        </tr> 
+                        <!-- Move all buttons removed because we are only dealing with few moves.  -->
+                        <tr>
+                          <td class="dual-listboxes-button-list"><button id="allTo2-tl" type="button" class="toFrom">&nbsp;>>&nbsp;</button></td>
+                        </tr>
+                        <tr>
+                        <td class="dual-listboxes-button-list"><button id="allTo1-tl" type="button" class="toFrom">&nbsp;<<&nbsp;</button></td>
+                        </tr> 
+                        <tr>
+                          <td class="dual-listboxes-button-list"><button id="to1-tl" type="button" class="toFrom">&nbsp;<&nbsp;</button></td>
+                        </tr>
+                      </table>
+             </td>
+             <!--/div -->
+             <td  class="dual-listboxes-data"><%=  f.input :calmapp_versions_translation_languages, :label=>false, :as=>:select, 
+                 :collection=>f.object.translation_languages.collect {|tl| [tl.name,tl.id]}, :hint=>false, :multiple=>"multiple", 
+                 :input_html => { :class => "dual-listboxes-selected-data", :id => "assigned-translation-languages-box", :size=>'10',:style=>"width:100%; height:100%;",   }  %>
+               <select id="box2Storage-tl"></select>
+             </td>
+         </tr>                    
+       </table>
+       <p class="inline-hints"><%= t($FH + "calmapp_version.translation_languages") %></p>
+        <%=f.semantic_errors :calmapp_versions_translation_languages%>
+        <%=f.input :redis_databases, :as => :check_boxes%>
+
+
+                <%=f.semantic_errors :calmapp_id%>
+                <%=f.semantic_errors :calmapp%>
+
+
+       
 	<% end %>	
 	<%= f.actions do %>
       <%= f.action(:submit)  %>    

@@ -45,7 +45,8 @@ class RedisDatabase < ActiveRecord::Base
     end
   end
   def name
-    return CalmappVersion.find(calmapp_version_id).name + " / Redis Database Index: " + redis_db_index.to_s
+    return CalmappVersion.find(calmapp_version_id).name + " / Redis Instance: " + RedisInstance.find(redis_instance_id).description + 
+    " / Redis Database Index: " + redis_db_index.to_s
   end
   # returns an instance of Redis class
   def connect

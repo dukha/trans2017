@@ -1,60 +1,105 @@
 <script language="javascript" type="text/javascript">
         //<!-- This script sets up dual list boxes with the appropriate ids -->
-        /*
+        
         $(function() {
-            $.configureBoxes({box1View : "availableLanguagesBox",
-                              box2View : "selectedLanguagesBox",
-                              box1Filter : "availableLanguagesFilter",
-                              box2Filter : "selectedLanguagesFilter",
-                              box1Clear : "availableLanguagesFilterClear",
-                              box2Clear : "selectedLanguagesFilterClear",
-                              box1Counter : "availableLanguagesCounter",
-                              box2Counter :  "selectedLanguagesCounter"  });
+            $.configureBoxes({box1View : "available-translation-languages-box",
+                              box2View : "assigned-translation-languages-box",
+                              box1Filter : "available-translation-languages-filter",
+                              box2Filter : "assigned-translation-languages-filter",
+                              box1Clear : "available-translation-languages-filter-clear",
+                              box2Clear : "assigned-translation-languages-filter-clear",
+                              box1Counter : "available-translation-languages-counter",
+                              box2Counter :  "assigned-translation-languages-counter",
+                              box1Storage :   "box1Storage-tl",
+                              box2Storage :   "box2Storage-tl",
+                              to1 : "to1-tl",
+                              to2 : "to2-tl"});
         });
-         //This funcion ensures that all values in the receiving listbox are extracted and written. They must be selected for this.
+         //This function ensures that all values in the receiving listbox are extracted and written. They must be selected for this.
          $(document).ready(function(){
           deleteBlanksFromSelectBox('#availableLanguagesBox');
          });//end ready
 
-         //This function is necesary to remove a blank that formtastic leaves in the first listbox.
+         //This function is necessary to remove a blank that formtastic leaves in the first listbox.
          function deleteBlanksFromSelectBox(boxId){
            $(boxId + " :empty").remove();
          }
-         */
+         
     </script>
 
         <!--div id="calmapp-versions-table" class='nested-fields' style='display:table' -->
-        <div id="calmapp-versions-table" class='nested-fields' style='border:1px solid;border-color:grey; margin-left:20px;margin-right:1px margin-top:1px; margin-bottom:1px;padding-top:2px;padding-bottom:2px;"}'>  
-                <%= f.inputs do%>
+        <div id="calmapp-versions-table" class='nested-fields' style='display:table; border:1px solid;border-color:grey; margin-left:20px;margin-right:1px margin-top:1px; margin-bottom:1px;padding-top:2px;padding-bottom:2px;width:80%;"}'>
+                <!--%= f.inputs do% -->
                       <!--%= f.input :version, label: false, required: false, input_html: {style: "margin-left:25%"}% -->
-                      <%= f.input :version,  required: true,wrapper_html: {style: "margin-left:20px"}%>
+                      <!--%= f.input :version,  required: true,wrapper_html: {style: "margin-left:20px"}% -->
                       <p style="font-size:13px; font-weight:700;margin-left:20px;"><%=t($ARM + "translation_language", :count=>3)%></p>
-                      <%= f.semantic_fields_for :calmapp_versions_translation_languages do |cavtl| %> 
-                      <!--%= f.semantic_fields_for :translation_languages do |cavtl| %--> 
-                           <%TranslationLanguage.order("name ASC").all.each do |tl|%>
-                           
-                              <%=check_box_tag("calmapp[calmapp_versions][translation_languages][]", tl.id, f.object.translation_languages.include?(tl))%> &nbsp; <%=tl.name%>           
-                           <%end%>     
-                          <!--%= render :partial=>'calmapp_versions_translation_language_fields', :locals=>{:f=> cavtl}  %-->            
-                      <%end%> 
-                      
-                      <div class='add-tablecell'>
-                        
-                          <%= link_to_add_association(t($FA + 'add_translation_language'), f, :calmapp_versions_translation_languages, 
+                      <li id="translation-languages" style=" width:80%;" class="string input required">
+     <!-- Table just for layout of 2 listboxes filters and buttons -->
+        <!--table id="translation-languages-table" style="width:80%;" -->
+           <div style='display:table-row;'>
+             <div style='table-cell' class="dual-listboxes-main-label" ><label class='label' id="translation-languages-label"><%=t($ARA + 'calmapp_version.translation_languages')%></label></div>
+             <div style='table-cell' ><label><%=t($ARA + "calmapp_version.translation_languages_available")%></label></div> 
+             <div style='table-cell' </div> 
+             <div style='table-cell' ><label><%=t($ARA + "calmapp_version.translation_languages_assigned")%></label></div>
+           </div>
+           <div style='display:table-row;'>
+               <div style='table-cell' ></div>
+               <div style='table-cell' ><input type="text" id="available-translation-languages-filter" class="dual-listboxes-available-filter"/></div>
+               <div style='table-cell' ></div>
+               <div style='table-cell' ><input type="text" id="assigned-available-translation-languages-filter" class="dual-listboxes-selected-filter"/>
+                 <select id="box1Storage-tl"></select>
+               </div>
+           </div>
+           <div style='display:table-row;'>
+             <div style='table-cell' ></div>
+             <!--%binding.pry% -->
+             <div style='table-cell'   class="dual-listboxes-data"><%=  f.input :translation_languages_available, :label=>false, :input_html =>{:id =>"available-translation-languages-box",:class => "dual-listboxes-available-data"},  :as=>:select, :collection=>f.object.available_translation_languages.collect {|tl| [tl.name, tl.id ]},  :multiple=>"multiple"%></div>
+             <div style='table-cell;width:10%; '>
+                      <ol >
+                        <li class="dual-listboxes-button-list"><button id="to2-tl" type="button" class="toFrom" >&nbsp;>&nbsp;</button></li>
+                        <!-- Move all buttons removed because we are only dealing with few moves.  -->
+                        <!--li class="dual-listboxes-button-list"><button id="allTo2-reg" type="button" class="toFrom">&nbsp;>>&nbsp;</button></li>
+                        <li class="dual-listboxes-button-list"><button id="allTo1-reg" type="button" class="toFrom">&nbsp;<<&nbsp;</button></li-->
+                        <li class="dual-listboxes-button-list"><button id="to1-tl" type="button" class="toFrom">&nbsp;<&nbsp;</button></li>
+                      </ol> 
+             </div>
+             <div style='table-cell'  class="dual-listboxes-data"><%=  f.input :translation_languages, :label=>false, :as=>:select, :collection=>f.object.translation_languages.collect {|tl| [tl.name,tl.id]}, :hint=>false, :multiple=>"multiple", :input_html => { :class => "dual-listboxes-selected-data", :id => "assigned-translation-languages-box" }  %>
+               <select id="box2Storage-tl"></select>
+             </div>
+           </div>
+       <--/table-->
+       <p class="inline-hints"><%= t($FH + "calmapp_version.translation_languages") %></p>
+        <%=f.semantic_errors :translation_languages%>
+     </li> <!-- end translation_languages -->
+                      <!--%= f.semantic_fields_for :calmapp_versions_translation_languages do |cavtl| % -->
+                      <!--%= f.semantic_fields_for :translation_languages do |cavtl| %-->
+                           <!-- %TranslationLanguage.order("name ASC").all.each do |tl|% -->
+
+                              <!-- %=check_box_tag("calmapp[calmapp_versions][translation_languages][]", tl.id, f.object.translation_languages.include?(tl))%> &nbsp; < %=tl.name% -->
+                           <!--%end% -->
+                          <!--%= render :partial=>'calmapp_versions_translation_language_fields', :locals=>{:f=> cavtl}  %-->
+                               <!--%=f.input :calmapp_versions_translation_languages, 
+                               :as => :check_boxes,
+                               :collection => TranslationLanguage.all % -->
+                      <!--%end% -->
+
+                      <!--div class='add-tablecell'>
+
+                          < %= link_to_add_association(t($FA + 'add_translation_language'),
+                            f, :calmapp_versions_translation_languages,
                           :partial => 'calmapp_versions_translation_language_fields', :render_options => {:locals => { }}, :style=> "margin-left:20px;font-size: smaller;") %>
-                          
-                     </div>
-                     <span><%= link_to_remove_association t($FA +"remove_version"), f, :style => "font-size: smaller;"   %></span> 
-                  <%end%>      
-            
-                      
+
+                     </div -->
+                     <!--span>< %= link_to_remove_association t($FA +"remove_version"), f, :style => "font-size: smaller;"   %></span-->
+                  <!--%end% -->
+
+
                        <!--%= f.input :translation_languages, :as => :check_boxes, :collection => TranslationLanguage.order('name ASC').all  % -->
-                       
-                       
-                 
+
+
+
                 <%=f.semantic_errors :calmapp_id%>
                 <%=f.semantic_errors :calmapp%>
-                   
-                   
+
+
        </div>
-      

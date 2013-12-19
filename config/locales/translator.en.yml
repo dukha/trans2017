@@ -71,6 +71,7 @@ en:
       calmapp_version:
         version: "Enter the version here. Format is <major_version>.<minor_version> e.g. 12.23 (There is no distinct translation for maintenance versions, such as 1.20.3, so don't enter them here.)"
         add_languages: If this checkbox is not checked then no language will be written to the database
+        translation_languages: English is required in all versions.
       calmapp:
         name: Enter the application name.
         new_version: If this checkbox is not checked then no version will be written to the database
@@ -209,8 +210,9 @@ en:
         calmapp_id: Calm App
         version: Version
         
-        languages: Languages Selected
-        languages_available: Languages Available
+        translation_languages: Languages Selected
+        translation_languages_available: Languages Available
+        translation_languages_assigned: Languages Assigned
       redis_database:
         redis_db_index: Redis Database Index
         calmapp_version_id: Calm App Version

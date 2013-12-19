@@ -3,13 +3,14 @@ class CalmappVersion < ActiveRecord::Base
   include Validations
   #languages available is a virtual attribute to allow languages_available to be used in the new form
   # :add_languages, :new_redis_db are virtual attributes for the user to indicate that a languages and redis database are to be added at the same time as a new version
-  attr_accessor :languages_available, :add_languages, :new_redis_dev_db
-  attr_accessible   :calmapp_id, :version,  :redis_database#, :language_ids, :new_redis_dev_db
+  attr_accessor :translation_languages_available, :add_languages, :new_redis_dev_db, :translation_languages_assigned
+  attr_accessible   :calmapp_id, :version,  :redis_database, :translation_languages, :translation_languages_available, 
+  :calmapp_versions_translation_language_ids, :calmapp_versions_translation_languages_attributes#, :language_ids, :new_redis_dev_db
   
   belongs_to :calmapp #, :class_name => "Application", :foreign_key => "calmapp_id"
   
   has_many :redis_databases
-  
+  accepts_nested_attributes_for :redis_databases, :reject_if => :all_blank, :allow_destroy => true
  
   validates  :version,  :presence=>true
   validates :version, :numericality=>true#=> {:only_integer=>false, :allow_nil =>false}
@@ -54,13 +55,13 @@ class CalmappVersion < ActiveRecord::Base
     ##return version.match( regex)
   #end
 
-  def available_languages
-    #if id == nil  then #args[:idx] == "" then
-      #return Language.all
-    #else
-      return Language.all - languages
-    #end
+  # Don't confuse the virtual attribute translation_languages_available that is just to keep AR happy
+  # Returns translation_languages not already assigned to this course.
+  def available_translation_languages
+      return TranslationLanguage.all - translation_languages
   end
+  
+  
 end
 
 # == Schema Information

@@ -1,7 +1,7 @@
 <%= semantic_form_for(@calmapp) do |f| %>
 	<%= f.inputs do %>
     <%= f.input :name %>
-      
+             <!--%binding.pry% -->
               <p style="font-size:15px; font-weight:700;margin-left:20px;"><%=t($ARM + "calmapp_version", :count=>3)%></p>
              <%= f.semantic_fields_for :calmapp_versions do |cav| %>  
                
