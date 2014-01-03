@@ -6,8 +6,8 @@
 
 class TranslationLanguage < ActiveRecord::Base
   #set_table_name :language
-  has_many :calmapp_versions_languages
-  has_many :calmapp_versions, :through => :calmapp_versions_language
+  has_many :calmapp_versions_translation_language
+  has_many :calmapp_versions, :through => :calmapp_versions_translation_language
   has_many :translations_uploads
   
   validates :iso_code, :name, :presence => true,:uniqueness => true
@@ -16,7 +16,29 @@ class TranslationLanguage < ActiveRecord::Base
   attr_accessible :iso_code, :name #,  :calm_reg_language, :course_l
   
   #validates_with VenueValidator
-  
+  def self.demo
+    TranslationLanguage.create!(:iso_code=> "es", :name=>"Spanish")
+    TranslationLanguage.create!(:iso_code=> "fr", :name=>"French")
+    TranslationLanguage.create!(:iso_code=> "de", :name=>"German")
+    TranslationLanguage.create!(:iso_code=> "en-US", :name=>"English(US)")
+    TranslationLanguage.create!(:iso_code=> "zh", :name=>"Chinese")
+    TranslationLanguage.create!(:iso_code=> "zh-TW", :name=>"Chinese(Taiwan)")
+    TranslationLanguage.create!(:iso_code=> "zh-MY", :name=>"Chinese(Malaysia)")
+    TranslationLanguage.create!(:iso_code=> "dk", :name=>"Danish")
+    TranslationLanguage.create!(:iso_code=> "pt", :name=>"Portuguese")
+    TranslationLanguage.create!(:iso_code=> "it", :name=>"Italian")
+    TranslationLanguage.create!(:iso_code=> "el", :name=>"Greek")
+    TranslationLanguage.create!(:iso_code=> "ja", :name=>"Japanese")
+    TranslationLanguage.create!(:iso_code=> "sv", :name=>"Swedish")
+    TranslationLanguage.create!(:iso_code=> "hu", :name=>"Hungarian")
+    TranslationLanguage.create!(:iso_code=> "sr", :name=>"Serbian")
+    TranslationLanguage.create!(:iso_code=> "id", :name=>"Indonesian")
+    TranslationLanguage.create!(:iso_code=> "th", :name=>"Thai")
+    TranslationLanguage.create!(:iso_code=> "hi", :name=>"Hindi")
+    TranslationLanguage.create!(:iso_code=> "ne", :name=>"Nepali")
+    TranslationLanguage.create!(:iso_code=> "ko", :name=>"Korean")
+    puts "Translation Languages inserted"
+  end
 =begin 
   def allow_organisation_child?
     false

@@ -25,7 +25,7 @@
 class RedisInstance < ActiveRecord::Base
   
   include Validations
-  
+  has_many :redis_databases
   
   
   validates :host,:presence=>true
@@ -36,6 +36,9 @@ class RedisInstance < ActiveRecord::Base
   # a generalised validation for the record. Checks the attributes to see if it can connect to the instance
   validates  :host, :redis_instance => true
   
+  #validates :host, :exclusion => { in: ['localhost', 'Localhost', 'LOCALHOST'], message: "%{value} is not permitted." }
+  validate :not_localhost
+  
   after_initialize :default_values
 
   def name
@@ -44,7 +47,7 @@ class RedisInstance < ActiveRecord::Base
 
 
   def database_supports_language? language
-    if language.is_a(Language) then
+    if language.is_a(TranslationLanguage) then
       language = language.id
     end
     return calmapp_version.language_ids.include? language
@@ -52,7 +55,8 @@ class RedisInstance < ActiveRecord::Base
   
   def unused_redis_database_indexes() 
     ar = (0..(max_databases - 1)).to_a
-    RedisDatabase.select{redis_db_index}.each{ |ri| ar.delete(ri.redis_db_index)}
+    #binding.pry
+    redis_databases.each{|rdb| ar.delete(rdb.redis_db_index)}
     return ar
   end
   
@@ -61,7 +65,12 @@ class RedisInstance < ActiveRecord::Base
       self.port ||= 6379
       self.max_databases = 16
     end
-
+    
+    def not_localhost
+      if host.downcase == 'localhost' or host.start_with?('127.') or host.start_with?('10')  then
+        errors.add(:host, "can't refer to localhost. Give the public IP address")
+      end 
+    end
 end
 
 

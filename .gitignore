@@ -13,5 +13,7 @@
 # Ignore all logfiles and tempfiles.
 /log/*.log
 /tmp
-
+/*.sublime*
+/*.kate*
 config/database.yml
+public/system/*

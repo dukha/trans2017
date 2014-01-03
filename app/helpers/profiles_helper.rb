@@ -122,22 +122,22 @@ end
 module ProfilesHelper
   STANDARD_ACTIONS = %w(read write create destroy)
   # These must all be in the translation file as roles.<action>
-  NONSTANDARD_ACTIONS = %w(lookup confirm template addallocations search letters import change trafficlightchange invite)
+  NONSTANDARD_ACTIONS = %w(lookup confirm search import change invite redis_databases_getunused)
   def layout_check_boxes profile
     html =''
     rows_data= collect_roles_in_groups
     #puts "bbbb " + collect_roles_in_groups.to_s
     if ! rows_data.empty? then
       html << "<table>"
-      rows_data.each { |array|
-        next if array.empty?
+      rows_data.each { |roles_symbols_array|
+        next if roles_symbols_array.empty?
         html << "<tr class = '" + cycle('dataeven', 'dataodd') + "' >"
         
         html << "<td class='profilerowheader'>"
-        if array == rows_data.last then
+        if roles_symbols_array == rows_data.last then
           html<< t("roles.miscellaneous")  
         else
-          sym = first_not_nil_element_array(array) 
+          sym = first_not_nil_element_array(roles_symbols_array) 
           next if sym.nil?        
           arr=sym.to_s.split("_")
           if arr.length >2 then
@@ -151,14 +151,15 @@ module ProfilesHelper
         end
 
         html << "</td>"
-        array.each{ |role|
+        #binding.pry
+        roles_symbols_array.each{ |role|
           if role.nil? then
             next
           end
           html << "<td class='profilecheckboxtd'>"
           html << check_box_tag("profile[roles][]", role, profile.roles.include?( role), :class=>"profilecheckbox")
           #binding.pry
-          if array==rows_data.last then
+          if roles_symbols_array==rows_data.last then
             html << label_tag(role, t("roles." + role.to_s)) #t("."+role.to_s))
           else
             #if role.nil?

@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<!--[if IE 7]>
+<html class="ie ie7" lang="en-US">
+<![endif]-->
+<!--[if IE 8]>
+<html class="ie ie8" lang="en-US">
+<![endif]-->
+<!--[if !(IE 7) | !(IE 8)  ]><!-->
+<html class=" js no-flexbox flexboxlegacy canvas canvastext webgl no-touch geolocation postmessage no-websqldatabase indexeddb hashchange history draganddrop websockets rgba hsla multiplebgs backgroundsize borderimage borderradius boxshadow textshadow opacity cssanimations csscolumns cssgradients no-cssreflections csstransforms csstransforms3d csstransitions fontface generatedcontent video audio localstorage sessionstorage webworkers applicationcache svg inlinesvg smil svgclippaths" style="" lang="en-US"><!--<![endif]--><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+		    <meta charset="UTF-8">
+		    <meta http-equiv="X-UA-Compatible" content="IE=9; IE=8; IE=7; IE=EDGE">
+		    <title>jQuery Plugin – Select | TexoTela - Weaving a Web</title>
+		    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+		    <link rel="profile" href="http://gmpg.org/xfn/11">
+		    		    <link rel="pingback" href="http://www.texotela.co.uk/xmlrpc.php">
+		   
+		   <!-- Icons font support for IE6-7  -->
+		    <!--[if lt IE 8]>
+		      <script src="http://www.texotela.co.uk/wp-content/themes/customizr/inc/css/fonts/lte-ie7.js"></script>
+		    <![endif]-->
+		    <link rel="alternate" type="application/rss+xml" title="TexoTela - Weaving a Web » Feed" href="http://www.texotela.co.uk/feed/">
+<link rel="alternate" type="application/rss+xml" title="TexoTela - Weaving a Web » Comments Feed" href="http://www.texotela.co.uk/comments/feed/">
+<link rel="alternate" type="application/rss+xml" title="TexoTela - Weaving a Web » jQuery Plugin – Select Comments Feed" href="http://www.texotela.co.uk/code/jquery/select/feed/">
+<link rel="stylesheet" id="customizr-skin-css" href="jquery.selectbox_files/red.css" type="text/css" media="all">
+<link rel="stylesheet" id="customizr-style-css" href="jquery.selectbox_files/style.css" type="text/css" media="all">
+<link rel="stylesheet" id="fancyboxcss-css" href="jquery.selectbox_files/jquery.css" type="text/css" media="all">
+<script src="jquery.selectbox_files/ga.js" async="" type="text/javascript"></script><script type="text/javascript" src="jquery.selectbox_files/comment-reply.js"></script>
+<script type="text/javascript" src="jquery.selectbox_files/jquery_003.js"></script>
+<script type="text/javascript" src="jquery.selectbox_files/jquery-migrate.js"></script>
+<script type="text/javascript" src="jquery.selectbox_files/modernizr.js"></script>
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="http://www.texotela.co.uk/xmlrpc.php?rsd">
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="http://www.texotela.co.uk/wp-includes/wlwmanifest.xml"> 
+<link rel="prev" title="jQuery Plugin – Numeric" href="http://www.texotela.co.uk/code/jquery/numeric/">
+<link rel="next" title="jQuery Plugin – News Ticker" href="http://www.texotela.co.uk/code/jquery/newsticker/">
+<meta name="generator" content="WordPress 3.7.1">
+<link rel="canonical" href="http://www.texotela.co.uk/code/jquery/select/">
+<link rel="shortlink" href="http://www.texotela.co.uk/?p=24">
+<script type="text/javascript">
+	var _gaq = _gaq || [];
+	_gaq.push(['_setAccount', 'UA-356577-3'], ['_trackPageview']);
+	(function() {
+	var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+	ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+	var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	})();
+</script>
+	<style type="text/css">.recentcomments a{display:inline !important;padding:0 !important;margin:0 !important;}</style>
+
+        
+        
+        
+<!-- Block (3) START-->
+<script type="text/javascript" src="jquery.selectbox_files/jquery.html"></script>
+<script type="text/javascript">
+function parseSamples()
+{
+    $("pre.sample").each(
+		function()
+		{
+			if(this.firstChild.data)
+			{
+				this.fn = function()
+				{
+					eval(this.firstChild.data);
+					return false;
+				};
+				$(this).append("<button class='runsnip' onclick='this.parentNode.fn()'>&raquo; Run</button><br />")
+			}
+		}
+	);
+	$("code.sample").wrap("<a href='#'></a>")
+	.click(
+		function()
+		{
+			if(this.firstChild.data)
+			{
+				eval(this.firstChild.data);
+			}
+			return false;
+		}
+	);
+}
+$ = jQuery;
+$(document).ready(
+	function()
+	{
+		parseSamples();
+		$("#debug").hide();
+		$("select").change(
+			function()
+			{
+				$("#debug").show();
+				$("#debug").html("#" + this.id + " '" + this.options[this.selectedIndex].text +
+				"' (text) : '" + this.value + "' (value) selected");
+			}
+		);
+	}
+)
+
+function sortoptions(sort)
+{
+	var $this = $(this);
+	// sort
+	$this.sortOptions(sort.dir == "asc" ? true : false);
+}
+</script>
+<!-- Block (3) END -->
+		    <!--Icons size hack for IE8 and less -->
+		    <!--[if lt IE 9]>
+		      <link href="http://www.texotela.co.uk/wp-content/themes/customizr/inc/css/fonts/ie8-hacks.css" rel="stylesheet" type="text/css"/>
+		    <![endif]-->
+		<style type="text/css" id="holderjs-style"></style></head>
+		
+	<body class="page page-id-24 page-child parent-pageid-12 page-template-default" itemscope="" itemtype="http://schema.org/WebPage">
+		
+		
+	   	<header class="tc-header clearfix row-fluid" role="banner">
+			
+			
+		
+	    	
+		        <div class="brand span3 pull-left">
+
+		        	
+		          			            
+		            <h1><a class="site-title" href="http://www.texotela.co.uk/" title="TexoTela - Weaving a Web | Writing, Photography, Web Development, Technology and other Ramblings">TexoTela - Weaving a Web</a></h1>
+		             
+		        </div> <!-- brand span3 pull-left -->
+
+	        
+	   
+	   
+	   							<div class="container outside">
+			        <h2 class="site-description">
+			        	 			        	 Writing, Photography, Web Development, Technology and other Ramblings			        </h2>
+			    </div>
+			
+				
+	      	<div class="navbar-wrapper clearfix span9">
+
+          		<div class="navbar notresp row-fluid pull-left">
+          			<div class="navbar-inner" role="navigation">
+          				          				<div class="row-fluid">
+	            			
+        	<div class="social-block span5">
+        			        			           		<a class="social-icon icon-feed" href="http://www.texotela.co.uk/feed/rss/" title="Suscribe to my rss feed"></a><a class="social-icon icon-twitter" href="http://twitter.com/SamCollett" title="Follow me on twitter" target="_blank"></a><a class="social-icon icon-google" href="http://google.com/+SamCollett" title="Follow me on google" target="_blank"></a><a class="social-icon icon-github" href="https://github.com/SamWM" title="Follow me on github" target="_blank"></a>	           	        	</div><!--.social-block-->
+
+        							<h2 class="span7 inside site-description">
+					                      Writing, Photography, Web Development, Technology and other Ramblings                </h2>
+
+			
+		
+          
+                         <div class="nav-collapse collapse">
+              <div class="menu-menu-1-container"><ul id="menu-menu-1" class="nav"><li id="menu-item-47" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-47"><a href="http://www.texotela.co.uk/">Home</a></li>
+<li id="menu-item-48" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-48"><a href="http://www.texotela.co.uk/about/">About</a></li>
+<li id="menu-item-141" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-141"><a href="http://www.texotela.co.uk/photography/">Photography</a></li>
+<li id="menu-item-49" class="menu-item menu-item-type-post_type menu-item-object-page current-page-ancestor current-menu-ancestor current_page_ancestor menu-item-has-children dropdown menu-item-49"><a class="dropdown-toggle" data-toggle="dropdown" data-target="#" href="http://www.texotela.co.uk/code/">Code <b class="caret"></b></a>
+<ul class="dropdown-menu">
+	<li id="menu-item-50" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-50"><a href="http://www.texotela.co.uk/code/javascript/">JavaScript</a></li>
+	<li id="menu-item-51" class="menu-item menu-item-type-post_type menu-item-object-page current-page-ancestor current-menu-ancestor current-menu-parent current-page-parent current_page_parent current_page_ancestor menu-item-has-children dropdown-submenu menu-item-51"><a href="http://www.texotela.co.uk/code/jquery/">jQuery</a>
+<ul class="dropdown-menu">
+		<li id="menu-item-52" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-52"><a href="http://www.texotela.co.uk/code/jquery/checkboxes/">jQuery Plugin – Checkbox Manipulation</a></li>
+		<li id="menu-item-53" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-53"><a href="http://www.texotela.co.uk/code/jquery/newsticker/">jQuery Plugin – News Ticker</a></li>
+		<li id="menu-item-54" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-54"><a href="http://www.texotela.co.uk/code/jquery/numeric/">jQuery Plugin – Numeric</a></li>
+		<li id="menu-item-55" class="menu-item menu-item-type-post_type menu-item-object-page current-menu-item page_item page-item-24 current_page_item menu-item-55"><a href="http://www.texotela.co.uk/code/jquery/select/">jQuery Plugin – Select</a></li>
+	</ul>
+</li>
+</ul>
+</li>
+<li id="menu-item-56" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children dropdown menu-item-56"><a class="dropdown-toggle" data-toggle="dropdown" data-target="#" href="http://www.texotela.co.uk/pn2/">Programmers Notepad 2 <b class="caret"></b></a>
+<ul class="dropdown-menu">
+	<li id="menu-item-57" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-57"><a href="http://www.texotela.co.uk/pn2/textclips/">Text Clips</a></li>
+</ul>
+</li>
+</ul></div>         </div><!-- /.nav-collapse collapse -->
+
+      	            		</div><!-- .row-fluid -->
+	            	</div><!-- /.navbar-inner -->
+	            </div><!-- /.navbar notresp -->
+
+	            <div class="navbar resp">
+	            	<div class="navbar-inner" role="navigation">
+	            		
+        	<div class="social-block ">
+        			        			           		<a class="social-icon icon-feed" href="http://www.texotela.co.uk/feed/rss/" title="Suscribe to my rss feed"></a><a class="social-icon icon-twitter" href="http://twitter.com/SamCollett" title="Follow me on twitter" target="_blank"></a><a class="social-icon icon-google" href="http://google.com/+SamCollett" title="Follow me on google" target="_blank"></a><a class="social-icon icon-github" href="https://github.com/SamWM" title="Follow me on github" target="_blank"></a>	           	        	</div><!--.social-block-->
+
+        							<h2 class="span7 inside site-description">
+					                      Writing, Photography, Web Development, Technology and other Ramblings                </h2>
+
+			
+		
+          
+                            <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+                   <div class="nav-collapse collapse">
+              <div class="menu-menu-1-container"><ul id="menu-menu-2" class="nav"><li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-47"><a href="http://www.texotela.co.uk/">Home</a></li>
+<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-48"><a href="http://www.texotela.co.uk/about/">About</a></li>
+<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-141"><a href="http://www.texotela.co.uk/photography/">Photography</a></li>
+<li class="menu-item menu-item-type-post_type menu-item-object-page current-page-ancestor current-menu-ancestor current_page_ancestor menu-item-has-children dropdown menu-item-49"><a class="dropdown-toggle" data-toggle="dropdown" data-target="#" href="http://www.texotela.co.uk/code/">Code <b class="caret"></b></a>
+<ul class="dropdown-menu">
+	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-50"><a href="http://www.texotela.co.uk/code/javascript/">JavaScript</a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-page current-page-ancestor current-menu-ancestor current-menu-parent current-page-parent current_page_parent current_page_ancestor menu-item-has-children dropdown-submenu menu-item-51"><a href="http://www.texotela.co.uk/code/jquery/">jQuery</a>
+<ul class="dropdown-menu">
+		<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-52"><a href="http://www.texotela.co.uk/code/jquery/checkboxes/">jQuery Plugin – Checkbox Manipulation</a></li>
+		<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-53"><a href="http://www.texotela.co.uk/code/jquery/newsticker/">jQuery Plugin – News Ticker</a></li>
+		<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-54"><a href="http://www.texotela.co.uk/code/jquery/numeric/">jQuery Plugin – Numeric</a></li>
+		<li class="menu-item menu-item-type-post_type menu-item-object-page current-menu-item page_item page-item-24 current_page_item menu-item-55"><a href="http://www.texotela.co.uk/code/jquery/select/">jQuery Plugin – Select</a></li>
+	</ul>
+</li>
+</ul>
+</li>
+<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children dropdown menu-item-56"><a class="dropdown-toggle" data-toggle="dropdown" data-target="#" href="http://www.texotela.co.uk/pn2/">Programmers Notepad 2 <b class="caret"></b></a>
+<ul class="dropdown-menu">
+	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-57"><a href="http://www.texotela.co.uk/pn2/textclips/">Text Clips</a></li>
+</ul>
+</li>
+</ul></div>         </div><!-- /.nav-collapse collapse -->
+
+      	            	</div><!-- /.navbar-inner -->
+          		</div><!-- /.navbar resp -->
+
+        	</div><!-- /.navbar-wrapper -->
+
+        			
+		</header>
+
+		<div id="main-wrapper" class="container">
+
+    
+    		    	
+	        <div class="tc-hot-crumble container" role="navigation">
+	        	          <div class="row">
+	            <div class="span12">
+	            <div class="breadcrumb-trail breadcrumbs" itemprop="breadcrumb"><span class="trail-begin"><a href="http://www.texotela.co.uk/" title="TexoTela - Weaving a Web" rel="home" class="trail-begin">Home</a></span> <span class="sep">»</span> <a href="http://www.texotela.co.uk/code/" title="Code">Code</a> <span class="sep">»</span> <a href="http://www.texotela.co.uk/code/jquery/" title="jQuery">jQuery</a> <span class="sep">»</span> <span class="trail-end">jQuery Plugin – Select</span></div>	            </div>
+	          </div>
+	        </div>
+
+		        
+    <div class="container" role="main">
+        <div class="row">
+
+                           
+                              <div class="span3 left tc-sidebar">
+                  <div id="left" class="widget-area" role="complementary">
+                                      </div><!-- #left -->
+                </div><!--.tc-sidebar .span3 -->
+               
+                              
+                <div id="content" class="span9 article-container">
+                    
+                    
+                        
+                                                                                    
+                                                                    <article id="page-24" class="post-24 page type-page status-publish hentry row-fluid hover">
+                                        
+        
+        
+                    <header>
+                                      <h1 class="entry-title format-icon">jQuery Plugin – Select  </h1>                    <hr class="featurette-divider">
+                             </header>
+
+            <div class="entry-content">
+                <p>Source code available from <a href="http://github.com/SamWM/jQuery-Plugins" class="source">GitHub</a> or a <a href="http://code.webmonkey.uk.com/plugins/">Zipped download</a>.</p>
+<form id="example" action="javascript:void()">
+<p>My Select:</p>
+<select name="myselect" id="myselect">
+<option selected="selected" value="myselect_1">#myselect option 1</option>
+<option value="myselect_2">#myselect option 2</option>
+</select>
+<p>My Select 2:</p>
+<select multiple="multiple" name="myselect2" id="myselect2">
+<option value="myselect2_1">#myselect2 option 1</option>
+<option value="myselect2_2">#myselect2 option 2</option>
+</select>
+<div style="display: none;" id="debug"></div>
+</form>
+<h3 id="addOption">addOption</h3>
+<p>You can add a single option: <a href="#"><code class="sample">$("#myselect").addOption("Value", "Text");</code></a>,<br>
+change the text of an existing option: <a href="#"><code class="sample">$("#myselect").addOption("Value", "Text Replacement");</code></a> or add<br>
+multiple options using a hash:</p>
+<pre class="sample">var myOptions = {
+	"Value 1" : "Text 1",
+	"Value 2" : "Text 2",
+	"Value 3" : "Text 3"
+}
+$("#myselect2").addOption(myOptions, false); // use true if you want to select the added options <button class="runsnip" onclick="this.parentNode.fn()">» Run</button><br></pre>
+<h3 id="ajaxAddOption">ajaxAddOption(url[, params, select, fn, args])</h3>
+<p>Add options via AJAX (page must return valid JSON, sample below): <a href="#"><code class="sample">$("#myselect2").ajaxAddOption("ajaxoptions.js");</code></a>.</p>
+<pre><!--? echo htmlentities(file_get_contents("ajaxoptions.js")); ?--></pre>
+<p>Parameters</p>
+<ul>
+<li>url – Page to get options from (must be valid JSON)</li>
+<li>params (optional) –  Any parameters to send with the request</li>
+<li>select (optional) – Select the added options, default true</li>
+<li>fn (optional) – call this function with the select object as param after completion</li>
+<li>args – (optional) array of arguments to pass onto the function</li>
+</ul>
+<p><a href="#"><code class="sample">$("#myselect2").ajaxAddOption("ajaxoptions.js", {}, false, sortoptions, [{"dir":"desc"}]);</code></a></p>
+<pre>function sortoptions(sort)
+{
+	var $this = $(this);
+	// sort
+	$this.sortOptions(sort.dir == "asc" ? true : false);
+}</pre>
+<h3 id="removeOption">removeOption(index/value/regex/array[, selectedOnly])</h3>
+<p>Remove an option by<br>
+<br>- index: <a href="#"><code class="sample">$("#myselect2").removeOption(0);</code></a><br>
+<br>- value: <a href="#"><code class="sample">$("#myselect").removeOption("Value");</code></a><br>
+<br>- regular expression: <a href="#"><code class="sample">$("#myselect").removeOption(/^val/i);</code></a><br>
+<br>- array <a href="#"><code class="sample">$("#myselect").removeOption(["myselect_1", "myselect_2"]);</code></a></p>
+<p>To remove all options, you can do <a href="#"><code class="sample">$("#myselect").removeOption(/./);</code></a></p>
+<p>If you supply a second parameter as a boolean (true, false), then 
+only options that have been selected (and matched) will be removed: <a href="#"><code class="sample">$("#myselect2").removeOption("Value 2", true);</code></a>.</p>
+<h3 id="sortOptions">sortOptions([ascending])</h3>
+<p>Sorting is done as follows: <a href="#"><code class="sample">$("#myselect2").sortOptions(false);</code></a> (descending)<br>
+or <a href="#"><code class="sample">$("#myselect2").sortOptions();</code></a> (ascending)
+</p>
+<h3 id="selectOptions">selectOptions(value[, clear])</h3>
+<p>Select options by value, using a string as the parameter <a href="#"><code class="sample">$("#myselect2").selectOptions("Value 1");</code></a>, or a regular expression<br>
+<a href="#"><code class="sample">$("#myselect2").selectOptions(/^val/i);</code></a>. You can also clear already selected options:<br>
+<a href="#"><code class="sample">$("#myselect2").selectOptions("Value 2", true);</code></a></p>
+<p><a href="http://www.mathias-bank.de/2006/11/01/jquery-plugin-select-box-manipulation/">Originally coded</a> by Mathias Bank, with a modification to allow it to take a regular expression.</p>
+<h3 id="copyOptions">copyOptions(to[, which])</h3>
+<p>You can copy options from one select to another: <a href="#"><code class="sample">$("#myselect").copyOptions("#myselect2");</code></a> (copy selected options) or<br>
+<a href="#"><code class="sample">$("#myselect").copyOptions("#myselect2", "all");</code></a> (copy all options)
+</p>
+<h3 id="containsOption">containsOption(value[, fn])</h3>
+<p>Checks if a select box has an option with the supplied value</p>
+<p>Parameters</p>
+<ul>
+<li>value – Which value to check for. Can be a string or regular expression<br>
+	e.g.<br>
+	<code>if( $("#myselect").containsOption("val1") ) { ... }</code> or<br>
+	<code>if( $("#myselect").containsOption(/^val/i) ) { ... }</code></li>
+<li>fn (optional) – Function to apply if an option with the given value is found. Use this if you don’t want to break the chaining<br>
+	e.g. <code>$("#myselect").containsOption("val1", 
+copyoption).doSomethingElseWithSelect(); // calls copyoption (user 
+defined function) for any options found, chain is continued</code></li>
+</ul>
+<h3 id="selectedValues">selectedValues()</h3>
+<p>Returns an array of the values which have been selected. <code>$("#myselect2").selectedValues()</code>.</p>
+<h3 id="selectedTexts">selectedTexts()</h3>
+<p>Returns an array of the texts which have been selected. <code>$("#myselect2").selectedTexts()</code>.</p>
+<h3 id="selectedOptions">selectedOptions()</h3>
+<p>Returns a jQuery object with each <code>&lt;option&gt;</code> that has been selected. <code>$("#myselect2").selectedOptions()</code>.</p>
+            </div>
+
+               
+            <footer class="entry-meta">
+
+            </footer><!-- .entry-meta -->
+                                            </article>
+                                
+                            
+                        
+                    
+                </div><!--.article-container -->
+
+           
+        </div><!--.row -->
+    </div><!-- .container role: main -->
+
+    
+</div><!--#main-wrapper"-->
+
+				
+				
+			<!-- FOOTER -->
+			<footer id="footer" class="">
+			 	
+    	
+		 <div class="colophon">
+		 
+		 	<div class="container">
+
+		 		<div class="row-fluid">
+
+				    
+	        <div class="span4 social-block pull-left">
+	        		        			           		<a class="social-icon icon-feed" href="http://www.texotela.co.uk/feed/rss/" title="Suscribe to my rss feed"></a><a class="social-icon icon-twitter" href="http://twitter.com/SamCollett" title="Follow me on twitter" target="_blank"></a><a class="social-icon icon-google" href="http://google.com/+SamCollett" title="Follow me on google" target="_blank"></a><a class="social-icon icon-github" href="https://github.com/SamWM" title="Follow me on github" target="_blank"></a>	           		        </div>
+	        
+        
+    	
+    	<div class="span4 credits">
+    		    	<p> · © 2013 <a href="http://www.texotela.co.uk/" title="TexoTela - Weaving a Web" rel="bookmark">TexoTela - Weaving a Web</a> · Designed by <a href="http://www.themesandco.com/">Themes &amp; Co</a> ·</p>		</div>
+		
+    		    <div class="span4 backtop">
+	    		    	<p class="pull-right">
+	    		<a class="back-to-top" href="#">Back to top</a>
+	    	</p>
+
+	    </div>
+	    
+      			</div><!-- .row-fluid -->
+
+      		</div><!-- .container -->
+
+      	</div><!-- .colophon -->
+    				</footer>
+
+		<script type="text/javascript" src="jquery.selectbox_files/jquery_002.js"></script>
+<script type="text/javascript" src="jquery.selectbox_files/bootstrap.js"></script>
+<script type="text/javascript">
+/* <![CDATA[ */
+var TCParams = {"FancyBoxState":"1","FancyBoxAutoscale":"1","SliderName":"","SliderDelay":""};
+/* ]]> */
+</script>
+<script type="text/javascript" src="jquery.selectbox_files/tc-scripts.js"></script>
+<script type="text/javascript" src="jquery.selectbox_files/holder.js"></script>
+<script type="text/javascript" src="jquery.selectbox_files/jquery.js"></script>
+
+		
+	
+
+
+
+
+
+
+<div id="fancybox-tmp"></div><div id="fancybox-loading"><div></div></div><div id="fancybox-overlay"></div><div id="fancybox-wrap"><div id="fancybox-outer"><div class="fancybox-bg" id="fancybox-bg-n"></div><div class="fancybox-bg" id="fancybox-bg-ne"></div><div class="fancybox-bg" id="fancybox-bg-e"></div><div class="fancybox-bg" id="fancybox-bg-se"></div><div class="fancybox-bg" id="fancybox-bg-s"></div><div class="fancybox-bg" id="fancybox-bg-sw"></div><div class="fancybox-bg" id="fancybox-bg-w"></div><div class="fancybox-bg" id="fancybox-bg-nw"></div><div id="fancybox-content"></div><a id="fancybox-close"></a><div id="fancybox-title"></div><a href="javascript:;" id="fancybox-left"><span class="fancy-ico" id="fancybox-left-ico"></span></a><a href="javascript:;" id="fancybox-right"><span class="fancy-ico" id="fancybox-right-ico"></span></a></div></div></body></html>
+<!-- Dynamic page generated in 0.927 seconds. -->
+<!-- Cached page generated by WP-Super-Cache on 2013-12-01 16:24:28 -->
+<!-- Compression = gzip -->

@@ -47,11 +47,11 @@ class RedisDatabasesController < ApplicationController
   # POST /redis_databases.xml
   def create
     @redis_database = RedisDatabase.new(params[:redis_database])
-
-
+    #binding.pry
     respond_to do |format|
+      #binding.pry
       #if @redis_database.create_redis_db
-        if @redis_database.save
+        if @redis_database.save then
           tflash('create', :success, {:model=>@@model, :count=>1})
           format.html { redirect_to(:action=>:index) }
           format.xml  { render :xml => @redis_database, :status => :created, :location => @redis_database }
