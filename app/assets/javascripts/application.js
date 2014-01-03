@@ -1,13 +1,13 @@
 // Place your application-specific JavaScript functions and classes here
 // This file is automatically included by javascript_include_tag :defaults
 // require jquery
-// require jquery-2.0.3
-//= require jquery-1.8.0
+//= require jquery-2.0.3
+// require jquery-1.8.0
 // require jquery
 //= require jquery_ujs
 //= require turbolinks
 //
-//= require jquery-ui-1.10.3.js
+//= require jquery-ui-1.10.3.custom.js
 // ujs has to be in for delete to work and for other rails ajax
 // require jquery_ujs
 //= require hoverIntent.js
@@ -19,7 +19,7 @@
 //= require cocoon
 //Is hotkeys used?
 //= require jquery.hotkeys.js
-
+//= require jquery.selectboxes
 // These 3 below are needed for editable js tables. Currently not used: using best_in_place instead
 // require jquery.dataTables.js
 // require jquery.jeditable.js
@@ -28,9 +28,13 @@
 // These below are in and required by best_in_place gem
 //= require jquery.purr
 //= require best_in_place
-
+//= require popup
+// require redis_databases
+// require translations_uploads
 //= require_self
 //= require_tree .
+
+var HELP = namespace("help");
 
 function deleteBlanksFromSelectBox(boxId){
            $(boxId + " :empty").remove();

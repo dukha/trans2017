@@ -30,7 +30,6 @@ class RedisInstancesController < ApplicationController
   # GET /redis_instances/new.xml
   def new
     @redis_instance = RedisInstance.new
-
     respond_to do |format|
       format.html # new.html.erb
       format.xml  { render :xml => @redis_instance }
@@ -96,7 +95,7 @@ class RedisInstancesController < ApplicationController
 
   def unused_redis_database_indexes
     puts  "unused_redis_database_indexes"
-    debugger
+    #binding.pry
     ri = RedisInstance.find(params[:redis_instance_id])
     data = ri.unused_redis_database_indexes()
     if request.xhr?

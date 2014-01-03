@@ -1,0 +1,63 @@
+<script type="text/javascript" charset="utf-8">
+	 helpSelector = "#" + "<%=locals[:model]%>"+"_help";
+	 HELP.currentPopup = null;
+   HELP.popupSelector = "#help-popup";
+   HELP.popupBackgroundSelector = "#help-popup-background";
+   HELP.popupCloseSeletor = "#help-popup-close";
+   HELP.popupStatus = 0;
+  /*
+   * Shows a popup to allow search for an AT
+   */
+  HELP.showPopup = function(){
+      
+      centrePopup(HELP.popupSelector, HELP.popupBackgroundSelector);
+      HELP.currentPopup =  HELP.popupSelector; 
+      HELP.popupStatus = loadPopup(HELP.popupSelector, HELP.popupBackgroundSelector, HELP.popupStatus);  
+      return false;
+  }
+  /*
+   * Closes the AT popup
+   */
+  HELP.closePopup = function(){
+    HELP.popupStatus= closePopup(HELP.currentPopup, HELP.popupBackgroundSelector, HELP.popupStatus); 
+    HELP.currentPopup = null; 
+  }  
+	 $(document).ready(function(){
+	    $(helpSelector).click(function(){
+	      HELP.showPopup();
+	    });
+	    
+	     /*
+     * Close the popup by clicking on the X in the top right corner
+     */
+    $(HELP.popupCloseSeletor).click(function(){    
+          HELP.closePopup();
+      });  //end x click
+      
+      //Click out of event!  
+    $(HELP.popupBackgroundSelector).click(function(){  
+           
+         HELP.closePopup();
+      });  //end background click 
+       
+    
+	    
+	  });
+	  //atpopup search: For the escape event, keypress does not work in Chrome (probably not safari either). keydown works in both FF and Chrome
+    $(this).keydown(function(e){  
+          if(e.keyCode==27 && HELP.popupStatus==1){  
+               
+             HELP.closePopup();
+           }  
+     });//end keydown  
+     
+</script>
+<span style="float:right">
+<!--%locals={}% -->
+<button id= "<%=locals[:model]%>_help" type= 'button' value ="<%=(locals[:model]?locals[:model]:"") + "." + (locals[:action]?locals[:action]:"")%>" ><%=t($C +"help")%></button>
+</span>
+<div id="help-popup" class="popup">
+  <a id="help-popup-close" class = "popup-close">x</a>
+  <%=render 'help/' + params[:controller] + "/" + params[:locale] + "/" + params[:action] + "/help" %>
+</div>
+<div id= "help-popup-background"  class="popup-background"></div>

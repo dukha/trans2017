@@ -9,7 +9,7 @@ module TranslationsHelper
   $AR="activerecord."
   $ARA=$AR + "attributes."
   $ARM= $AR + "models."
-  
+  $C ="commons."
   $F="formtastic."
   $FL= $F+"labels."
   $FH=$F+"hints."

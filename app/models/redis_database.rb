@@ -6,22 +6,30 @@ class RedisDatabase < ActiveRecord::Base
   belongs_to :release_status
   #has_many :uploads_redis_databases
   #has_many :uploads, :through => :uploads_redis_databases
-  validates :calmapp_version_id, :existence => true, :presence=>true
+  validates :calmapp_version_id, :presence=>true
+  validates :calmapp_version_id, :existence => true#, :presence=>true
   validates :redis_db_index, :presence=>true
+  validates :redis_db_index, :uniqueness => {:scope=>[:redis_instance]}
+  validates :redis_instance, :presence=>true
+  validates :release_status, :presence=>true, :existence=>true
+  validates :release_status, :uniqueness=>{:scope=>[:calmapp_version]}
+  #validate :redis_db_index_exists
   
-  validates :release_status_id, :presence=>true, :existence=>true
-  #validates :release_status_id, :existence=>true
+  validates :release_status_id, :existence=>true
   #validates :calmapp_version_id,:presence=>true
   #validates :host,:presence=>true
   #validates :port, :presence => true
+  
   #This validation checks whether the redis_db_index is one permitted by the installation.
-  #Returns false if not. Default redis setup is for databases 0-15 to be avilable.
+  #Returns false if not. Default redis setup is for databases 0-15 to be available.
   #This can be increased in the redis config file (not via rails)
-  #validates  :redis_db_index, :redis_db => true
+  validates  :redis_db_index, :redis_db => true
+  
   #validates_with Validations::TranslationValidator
 
   
   @connection=nil
+=begin
   def save!
     if new_record?
       state='new'
@@ -33,7 +41,7 @@ class RedisDatabase < ActiveRecord::Base
     if new_record?
       state='new'
     end
-    super
+    result = super
     new_record state
   end 
   def new_record state
@@ -44,8 +52,9 @@ class RedisDatabase < ActiveRecord::Base
       temp_redis.set name, redis_db_index
     end
   end
+=end
   def name
-    return CalmappVersion.find(calmapp_version_id).name + " / Redis Instance: " + RedisInstance.find(redis_instance_id).description + 
+    return (calmapp_version_id ? CalmappVersion.find(calmapp_version_id).name : "") + " / Redis Instance: " + RedisInstance.find(redis_instance_id).description + 
     " / Redis Database Index: " + redis_db_index.to_s
   end
   # returns an instance of Redis class

@@ -16,3 +16,4 @@
 /*.sublime*
 /*.kate*
 config/database.yml
+public/system/*

@@ -1,5 +1,6 @@
 class TranslationsUpload < ActiveRecord::Base
-  attr_accessible :description, :translation_language_id, :calmapp_version_id, :yaml_upload, :translation_language, :calmapp_version
+  include Validations
+  attr_accessible :description, :translation_language_id, :calmapp_version_id, :yaml_upload, :translation_language, :calmapp_version, :yaml_upload 
   belongs_to :translation_language
   belongs_to :calmapp_version
   

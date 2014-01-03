@@ -67,7 +67,6 @@ module Validations
        #redis_db = Redis.new( :db=> value, :password=>$REDIS_PW, :port=>object.port, :host=> object..host)
        redis_db = Redis.new( :db=> value, :password=>object.redis_instance.password, :port=>object.redis_instance.port, :host=> object.redis_instance.host)
        # the above line doesn't try to connect immediately. You have to do something with it (like ping) to force it to connect.
-       debugger
        redis_db.ping
      rescue Exception => e
        if e.message.index("invalid DB index") then
@@ -92,7 +91,6 @@ module Validations
        #debugger
        redis_db = Redis.new( :db=> 0, :password=>object.password, :port=>object.port, :host=> object.host)
        # the above line doesn't try to connect immediately. You have to do something with it (like ping) to force it to connect.
-       #debugger
        redis_db.ping
      rescue Exception => e
        if e.message.index("invalid DB index") then
@@ -109,27 +107,7 @@ module Validations
        puts object.errors[attribute]
      end #def rescue
    end
-   # @deprecated Couldn't figure out how to do validates :with
-   class RedisDbValidator2 < ActiveModel::Validator
-      def validate(record)
-        redis_db = Redis.new( :db=> record.redis_db_index, :password=>$REDIS_PW, :port=>record.port, :host=> record.host)
-        redis_db.ping
-      rescue Exception => e
-        #if record.name.starts_with? 'X'
-          #record.errors[:name] << 'Need a name starting with X please!'
-        #end
-        if e.message.index("invalid DB index") then
-          record.errors[:redis_db_index] = I18n.t($MS + "invalid_redis_db_index.error", :value=>record.redis_db_index)
-          #raise e
-        elsif e.message.index("getaddrinfo") then
-          record.errors[:host] = I18n.t($MS + "invalid_redis_db_location.error", :value=>record.host)
-        elsif e.message.index("Connection refused") then
-          object.errors[:port] = I18n.t($MS + "redis_connection_refused.error", :value=>record.port)
-       else
-         raise e
-       end #invalid index
-      end
-   end
+
 #ActiveRecord::DeleteRestrictionError
 =begin
   This class is copied and modified from validates_existence gem.

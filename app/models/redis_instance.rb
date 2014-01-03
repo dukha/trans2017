@@ -36,6 +36,9 @@ class RedisInstance < ActiveRecord::Base
   # a generalised validation for the record. Checks the attributes to see if it can connect to the instance
   validates  :host, :redis_instance => true
   
+  #validates :host, :exclusion => { in: ['localhost', 'Localhost', 'LOCALHOST'], message: "%{value} is not permitted." }
+  validate :not_localhost
+  
   after_initialize :default_values
 
   def name
@@ -62,7 +65,12 @@ class RedisInstance < ActiveRecord::Base
       self.port ||= 6379
       self.max_databases = 16
     end
-
+    
+    def not_localhost
+      if host.downcase == 'localhost' or host.start_with?('127.') or host.start_with?('10')  then
+        errors.add(:host, "can't refer to localhost. Give the public IP address")
+      end 
+    end
 end
 
 

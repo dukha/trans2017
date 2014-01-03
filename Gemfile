@@ -149,7 +149,7 @@ end # end group dev, test
 
 
   gem 'sass-rails', '~>4.0.0' #:git=> "git://github.com/rails/sass-rails"#, " ~> 3.2.5"
-  gem 'coffee-rails', '~>4.0.0'#, "~> 3.2.1"
+  #gem 'coffee-rails', '~>4.0.0'#, "~> 3.2.1"
   gem 'uglifier','~>2.2.1'
 
 

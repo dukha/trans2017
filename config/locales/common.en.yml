@@ -13,6 +13,7 @@ en:
     for_user: For User %{user} 
     clear: Clear
     close: Close
+    help: Help
     current_time: Now
     changed_ago: "Changed %{change_date} ago"
     visibility:

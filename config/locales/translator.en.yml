@@ -77,7 +77,8 @@ en:
         new_version: If this checkbox is not checked then no version will be written to the database
         new_redis_dev_db: If this checkbox is not checked then no redis database will be written to the database. You will still need to add test and production redis databases later.
       redis_database:
-        redis_db_index: "This is the integer that represents the database. Only 1 database per version. Do not enter data if not sure about the database index."
+        redis_db_index_new: "This is the integer that represents the database where the translations will be eventually published. Do not enter data if not sure about the database index."
+        redis_db_index_edit: "This is the integer that represents the database where the translations will be eventually published. If translations are already published and being used by an application then the translations may be lost to the application. (They would have to be republished.)"
         calmapp_version_id: "Choose the corect application and version carefully"
         release_status_id: "The status of the the translation database that you are adding: 'development' will only be used by developers for English. 'test' will be used by most translators. 'production will be a copy of test to be used by users."
         redis_instance_id: "Choose computer ip address on which the redis server is running that you want to use."
