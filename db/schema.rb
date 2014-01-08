@@ -13,6 +13,9 @@
 
 ActiveRecord::Schema.define(version: 201204041046086) do
 
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "calmapp_versions", force: true do |t|
     t.integer  "calmapp_id", null: false
     t.datetime "created_at"
@@ -129,6 +132,7 @@ ActiveRecord::Schema.define(version: 201204041046086) do
     t.integer  "yaml_upload_file_size"
     t.datetime "yaml_upload_updated_at"
     t.integer  "calmapp_version_id"
+    t.string   "yaml_upload2"
   end
 
   create_table "uploads", force: true do |t|

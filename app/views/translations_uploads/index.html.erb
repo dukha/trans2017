@@ -103,7 +103,8 @@
             <td class="<%= cell_class %>"><%= translations_upload.translation_language.name %></td>
              <td class="<%= cell_class %>"><%= translations_upload.calmapp_version.name%></td>
             <td class="<%= cell_class %>"><%= translations_upload.description %></td>
-            <td class="<%= cell_class %>"> <%=translations_upload.yaml_upload_file_name%></td>
+            <!--td class="<%= cell_class %>"> < %=translations_upload.yaml_upload_file_name% ></td -->
+            <td class="<%= cell_class %>"> <%=translations_upload.yaml_upload2%></td>
           <%= link_edit( edit_translations_upload_path(translations_upload), :translations_uploads  ) %>
       <%= link_destroy( translations_upload, :translations_uploads ) %>
       

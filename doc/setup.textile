@@ -1,7 +1,9 @@
-apt-get install imagemagick
-Then add to config/environments/development.rb
-Paperclip.options[:command_path] = "/usr/bin/" 
-#See paperclip docs iof this does not work
+if you want paperclip or carrierwave for images
+  apt-get install imagemagick
+  Then add to config/environments/development.rb
+  Paperclip.options[:command_path] = "/usr/bin/" 
+  #See paperclip docs if this does not work
+end
 
 add to gemfile
 gem 'rubyracer'

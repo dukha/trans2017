@@ -61,8 +61,8 @@ gem 'acts_as_tree'#,'0.1.1'
 =end
 #gem 'babilu', '0.2.2'
 # paperclip uploads a file and writes the file name etc to the database
-gem 'paperclip'#, '2.3.11'
-
+#gem 'paperclip'#, '2.3.11'
+gem 'carrierwave'
 
 gem "redis" #, :git => "git://github.com/ezmobius/redis-rb.git"
 # foreigner is a gem that allows the insertion of foreign keys into migrations.
@@ -82,7 +82,7 @@ gem 'passenger' #, '~>3.0.11'
 # nested forms
 gem 'cocoon','~>1.2.0'
 # thin is a faster dev webserver than webrick
-gem 'thin'
+#gem 'thin'
 
 # email notification of exceptions (if sendmail is installed)
 gem 'exception_notification_rails3', :require => 'exception_notifier'

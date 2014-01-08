@@ -109,8 +109,9 @@ end
   # POST /translations_uploads
   # POST /translations_uploads.xml
   def create
-    @translations_upload = TranslationsUpload.new(params[:translations_upload])
     binding.pry
+    @translations_upload = TranslationsUpload.new(params[:translations_upload])
+    
     respond_to do |format|
       if @translations_upload.save
         tflash('create', :success, {:model=>@@model, :count=>1})         
