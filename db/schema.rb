@@ -25,6 +25,12 @@ ActiveRecord::Schema.define(version: 201204041046086) do
 
   add_index "calmapp_versions", ["calmapp_id"], name: "i_calmapp_versions_appliction_id", using: :btree
 
+  create_table "calmapp_versions_redis_databases", force: true do |t|
+    t.integer "calmapp_version_id"
+    t.integer "redis_database_id"
+    t.integer "release_status_id"
+  end
+
   create_table "calmapp_versions_translation_languages", force: true do |t|
     t.integer "calmapp_version_id",      null: false
     t.integer "translation_language_id", null: false
@@ -77,10 +83,10 @@ ActiveRecord::Schema.define(version: 201204041046086) do
   end
 
   create_table "redis_databases", force: true do |t|
-    t.integer  "calmapp_version_id", null: false
+    t.integer  "calmapp_version_id"
     t.integer  "redis_instance_id"
     t.integer  "redis_db_index",     null: false
-    t.integer  "release_status_id",  null: false
+    t.integer  "release_status_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

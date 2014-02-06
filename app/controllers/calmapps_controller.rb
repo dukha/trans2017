@@ -211,7 +211,7 @@ class CalmappsController < ApplicationController
   # PUT /calmapps/1.xml
   def update
     @calmapp = Calmapp.find(params[:id])
-    binding.pry
+    #binding.pry
     #binding.pry
 =begin
     if params[:calmapp][:language_ids]==nil then

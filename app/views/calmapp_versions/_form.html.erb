@@ -5,36 +5,7 @@
 				   <%= f.input :version  %>
 				   <!-- release_status_id moved to RedisDatabase-->
 				   <!--%= f.input :release_status_id, :as=>:select,:collection=> ReleaseStatus.all.collect {|p| [ p.status, p.id ]}    % -->
-		       <script language="javascript" type="text/javascript">
-        //<!-- This script sets up dual list boxes with the appropriate ids -->
-        
-        $(function() {
-            $.configureBoxes({box1View : "available-translation-languages-box",
-                              box2View : "assigned-translation-languages-box",
-                              box1Filter : "available-translation-languages-filter",
-                              box2Filter : "assigned-translation-languages-filter",
-                              box1Clear : "available-translation-languages-filter-clear",
-                              box2Clear : "assigned-translation-languages-filter-clear",
-                              box1Counter : "available-translation-languages-counter",
-                              box2Counter :  "assigned-translation-languages-counter",
-                              box1Storage :   "box1Storage-tl",
-                              box2Storage :   "box2Storage-tl",
-                              to1 : "to1-tl",
-                              to2 : "to2-tl",
-                              allTo1 : "allTo1-tl",
-                              allTo2 : "allTo2-tl"});
-        });
-         //This function ensures that all values in the receiving listbox are extracted and written. They must be selected for this.
-         $(document).ready(function(){
-          deleteBlanksFromSelectBox('#availableLanguagesBox');
-         });//end ready
 
-         //This function is necessary to remove a blank that formtastic leaves in the first listbox.
-         function deleteBlanksFromSelectBox(boxId){
-           $(boxId + " :empty").remove();
-         }
-         
-    </script>
 
         <!--div id="calmapp-versions-table" class='nested-fields' style='display:table' -->
         <p style="font-size:15px; font-weight:700;margin-left:0px;"><%=t($ARM + "translation_language", :count=>3)%></p>
@@ -57,7 +28,7 @@
                <td ></td>
                <td ><input type="text" id="available-translation-languages-filter" class="dual-listboxes-available-filter" style="width:98%"/></td>
                <td style="width:10%" ></td>
-               <td ><input type="text" id="assigned-available-translation-languages-filter" class="dual-listboxes-selected-filter" style="width:98%"/>
+               <td ><input type="text" id="assigned-translation-languages-filter" class="dual-listboxes-selected-filter" style="width:98%"/>
                  <select id="box1Storage-tl"></select>
                </td>
            </tr>
@@ -91,24 +62,182 @@
              <!--/div -->
              <td  class="dual-listboxes-data"><%=  f.input :calmapp_versions_translation_languages, :label=>false, :as=>:select, 
                  :collection=>f.object.translation_languages.collect {|tl| [tl.name,tl.id]}, :hint=>false, :multiple=>"multiple", 
-                 :input_html => { :class => "dual-listboxes-selected-data", :id => "assigned-translation-languages-box", :size=>'10',:style=>"width:100%; height:100%;",   }  %>
+                 :input_html => { :class => "dual-listboxes-selected-data", :id => "assigned-translation-languages-box", :size=>'10',:style=>"width:100%; height:100%;"   }  %>
                <select id="box2Storage-tl"></select>
              </td>
          </tr>                    
        </table>
        <p class="inline-hints"><%= t($FH + "calmapp_version.translation_languages") %></p>
         <%=f.semantic_errors :calmapp_versions_translation_languages%>
-        <%=f.input :redis_databases, :as => :check_boxes%>
+        
+        <!-- %=f.input :redis_databases, :as => :check_boxes% -->
+        <!--div id="cavtd">
+          < %f.semantic_fields_for :calmapp_versions_redis_database do |cavrd| %> 
+           <!--%binding.pry% -- >
+                 
+                 < %=render :partial => 'shared/calmapp_versions_redis_database_form', :locals=>{:f=>cavrd}%>
+                 <!--%= render :partial=>'calmapp_versions/calmapp_version_simple_details', :locals=>{:f=> cav}  % -- >            
+          < %end%> 
+          
+           <!--div class='add-tablecell' -- >
+             <!--%binding.pry% -- >
+                < %= link_to_add_association t($FA + 'add_redis_database'), f, :calmapp_versions_redis_database,
+                {:partial =>  'shared/calmapp_versions_redis_database_form',
+                  :wrap_object => Proc.new {|calmapp_versions_redis_database| calmapp_versions_redis_database.build_redis_database; calmapp_versions_redis_database }}%>  
+<!--,
+              'data-association-insertion-node' => "div#calmapp_versions_redis_database", 
+                'data-association-insertion-method' => "append", 
+                :wrap_object => Proc.new {|calmapp_versions_redis_database| calmapp_versions_redis_database.build_redis_database; calmapp_versions_redis_database }
+            -- > 
+           <!--/div -- >
+            
+            < %=f.semantic_errors "calmapp_versions_redis_database.calmapp_version_id"%>
+            < %=f.semantic_errors :calmapp_id%>
+            < %=f.semantic_errors :calmapp%>
 
-
-                <%=f.semantic_errors :calmapp_id%>
-                <%=f.semantic_errors :calmapp%>
-
-
+          </div-->
        
 	<% end %>	
 	<%= f.actions do %>
-      <%= f.action(:submit)  %>    
+      <%= f.action(:submit, :button_html=> {:id=>"submit-cav-form"})  %>    
   <% end %>
 <% end %>
 
+<script language="javascript" type="text/javascript">
+        //<!-- This script sets up dual list boxes with the appropriate ids -->
+        
+        $(function() {
+            $.configureBoxes({box1View : "available-translation-languages-box",
+                              box2View : "assigned-translation-languages-box",
+                              box1Filter : "available-translation-languages-filter",
+                              box2Filter : "assigned-translation-languages-filter",
+                              box1Clear : "available-translation-languages-filter-clear",
+                              box2Clear : "assigned-translation-languages-filter-clear",
+                              box1Counter : "available-translation-languages-counter",
+                              box2Counter :  "assigned-translation-languages-counter",
+                              box1Storage :   "box1Storage-tl",
+                              box2Storage :   "box2Storage-tl",
+                              to1 : "to1-tl",
+                              to2 : "to2-tl",
+                              allTo1 : "allTo1-tl",
+                              allTo2 : "allTo2-tl"});
+        });
+        //This function is necessary to remove a blank that formtastic leaves in the first listbox.
+        function deleteBlanksFromSelectBox(boxId){
+           $(boxId + " :empty").remove();
+        }
+        
+        /*
+         * Begin getting and setting redis_db_index
+         */ 
+         
+         /**
+          * @param object is the div container for the fields to do with 1 redis database
+          */
+         var redisDbIndexSelector = function(object){calmapp_versions_translation_language
+           return $(object).parent("li").siblings("li").find("#redis_db_index");
+         }
+            //$(this).parent("li").siblings("li").find("#redis_db_index");
+         /**
+          * getNextRedisDbIndex() uses and an ajax call to retrieve the next available index from server
+          * @param redisInstanceId is the id of the redis instance
+          */
+         var getNextRedisDbIndex = function(redisDbIndexObject, redisInstanceId){
+            var url = "<%= redis_databases_getnextindex_path %>";
+            console.log(url);
+            data = {redis_instance_id : redisInstanceId   };//{redis_instance_id : redisInstanceId};
+            console.log(data);
+            dbIndexObject = redisDbIndexObject;
+            $.ajax( {
+                       url:     url   ,
+                       async : true,
+                       type:       "GET", 
+                       dataType:   "json",
+                       data:       data,
+                
+                       success:    function(data, textStatus, xhr)   {
+                                      console.log("pop success");
+                                      unusedIndexArray = data
+                                      console.log("data = " + data);
+                                      console.log("success url " +url);
+                                      $(dbIndexObject).val(data);
+                                      /*unusedIndexArray.splice(0,0,'');
+                                      $.each(unusedIndexArray, function( intIndex, objValue ){
+                                 
+                                        // Create a new option HTML element out of the
+                                        // current value (in the iteration) and then
+                                        // add this value to the list.
+                                        //console.log("options " + objValue);
+                                        $(RDB.Form.dbIndexSelectSelector).append($( "<option ></option>" ).val(objValue).html(objValue));
+                                        //);
+                                         //$(RDB.Form.dbIndexSelectSelector).addOption(objValue,objValue);
+                                        }//end each function
+                                      );//end each
+                                      //We must be careful to set the index back to what it was if the user sets the same instance again
+                                     //if($(RDB.Form.redisInstanceSelectSelector).val()==RDB.Form.instanceId){
+                                           //$(RDB.Form.redisDatabaseIndex).val(RDB.Form.dbIndex);
+                                           //disableDbIndex(true);
+                                     //}else{
+                                        //$(RDB.Form.dbIndexSelectSelector).val('');
+         //}*/
+                                    },
+                      error:      function(request, status, error) {
+                                     console.log("pop error");
+                                    //This callback will handle errors on the server but not errors in the success callback
+                                    //@todo put the reponse text in a web page
+                                    alert(request.responseText);
+                                  },
+                     });//end ajax
+          } ;
+         
+          /**
+           * setRedisDbIndex() sets the in the form
+           * @param dbIndex is the index to set
+           */
+          var setRedisDbIndex = function(dbIndexObject, dbIndexValue){
+            //console.log(dbIndex);
+            $(dbIndexObject).val(dbIndexValue)
+          };
+         
+         $(document).ready(function(){
+          deleteBlanksFromSelectBox('#availableLanguagesBox');
+          $("#submit-cav-form").click(function(event){
+            //only selected options are sent to the controller. Thus select all in the assigned box
+            $("#assigned-translation-languages-box > option").prop('selected', true) ;
+            return true;
+          });//end click
+          
+          $('#cavtd').bind('cocoon:before-insert', function(e, insertedItem) {
+            //$("#owner_from_list").hide();
+            //$("#owner a.add_fields").hide();
+            
+          }); //end bind / on
+          /**
+           * We bind the cocoon after insert event to the container div, so that on
+           * selection of the redis instance, a new index will automatically be selected
+           */
+          $('#cavtd').bind('cocoon:after-insert', function(e, insertedItem) {
+            console.log(insertedItem.find('select#redis_instance_id'));
+            //var redisDbIndexInput = $(this).parent("li").siblings("li").find("#redis_db_index");//redisDbIndexSelector(this);
+            //console.log(redisDbIndexInput);
+            //console.log($(redisDbIndexInput));
+            $(insertedItem.find('select#redis_instance_id')).change(function(e){
+              var listItemSiblingsObjects = $(this).parent("li").siblings("li")
+              var redisInstanceSelect = $(this);//$(listItemSiblingsObjects).find("#redis_instance_id");
+              
+              var redisDbIndexInput = $(listItemSiblingsObjects).find("#redis_db_index");//redisDbIndexSelector(this);
+              
+              //console.log($(this).children( "option:selected"));
+              if( $(this).children( "option:selected").text() == ''){
+                //redisDbIndexInput.val(''); 
+                setRedisDbIndex(redisDbIndexInput, '');
+              }else{
+                //setRedisDbIndex(redisDbIndexInput, 100);
+                getNextRedisDbIndex(redisDbIndexInput, $(redisInstanceSelect).val());
+              }
+            });
+          }); //end bind/on
+          
+         });//end ready
+
+</script>

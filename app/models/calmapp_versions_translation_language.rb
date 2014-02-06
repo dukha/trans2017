@@ -10,7 +10,7 @@
 
 class CalmappVersionsTranslationLanguage < ActiveRecord::Base
   include Validations
-  belongs_to :calmapp_version
+  belongs_to :calmapp_version_tl, :inverse_of=>:calmapp_versions_translation_languages, :class_name => "CalmappVersion", :foreign_key =>"calmapp_version_id"
   belongs_to :translation_language
 
   validates :translation_language_id, :uniqueness => {:scope=> :calmapp_version_id}

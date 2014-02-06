@@ -35,7 +35,7 @@
   
     
     <td class="<%= link_cell_class %>"><%= tlink_to  'edit', edit_calmapp_version_path(calmapp_version) %></td>
-    <td class="<%= link_cell_class %>"><%= tlink_to 'destroy',  calmapp_version , :confirm => 'delete.are_you_sure', :model =>  "calmapp_version", :value=>calmapp_version.name, :method => :delete %></td>
+    <td class="<%= link_cell_class %>"><%=link_destroy calmapp_version, "calmapp_version"%><!--%= tlink_to 'destroy',  calmapp_version , :confirm => 'delete.are_you_sure', :model =>  "calmapp_version", :value=>calmapp_version.name, :method => :delete % --></td>
   </tr>
 <% end %>
 </table>

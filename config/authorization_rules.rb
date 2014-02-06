@@ -57,7 +57,9 @@ authorization do
   role :redis_databases_getunused do
     has_permission_on [:redis_instances],  :to=>[:unused_redis_database_indexes]
   end
-
+  role :redis_databases_getnextindex do
+    has_permission_on [:redis_instances],  :to=>[:next_redis_database_index]
+  end
   standard_roles :profiles
   #standard_roles :locations
   standard_roles :languages

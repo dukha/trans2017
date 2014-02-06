@@ -122,7 +122,7 @@ end
 module ProfilesHelper
   STANDARD_ACTIONS = %w(read write create destroy)
   # These must all be in the translation file as roles.<action>
-  NONSTANDARD_ACTIONS = %w(lookup confirm search import change invite redis_databases_getunused)
+  NONSTANDARD_ACTIONS = %w(lookup confirm search import change invite redis_databases_getunused redis_databases_getnextindex)
   def layout_check_boxes profile
     html =''
     rows_data= collect_roles_in_groups

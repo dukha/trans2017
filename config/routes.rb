@@ -48,7 +48,7 @@ Translator::Application.routes.draw do
    resources :redis_databases
    resources :redis_instances
    get 'unused_redis_database_indexes' => 'redis_instances#unused_redis_database_indexes', :as => 'redis_databases_getunused', via: :all
-
+   get 'next_unused_redis_database_index'=> 'redis_instances#next_redis_database_index'  , :as => 'redis_databases_getnextindex', :via=> :all
    resources :user_works#, :only=>[:edit, :show]
 
    resources :translations #, :except=>:show#, :only=> [:new, :index]

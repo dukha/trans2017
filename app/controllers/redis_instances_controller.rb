@@ -94,13 +94,33 @@ class RedisInstancesController < ApplicationController
   end
 
   def unused_redis_database_indexes
-    puts  "unused_redis_database_indexes"
+    #puts  "unused_redis_database_indexes"
     #binding.pry
     ri = RedisInstance.find(params[:redis_instance_id])
     data = ri.unused_redis_database_indexes()
     if request.xhr?
       render :json => data
+    else
+      return data
     end 
+  end 
   
-  end  
-end
+  def next_redis_database_index
+    #binding.pry
+    ri = RedisInstance.find(params[:redis_instance_id])
+    indexes = ri.unused_redis_database_indexes()
+    if not indexes.empty? then
+      ret_val = indexes[0]
+    else
+      ret_val = {}
+      ret_val["error"] = t($MS + "redis_instance.all_redis_db_indexes_taken", description )
+    end #not empty
+    #binding.pry
+    if request.xhr?
+        render :json => ret_val#["error"]? ret_val["error"] : ret_val
+      else
+        return ret_val
+      end #xhr 
+  end #def
+  
+end #class

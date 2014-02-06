@@ -206,6 +206,7 @@ en:
       calmapp:
         new_redis_dev_db: Add Redis Developers Database
         new_version: Add First Version
+        name: Application Name
       translation_parameter:
         language_id: Language
         redis_database_id: Redis Database

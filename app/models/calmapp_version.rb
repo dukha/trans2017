@@ -4,20 +4,29 @@ class CalmappVersion < ActiveRecord::Base
   #languages available is a virtual attribute to allow languages_available to be used in the new form
   # :add_languages, :new_redis_db are virtual attributes for the user to indicate that a languages and redis database are to be added at the same time as a new version
   attr_accessor :translation_languages_available, :add_languages, :new_redis_dev_db, :translation_languages_assigned
-  attr_accessible   :calmapp_id, :version,  :redis_database, :translation_languages, :translation_languages_available, 
-  :calmapp_versions_translation_language_ids, :calmapp_versions_translation_languages_attributes#, :language_ids, :new_redis_dev_db
+  attr_accessible   :calmapp_id, :version,  
+         :redis_databases, :translation_languages, :translation_languages_available, 
+         :calmapp_versions_translation_language_ids, :calmapp_versions_translation_languages_attributes, 
+         :calmapp_versions_redis_database, :calmapp_versions_redis_database_attributes, 
+         :redis_databases_attributes#, :language_ids, :new_redis_dev_db
   
   belongs_to :calmapp #, :class_name => "Application", :foreign_key => "calmapp_id"
   
-  has_many :redis_databases
-  accepts_nested_attributes_for :redis_databases, :reject_if => :all_blank, :allow_destroy => true
+  has_many :calmapp_versions_redis_database, :inverse_of=>:calmapp_version_rd, 
+           #:class_name => "CalmappVersionsRedisDatabase",
+             :foreign_key=>"calmapp_version_id"
+  accepts_nested_attributes_for :calmapp_versions_redis_database, :reject_if => :all_blank, :allow_destroy => true
+  
+  has_many :redis_databases, :through =>:calmapp_versions_redis_database, :source=>:calmapp_version_rd
+  #accepts_nested_attributes_for :redis_databases, :reject_if => :all_blank, :allow_destroy => true
  
   validates  :version,  :presence=>true
   validates :version, :numericality=>true#=> {:only_integer=>false, :allow_nil =>false}
   
   #validates :calmapp, :presence=>true
 
-  has_many :calmapp_versions_translation_languages, :dependent => :destroy
+  has_many :calmapp_versions_translation_languages, :dependent => :destroy, :inverse_of => :calmapp_version_tl,
+            :foreign_key=> "calmapp_version_id"
   accepts_nested_attributes_for :calmapp_versions_translation_languages, :reject_if => :all_blank, :allow_destroy => true
   has_many :translation_languages , :through => :calmapp_versions_translation_languages
   #validates :calmapp_id, :existence=>true

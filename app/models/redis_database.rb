@@ -1,21 +1,24 @@
 class RedisDatabase < ActiveRecord::Base
   include Validations
   #validates :with => RedisDbValidator2
-  belongs_to :calmapp_version
+  #belongs_to :calmapp_version
   belongs_to :redis_instance
-  belongs_to :release_status
+  #belongs_to :calmapp_versions_redis_database
+  has_one :calmapp_versions_redis_database
+  has_one :calmapp_version, :through => :calmapp_versions_redis_database
+  #belongs_to :release_status
   #has_many :uploads_redis_databases
   #has_many :uploads, :through => :uploads_redis_databases
-  validates :calmapp_version_id, :presence=>true
-  validates :calmapp_version_id, :existence => true#, :presence=>true
+  #validates :calmapp_version_id, :presence=>true
+  #validates :calmapp_version_id, :existence => true#, :presence=>true
   validates :redis_db_index, :presence=>true
   validates :redis_db_index, :uniqueness => {:scope=>[:redis_instance]}
   validates :redis_instance, :presence=>true
-  validates :release_status, :presence=>true, :existence=>true
-  validates :release_status, :uniqueness=>{:scope=>[:calmapp_version]}
+  #validates :release_status, :presence=>true, :existence=>true
+  #validates :release_status, :uniqueness=>{:scope=>[:calmapp_version]}
   #validate :redis_db_index_exists
   
-  validates :release_status_id, :existence=>true
+  #validates :release_status_id, :existence=>true
   #validates :calmapp_version_id,:presence=>true
   #validates :host,:presence=>true
   #validates :port, :presence => true
@@ -23,7 +26,7 @@ class RedisDatabase < ActiveRecord::Base
   #This validation checks whether the redis_db_index is one permitted by the installation.
   #Returns false if not. Default redis setup is for databases 0-15 to be available.
   #This can be increased in the redis config file (not via rails)
-  validates  :redis_db_index, :redis_db => true
+  #validates  :redis_db_index, :redis_db => true
   
   #validates_with Validations::TranslationValidator
 
