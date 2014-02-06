@@ -1,0 +1,14 @@
+<div id='redis-database class='nested-fields' style='display:list-item'>
+        <!--%binding.pry% -->
+        <%= f.input :redis_instance_id,  :include_blank=>false, :as=>:select,
+          :collection=> RedisInstance.all.collect {|p| [ p.description, p.id ]}, :include_blank=>true, 
+          :input_html=>{:id=>"redis_instance_id"} %>
+        <%= f.input :redis_db_index %> 
+        <!--%locals={}; locals[:state]="new"% -->
+        <!--%= f.input(:redis_db_index , :as=> :select, :collection=> locals[:state]=="edit"?((RedisInstance.find(@redis_database.redis_instance_id).unused_redis_database_indexes + [@redis_database.redis_db_index]).sort!) : [], 
+                      :input_html=>{:name=>"redis_database[redis_db_index]", :id=>"redis_database_redis_db_index"})%> 
+                      <!--, :hint=> (locals[:state]=="edit"?t($FH + "redis_database.redis_db_index_edit") : t($FH + "redis_database.redis_db_index_new"))-->
+         <!--t :redis_db_index, :input_html=>{:id=> "redis_db_index", :disabled=>"disabled"}% -->
+     <!--   < %= db.semantic_errors :redis_db_index% -->
+  <!--%end%-->
+</div>

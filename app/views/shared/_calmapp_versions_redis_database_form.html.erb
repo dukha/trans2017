@@ -1,0 +1,25 @@
+
+<div id = 'calmapp_versions_redis_database' class='nested-fields' style='display:list-item'>
+  <!--%binding.pry%-->
+
+     <!--%=f.inputs do % -->
+     <!--   < %= db.input :calmapp_version_id, :as=>:select,:collection=> CalmappVersion.all.collect {|p| [ p.calmapp_name_with_version, p.id ]} %>  -->
+        <!--%binding.pry% -->
+        <div><%=f.object.redis_database%></div>
+        <%=f.input :release_status_id,  :include_blank=>true, :as=>:select,
+          :collection=> ReleaseStatus.all.collect {|p| [ p.status, p.id ]}%>
+         
+        <%=f.semantic_fields_for :redis_database do |rd| %>
+            <!--%=render  :partial=>"shared/redis_database_fields", :locals=>{:f=> rd} % -->
+            <%= rd.input :redis_instance_id,  :include_blank=>false, :as=>:select,
+          :collection=> RedisInstance.all.collect {|p| [ p.description, p.id ]}, :include_blank=>true, 
+          :input_html=>{:id=>"redis_instance_id"} %>
+        <%= rd.input :redis_db_index %> 
+         <%end%> 
+         
+<!-- %= db.semantic_errors :host%>
+< %= db.semantic_errors :port%> -->
+  <!--%end% -->   
+
+</div>
+
