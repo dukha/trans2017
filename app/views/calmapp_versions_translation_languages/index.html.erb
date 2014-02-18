@@ -1,0 +1,39 @@
+<%=theading("listing", :model=>"calmapp_versions_translation_language",:count=>10 )%>
+<% cell_class = "data" %>
+<% link_cell_class="link"%> 
+<% if CalmappVersionsTranslationLanguage.count==0 then %>
+  <%=tflash( "no_records_found", :warning)%><br/>
+<%  else %> 
+
+  <%= twill_paginate %>
+  <table class="data">
+    <thead>
+      <tr class ="dataheader">
+        <th class ="dataheader"><%=tlabel('translation_language_id', 'calmapp_versions_translation_language') %> </th>
+        <th class ="dataheader"><%=tlabel('calmapp_version_id', 'calmapp_versions_translation_language')%></th>
+        
+        <th class="linkheader"></th>
+        <th class="linkheader"></th>
+      </tr>
+    </thead>
+  
+    <tbody>
+      <% @calmapp_versions_translation_languages.each do |calmapp_versions_translation_language| %>
+        <tr class = "<%= cycle('dataeven', 'dataodd') %>" >
+          <td class="<%= cell_class %>"><%= calmapp_versions_translation_language.translation_language.name %></td>
+          <td class="<%= cell_class %>"><%= calmapp_versions_translation_language.calmapp_version_tl.name %></td>
+          
+          <td class="<%= link_cell_class %>"><%= tlink_to  'change_uploads', edit_calmapp_versions_translation_language_path(calmapp_versions_translation_language) %></td>
+          <!--td class="< %= link_cell_class %>">< %= link_destroy calmapp_versions_translation_language, "calmapp_versions_translation_language" %></td -->
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <%= twill_paginate %>
+ <%end%>
+<br>
+
+<!--%= tlink_to 'new_model', new_calmapp_versions_translation_language_path, :model=> 'calmapp_version' % -->
+<div class="inline-hints">
+     <%=t($MS + "calmapp_versions_translation_language." + $N)%>
+  </div>

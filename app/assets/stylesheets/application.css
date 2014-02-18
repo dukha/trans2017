@@ -1,12 +1,12 @@
 /*
-
-*=require formtastic
 *=require formtastic_changes
+*=require formtastic
+
 *=require jquery.treeview
 *=require simple-dropdown-index
 *=require sunny/jquery-ui-1.10.3
 *=require trans
-* =require popup
+* =require popup 
 *= require_self
 */
 

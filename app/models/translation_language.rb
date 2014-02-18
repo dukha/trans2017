@@ -8,8 +8,8 @@ class TranslationLanguage < ActiveRecord::Base
   #set_table_name :language
   has_many :calmapp_versions_translation_language
   has_many :calmapp_versions, :through => :calmapp_versions_translation_language
-  has_many :translations_uploads
   
+  #
   validates :iso_code, :name, :presence => true,:uniqueness => true
   validates :name, :presence => true, :uniqueness => true
   

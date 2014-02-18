@@ -12,7 +12,7 @@ The following style may be *conditionally* included for improved support on olde
 form.formtastic fieldset ol li fieldset legend { margin-left: -6px;}
 
 --------------------------------------------------------------------------------------------------*/
-p.inline-hints{
+p.inline-hints, div.inline-hints{
 	font-style:italic;
 	font-size:smaller;
 	padding-top:0px;
@@ -23,3 +23,8 @@ p.inline-hints{
 form.formtastic fieldset > ol > li.optional >input { 
   padding-bottom:0px;
 	margin-bottom:0px; }
+	
+form.formtastic fieldset.inputs > legend > span, form.formtastic fieldset.inputs > ol > legend > span{
+  color: #ba6f05;
+  font-weight : bold;
+}

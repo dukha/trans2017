@@ -13,7 +13,7 @@ class RedisDatabase < ActiveRecord::Base
   #validates :calmapp_version_id, :existence => true#, :presence=>true
   validates :redis_db_index, :presence=>true
   validates :redis_db_index, :uniqueness => {:scope=>[:redis_instance]}
-  validates :redis_instance, :presence=>true
+  validates :redis_instance_id, :presence=>true
   #validates :release_status, :presence=>true, :existence=>true
   #validates :release_status, :uniqueness=>{:scope=>[:calmapp_version]}
   #validate :redis_db_index_exists
@@ -88,7 +88,7 @@ class RedisDatabase < ActiveRecord::Base
     return container.to_yaml
   end
   
-  def redis_instance
+  def redis_instance_find
     if @redis_instance.nil? then
       @redis_instance = RedisInstance.find(redis_instance_id)
     end

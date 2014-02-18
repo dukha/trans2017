@@ -1,8 +1,10 @@
 Translator::Application.routes.draw do
+  #resources :calmapp_versions_translation_languages
+
   scope "/:locale" do
    resources :profiles
    #devise_for :users
-
+   
    resources :translations_uploads
    # root will check permission and if ok redirect to whiteboards
    #root :to => "whiteboards#index"
@@ -50,7 +52,7 @@ Translator::Application.routes.draw do
    get 'unused_redis_database_indexes' => 'redis_instances#unused_redis_database_indexes', :as => 'redis_databases_getunused', via: :all
    get 'next_unused_redis_database_index'=> 'redis_instances#next_redis_database_index'  , :as => 'redis_databases_getnextindex', :via=> :all
    resources :user_works#, :only=>[:edit, :show]
-
+   resources :calmapp_versions_translation_languages
    resources :translations #, :except=>:show#, :only=> [:new, :index]
    get "translations/dev_new" => "translations#dev_new", :as => "dev_new_translation", via: :all
    get "translations/dev_create" => "translations#dev_create", :as => "dev_create_translation", via: :all
@@ -63,6 +65,9 @@ Translator::Application.routes.draw do
    get "translations_uploads/select_translation_to_redis/:id" => "translations_uploads#select_translation_to_redis", :as => "select_to_redis", via: :all
 
    get "redis_databases/redis_to_yaml/:id" => "redis_databases#redis_to_yaml", :as => "redis_to_yaml", via: :all
+   
+   get "calmapp_version/version_alterwithredisdb/:id" => "calmapp_versions#version_alterwithredisdb", :as => "version_alterwithredisdb", via: :all
+   
    #get "calmapps/all_in_one_new/" => "calmapps#all_in_one_new", :as => "all_in_one_new"
    #get "calmapps/all_in_one_create" => "calmapps#all_in_one_create"
    #match "upload"

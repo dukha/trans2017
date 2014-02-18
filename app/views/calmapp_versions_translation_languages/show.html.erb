@@ -1,0 +1,14 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Translation language:</strong>
+  <%= @calmapp_versions_translation_language.translation_language_id %>
+</p>
+
+<p>
+  <strong>Calmap version:</strong>
+  <%= @calmapp_versions_translation_language.calmapp_version_id %>
+</p>
+
+<%= link_to 'Edit', edit_calmapp_versions_translation_language_path(@calmapp_versions_translation_language) %> |
+<%= link_to 'Back', calmapp_versions_translation_languages_path %>

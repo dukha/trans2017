@@ -1,0 +1,18 @@
+<li class= "nested-fields">
+  <%=f.inputs :name=> t("heading.uploads") do%>  
+    <%= f.input :description  %>   
+           <!--%bottom_border = "border-bottom:thin solid black; padding-bottom:3px"% -->
+          <!--%binding.pry% -->
+          <%if f.object.new_record? %>
+             <%= f.input :yaml_upload2, :as =>:file%> 
+          <%else%>
+          <li>
+            <%= f.object.yaml_upload2.url %>
+            </li>
+          <%end%>
+           <li style="padding-bottom:10px;margin-left:20px; border-width:1px;border-bottom-style:solid;border-color:ffe88f">
+            <%=link_to_remove_association( t($FA + 'remove_upload'), f, { wrapper_class: 'nested-fields' })%>
+       </li> 
+           
+    <%end%>
+ </li>          

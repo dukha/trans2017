@@ -1,19 +1,9 @@
-<% if namespaced? -%>
-require_dependency "<%= namespaced_file_path %>/application_controller"
-
-<% end -%>
-<% module_namespacing do -%>
 class <%= controller_class_name %>Controller < ApplicationController
-  # The line below only when fixed attr_accessible
-  # before_action :set_<%= singular_table_name %>, only: [:show, :edit, :update, :destroy]
-=begin
- from latest version 
+  # place this file in your current railties gem in the correct folder e.g.
+  # For using ruby 1.9.2 p180 and rails 3.0.7 place controller.rb in
+  # /home/mark/.rvm/gems/ruby-1.9.2-p180/gems/railties-3.0.7/lib/rails/generators/rails/scaffold_controller/templates/
+  # delete these comments after generation
 
-  # GET <%= route_url %>
-  #def index
-    #@<%= plural_table_name %> = <%= orm_class.all(class_name) %>
-  #end
-=end
   # Comment out the next 2 lines if not using authentication and authorisation
   before_filter :authenticate_user!
   filter_access_to :all
@@ -81,66 +71,88 @@ if @<%= plural_table_name %>.count == 0 then
 end  
 respond_to do |format|
   format.html # index.html.erb
-  #format.json { render <%= key_value :json, "@#{plural_table_name}" %> }
+  format.json { render <%= key_value :json, "@#{plural_table_name}" %> }
   format.xml  { render :xml => @<%= plural_table_name %> }
 end
   end
 
   # GET <%= route_url %>/1
+  # GET <%= route_url %>/1.xml
   def show
+    @<%= singular_table_name %> = <%= orm_class.find(class_name, "params[:id]") %>
+
+    respond_to do |format|
+      format.html # show.html.erb
+      format.xml  { render :xml => @<%= singular_table_name %> }
+      format.json { render <%= key_value :json, "@#{singular_table_name}" %> }
+    end
   end
 
   # GET <%= route_url %>/new
+  # GET <%= route_url %>/new.xml
   def new
-    @<%= singular_table_name %> = <%= orm_class.build(class_name) %>
+    @<%= singular_table_name %> = <%= orm_class.build(class_name) %> 
+
+    respond_to do |format|
+      format.html # new.html.erb
+      format.xml  { render :xml => @<%= singular_table_name %> }
+      format.json { render <%= key_value :json, "@#{singular_table_name}" %> }
+    end
   end
 
   # GET <%= route_url %>/1/edit
   def edit
+    @<%= singular_table_name %> = <%= orm_class.find(class_name, "params[:id]") %>
   end
 
   # POST <%= route_url %>
+  # POST <%= route_url %>.xml
   def create
-    @<%= singular_table_name %> = <%= orm_class.build(class_name, "#{singular_table_name}_params") %>
+    @<%= singular_table_name %> = <%= orm_class.build(class_name, "params[:#{singular_table_name}]") %>
 
-    if @<%= orm_instance.save %>
-      tflash('create', :success, {:model=>@@model, :count=>1})  
-      redirect_to @<%= singular_table_name %>, notice: <%= "'#{human_name} was successfully created.'" %>
-    else
-      render action: 'new'
+    respond_to do |format|
+      if @<%= orm_instance.save %>
+        tflash('create', :success, {:model=>@@model, :count=>1})         
+        format.html { redirect_to( :action => "index")} 
+        format.xml  { render :xml => @<%= singular_table_name %>, :status => :created, :location => @<%= singular_table_name %> }
+        format.json { render <%= key_value :json, "@#{singular_table_name}" %>, <%= key_value :status, ':created' %>, <%= key_value :location, "@#{singular_table_name}" %> }
+      else
+        format.html { render :action => "new" }
+        format.xml  { render :xml => @<%= orm_instance.errors %>, :status => :unprocessable_entity }
+        format.json { render <%= key_value :json, "@#{orm_instance.errors}" %>, <%= key_value :status, ':unprocessable_entity' %> }
+      end
     end
   end
 
-  # PATCH/PUT <%= route_url %>/1
+  # PUT <%= route_url %>/1
+  # PUT <%= route_url %>/1.xml
   def update
-    if @<%= orm_instance.update("#{singular_table_name}_params") %>
-       tflash('update', :success, {:model=>@@model, :count=>1})
-      redirect_to @<%= singular_table_name %>, notice: <%= "'#{human_name} was successfully updated.'" %>
-    else
-      render action: 'edit'
+    @<%= singular_table_name %> = <%= orm_class.find(class_name, "params[:id]") %>
+
+    respond_to do |format|
+      if @<%= orm_instance.update_attributes("params[:#{singular_table_name}]") %>
+        tflash('update', :success, {:model=>@@model, :count=>1})
+        format.html { redirect_to( :action => "index")} 
+        format.xml  { head :ok }
+        format.json { head :ok }
+      else
+        format.html { render :action => "edit" }
+        format.xml  { render :xml => @<%= orm_instance.errors %>, :status => :unprocessable_entity }
+        format.json { render <%= key_value :json, "@#{orm_instance.errors}" %>, <%= key_value :status, ':unprocessable_entity' %> }
+      end
     end
   end
 
   # DELETE <%= route_url %>/1
+  # DELETE <%= route_url %>/1.xml
   def destroy
+    @<%= singular_table_name %> = <%= orm_class.find(class_name, "params[:id]") %>
     @<%= orm_instance.destroy %>
-    
-    redirect_to <%= index_helper %>_url, notice: <%= "'#{human_name} was successfully destroyed.'" %>
+    tflash('delete', :success, {:model=>@@model, :count=>1})
+    respond_to do |format|
+      format.html { redirect_to(<%= index_helper %>_url) }
+      format.xml  { head :ok }
+      format.json { head :ok }
+    end
   end
-
-  private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_<%= singular_table_name %>
-      @<%= singular_table_name %> = <%= orm_class.find(class_name, "params[:id]") %>
-    end
-
-    # Only allow a trusted parameter "white list" through.
-    def <%= "#{singular_table_name}_params" %>
-      <%- if attributes_names.empty? -%>
-      params[<%= ":#{singular_table_name}" %>]
-      <%- else -%>
-      params.require(<%= ":#{singular_table_name}" %>).permit(<%= attributes_names.map { |name| ":#{name}" }.join(', ') %>)
-      <%- end -%>
-    end
 end
-<% end -%>

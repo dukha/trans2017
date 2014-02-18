@@ -12,12 +12,12 @@ class CalmappVersion < ActiveRecord::Base
   
   belongs_to :calmapp #, :class_name => "Application", :foreign_key => "calmapp_id"
   
-  has_many :calmapp_versions_redis_database, :inverse_of=>:calmapp_version_rd, 
+  has_many :calmapp_versions_redis_database#, :inverse_of=>:calmapp_version_rd, 
            #:class_name => "CalmappVersionsRedisDatabase",
-             :foreign_key=>"calmapp_version_id"
+             #:foreign_key=>"calmapp_version_id"
   accepts_nested_attributes_for :calmapp_versions_redis_database, :reject_if => :all_blank, :allow_destroy => true
   
-  has_many :redis_databases, :through =>:calmapp_versions_redis_database, :source=>:calmapp_version_rd
+  has_many :redis_databases, :through =>:calmapp_versions_redis_database#, :source=>:calmapp_version_rd
   #accepts_nested_attributes_for :redis_databases, :reject_if => :all_blank, :allow_destroy => true
  
   validates  :version,  :presence=>true
@@ -70,7 +70,9 @@ class CalmappVersion < ActiveRecord::Base
       return TranslationLanguage.all - translation_languages
   end
   
-  
+  def to_s
+    name
+  end
 end
 
 # == Schema Information

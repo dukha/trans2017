@@ -1,15 +1,15 @@
 class TranslationsUpload < ActiveRecord::Base
   include Validations
   mount_uploader :yaml_upload2, YamlTranslationFileUploader
-  attr_accessible :description, :translation_language_id, :calmapp_version_id, :yaml_upload, :translation_language, :calmapp_version, :yaml_upload, :yaml_upload2 
-  belongs_to :translation_language
-  belongs_to :calmapp_version
+  attr_accessible :description,  :calmapp_versions_translation_language_id, :yaml_upload2, :calmapp_versions_translation_language
+  belongs_to :calmapp_versions_translation_language
+  #belongs_to :calmapp_version
   
-  validates :translation_language_id,  :presence=>true
-  validates :translation_language_id, :existence => true
+  #validates :translation_language_id,  :presence=>true
+  #validates :translation_language_id, :existence => true
   
-  validates :calmapp_version_id,  :presence=>true
-  validates :calmapp_version_id, :existence => true
+  #validates :calmapp_version_id,  :presence=>true
+  #validates :calmapp_version_id, :existence => true
   
   validates :description,  :presence=>true
   

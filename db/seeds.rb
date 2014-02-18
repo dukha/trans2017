@@ -53,15 +53,15 @@ reg4 = CalmappVersion.create!(:calmapp_id => reg.id, :version => 4)
 trans1=CalmappVersion.create!(:calmapp_id => trans.id, :version => 1)
 log.info("Calm application version inserted")
 
-ri_local = RedisInstance.create!(:host=>"localhost", :password => '123456', :port => '6379', :max_databases=>16, :description=> "Developer's Desktop Computer(only)")
+ri_local = RedisInstance.create!(:host=>"192.168.0.1", :password => '123456', :port => '6379', :max_databases=>16, :description=> "Developer's Desktop Computer(only)")
 ri_integration = RedisInstance.create!(:host=>"31.222.138.180", :password => '123456', :port => '6379', :max_databases=>32, :description=>'Integration Server')
 log.info("Redis instances inserted")
 
-red_reg4_loc_dev = RedisDatabase.create!(:calmapp_version_id => reg4.id, :redis_instance_id => ri_local.id, :redis_db_index => 1, :release_status_id => vs_dev.id)
-red_reg4_loc_test = RedisDatabase.create!(:calmapp_version_id => reg4.id, :redis_instance_id => ri_local.id, :redis_db_index => 2, :release_status_id => vs_test.id)
-red_trans1_int_dev = RedisDatabase.create!(:calmapp_version_id => trans1.id, :redis_instance_id => ri_integration.id, :redis_db_index => 1, :release_status_id => vs_dev.id)
-red_trans1_int_test = RedisDatabase.create!(:calmapp_version_id => trans1.id, :redis_instance_id => ri_integration.id, :redis_db_index => 2, :release_status_id => vs_test.id)
-log.info("Redis databases inserted")
+#red_reg4_loc_dev = RedisDatabase.create!(:calmapp_version_id => reg4.id, :redis_instance_id => ri_local.id, :redis_db_index => 1, :release_status_id => vs_dev.id)
+#red_reg4_loc_test = RedisDatabase.create!(:calmapp_version_id => reg4.id, :redis_instance_id => ri_local.id, :redis_db_index => 2, :release_status_id => vs_test.id)
+#red_trans1_int_dev = RedisDatabase.create!(:calmapp_version_id => trans1.id, :redis_instance_id => ri_integration.id, :redis_db_index => 1, :release_status_id => vs_dev.id)
+#red_trans1_int_test = RedisDatabase.create!(:calmapp_version_id => trans1.id, :redis_instance_id => ri_integration.id, :redis_db_index => 2, :release_status_id => vs_test.id)
+#log.info("Redis databases inserted")
 
 
 Profile.seed
@@ -75,7 +75,14 @@ translation_organisation = Organisation.create :name=>"translation_organisation"
 en = TranslationLanguage.create!(:iso_code=> "en", :name=>"English") #, :parent_id=>translation_organisation.id)
 nl = TranslationLanguage.create!(:iso_code=> "nl", :name=>"Dutch")  
 
-
+TranslationLanguage.create!(:iso_code=> "en_US", :name=>"American English")
+TranslationLanguage.create!(:iso_code=> "zh", :name=>"Mandarin")
+TranslationLanguage.create!(:iso_code=> "zh_MY", :name=>"Malaysia Mandarin")
+TranslationLanguage.create!(:iso_code=> "el", :name=>"Greek")  
+TranslationLanguage.create!(:iso_code=> "hi", :name=>"Hindi") 
+TranslationLanguage.create!(:iso_code=> "id", :name=>"Indonesian")
+TranslationLanguage.create!(:iso_code=> "it", :name=>"Italian")
+TranslationLanguage.create!(:iso_code=> "es", :name=>"Spanish")     
 
 
 

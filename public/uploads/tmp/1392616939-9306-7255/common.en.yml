@@ -13,7 +13,6 @@ en:
     for_user: For User %{user} 
     clear: Clear
     close: Close
-    help: Help
     current_time: Now
     changed_ago: "Changed %{change_date} ago"
     visibility:
@@ -194,20 +193,13 @@ en:
         login: User name or email address
   errors:
     messages:
-      carrierwave_processing_error: "Cannot resize image."
-      carrierwave_integrity_error: "Not an image."
-      carrierwave_download_error: "Couldn't download image."
-      extension_white_list_error: "You are not allowed to upload %{extension} files, allowed types: %{allowed_types}"
-      extension_black_list_error: "You are not allowed to upload %{extension} files, prohibited types: %{prohibited_types}"        
+      
       # these messages are for the date_validator gem (copied from the gem for our internationalisation)
       not_a_date: "%{value} is not a date"
       after: "%{attribute} must be after %{date}"
       after_or_equal_to: "%{attribute} must be after or equal to %{date}"
       before: "%{attribute}} must be before %{date}"
       before_or_equal_to: "%{attribute}must be before or equal to %{date}"
-      
-
-    
          
 # Nested attributes are no longer supported as of rails 3.1
 #    attributes:

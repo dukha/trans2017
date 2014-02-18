@@ -60,6 +60,10 @@ authorization do
   role :redis_databases_getnextindex do
     has_permission_on [:redis_instances],  :to=>[:next_redis_database_index]
   end
+  
+  role  :version_alterwithredisdb do
+    has_permission_on [:calmapp_versions], :to => [:version_alterwithredisdb]
+  end
   standard_roles :profiles
   #standard_roles :locations
   standard_roles :languages

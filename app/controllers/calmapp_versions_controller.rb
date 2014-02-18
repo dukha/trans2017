@@ -8,6 +8,7 @@ class CalmappVersionsController < ApplicationController
   @@model="calmapp_version"
   
   def index
+  
     @calmapp_versions = CalmappVersion.paginate(:page => params[:page], :per_page=>15)  #CalmappVersion.all
 
     respond_to do |format|
@@ -49,9 +50,14 @@ class CalmappVersionsController < ApplicationController
   # POST /calmapp_versions.xml
   def create
     #binding.pry
-    attr_hash = prepare_params_with_translation_language(params[:id], params[:calmapp_version][:calmapp_versions_translation_language_ids])
-    params["calmapp_version"]["calmapp_versions_translation_languages_attributes"] = attr_hash
-    params[:calmapp_version].delete(:calmapp_versions_translation_language_ids)
+=begin
+    if not redis_db_update? then
+      attr_hash = prepare_params_with_translation_language(params[:id], params[:calmapp_version][:calmapp_versions_translation_language_ids])
+      params["calmapp_version"]["calmapp_versions_translation_languages_attributes"] = attr_hash
+      params[:calmapp_version].delete(:calmapp_versions_translation_language_ids)
+    end
+=end
+    prepare_params
     @calmapp_version = CalmappVersion.new(params[:calmapp_version])
     #binding.pry
     respond_to do |format|
@@ -72,15 +78,13 @@ class CalmappVersionsController < ApplicationController
   def update
     @calmapp_version = CalmappVersion.find(params[:id])
     
-    attr_hash = prepare_params_with_translation_language(params[:id], params[:calmapp_version][:calmapp_versions_translation_language_ids])
-    params["calmapp_version"]["calmapp_versions_translation_languages_attributes"] = attr_hash
-    params[:calmapp_version].delete(:calmapp_versions_translation_language_ids)
+    prepare_params 
     #binding.pry
     respond_to do |format|
       begin
-        #binding.pry
+        
         #valid_new_associations = @calmapp_version.check_translation_languages_validity(params[:calmapp_version][:calmapp_versions_translation_language_ids])
-        #binding.pry
+        binding.pry
         #params[:calmapp_version][:calmapp_versions_translation_languages_attributes] = []
         
         if @calmapp_version.update_attributes(params[:calmapp_version])
@@ -88,7 +92,12 @@ class CalmappVersionsController < ApplicationController
           format.html { redirect_to( :action => "index")} #(@calmapp_version, :notice => 'Application version was successfully updated.') }
           format.xml  { head :ok }
         else
-          format.html { render :action => "edit" }
+          if redis_db_update? then
+            format.html { render :action => "version_alterwithredisdb" }
+          else
+            format.html { render :action => "edit" } 
+          end
+          
           format.xml  { render :xml => @calmapp_version.errors, :status => :unprocessable_entity }
         end
       rescue ActiveRecord::RecordNotSaved => e
@@ -115,6 +124,10 @@ class CalmappVersionsController < ApplicationController
       format.html { redirect_to(calmapp_versions_url) }
       format.xml  { head :ok }
     end
+  end
+  
+  def version_alterwithredisdb
+    @calmapp_version = CalmappVersion.find(params[:id])
   end
   
   def publish_to_redis
@@ -216,4 +229,20 @@ delete third task
 
     return attr_hash
    end
+   private
+     def redis_db_update? 
+       #return params[:calmapp_version] if params[:calmapp_version] == nil
+         return params[:calmapp_version][:calmapp_versions_translation_language_ids] == nil
+     end
+     
+     def prepare_params
+       #binding.pry
+       return if not params[:calmapp_version]
+   
+       if not redis_db_update? then
+        attr_hash = prepare_params_with_translation_language(params[:id], params[:calmapp_version][:calmapp_versions_translation_language_ids])
+        params["calmapp_version"]["calmapp_versions_translation_languages_attributes"] = attr_hash
+        params[:calmapp_version].delete(:calmapp_versions_translation_language_ids)
+      end
+     end
 end

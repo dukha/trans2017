@@ -83,10 +83,8 @@ ActiveRecord::Schema.define(version: 201204041046086) do
   end
 
   create_table "redis_databases", force: true do |t|
-    t.integer  "calmapp_version_id"
     t.integer  "redis_instance_id"
-    t.integer  "redis_db_index",     null: false
-    t.integer  "release_status_id"
+    t.integer  "redis_db_index",    null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -133,11 +131,7 @@ ActiveRecord::Schema.define(version: 201204041046086) do
     t.string   "description"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "yaml_upload_file_name"
-    t.string   "yaml_upload_content_type"
-    t.integer  "yaml_upload_file_size"
-    t.datetime "yaml_upload_updated_at"
-    t.integer  "calmapp_version_id"
+    t.integer  "calmapp_versions_translation_language_id"
     t.string   "yaml_upload2"
   end
 

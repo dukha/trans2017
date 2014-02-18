@@ -2,27 +2,27 @@
 <% if CalmappVersion.count==0 then %>
   <%=tflash( "no_records_found", :warning)%><br/>
 <%  else %>
-<%= twill_paginate %>
-<table class="data">
-  <tr class="dataheader">
-
-    <th class ="dataheader"><%=tlabel('calmapp_id',  'calmapp_version') %></th>
-
-    <th class ="dataheader"><%=tlabel('version','calmapp_version') %></th>
-
-    
-
-    <th class="linkheader"></th>
-    <th class="linkheader"></th>
-    
-  </tr>
-
+  <%= twill_paginate %>
+  <table class="data">
+    <tr class="dataheader">
   
-<% cell_class = "data" %>
-<% link_cell_class="link"%>  
-<% @calmapp_versions.each do |calmapp_version| %>
+      <th class ="dataheader"><%=tlabel('calmapp_id',  'calmapp_version') %></th>
+  
+      <th class ="dataheader"><%=tlabel('version','calmapp_version') %></th>
+  
+      
+  
+      <th class="linkheader"></th>
+      <th class="linkheader"></th>
+      
+    </tr>
+  
+    
+  <% cell_class = "data" %>
+  <% link_cell_class="link"%>  
+  <% @calmapp_versions.each do |calmapp_version| %>
 
-  <tr class = "<%= cycle('dataeven', 'dataodd') %>" >
+    <tr class = "<%= cycle('dataeven', 'dataodd') %>" >
   
       <td class="<%= cell_class %>"><%= Calmapp.find(calmapp_version.calmapp_id).name %></td>
 
@@ -36,6 +36,7 @@
     
     <td class="<%= link_cell_class %>"><%= tlink_to  'edit', edit_calmapp_version_path(calmapp_version) %></td>
     <td class="<%= link_cell_class %>"><%=link_destroy calmapp_version, "calmapp_version"%><!--%= tlink_to 'destroy',  calmapp_version , :confirm => 'delete.are_you_sure', :model =>  "calmapp_version", :value=>calmapp_version.name, :method => :delete % --></td>
+    <td class="<%= link_cell_class %>"><%= tlink_to "version_alterwithredisdb", version_alterwithredisdb_path(calmapp_version)%></td>
   </tr>
 <% end %>
 </table>

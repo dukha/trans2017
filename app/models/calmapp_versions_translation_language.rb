@@ -10,6 +10,9 @@
 
 class CalmappVersionsTranslationLanguage < ActiveRecord::Base
   include Validations
+  attr_accessible :calmapp_version_id, :calmapp_version, :translation_language_id, 
+  :translation_language, :translations_uploads_attributes
+  
   belongs_to :calmapp_version_tl, :inverse_of=>:calmapp_versions_translation_languages, :class_name => "CalmappVersion", :foreign_key =>"calmapp_version_id"
   belongs_to :translation_language
 
@@ -18,6 +21,9 @@ class CalmappVersionsTranslationLanguage < ActiveRecord::Base
   #validates :calmapp_version, :existence=>true
   #validates :language, :existence=>true
   #attr_accessor :write
+  has_many :translations_uploads
+  accepts_nested_attributes_for :translations_uploads
+  
   def name
     return CalmappVersion.find(calmapp_version_id).name + " " + TranslationLanguage.find(translation_language_id).name
   end

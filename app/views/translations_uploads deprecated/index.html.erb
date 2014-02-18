@@ -84,9 +84,9 @@
 
   <table class="data">
     <tr class="dataheader">
-    
-      <th class ="dataheader"><%=sortable("translation_language_id","translations_upload", sortable_cols.include?("translation_language_id"))%></th> 
-      <th class ="dataheader"><%=sortable("calmapp_version_id","translations_upload", sortable_cols.include?("calmapp_version_id"))%></th>
+      <td class = "dataheader">Version/language</td>
+      <!--th class ="dataheader">< %=sortable("translation_language_id","translations_upload", sortable_cols.include?("translation_language_id"))%></th --> 
+      <!--th class ="dataheader">< %=sortable("calmapp_version_id","translations_upload", sortable_cols.include?("calmapp_version_id"))%></th -->
     
       <th class ="dataheader"><%=sortable("description","translations_upload", sortable_cols.include?("description"))%></th> 
   
@@ -100,10 +100,11 @@
   <% @translations_uploads.each do |translations_upload| %>
   
     <tr class = "<%= cycle('dataeven', 'dataodd') %>" >
-            <td class="<%= cell_class %>"><%= translations_upload.translation_language.name %></td>
-             <td class="<%= cell_class %>"><%= translations_upload.calmapp_version.name%></td>
+            <td class="<%= cell_class %>"><!--%= translations_upload.calmapp_versions_translation_language.name % --></td>
+            <!--td class="< %= cell_class %>">< %= translations_upload.translation_language.name %></td-->
+             <!--td class="<%= cell_class %>">< %= translations_upload.calmapp_version.name%></td -->
             <td class="<%= cell_class %>"><%= translations_upload.description %></td>
-            <!--td class="<%= cell_class %>"> < %=translations_upload.yaml_upload_file_name% ></td -->
+            <!--td class="< %= cell_class %>"> < %=translations_upload.yaml_upload_file_name% ></td -->
             <td class="<%= cell_class %>"> <%=translations_upload.yaml_upload2%></td>
           <%= link_edit( edit_translations_upload_path(translations_upload), :translations_uploads  ) %>
       <%= link_destroy( translations_upload, :translations_uploads ) %>

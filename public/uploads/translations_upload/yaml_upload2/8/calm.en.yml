@@ -1,0 +1,1318 @@
+# Sample localization file for English. Add more files in this directory for other locales.
+# See http://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
+
+en:
+  inbound_mail_explanation: "These mail servers will be checked for replies from applicants. They must be Gmail accounts with IMAP enabled. Calm will only process mail with a valid conversation key in the subject. The from address in an email to an applicant is the 'Account Name' of the mail server nearest to the course venue."
+  no_messages: No letters found
+  application:
+    app_title: "%{calm}: %{app_name}" 
+    registrar: Registrar
+    app_sub_name: Course Applications and Letter Management
+    developed_using: Developed Using...
+    about: About %{calm}
+    version: Version %{version}
+  placeholders:
+    quick_search: "QuickSearch"  
+  formtastic:
+    labels:
+      remote_instance_name: "The Instance on Calm 3"
+      # For some reason with Devise, "activerecord.attributes.user.username" etc do not work for translation even when hard coded.
+      # Formtastic stuff works with no coding
+      #domain_id: &fl_di Sign in Domain
+      password: &fl_p Password
+      #username: &fl_u UserName
+      name: &fl_n Name
+      description: &fl_d Description
+      translation_code: &fl_tc Translation Code
+      iso_code: &fl_ic ISO Language Code
+      #parent_id: &fl_pi Parent Domain
+      name_english: &fl_en English name
+      old_code: &fl_oc Old Code
+      oldcode: *fl_oc
+      email: &fl_e Email
+      given_name: &fl_gn Given Name
+      family_name: &fl_fn Family Name
+      dob: &fl_dob Date of Birth
+      #owner: Owner
+      #draft_letter: Draft
+      #message: Message
+      from: From
+      to: To
+      type: Type
+      original_arrival: Original Arrival
+      original_departure: Original Departure
+      status: Status
+      # ALL THESE SHOULD GO UNDER $ARA + . +<MODEL_NAME> + . <ATTR_NAME> 
+      #first_course_year: Year of first course
+      #gender: Gender
+      #birthdate: Date of birth
+      #birth_country: Country where born
+      #age: Age
+      #Participation: Participates as
+      #kind: Kind
+      #title: Title
+      #recipient: Recipient
+      #
+      #value: Letter
+      #date: Date
+      #days_since_application: Days Since Application
+      #days_to_course: Days To Course
+      #operator: Operator
+      #method: Method
+      #incoming: Incoming
+      #textilesegment: Text
+      #additionsegment: Optional
+      #replysegment: Reply
+
+      #participation: Participates as
+      #for_location: "For location:"lookup
+
+      #Participation: Participates as
+
+    hints:
+      public_schedule:
+        location_id: Data for all courses in this location sub-tree will be sent to the OSA schedule page.
+        subdomain: This is the OSA name identifying the schedule web page. The course data is sent to this page.
+        name: A name by which you can identify this OSA data bridge.
+      
+      default_venue: For OSA, each Organisation can have 1 default venue. Normally this will be a centre. 
+      language:
+        name: The name of the language in the characters used by that language e.g.日本
+        publishing_language: The language is available in both OSA(for schedules) and Calm 3(for application forms)
+        course_language: There are materials available to present instructions  in this language for a 10 day courses
+        calm_reg_language: The Calm version that  is being used now has a translation in this language.
+        left_to_right: The language is written from left to right (not right to left)   
+      course_type:
+        last_day: For example a 10 day course finishes on day 11, so last day = 11
+        oldcode: The code used by previous versions of calm
+        osa_code: "The code used to identify this course type in 'OSA' student application. Don't even think of editing data here unless you have a copy of OSA xsd file!"
+        external_course_type_code: "The code used to identify this course type in 'pform' student application. Calm won't be able to talk to pform if you get this wrong. Talk to a techie before touching this"  
+      student_allocation:
+        name: Name of quota here, eg New Males, Males etc
+        translation_code: Translation Code
+        quota: Number of students in this quota
+        initial_quota: Allow for cancellations by using an inital quota
+      devise:
+        registrations:
+          password: xxxx    
+      user:
+        passwordedit: Leave blank if the password is to remain unchanged
+        language: Choose the language that will be used for using the calm screens
+      course:
+        #course_type_id: Choose the course type from list
+        venue_id: Choose the location from the list
+        start_date: For new courses the datepicker defaults to 3 days after the last course (in chronological order) finishes.
+        end_date: Automatically filled by calculating from the type of course. Change the course type or start date and end date also changes.
+        tentative: "If ticked then course will not be published to the internet."
+        cancelled: "If ticked then course will not be published to the internet."
+        marked_for_delete: "Course can only be deleted if there are no applications present. If ticked then course will not be published to the internet."
+        enrollment_open_at: "Students will be able to click 'Apply' on the web to apply for the course from this date onward."
+        start_time: The time that students must be on the site on day 0. Change the course type venue and this may change.
+        special_handling_ats: Click the ... button or type in an AT code to select the AT(s) reviewing applications that must be forwarded to an AT. 
+        conducting_ats: Click the ... button or type in an AT code to select the AT(s) conducting the course.
+        conducting_ccts: "Click the ... button to select the CCT(s) conducting the course. If an AT is conducting a childrens's course, using the Conducting ATs section."
+        allow_enrollments_after_start_date: "OS's can register for PT while the course is in progress. Must be false for Long Courses"
+        registrars: Choose the user(s) to be nominated registrars for this course (not required). Click the  arrow buttons to move a user to registrar.
+        languages: Choose the language(s) in which this course will be offered and/or published. At least 1 required.
+        internal_comment: Add comments here that will only be seen by registrars (not published).
+        cct_list_temp: "List conducting CCT's for children's and teenagers' courses here. Use 2 or 3 character codes for each CCT. IF MORE THAN 1 CCT THEN CODES SHOULD BE SEPARATED BY COMMAS. If an AT is conducting a children's/teenagers' course then use the Conducting AT field."
+        calm30_quota_categories: Set your quota categories for Calm 3 with quota here.
+        calm_30_course_id: Filled after the data is written to Calm 3  for the first time. Contains the Calm 3 identifier. Not editable.
+        application_form_url:  The link for the application form. Comes from Calm 3 after first save.  Not editable.
+        conducting_assistant_teachers: "These AT's will conduct the course."
+        special_handling_assistant_teachers: "These AT's will process MQ's etc for the course. May or may not be conducting AT's"
+        courses_traffic_light: These traffic lights will appear in the schedule and are also used to close off applications (by setting closed on one or more traffic lights). Add traffic lights by selecting a traffic light group above.
+        traffic_light_group_id: Use this field to specify which combination of traffic lights that this course will use.
+        no_application: "Use this field for things like Open Day where there is no application necessary. Corresponds to 'Special' in OSA."
+        reconfirmation_days_before: The number of days before the course to send a reconfirm request. 0 means no reconfirmation.
+        c30_optional_course_identifier: "Organisation's Course Identifer(Optional)" 
+        c30_ats_doing_reg_codes: "Special Handling AT's. Given names for polite emails. Comma separated list. Only 8 character possible. Totally optional(deprecated not in calm4)" 
+        c30_registrars_list: "List of registrars assigned to this course. Comma separated."
+        c30_registratrars_email_address: "The email address of a registrar to be notified by email when an application comes in. (Small courses only: deprecated, not in calm4)" 
+      courses_language:
+        publishing_language: Course will be published in schedule of this language
+        publishable_comment: Language specific comment for schedule
+        course_language: Instruction will be given in this language
+        c30_dates_from_to_text: Add the same starting dates in the desired format for the application form.
+        c30_where_text: Add information about the course site here e.g Address or village name (also for application form)
+        c30_full_desription: Add information about the site or course here 
+      assistant_teacher:
+        atcode: The unique code for this AT (couple)
+        names: The names of the single or couple AT
+        oldid: The id from calm (legacy stuff fom Calm 3)
+        male_name: The name of the male AT if couple or single male
+        female_name: The name of the female AT if couple or single female
+        male_email: The email of the male AT if couple or single male 
+        female_name: The email of the female AT if couple or single female
+        region_code: The code of the region where this AT(couple) are based
+        emails: The email addresses of a couple or single AT   
+      organisation:
+        organisation_default_start_time: Default time for students to have arrived e.g 5:00 pm. Used for 10D, Sati, LC's etc. Can be overridden in new course setup
+        organisation_default_1d_start_time: Default 1 day Course time for students to have arrived e.g 9:00 am. Can be overridden in new course setup.
+        organisation_default_child_1d_start_time: Default 1 day Course time for children to have arrived e.g 9:00 am. Can be overridden in new course setup
+        organisation_default_teen_1d_start_time: Default 1 day Course time for teens to have arrived e.g 9:00 am. Can be overridden in new course setup
+        organisation_default_child_multi_d_start_time: Default multi-day day Course time for children to have arrived e.g 12:00 pm. Can be overridden in new course setup        
+        organisation_default_end_time: Default time for end of course e.g 7:00 am. Used for 10D, Sati, LC's etc. Can be overridden in new course setup
+        organisation_default_1d_end_time: Default 1 day Course time for end of course e.g 4:00 pm. Can be overridden in new course setup.
+        organisation_default_child_1d_end_time: Default 1 day Course time for end of course e.g 4:00 pm. Can be overridden in new course setup
+        organisation_default_teen_1d_end_time: Default 1 day Course time for tend of course e.g 4:00 pm. Can be overridden in new course setup
+        organisation_default_child_multi_d_end_time: Default multi-day day Course time for end of course e.g 1:00 pm. Can be overridden in course new setup
+        default_special_handling_assistant_teachers: "Inital list of special handling AT's. Can be changed in course setup" 
+        
+        organisation_default_venue_id: Default Venue can be changed here while editing an existing record, not with a new record.
+
+        # for Calm 4: organisation_select_application_form_site: "Choose who will process the application: Calm 3 or 4 (for Calm 3.5 only Calm 3 is implemented). Choose which application form the applicants will see: webform, PFORM or OSA. (for Calm 3.5 only PFORM is implemented)."
+        organisation_select_application_form_site: "Choose which application form the applicants will see: webform or PFORM"
+        c30_instance_id: "Select the remote instance which represents the Calm 3 instance to wich this organisation is related. Several Organisations can relate to the same instance."
+        # for CALM 4: organisation_select_application_form_site: "Choose who will process the application: CALM 3 or 4 (for CALM 3.5 only CALM 3 is implemented). Choose which application form the applicants will see: webform, PFORM or OSA. (for CALM 3.5 only PFORM is implemented)."
+        #organisation_select_application_form_site: "Where to send the course applications and which form to use. For Calm 3.5 there is no choice to make. Either a webform or PFORM application will be sent to Calm 3"
+        #c30_instance_id: "Select the remote instance which represents the CALM 3 instance to wich this organisation is related. Several Organisations can relate to the same instance."
+
+      c30_instance:
+        remote_instance_name: "Which Instance on the Calm 3 server is this representing?"
+      public_schedule:
+        osa_subdomain: 
+            "Usually part of the Dhamma name used as the OSA identifier. 
+            For centres, remove 'Dhamma' from the centre name and put the rest in lowercase. e.g. 'Dhamma Rasmi' has a OSA subdomain of 'rasmi'. 
+            This must match what is in OSA for the schedule to work. If in doubt, check in OSA first. 
+            If the course is at a non-centre site that is not under a centre, then discuss with OSA before going ahead."  
+      venue:  
+        c30_venue_id: "Locations on the Calm 3 Instance which are not yet taken. (Might be empty if all are taken.)"
+        timezone_id: Choose a city near where the venue is or the timezone of the venue. This selection only shows places in the region that is specified in the area of the organisation.
+        default_venue_accessor: Only 1 venue can be default. You are unsetting previous default by changing this. Default venue is needed for OSA. If the organsiation is a centre or centre trust then the Default Venue should be the centre. You can only click this on. Go to another venue to click this off.
+        default_venue_accessor_is_me: This venue is the default. Set another venue to unset this one. Default Venue is needed for OSA. If the organisation is a centre or centre trust then the Default Venue should be the centre. 
+      osa_traffic_light_value:
+        translation_code: Do not change this code
+        osa_code: Do not change this unless you know that OSA has changed
+        colour: The colour of the traffic light. A name known in css e.g YellowGreen is ok or a hashed rgb code e.g. '#ff0000'
+      traffic_light:
+        translation_code: Do not change this code
+      location:
+        calm30_quota_categories: Choose a category and add the quota to that category for Calm 3
+        #c30_instance: xxxxx loc  
+      email: Enter valid email address where user can be contacted
+      start_date: First day of the course, D0
+      end_date: The day that the course finishes
+      
+      old_students_only: (Click on this if no new students may attend the course e.g. Sati)
+      translated_field: "This field is edited through the translation file. Contact your Calm translator to add or change the translation. The translation key is \"%{key}\"."
+      username: Enter name that the user will use to sign letters (usually not just initials).
+      password: Enter your new password 
+      password_confirmation: Confirm that you typed the new password correctly  
+      current_password: Enter your existing password
+      iso_code: The ISO code needs to be Googled if you don't know it
+      translation_code: This code is used as a key in translation. Once even 1 translation has been done, DO NOT EDIT IT.
+      given_name: The name that is given at birth by parents.
+      family_name: The family name
+      fqdn: "The fully qualified host name tells how to reach this host from the internet. It will be used to reach the PFORM web app, as it must run on same host as the registration app. Example: 'myhost.example.com' (On development PC set to 'localhost'). Definition at http://en.wikipedia.org/wiki/Fqdn" 
+      first_course_year: When did they sit their first course?
+      message:
+        recipient:  Hint for email addresses
+    actions:
+      list_course_applications: Applications
+      generate_xml: Generate OSA XML
+      add_venue: Add Venue
+      add_organisation: Add Organisation
+      add_c30_instance: Add Calm 3 Instance
+      import_c30_venues_to_c30_instance: Import all Venues which have Courses in this C30Instance
+      import_c30_courses_to_venue: Import all Courses from Matching Calm 3 Location
+      add_c30_venue: Add Calm 3 Venue
+      add_area: Add Area
+      add_course: Add Course
+      add_remote_host: Add RemoteHost
+      add_conducting_at: Add Conducting AT
+      show_conversation: Letters
+      create_letter: As secure web form
+      create_email: As email
+      create_postal: As postal letter
+      create_sms: As SMS
+      allocation_schemes_for_venue: Quota Schemes
+      new_letter: Preview
+      deliver: Send
+      discard: Discard
+      letter_edit_help: Help
+      new_location_variable: New Location Variable
+      new_letter_template: New Letter Template
+      new_masking_template: New Masking Template
+      apply: Apply
+      apply_serve: Apply to Serve
+      sign_in: &fa_si Log In
+      sign_out: &fa_so Log Out %{username}
+      show: Show
+      hide: Hide
+      edit: Edit
+      destroy: &ad Delete
+      delete: *ad
+      new: New
+      letters: Letters
+      back: Back
+      create_model: Add %{model}
+      save: Save %{model}
+      update: Update %{model}
+      new_model: Add %{model}
+      submit: Submit
+      show_something: Show %{something}
+      hide_something: Hide %{something}
+      mark_deleted: Mark Deleted
+      add_child: Add Child %{location_type}
+      search: Search
+      select: Select %{model}
+      select2: Select
+      to_operator: Send to operator
+      reset_password: Reset Password
+      edit_permissions: Edit Permissions
+      display: "Display"
+      show_original: "Original"
+      back: "Back"
+      remove: Remove
+      add_course_language: Add a language
+      remove_course_language: Remove
+      add_calm30_quota_category: Add a quota
+      add_special_handling_at: Add special Handling AT
+      add_traffic_lights: Add Traffic Light
+      publish: Publish  
+      traffic_light_change: Change Traffic Lights
+      remove_calm30_quota_category: Remove
+      remove_special_handling_at: Remove
+      remove_traffic_light: Remove
+      
+  roles:
+    actions:
+      read: Read
+      write: Write
+      create: Create
+      destroy: Destroy
+      lookup: Lookup 
+      confirm: Confirm
+      template: Template
+      addallocations: Add Quotas
+      search: Search
+      letters: Letters
+      import: Import 
+      change: Change
+      trafficlightchange: Change Traffic Lights
+      invite: Invite
+    miscellaneous: Miscellaneous
+    courses: Courses
+    course_types: Course Types
+    guest: Guest
+    #appliction:
+    location_tree: Location Tree
+    users: Users
+    profiles: Profiles
+    languages: Languages
+    course_applications: Course Applications
+    application_forms: Application Forms
+    locations: Locations
+    organisations: Organisations
+    areas: Areas
+    venues: Venues
+    course_types: Course Types
+    whiteboard_types: Whiteboard Types
+    permissions: Permissions
+    public_schedules: Schedule Management
+    allocation_schemes: Quota Schemes
+    student_allocations: Quotas
+    #allocation_schemes
+    #allocation_types
+    application_forms: Application Forms 
+    assistant_teachers: Assistant Teachers
+    at_course_role_types: AT Course Role Types
+    at_responsibility_types: AT Responsibilities Types
+    c30_courses: Calm30 Courses
+    c30_instances: Calm30 Instances
+    c30_venues: Calm30 Venues
+    calm30_quota_categories: Calm30 Quota Categories
+    calm_regions: Regions
+    course_applications: Applications
+    course_calm30_quota_categories: Courses Calm30 Quotas 
+    inbound_mail_servers: Inbound Mail Servers
+    languages: Languages
+    letter_templates: Letter Templates
+    letter_translations: Letter Translations
+    localhosts: Servers(i.e. Remote Computers)
+    location_location_variables: Location Variables/Locations
+    location_variables: Location Variables
+    locations: Locations
+    masking_letter: Masking Letter
+    messages: Messages
+    organisations: Organisations
+    osa_traffic_light_values: Traffic Light Values(OSA)
+    #permissions: 
+    profiles: User Profiles
+    #public_schedules
+    remote_hosts: Servers other than Calm 3.5
+    student_allocations: Quotas
+    traffic_light_groups: Traffic Light Groups 
+    traffic_lights: Traffic Lights
+    users: Users
+    venues_allocation_schemes: Default Venue Quotas
+    
+    
+      
+  activerecord:
+    attributes:
+      id: ID
+      assistant_teacher:
+        id: id
+        atcode: AT code
+        names: AT Name(s) 
+        oldid: Old ID
+        male_name: Male AT Name
+        female_name: Female AT Name 
+        male_email: Male AT email
+        female_email: Female AT email
+        #region_code: Region of AT
+        emails: Email addresses
+        calm_region: Region of AT 
+        marked_deleted: Trashed
+      calm_region:
+        oldcode: Old Code
+        name: Name
+        translation_code: Translation Code
+      childrens_course_teachers_old:
+        region: region
+        local_region: Local Region 
+        serial_number: Serial No.
+        status: Status 
+        address: Address
+        subregion: Subregion
+        name: Name
+        email: Email
+        telephone: Phone
+        extra_data1: Extra Data
+        extra_data2: Extra Data
+        extra_data3: Extra Data  
+      osa_traffic_light_value: 
+        osa_code: OSA Code
+        translation_code: Translation Code
+        colour: Colour
+      #quota_category:
+        #quota_category_type_id: Category Type
+        #osa_quota_status_type_id: Status Type
+      traffic_light_group:
+        translation_code: Translation Code          
+      course:
+        course_type_id: &fl_ccti Course Type
+        venue_id: &fl_cli Venue
+        start_date: &fl_bd Start Date
+        end_date: &fl_ed End Date
+        course_type: Type
+        nbr: App
+        nbr_enrolled: Applications Count
+        #conducting_assistant_teachers: "Conducting AT's"
+        conducting_ats: "Conducting AT's"
+        conducting_ccts: "Conducting CCT's"
+        courses_special_handler_ats: "Special Handling AT's"
+        courses_conducting_ats: "Conducting AT's"
+        special_handling_assistant_teachers: "Special Handling AT's"
+        conducting_assistant_teachers: "Conducting AT's"
+        languages_selected: Language(s) Selected
+        languages_available: Languages Available
+        languages: Course Language(s)
+        enrollment_open_at: Apply After
+        start_time: Arrive Before Time
+        allow_enrollments_after_start_date: Allow Registrations After Start
+        registrars: Registrars
+        registrars_available: Registrars Available
+        registrars_assigned: Registrar(s) Assigned  
+        publishable_comment: Web-Schedule Comment
+        internal_comment: Internal Comments
+        cct_list_temp: "Conducting CCT's"
+        #traffic_light_group_id: Traffic Light Group
+        traffic_lights: Traffic Lights 
+        traffic_light_group_id: Traffic Light Group
+        calm30_quota_categories: Quotas
+        courses_calm30_quota_categories: Quotas
+        calm_30_course_id: Id from Calm 3
+        courses_traffic_light: Traffic Lights
+        calm30_id: Id from Calm 3
+        c30_optional_course_identifier: "Course Identifier(Optional)"
+        c30_ats_doing_reg_codes: "Special Handling AT's: Given Names"
+        c30_registrars_list: Registrars Assigned
+        c30_registratrars_email_address: Registrars Email
+        application_form_url:  Link to Application Form
+        no_application: No Apply Link
+        reconfirmation_days_before: Reconfirm Days before Start
+        tentative: Tentative
+        cancelled: Cancelled
+        marked_for_delete: Marked Deleted
+        scheduled: Scheduled
+        in_progress: In Progress
+        finished: Finished
+        status: Status
+        scheduled_but_not_yet_open: Scheduled(not open)   
+        courses_language: Course Languages
+        to_s: "%{course_type} from %{start_date} to %{end_date} in %{venue}"
+      courses_language:
+        publishing_language: Schedule Language
+        course_language: Instruction Language
+        language_id: Language
+        publishable_comment: Comment for Schedule 
+        application_form_url: Application Link 
+        course_id: Course Language
+        c30_dates_from_to_text: Start and End Date Text
+        c30_where_text: Course Site
+        c30_full_desription: Site/Course Description
+      courses_traffic_light:
+        course_id: Course Traffic Light
+        traffic_light_id: Traffic Light
+        osa_traffic_light_value: Colour
+      course_type:
+        last_day: &fl_ld Last Day of Course
+        old_students_only: &fl_oso Old Students Only
+        external_course_type_code: "PFORM Type"
+        osa_code: OSA Type
+        childrens_course: Childrens Course
+      language:
+        publishing_language: Schedule and Application Language
+        course_language: Course Instruction Language
+        calm_reg_language: Calm Translation Lanugage
+        left_to_right: Written Left to Right
+        iso_code: *fl_ic
+        name: *fl_n
+      inbound_mail_server:
+        enabled: Active
+        server: Host Name
+        port: Port Nbr
+        ssl: Use SSL
+        username: Account Name
+        pw: Password
+        location: Serves Location
+      letter_translation:
+        location_variable: Variable/Template
+        language: Language
+        male_addressee: Addressed to male
+        female_addressee: Addresed to female  
+      profile:
+        name: Profile Name
+        translation_code: Translation Code
+        translated_name: Translated Name
+        roles: "Roles"
+      whiteboard:
+        info: Information for User
+        whiteboard_type_id: Type
+      role:
+        name: &fl_rn Role Name
+        role_type_id: Role
+        location_type: Location
+      location:
+        name: &fl_ln Location Name
+        venues_calm30_quota_categories: Quota Categories
+        organisations_default_special_handling_ats: "Default Special Handling AT's"
+      student_allocation:
+        quota: &fl_q Quota
+        initial_quota: &fl_iq Initial Quota
+      organisation:
+        # name: Organisation Name This doesn't work when it should...
+        parent_id: Parent Location Name
+        organisation_default_1d_start_time: "1 Day Course Default 'Arrive By' Time"
+        organisation_default_start_time: "Course Default 'Arrive By' Time"
+        organisation_default_child_1d_start_time: "1 Day Children's Course Default 'Arrive by' Time"
+        organisation_default_teen_1d_start_time: "1 Day Teen's Course Default 'Arrive by' Time"
+        organisation_default_child_multi_d_start_time: "Multi-Day Children's Course Default 'Arrive by' Time"
+        organisation_default_1d_end_time: "1 Day Course Default Ending Time"
+        organisation_default_end_time: "Course Default Ending Time"
+        organisation_default_child_1d_end_time: "1 Day Children's Course Default Ending Time"
+        organisation_default_teen_1d_end_time: "1 Day Teen's Course Default Ending Time"
+        organisation_default_child_multi_d_end_time: "Multi-Day Children's Course Default Ending Time"
+        default_special_handling_assistant_teachers: "Default AT's for Special Handling"
+        
+        organisation_default_venue_id: Default Venue
+
+        #organisation_select_application_form_site: "Type of Application Form"
+        #c30_instance_id: " Calm 3 Instance"
+        organisation_select_application_form_site: "Recipient of Applications"
+        c30_instance_id: "CALM 3 Instance"
+
+      venue:
+        timezone_id: Venue in Time Zone..
+        default_venue_accessor: "Sets Default Venue for %{organisation}"
+        default_venue_accessor_is_me: "This is Default Venue for %{organisation}"
+        c30_venue_id: "Matching Calm 3 Location"
+      traffic_light_groups_traffic_light:
+        traffic_light: Traffic Light
+        value: Value  
+      area:
+        timezone_region: Time Zone Region  
+      timezone:
+        zone: Time Zone Name
+        region: Region of Zone
+        region_local1: Region in Local Script
+        region_local2: Region in Alternate Local Script
+        zone_local1: Zone in Local Script
+        zone_local2: Zone in Alternate Local Script    
+      letter_template:
+        kind: Type
+        title: Title
+      message:
+        kind: Kind
+        title: Title
+        recipient: Recipient
+        status: Status
+        value: Letter
+        date: Date (UTC)
+        days_since_application: Days After Applying
+        days_to_course: Days To Course
+        operator: Operator
+        method: Method
+        incoming: Incoming
+      student:
+        given_name: *fl_gn
+        family_name: *fl_fn
+        dob: *fl_dob
+      allocation_scheme:
+        quotas: Quotas
+      permission:
+        profile: Profile
+        location: Location 
+      #language:
+       
+      user:
+        #name: *fl_u
+        email: *fl_e
+        username: "Username"
+        actual_name: "Name"
+      whiteboard_type:
+        name: *fl_n
+      calm30_quota_category:
+        code: Code
+        translation_code: Translation Code
+        name: Name
+        description: Description
+      courses_calm30_quota_categories:
+        quota: Quota
+        calm30_quota_category_id: Category
+      venues_calm30_quota_categories:
+        quota: Quota
+        calm30_quota_category_id: Category
+      course_application:
+        course_participation: "Participation"
+        id: id
+        course_id: Course id
+        application_form_id: Application Form id
+        person_id: Person id
+        created_at: Creation Date
+        updated_at: Updated Date
+        phone_home: Home Phone
+        phone_work: Work Phone
+        phone_mobile: Mobile
+        phone_fax: Fax
+        age: Age
+        occupation: Occuptation
+        friends_family: Friends, Family On Cse 
+        part_time_arrival: Parttime Arrival Date
+        part_time_departure: Parttime Departure Date
+        pregnant: Pregnant?
+        help_setup: Can Help Setup
+        first_course: First Course
+        last_course: Last Course
+        courses_served: Courses Served
+        help_serve: Serve if Needed
+        ref_list: Referral List
+        application_language: Application Language
+        language_native: Native Language
+        languages_other: Other Languages
+        apply_to: Sit or Serve
+        room: Room
+        hall_position: Hall Position
+        anything_to_add: Anything Added
+        registars_note: Registrars Note
+        pending_status: Pending Status
+        wait_listed: Wait Listed
+        referral_status:  Referral Status
+        transport: Transport Offered/Needed
+      person:
+        id: Id
+        family_name: Family Name                                                                                                                                                                     
+        given_name: Given Name
+        email: Email
+        birthdate: Birthdate
+        birth_country: Birth Country
+        old_student: Old or New Student
+        first_course_year: Year First Course
+        home_phone: Home Phone
+        address: Address
+        town: Suburb
+        post_code: Postcode
+        province: State
+        residence_country: Country of Residence
+        created_at: Created Date
+        updated_at: Updated Date
+        male: Gender
+        gender: "Gender"
+      venues_allocation_scheme:
+        name: Scheme Name
+        venue_id: Venue
+        allocation_scheme_id: Quota Scheme Templates  
+      localhost:
+        fqdn: "Host name"
+      remote_host:
+        fqdn: "Host name"
+      traffic_light:
+        translation_code: Translation Code
+      public_schedule:
+        cache_timestamp: "Last time cached (not used yet)"
+        name: "Name"
+        location: "Location of Courses"
+        organisation_osa_subdomain: OSA Subdomain for this Organisation
+        location: "Courses from Location"
+#        subdomain: "Publish on Webpage (OSA subdomain)"
+      at_responsibility_type:
+        translation_code: Responsibility  
+      at_course_role_type:
+        translation_code: Role  
+      course_application:
+        #old_student: "Old student"
+#        gender: "Gender"
+#        course_participation: Participation
+#        birthdate: "Birthdate"
+#        person:
+#          given_name: "Given name"
+#          family_name: "Family name"
+#          gender: Gender
+#          birthdate: Date of Birth
+#          room: Room
+#          old_student:
+#        course:
+#          start_date: "Starting"
+#          course_type:
+#            name_english: "Kind"
+#          venue:
+#            name: "Venue"  
+    models:
+      letter_translation:
+        one: Letter translation
+        other: Letter translations
+      inbound_mail_server:
+        one: Inbound Mail Server
+        other: Inbound Mail Servers
+      available_letter_templates: 
+        one: Available Letter
+        other: Create a New Message from one of the Available Letters
+      childrens_course_teachers_old:
+        one: CCT
+        other: "CCT's"  
+      letter_templates: 
+        one: Letter Type
+        other: Letter Types
+      message: 
+        one: Letter
+        other: Letters
+      assistant_teacher:
+        one: (Assistant) Teacher
+        other: (Assistant) Teachers
+      calm_region:
+        one: Calm Region
+        other: Calm Regions
+      osa_traffic_light_value:
+        one: OSA Traffic Light Value
+        other: OSA Traffic Light Values
+      traffic_light_group:
+        one: Traffic Light Group
+        other: Traffic Light Groups
+      #quota_category:
+        #one: Quota Category
+        #other: Quota Categories
+      traffic_light:
+        one: Traffic Light
+        other: Traffic Lights
+      course_type: 
+        one: Course Type
+        other: Course Types
+      location_variable:
+        one: Location Variable
+        other: Location Variables
+      letter_template:
+        one: Letter Template
+        other: Letter Templates
+      course:
+        one: Course
+        other: Courses
+      location:
+        one: Location
+        other: Locations
+      student_allocation:
+        one: Quota
+        other: Quotas
+      allocation_scheme:
+        one: Quota Scheme
+        other: Quota Schemes
+      area:
+        one: Area
+        other: Areas
+      region:
+        one: Region
+        other: Regions
+      venue:
+        one: Venue
+        other: Venues
+      organisation:
+        one: Organisation
+        other: Organisations
+      localhost:
+        one: Calm 3.5 Server
+        other: Calm 3.5 Servers
+      language:
+        one: Language
+        other: Languages
+      user:
+        one: User
+        other: Users
+      whiteboard_type:
+        one: Whiteboard Type
+        other: Whiteboard Types
+      whiteboard:
+        one: Whiteboard
+        other: Whiteboards
+      registration:
+        one: User
+        other: Users
+      user_role:
+        one: User Role
+        other: User Roles
+      role_type:
+        one: Role Type
+        other: Role Types
+      role:
+        one: Role
+        other: Roles
+      location:
+        one: Location
+        other: Locations
+      #quota:
+        #one: Quota
+        #other: Quotas
+      calm30_quota_category:
+        one: Calm 3 Quota Category
+        other: Calm 3 Quota Categories  
+      registration:
+        one: User
+        other: Users
+      profile: 
+        one: "Profile (for Users)"
+        other: "Profiles(for Users)"
+      permission:
+        one:  "Access permission"
+        other: "Access permissions"
+      public_schedule:
+        one: "Course Schedule"
+        other: "Course Schedules"
+      course_application: 
+        one: "Application"
+        other: "Applications"
+      venues_allocation_scheme:
+        one: Venue-Quota-Scheme
+        other: Venue-Quota-Schemes 
+      at_responsibility_type: 
+        one: AT Responsibility
+        other: AT Responsibilities
+      at_course_role_type: 
+        one: AT Role
+        other: AT Roles     
+  errors:
+    messages:
+      c30_instance:
+        c30_config:
+          cannot_find_calm3_config: "Could not get schedule name, region or kind of application form from  Calm 3. Make sure the C30Instance involved points to the correct  Calm 3 instance."
+          x: 'abc'
+      role:
+        unique_location_type_rol_type: Role Type annd Location Type must be together unique.
+      location_variable:
+        name_unique_error: Cannot have two location variables with the same name at one location
+      localhost:
+        duplicate: Only one localhost can exist
+      letter_template:
+        course_type_missing: Tick at least one course type
+        participation_missing: Tick at least one kind of participation
+      letter_translation:
+        language_unique_error: "Cannot have several translation into same language"
+        language_english_error: "Cannot translate into English"
+      course:
+        courses_calm30_quota_categories:
+          count_less_than_6: ": count of categories must be less than 6 (Calm 3 limitation)" 
+          duplicate_categories: "No duplicate quota categories possible: the following need to be changed %{duplicates}"
+        courses_special_handler_ats:
+          atleast_1_at: There must be at least 1 special handling AT for each course. Please select one.
+        courses_language:
+          courses_language_not_empty: There must be at least 1 Instruction Language and 1 Schedule Language for each course. 
+          atleast_1_course_language: There must be at least 1 Instruction Language for each course.
+          atleast_1_publishing_language: There must be at least 1 Publishing Language (for schedule and application form) for each course. 
+          no_apply_url_for_course_language: Calm 3 does not seem to have a application form url for language %{language} 
+      #venue:
+      translation_code: "Can only contain letters and numbers. (No spaces, special characters like ',' or '@')"
+      organisation:
+        organisations_default_special_handling_ats:
+          atleast_1_at: There must be at least 1 default special handling AT for each organisation. Please select one.   
+        c30_instance_id:
+          application_to_calm3: "You have chosen to send application forms to Calm 3. Therefore this Organisation must be associated with a C30Instance"
+          application_to_calm4: "You have chosen to send application forms to Calm 4. Therefore this Organisation must NOT be associated with a C30Instance"
+      osa_xml_generator35:
+        invalid_osa_xml_base: "%{object_name} is not an object that can be serialised and sent to OSA"
+        only_1_subdomain_for_create_or_update: "Only 1 subdomain/Organisation permitted by OSA for create or update of course on schedule. These 2 courses have different OSA Subdomains: '%{cse0}', '%{cse1}'. Probable cause: You can only submit courses for an Area that is already under an Organisaton." 
+        bad_calm_xml_build: "Programming Error: %{type} is not a valid operation for OSA from this application."
+        invalid_xml_from_xsd: "Invalid XML : %{xsd_errors}"
+        invalid_xml_markup: "Not well formed XML : %{nokogiri_errors}"
+        organisation_must_have_default_venue: "Organisation, %{org}, must have a default venue to send this course, '%{cse}', to OSA" 
+      
+  headings:
+    listing_all: 
+      heading: All %{model}
+    listing_past:
+      heading: Past %{model}
+    listing_current:
+      heading: "Current %{model}"         
+    new_organisation:
+      heading: New organisation belonging to %{parent}
+    new_c30_instance:
+      heading: New(for Calm 3.5)  Calm 3 Instance Belonging to %{parent}
+    new_venue: 
+      heading: New Venue organised from %{parent} 
+    new_c30_venue: 
+      heading: New  Calm 3 Venue Organised from %{parent} 
+    new_area:
+      heading: New Area, part of %{parent}
+    edit_organisation:
+      heading: Edit Organisation, belonging to %{parent}
+    edit_venue: 
+      heading: Edit Venue, belonging to %{parent} 
+    edit_course_application: 
+      heading: Process Application 
+    course:
+      traffic_light_change:
+        heading: Change Traffic Lights of %{model}  
+    home:
+      heading: "Home Page : Whiteboard"  
+  menus:
+    assistant_teachers: Assistant Teachers
+    calm_regions: Calm Regions
+    courses_past: Past Courses
+    courses_all: All Courses
+    public_schedules: Schedule Builder
+    applications: Applications
+    info: Information
+    old_students: Old Students
+    configuration: Configuration
+    courses: Courses
+    courses_current: Current Courses
+    course_schedule: Course Schedule
+    current_courses_list: Current Courses List
+    current_course: Current Course
+    add_course: Add Course
+    lookups:  Lookups
+    course_types: Course Types
+    languages: Languages
+    whiteboard_types: Whiteboard Types
+    locations: Locations
+    student_allocation: Quotas
+    allocation_schemes: Quota Schemes
+    traffic_light_group: Traffic Light Group
+    OSA Traffic Light Values: OSA Traffic Light Values
+    user_info: User Information
+    home: Home
+    contact: Contact Calm
+    help: Help
+    about: About Calm
+    choices: Choices
+    at_responsibility_types: AT Responsibilities
+    at_course_role_types: AT Roles
+    edit_course+application: Process Application
+    #user_preferences: User Preferences(Change Password)
+    admin: Admin
+    new_user: New User
+    #change_password: Change Password
+    admin: Admin
+    location_tree: Locations
+    student_allocations: Quotas
+    roles: Roles
+    role_types: Role Types
+    user_roles: User Roles
+    users: Users
+    os_search: Find Old Student TBA
+    newsletter: Newsletter TBA
+    profiles: Role Profiles(for Users)
+    traffic_lights: Traffic Lights
+    traffic_light_groups: Traffic Light Groups
+    osa_traffic_light_values: OSA Traffic Light Values
+  lookups:
+    message_status:
+      registrar_draft: Draft
+      registrar_sent: Sent
+      registrar_wait_reply: Waiting for reply
+      registrar_got_reply: Reply received
+      applicant_draft: "Error: An applicant's draft must not be visible to registrars."
+      applicant_sent: Received 
+#      draft: Draft
+#      sending: Sending
+#      sent: Sent
+#      received: Received
+#      replied: Replied
+    letter_template:
+      unsolicited: "unsolicited message (composed and sent by applicant)"
+      confidential: "confidential message (do not use untrusted delivery methods)"
+      public_long_message: "public long message (any method except SMS because of length)"
+      public_short_message: "public short message (any method)"
+    delivery_method:
+      www: Web-form
+      postal: Mail
+      email: Email
+      sms: SMS
+    traffic_light:
+      males: Male
+      females: Female
+      old_males: OM
+      new_males: NM
+      old_females: OF
+      new_females: NF
+      servers: Servers
+      students: Students
+      #male_server: Male Server
+      #female_server: Female Server
+    osa_traffic_light_value:
+      open: Open
+      closed: Closed
+      filling_up: Filling Up
+      short_wait_list: Short Waitlist
+      long_wait_list: Long Waitlist
+    traffic_light_group:
+      students_servers_only: Students, Servers 
+      male_female: Male, Female 
+      old_male_female: "Old: Male, Female"
+      old_new_male_female: Male, Female, Old, New  
+    course_type:
+      10day: 10 Day Course
+      1day: 1 Day Course
+      3day: 3 Day Course
+      sati8day: Satipatthana Sutta Course (8 Day)
+      sati9day: Satipatthana Sutta Course (9 Day)
+      childteen1day: Children and Teenagers 1 Day Course
+      teenager1day: Teenagers 1 Day
+      children1day: Childrens 1 Day
+      children2day: Childrens 2 Day
+      exec: Executive 10 Day course
+      work: Work Period
+      openday: Open day 
+      special10day: Special 10 Day
+      other: Other
+      20day: 20 Day Course
+      30day: 30 Day Course
+      45day: 45 Day Course
+      60day: 60 Day Course
+      45day15dayanapana: 45 Day Course (15 Days Anapana)
+      tsc15day: Teachers Self Course 15 Day
+      tsc10day: Teachers Self Course 10 Day
+      2day: 2 Day Course
+      description:
+        10day: 10 Day Course
+        1day: 1 Day Course (Old Students Only)
+        3day: 3 Day Course (Old Students only)
+        sati9day: Satipatthana Sutta 9 Day Course (Old Students only). Finishes on morning of day 9.
+        sati8day: Satipatthana Sutta Course (9 Day)
+        childteen1day: Children's and Teenagers 1 Day Course (Ages 8-16)
+        teenager1day: Teenagers 1 Day Course (Ages 13-18)
+        children1day: Childrens 1 Day Course (ages 8-12)
+        children2day: Childrens 2 Day course (Ages 8-12)
+        exec: 10 Day Course for people in executive positions
+        work: A period for performing work on a site of meditation (Old Students only),
+        openday: Open Day is a day to introduce the public to the centre.
+        special10day: Special 10 Day Course (Serious Old Students only)
+        other: Other
+        20day: 20 Day Course (Old Students only)
+        30day: 30 Day Course (Old Students only)
+        45day: 45 Day Course (Old Students only)
+        60day: 60 Day Course (Old Students only)
+        45day15dayanapana: 45 Day course commencing with 15 days of anapana(Old Students only)
+        tsc15day: Teachers Self Course 15 days (Old Students only)
+        tsc10day: Teachers Self Course 10 Day (OS)
+        2day: A day old student course, not offered by most organisations
+    whiteboard_type:
+      system: System
+      localadmin: Local Admin
+      regionaladmin: Regional Administration
+      user: User
+    profile:
+      #name:
+      recovery_profile: Recovery User
+      sysadmin: System Administrator
+      guest_profile: Guest
+      c35_registrar: Calm 3/3.5 Registrar
+      c35_admin: Calm 3/3.5 Administrator
+      c35_scheduler: Calm3/3.5 Scheduler  
+      c35_sysadmin: Calm3/3.5 System Admin
+    calm30_quota_category:
+      name:
+        total_confirmed: Total Confirmed 
+        students_confirmed: Confirmed students 
+        wait_list: Waiting list 
+        pending: Pending 
+        just_received: Inbox 
+        nf_confirmed_beds: New Females confirmed(beds)
+        nm_confirmed_beds: New Males confirmed(beds)
+        of_confirmed_beds: Old Females confirmed(beds) 
+        om_confirmed_beds: Old Males confirmed(beds) 
+        of_confirmed_beds_tents: Old Females confirmed(bed and tents) 
+        om_confirmed_beds_tents: Old Males confirmed(beds and tents) 
+        m_confirmed: Males confirmed 
+        f_confirmed: Females confirmed 
+        old_students_ft_pt: Old Students 
+        nf_confirmed_pending: New Females confirmed/pending 
+        nm_confirmed_pending: New Males confirmed/pending 
+        of_confirmed_pending: Old Females confirmed/pending 
+        om_confirmed_pending: Old Males confirmed/pending 
+        offering_rides: Offering Rides
+        needs_bus: Bus transport to centre 
+        offering_or_needing_ride: Transport 
+        cancellations: Cancellations 
+        f_servers_ft: Female Servers Full Time 
+        m_server_ft: Male Servers Full Time 
+        f_servers_pt: Female Servers Part Time 
+        m_servers_pt: Male Servers Part Time 
+        m_tents: Male tent 
+        f_tents: Female Tent 
+        refused: Refused 
+        deleted: Deleted applications 
+        all: All applications 
+        nf_waitlist: Waitlist New Females 
+        nm_waitlist: Waitlist New Males 
+        of_waitlist: Waitlist Old Females 
+        om_waitlist: Waitlist Old Males 
+        nf_student_confirmed_pending_reconfirm_cancel: New Females confirmed/pending 
+        nm_student_confirmed_pending_reconfirm_cancel: New Males confirmed/pending 
+        of_confirmed_pending_reconfirm_cancel: Old Females confirmed/pending 
+        of_confirmed_serving_pending_reconfirm_cancel: Old females confirmed/pending servering 
+        om_confirmed_serving_pending_reconfirm_cancel: Old Males confirmed/pending 
+        of_pt_confirmed_beds: Parttime Old Females confirmed 
+        om_pt_confirmed_beds: Parttime Old Males confirmed 
+        of_confirmed_ft_pt_beds: Old Females confirmed incl Part Time 
+        om_confirmed_ft_pt_beds: Old Males confirmed incl Part Time 
+        m_ft_confirmed_pending: Full time Males Confirmed/Pending 
+        f_ft_confirmed_pending: Full time Females Confirmed/Pending 
+        m_ft_student_confirmed_pending_reconfirm_cancel: Full time Males Confirmed/    translation  = I18n.t(location.translation_code) Pending 
+        f_ft_student_confirmed_pending_reconfirm_cancel: Full time Females Confirmed/Pending 
+      description:
+        total_confirmed: Full time students and servers 
+        students_confirmed: Full time students 
+        wait_list: Not confirmed - on waiting list 
+        pending: Not confirmed eg medical letter 
+        just_received: Not yet processed 
+        nf_confirmed_beds: New Females confirmed 
+        nm_confirmed_beds: New Males confirmed 
+        of_confirmed_beds: Full time but excludes tents and servers 
+        om_confirmed_beds: Full time but excludes tents and servers 
+        of_confirmed_beds_tents: Full time including tents but not servers 
+        om_confirmed_beds_tents: Full time including tents but not servers 
+        m_confirmed: same as NM + OMCF 
+        f_confirmed: same as NF + OFCF 
+        old_students_ft_pt: All old students fulltime and parttime 
+        nf_confirmed_pending: Excludes inbox and waitlist 
+        nm_confirmed_pending: Excludes inbox and waitlist 
+        of_confirmed_pending: Excludes servers, parttime, inbox and waitlist 
+        om_confirmed_pending: Excludes servers, parttime, inbox and waitlist 
+        offering_rides: Confirmed students offering rides 
+        needs_bus: Needs bus transport to centre
+        offering_or_needing_ride: Confirmed students with transport need or offering ride 
+        cancellations: Cancellations
+        f_servers_ft: Female Servers Full Time 
+        m_server_ft: Male Servers Full Time 
+        f_servers_pt: Female Servers Part Time 
+        m_servers_pt: Male Servers Part Time 
+        m_tents: Male in tent or van 
+        f_tents: Female in tent or van 
+        refused: Refused
+        deleted: Deleted
+        all: All Applications
+        nf_waitlist: Waitlist New Females 
+        nm_waitlist: Waitlist New Males 
+        of_waitlist: Waitlist Old Females 
+        om_waitlist: Waitlist Old Males 
+        nf_student_confirmed_pending_reconfirm_cancel: Excludes inbox and waitlist also includes reconfirm cancellations
+        nm_student_confirmed_pending_reconfirm_cancel: Excludes inbox and waitlist also includes reconfirm cancellations
+        of_confirmed_serving_pending_reconfirm_cancel: Includes servers, parttime, inbox and waitlist also includes reconfirm cancellations
+        om_confirmed_serving_pending_reconfirm_cancel: Includes servers, parttime, inbox and waitlist also includes reconfirm cancellations 
+        of_pt_confirmed_beds: Part time but excludes tents and servers 
+        om_pt_confirmed_beds: Part time but excludes tents and servers 
+        of_confirmed_ft_pt_beds: as OFCF but including Parttime 
+        om_confirmed_ft_pt_beds: as OMCF but including Parttime 
+        m_ft_confirmed_pending: Excludes servers, parttime 
+        f_ft_confirmed_pending: Excludes servers, parttime 
+        m_ft_student_confirmed_pending_reconfirm_cancel: Male FT, Excludes servers, parttime also includes reconfirm cancellations
+        f_ft_student_confirmed_pending_reconfirm_cancel: Female FT, Excludes servers, parttime also includes reconfirm cancellations
+        #ft_student_confirmed_pending_reconfirm_cancel: Full Time confirmed pending reconfirm cancel, no servers    
+    location:      
+      type:
+          # note the caps : a restriction from model inheritance
+        #Root: Root
+        #Server: Server
+        area: Area
+        #Region: Region
+        world: Calm
+        remotehost: Calm 3 Server 
+        #Calm 3 Server
+        localhost: Calm 3.5 Server
+        organisation: Organisation
+        venue: Venue
+        c30instance: Calm 3 Instance
+        c30venue: Calm 3 Venue
+        
+      world: World
+      localhost: Rackspace, London 
+      australian_c30_server: BulletProof, Melbourne
+      australian_c30_test_server: BulletProof Test Clone, Melbourne
+      european_c30_server: Amsterdam  
+    at_responsibility_type:
+      all: All
+      males: Male
+      females: Females
+      old_males: Old Males
+      new_males: New Males
+      old_females: Old Females
+      new_females: New Females 
+    at_course_role_type:
+      both: Both
+      conducting: Conducting
+      special_handling: Special Handling     
+    role_type:
+      admin: Admin
+      registrar: Registrar
+      superuser: Superuser
+      newsletter_editor: Newsletter Editor
+      newsletter_sender: Newsletter Sender
+      world_admin: System Administrator
+      server_admin: Server Administrator
+      translator: Translator
+      os_db_editor: Old Student Database Editor
+      os_db_reader: Old Student Database Reader
+      installer: Installer
+      translation_installer: Translation Installer
+      rl_reader: RL Reader
+      rl_editor: RL Editor
+      at: AT
+      os_updater: Old Student Updates Personal Data
+      description:
+        admin: "Admin = Registrar plus Can add a venue in his/her authorised organisation, add a course at a venue, edit letters."
+        registrar: "Registrar = Can access only what is necessary to process an application. Only for Organisation, Venue."
+        superuser: "Superuser = Admin plus add,drop users, delete from os or application database."
+        newsletter_editor: "Newsletter Editor = Can create, edit,  newsletter for an organisation."
+        newsletter_sender: "Newsletter Sender = Can send newsletter"
+        world_admin: "System Administrator = Can change everything in all locations"
+        server_admin: "Server Administrator = Can change everything in all locations on a server. Can reboot server, reboot calm instances on the server"
+        translator: "Translator = Can create, edit translation data for Calm"
+        os_db_editor: "Old Student database Editor = Can maintain OS database, but not delete records."
+        os_db_reader: "Old Student Database Reader =Used by registrar application to match names of old students to existing records."
+        installer:  "Installer = Can install a new Calm instance."
+        translation_installer: "Translation Installer = Can install newly edited translations to live Calm instances. Run I18n.reload! or reboot an instance"
+        rl_reader: "RL Reader = Used by registrar application to read names but not comments in RL."
+        rl_editor: "RL Editor = Can read and edit names and comments in RL"
+        at: "AT = Can update, create delete in RL. Can view applications for a region."
+        os_updater: "OS =Can update own data in OS database e.g. email address, newsletter subscriptions"
+        sl_reader: "SL Reader = Can read the special list but not comments. Used by rl_editor or calm-reg application."
+        sl_editor: "SL Editor = Can read and edit the special list including comments."
+    allocation_scheme:
+      students_only: Students Only
+      students_servers: Students and Servers
+      students_males_females: Students Male Female
+      students_servers_males_females: Students Servers Male Female
+      students_old_new_males_females: Students Old New Male Female
+      students_servers_old_new_males_females: Students Servers Old New Male Female     
+    course_participation:
+      male: Male
+      female: Female
+    #  of: "OF"
+    #  nf: "NF"
+    #  om: "OM"
+    #  nm: "NM"
+    #  sm: "SM"
+    #  sf: "SF"
+    #  nm_should_sit: "NM should sit!"
+    #  nf_should_sit: "NF should sit!"
+    #  part_time: "part-time"
+    #  full_time: "full-time"
+    #  sit: "sit"
+    #  serve: "serve"
+      new_student: "new student"
+      old_student_ft: "old full-time student"
+      old_student_pt: "old part-time student"
+      server_ft: "server full-time"
+      server_pt: "server part-time"
+
+    calm_region:
+      baddata: Bad Data
+      india: India
+      europe: Europe
+      north_america: North America
+      latin_america: Latin America
+      australia_and_new_zealand: Australia and NZ
+      africa: Africa
+      israel: Israel
+      nepal: Nepal
+      hong_kong: Hong Kong
+      iran: Iran
+      korea: South Korea
+      malaysia: Malaysia
+      japan: Japan
+      middle_east: Middle East
+      myanmar: Myanmar
+      mongolia: Mongolia
+      singapore: Singapore
+      sri_lanka: Sri Lanka
+      thailand: Thailand
+      taiwan: Taiwan
+      china_prc: China
+      indonesia: Indonesia  
+        
+    organisation:
+      organisation_select_application_form_site: 
+        Apply_through_CALM_3:                  "Course Applications to Calm 3" 
+        Apply_with_PFORM_and_send_to_CALM_4:   "(NOT IMPLEMETED YET) Calm 4 PFORM"
+        Apply_with_OSA_and_send_to_CALM_4:     "(NOT IMPLEMETED YET) Calm 4 OSA"
+        
+
+#      old:
+#       "true": "Old"
+#        "false": "New"
+#      sitting:
+#        "true": "Sitting"
+#        "false": "Serving"
+#      full_time:
+#        "true": "Full-time"
+#        "false": "Part-time"
+  datetime:
+    formats:
+      course_form: "%a %e-%b-%Y"
+  #time:
+    #formats:
+      #easy: "%k:%M"
+  tabs:
+    course:
+      form:
+        assistant_teachers: "AT's/ CCT's/ Registrars"
+        languages: Languages/ Comments
+        date_and_location: Date - Location
+        traffic_lights: Traffic Lights
+        quota: Quota Categories
+        calm30: Info from Calm 3
+        osa: Status/OSA
+    course_application:
+      index:
+        all: All Participants
+        part_time_students: PT Students
+        old_males: OM FT Students
+        old_females: OF FT Students
+        new_males: NM FT Students
+        new_females: NF FT Students
+        servers: Servers(FT & PT)
+      form:
+        identity: Name, contact
+        previous_vipassana: Previous Courses
+        day_zero: Day0 Info
+        medical_other_techniques: Medical Info, Other Techniques
+        calm_processing: Calm Status etc
+        part_time: Part Time
+        miscellaneous: Miscellaneous
+      location:
+        form:
+          main: Main
+          default_times: Default Times
+    general:
+      message_error: "The record has not been saved. Data input errors have probably occurred. Check all tabs to find the place where the errors are. Problematic fields are : %{error_list}"
+      

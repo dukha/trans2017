@@ -1,25 +1,28 @@
 
-<div id = 'calmapp_versions_redis_database' class='nested-fields' style='display:list-item'>
-  <!--%binding.pry%-->
-
-     <!--%=f.inputs do % -->
-     <!--   < %= db.input :calmapp_version_id, :as=>:select,:collection=> CalmappVersion.all.collect {|p| [ p.calmapp_name_with_version, p.id ]} %>  -->
+<li class='nested-fields'>
+  <ol>  
+        <%=f.input :release_status_id ,  :include_blank=>true, :as=>:select,
+          :collection=> ReleaseStatus.all.collect {|p| [ p.status, p.id ]}, :wrapper_html=>{:style=>"margin-left:20px"}%>
+          <%f.semantic_errors :release_status_id%>
         <!--%binding.pry% -->
-        <div><%=f.object.redis_database%></div>
-        <%=f.input :release_status_id,  :include_blank=>true, :as=>:select,
-          :collection=> ReleaseStatus.all.collect {|p| [ p.status, p.id ]}%>
-         
         <%=f.semantic_fields_for :redis_database do |rd| %>
+          <!--%binding.pry% -->
             <!--%=render  :partial=>"shared/redis_database_fields", :locals=>{:f=> rd} % -->
-            <%= rd.input :redis_instance_id,  :include_blank=>false, :as=>:select,
-          :collection=> RedisInstance.all.collect {|p| [ p.description, p.id ]}, :include_blank=>true, 
-          :input_html=>{:id=>"redis_instance_id"} %>
-        <%= rd.input :redis_db_index %> 
-         <%end%> 
-         
-<!-- %= db.semantic_errors :host%>
-< %= db.semantic_errors :port%> -->
-  <!--%end% -->   
-
-</div>
+            <%disabled = "disabled" if not rd.object.new_record?%>
+           <%= rd.input :redis_instance_id,  :include_blank=>false, :as=>:select,
+              :collection=> RedisInstance.all.collect {|p| [ p.description, p.id ]}, :include_blank=>true, 
+              :input_html=>{:id=>"redis_instance_id", :disabled=>disabled}, :wrapper_html=>{:style=>"margin-left:20px"} %>
+               
+             <%= rd.semantic_errors :redis_instance_id %>
+          <%= rd.input :redis_db_index, :hint=> t($FH +"redis_database.redis_db_index"), :input_html=>{:id=>"redis_db_index", :readonly=>'readonly'}, :wrapper_html=>{:style=>"margin-left:20px; "} %> 
+            <%= rd.semantic_errors :redis_db_index %>
+            
+            
+       <%end%>
+       <%= f.semantic_errors :redis_database_id %>
+       <li style="padding-bottom:10px;margin-left:20px; border-width:1px;border-bottom-style:solid;border-color:ffe88f">
+            <%=link_to_remove_association( t($FA + 'remove_redis_database'), f, { wrapper_class: 'nested-fields' })%>
+       </li> 
+</ol>
+</li>
 
