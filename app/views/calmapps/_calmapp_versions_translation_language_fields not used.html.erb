@@ -1,4 +1,4 @@
-    <div id="calmapp-versions-translation_languages" class='nested-fields' style='border:1px solid;border-color:grey; margin-left:20px;margin-right:1px margin-top:1px; margin-bottom:1px;;padding-top:2px;padding-bottom:2px;"}'>
+    <li id="calmapp-versions-translation_languages" class='nested-fields' style='border:1px solid;border-color:grey; margin-left:20px;margin-right:1px margin-top:1px; margin-bottom:1px;;padding-top:2px;padding-bottom:2px;"}'>
        <%=f.inputs do%>
               <%=f.input :translation_language, :label =>false, required: false, input_html: {style: "margin-left:25%"}, as: :select, collection: TranslationLanguage.order("name ASC").all%>
               

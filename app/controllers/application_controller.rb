@@ -8,6 +8,15 @@ class ApplicationController < ActionController::Base
   include Exceptions
   #include SearchModel
   protect_from_forgery
+=begin  
+  #Logging exceptions
+  if Log4r::logger['rails'].exception?
+    rescue_from Exception do |ex| 
+      ActiveSupport::Notifications.instrument "exception.action_controller", message: ex.message, inspect: ex.inspect, backtrace: ex.backtrace 
+      raise ex  
+    end
+  end 
+=end 
   before_filter  :set_locale
   #rescue_from ActiveRecord::RecordInvalid, :with => :record_invalid
   rescue_from ActiveRecord::RecordInvalid do |exception|

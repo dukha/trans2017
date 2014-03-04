@@ -17,16 +17,17 @@
                       
                       <!--li id="translation-languages" style=" width:80%;" class="string input required"-->
      <!-- Table just for layout of 2 listboxes filters and buttons -->
-        <table id="translation-languages-table" style="width:80%; margin-left:10px;" >
+        <li>
+        <table id="translation-languages-table" class = 'dual-listboxes-layout' >
            <tr>
              <!--td class="dual-listboxes-main-label" ><label class='label' id="translation-languages-label">< %=t($ARA + 'calmapp_version.translation_languages')%></label></div -->
-             <td> </td> 
+             <!--td ></td -->
              <td ><label><%=t($ARA + "calmapp_version.translation_languages_available")%></label></td> 
              <td> </td> 
              <td ><label><%=t($ARA + "calmapp_version.translation_languages_assigned")%></label></td>
            </tr>
            <tr>
-               <td ></td>
+               <!--td ></td -->
                <td ><input type="text" id="available-translation-languages-filter" class="dual-listboxes-available-filter" style="width:98%"/></td>
                <td style="width:10%" ></td>
                <td ><input type="text" id="assigned-translation-languages-filter" class="dual-listboxes-selected-filter" style="width:98%"/>
@@ -34,7 +35,7 @@
                </td>
            </tr>
            <tr>
-             <td ></td>
+             <!--td ></td -->
              <!--%binding.pry% -->
              <td   class="dual-listboxes-data">
                <%=  f.input :translation_languages_available, :label=>false, 
@@ -70,7 +71,7 @@
        </table>
        <p class="inline-hints"><%= t($FH + "calmapp_version.translation_languages") %></p>
         <%=f.semantic_errors :calmapp_versions_translation_languages%>
-        
+        </li>
         <!-- %=f.input :redis_databases, :as => :check_boxes% -->
         <!--div id="cavtd">
           < %f.semantic_fields_for :calmapp_versions_redis_database do |cavrd| %> 

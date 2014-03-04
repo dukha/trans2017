@@ -17,3 +17,4 @@
 /*.kate*
 config/database.yml
 public/system/*
+public/uploads/*

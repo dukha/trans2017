@@ -27,15 +27,15 @@
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>40</x>
-      <y>330</y>
+      <x>30</x>
+      <y>270</y>
       <w>360</w>
       <h>100</h>
     </coordinates>
-    <panel_attributes>*TranslationUpload*
+    <panel_attributes>*TranslationsUpload*
 id:integer
-translation_language_id:integer
-translation_file_name:string (paperclip attributes)
+cavs_translation_language_id:integer
+yaml_upload2:string (carrierwave attributes)
 description:string
 bg=orange</panel_attributes>
     <additional_attributes/>
@@ -83,7 +83,7 @@ bg=orange</panel_attributes>
     <panel_attributes>*CalmappVersionTranslationLanguage*
 id:integer
 calmapp_version_id:integer
-language_id:integer
+translations_language_id:integer
 bg=orange</panel_attributes>
     <additional_attributes/>
   </element>
@@ -201,17 +201,6 @@ bg=green</panel_attributes>
     <additional_attributes>90;30;30;30</additional_attributes>
   </element>
   <element>
-    <type>com.umlet.element.Relation</type>
-    <coordinates>
-      <x>20</x>
-      <y>260</y>
-      <w>100</w>
-      <h>90</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>30;70;80;30</additional_attributes>
-  </element>
-  <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
       <x>540</x>
@@ -230,7 +219,7 @@ dot_key_code: string
 translation: string
 //iso_code (translationlanguage) is part 
 //of dot_key_code
-calmapp_version_translation_language_id: integer
+cavs_translation_language_id: integer
 upload_id:integer nullable 
 //translation may not have come from 
 //an upload
@@ -252,13 +241,13 @@ bg=orange
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>370</x>
-      <y>350</y>
-      <w>190</w>
-      <h>160</h>
+      <x>360</x>
+      <y>290</y>
+      <w>200</w>
+      <h>220</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>30;30;170;140</additional_attributes>
+    <additional_attributes>30;30;180;200</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Relation</type>
@@ -385,28 +374,18 @@ bg=orange</panel_attributes>
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>100</x>
-      <y>230</y>
+      <x>700</x>
+      <y>580</y>
       <w>250</w>
       <h>80</h>
     </coordinates>
-    <panel_attributes>*TranslationLanguageUpload*
+    <panel_attributes>&lt;&lt;deprecated&gt;&gt;
+TranslationLanguageUpload
 id:integer
 calmapp_version_upload_id:integer
 translation_upload_id:integer
-bg=orange</panel_attributes>
+bg=green</panel_attributes>
     <additional_attributes/>
-  </element>
-  <element>
-    <type>com.umlet.element.Relation</type>
-    <coordinates>
-      <x>50</x>
-      <y>180</y>
-      <w>70</w>
-      <h>100</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>30;30;50;80</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Class</type>
@@ -434,5 +413,16 @@ bg=orange</panel_attributes>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
     <additional_attributes>50;30;30;90</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>160</x>
+      <y>180</y>
+      <w>50</w>
+      <h>110</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>30;30;30;90</additional_attributes>
   </element>
 </diagram>

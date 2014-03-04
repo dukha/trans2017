@@ -87,6 +87,11 @@ gem 'cocoon','~>1.2.0'
 # email notification of exceptions (if sendmail is installed)
 gem 'exception_notification_rails3', :require => 'exception_notifier'
 
+gem 'rails-i18n', '~>4.0.0'
+
+#gem 'log4r', :git => "git://github.com/colbygk/log4r"
+gem 'logging'
+
 group :development, :test do
   gem 'rspec-rails'#, '2.8.0'
   # webrat or capybara can be used to simulate a browser. rspec doesn't care which one.

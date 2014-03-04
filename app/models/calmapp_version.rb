@@ -6,7 +6,7 @@ class CalmappVersion < ActiveRecord::Base
   attr_accessor :translation_languages_available, :add_languages, :new_redis_dev_db, :translation_languages_assigned
   attr_accessible   :calmapp_id, :version,  
          :redis_databases, :translation_languages, :translation_languages_available, 
-         :calmapp_versions_translation_language_ids, :calmapp_versions_translation_languages_attributes, 
+         :cavs_translation_language_id, :calmapp_versions_translation_languages_attributes, 
          :calmapp_versions_redis_database, :calmapp_versions_redis_database_attributes, 
          :redis_databases_attributes#, :language_ids, :new_redis_dev_db
   

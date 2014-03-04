@@ -1,3 +1,5 @@
+/* This import contains the matching colours etc for jquery sunny them*/
+@import 'sunny';
 $margin:2px;
 $padding:2px; 
 $footerheight:70px;
@@ -7,7 +9,7 @@ $indexfont-weight:550;
 $indexfont-size: x-small;
 $anchorcolor: #0000ff;
 $anchorhovercolor: #008000;
-$data-odd-color: #FEDD6D; /*#CAEAFF;*/
+/*#CAEAFF;*/
 
 html,body{
     /* overrides what is in application.css (from nifty)*/
@@ -124,13 +126,13 @@ tr.dataodd, tr.dataeven, span.file, span.web-browser, div.addChildrenLocation {
   font-weight: $indexfont-weight;
 }
 tr.dataodd{
-  background-color: $data-odd-color; /* #CAEAFF;*/
+  background-color: $data-odd-colour; /* #CAEAFF;*/
 }
 tr.dataeven{
   
 }
 tr.dataheader{
-  background-color:#CCCCCC;
+  background-color:$table-header-background-colour;
   
 }
 td.data, td.dataheader, td.linkheader, td.link{
@@ -372,7 +374,7 @@ div.criteria{
   display: block; 
   border: solid;
   border-width:1px;
-  border-color: $data-odd-color; 
+  border-color: $data-odd-colour; 
   padding: 5px;
   margin: 5px;
 }
@@ -382,4 +384,49 @@ div.criteria{
 label.criteria-label{
   /* Doesn't work?? */
   width:20%;
+}
+
+/* Styling  for cocoon nested fields */
+
+form.formtastic fieldset.padding0 > ol{
+  padding-left:20px;
+}
+
+form.formtastic fieldset > ol > li.nested-fields{
+  border-width:2px;
+  border-bottom-style:solid;
+  border-color: $nested-border-colour;
+  padding-bottom:10px;
+  padding-left: 20px;
+}
+form.formtastic fieldset > ol > li.nested-fields li{
+  margin-left:20px;
+  //background-color: green; 
+  
+}
+
+.nesting-heading {
+  font-size:15px; 
+  font-weight:700;
+  margin-left:20px;
+  color:  $mid-heading-colour;
+}
+
+.nested-heading {
+  
+  
+}
+form.formtastic li.nesting-add-fields, li.nesting-add-fields {
+  //margin-left:10px;
+}
+form.formtastic li.nesting-add-fields > a.add_fields, li.nesting-add-fields > a.add_fields {
+  //margin-left:10px;
+  //font-size: smaller;
+}
+.nested-remove-fields{
+  
+}
+form.formtastic fieldset.inputs > legend > span, form.formtastic fieldset.inputs > ol > legend > span{
+  color: $mid-heading-colour;
+  font-weight : bold;
 }

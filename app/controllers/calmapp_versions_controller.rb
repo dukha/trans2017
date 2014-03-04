@@ -77,14 +77,14 @@ class CalmappVersionsController < ApplicationController
   # PUT /calmapp_versions/1.xml
   def update
     @calmapp_version = CalmappVersion.find(params[:id])
-    
+    #binding.pry
     prepare_params 
     #binding.pry
     respond_to do |format|
       begin
         
         #valid_new_associations = @calmapp_version.check_translation_languages_validity(params[:calmapp_version][:calmapp_versions_translation_language_ids])
-        binding.pry
+        #binding.pry
         #params[:calmapp_version][:calmapp_versions_translation_languages_attributes] = []
         
         if @calmapp_version.update_attributes(params[:calmapp_version])
@@ -186,53 +186,11 @@ delete third task
      "2"=>
       {"description"=>"run test", "done"=>"0", "_destroy"=>"1", "id"=>"8"}}}
 =end  
-  def prepare_params_with_translation_language calmapp_version_id, translation_language_ids 
-    translation_language_ids.delete ""
-    #translation_language_ids.uniq!
-    en_id = TranslationLanguage.where{iso_code=='en'}.first.id
-    if not translation_language_ids.include?(en_id.to_s) then
-      translation_language_ids << en_id.to_s
-    end
-    attr_hash = {}
-    if not calmapp_version_id.nil? then
-      index = 0
-      # Do deletes first
-      
-      languages_to_be_deleted = CalmappVersionsTranslationLanguage.find_languages_not_in_version(translation_language_ids ,calmapp_version_id).all
-      #binding.pry
-      if  not languages_to_be_deleted.count == 0 then
-        languages_to_be_deleted.each do |l|
-          attr_hash[index.to_s] = {"translation_language_id"=>l.translation_language_id, "calmapp_version_id"=>l.calmapp_version_id, "_destroy"=>"1", "id" =>l.id}
-          index += 1  
-        end
-      end 
-    end # calmapp_version not nil  
-    # now the inserts and updates
-    puts "in prepare_params_with_translation_language"
-    index = 0
-    #binding.pry
-    translation_language_ids.each do |tlid|
-      tl_id = tlid.to_i
-      cvtl = CalmappVersionsTranslationLanguage.find_by_language_and_version(tl_id,calmapp_version_id )#.first
-      
-      if not cvtl.empty? then
-        puts "cvtl " + cvtl.to_s
-        attr_hash[index.to_s] =  {"translation_language_id"=>cvtl.first.translation_language_id, 
-            "calmapp_version_id"=>calmapp_version_id, "_destroy"=>false, "id"=>cvtl.first.id}
-        index += 1
-      else
-        puts "cvtl empty"
-        attr_hash[rand(1299999999999..1399999999999).to_s] = {"translation_language_id"=>tl_id, "calmapp_version_id"=>calmapp_version_id,  "_destroy"=>false}
-      end
-      puts "end prepare_params_with_translation_language"
-    end
 
-    return attr_hash
-   end
    private
      def redis_db_update? 
-       #return params[:calmapp_version] if params[:calmapp_version] == nil
-         return params[:calmapp_version][:calmapp_versions_translation_language_ids] == nil
+       #binding.pry
+       return params[:calmapp_version][:calmapp_versions_translation_language_ids] == nil
      end
      
      def prepare_params
@@ -245,4 +203,46 @@ delete third task
         params[:calmapp_version].delete(:calmapp_versions_translation_language_ids)
       end
      end
+     
+     def prepare_params_with_translation_language calmapp_version_id, translation_language_ids 
+      translation_language_ids.delete ""
+      #translation_language_ids.uniq!
+      en_id = TranslationLanguage.where{iso_code=='en'}.first.id
+      if not translation_language_ids.include?(en_id.to_s) then
+        translation_language_ids << en_id.to_s
+      end
+      attr_hash = {}
+      if not calmapp_version_id.nil? then
+        index = 0
+        # Do deletes first
+        languages_to_be_deleted = CalmappVersionsTranslationLanguage.find_languages_not_in_version(translation_language_ids ,calmapp_version_id).all
+        #binding.pry
+        if  not languages_to_be_deleted.count == 0 then
+          languages_to_be_deleted.each do |l|
+            attr_hash[index.to_s] = {"translation_language_id"=>l.translation_language_id, "calmapp_version_id"=>l.calmapp_version_id, "_destroy"=>"1", "id" =>l.id}
+            index += 1  
+          end
+        end 
+      end # calmapp_version not nil  
+      # now the inserts and updates
+      puts "in prepare_params_with_translation_language"
+      #index = 0
+      #binding.pry
+      translation_language_ids.each do |tlid|
+        tl_id = tlid.to_i
+        cvtl = CalmappVersionsTranslationLanguage.find_by_language_and_version(tl_id,calmapp_version_id )#.first
+        
+        if not cvtl.empty? then
+          puts "cvtl " + cvtl.to_s
+          attr_hash[index.to_s] =  {"translation_language_id"=>cvtl.first.translation_language_id, 
+              "calmapp_version_id"=>calmapp_version_id, "_destroy"=>false, "id"=>cvtl.first.id}
+          index += 1
+        else
+          puts "cvtl empty"
+          attr_hash[rand(1299999999999..1399999999999).to_s] = {"translation_language_id"=>tl_id, "calmapp_version_id"=>calmapp_version_id,  "_destroy"=>false}
+        end # empty
+        puts "end prepare_params_with_translation_language"
+      end #each
+    return attr_hash
+   end
 end

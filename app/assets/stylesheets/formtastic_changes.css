@@ -22,9 +22,11 @@ p.inline-hints, div.inline-hints{
 }
 form.formtastic fieldset > ol > li.optional >input { 
   padding-bottom:0px;
-	margin-bottom:0px; }
-	
-form.formtastic fieldset.inputs > legend > span, form.formtastic fieldset.inputs > ol > legend > span{
-  color: #ba6f05;
-  font-weight : bold;
+	margin-bottom:0px; 
 }
+	
+/*form.formtastic fieldset > ol > li fieldset.inputs ol{
+  paddding-left:20px;
+  border-style:solid;
+  background-color:green;
+}*/

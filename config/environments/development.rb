@@ -27,6 +27,8 @@ Translator::Application.configure do
   # This option may cause significant delays in view rendering with a large
   # number of complex assets.
   config.assets.debug = true
+  # This would configure rails-i18n gem for a limited number of locales
+  #config.i18n.available_locales = [:en, :nl]
 =begin
   # Only use best-standards-support built into browsers
   config.action_dispatch.best_standards_support = :builtin

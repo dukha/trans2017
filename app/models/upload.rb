@@ -86,106 +86,106 @@ class Upload < ActiveRecord::Base
  > traverse language_id, tree, Array.new,  dot_key_values_map, container, nil
  > puts dot_key_values_map.to_s
 =end
-def  traverse_yaml( node, dot_key_stack=Array.new, dot_key_values_map = nil,  container=Hash.new, anchors = Hash.new, in_sequence=nil )
-  puts node.to_s
- 
-  scalar_content =false
-  node.children.each { |child|
-    debugger
-    if child.is_a? Psych::Nodes::Stream then
-      map = Hash.new
-      traverse_yaml( child, dot_key_stack, dot_key_values_map, map,anchors, nil)
-    elsif child.is_a? Psych::Nodes::Document then
-      map = Hash.new
-      puts child
-      traverse_yaml(  child, dot_key_stack, dot_key_values_map, map, anchors, nil)
-    elsif child.is_a? Psych::Nodes::Mapping then
-      map= Hash.new
-      scalar_content = false
-      in_sequence = nil
-      traverse_yaml( child, dot_key_stack, dot_key_values_map, map, anchors, in_sequence)
-      if container.is_a? Hash then
-        if dot_key_stack.length > 0 then
-          key = dot_key_stack.pop
-        else
-          key= "document"
-        end
-        container.store(key, map)
-      else
-        raise Exception.new( "Error in parsing file. Trying to insert into " + container.class + ". Only Array and Map are allowed by Calm. Problem data is " + map.to_s)
-      end
-    elsif child.is_a? Psych::Nodes::Scalar then
-      scalar_content = true if in_sequence
-      unless scalar_content then
-        dot_key_stack.push child.value
-      end
-      if scalar_content then
-        dot_key = dot_key_stack.join "."
-        if dot_key_values_map then
-          dot_key_values_map.store(dot_key, ((scalar_content and child.anchor) ? ("&" + child.anchor + " ") : "") + child.value)
-        end
-        if child.anchor then
-          anchors.store(child.anchor, child.value)
-        end
+  def  traverse_yaml( node, dot_key_stack=Array.new, dot_key_values_map = nil,  container=Hash.new, anchors = Hash.new, in_sequence=nil )
+    puts node.to_s
+   
+    scalar_content =false
+    node.children.each { |child|
+      debugger
+      if child.is_a? Psych::Nodes::Stream then
+        map = Hash.new
+        traverse_yaml( child, dot_key_stack, dot_key_values_map, map,anchors, nil)
+      elsif child.is_a? Psych::Nodes::Document then
+        map = Hash.new
+        puts child
+        traverse_yaml(  child, dot_key_stack, dot_key_values_map, map, anchors, nil)
+      elsif child.is_a? Psych::Nodes::Mapping then
+        map= Hash.new
+        scalar_content = false
+        in_sequence = nil
+        traverse_yaml( child, dot_key_stack, dot_key_values_map, map, anchors, in_sequence)
         if container.is_a? Hash then
-          # case of content into hash
-          container.store(dot_key_stack.pop, child.value)
-          write_translation_to_hash(  dot_key, child.value) #, true, child.anchor)
-        end
-      end unless in_sequence
-      if container.is_a? Array then
-        # case of sequence
-        container.push child.value
-        dot_key = dot_key_stack.join(".") << "." + format_leading_zeros( container.length-1)
-        if dot_key_values_map then
-          dot_key_values_map.store(dot_key, ((scalar_content and child.anchor) ? ("&" + child.anchor + " ") : "") + child.value)
-        end
-        if child.anchor then
-          anchors.store(child.anchor, child.value)
-        end
-        if in_sequence then
-          in_sequence =+ 1
+          if dot_key_stack.length > 0 then
+            key = dot_key_stack.pop
+          else
+            key= "document"
+          end
+          container.store(key, map)
         else
-          in_sequence = 0
+          raise Exception.new( "Error in parsing file. Trying to insert into " + container.class + ". Only Array and Map are allowed by Calm. Problem data is " + map.to_s)
         end
-      end
-      scalar_content = !scalar_content unless in_sequence
-    elsif child.is_a? Psych::Nodes::Alias
-      if container.is_a? Array then
-        # case of sequence
-        container.push child.anchor
-        dot_key = dot_key_stack.join(".") << "." + format_leading_zeros( container.length-1)
-        if dot_key_values_map then
-          dot_key_values_map.store(dot_key, "*" + child.anchor )
+      elsif child.is_a? Psych::Nodes::Scalar then
+        scalar_content = true if in_sequence
+        unless scalar_content then
+          dot_key_stack.push child.value
         end
-        if in_sequence then
-          in_sequence =+ 1
+        if scalar_content then
+          dot_key = dot_key_stack.join "."
+          if dot_key_values_map then
+            dot_key_values_map.store(dot_key, ((scalar_content and child.anchor) ? ("&" + child.anchor + " ") : "") + child.value)
+          end
+          if child.anchor then
+            anchors.store(child.anchor, child.value)
+          end
+          if container.is_a? Hash then
+            # case of content into hash
+            container.store(dot_key_stack.pop, child.value)
+            write_translation_to_hash(  dot_key, child.value) #, true, child.anchor)
+          end
+        end unless in_sequence
+        if container.is_a? Array then
+          # case of sequence
+          container.push child.value
+          dot_key = dot_key_stack.join(".") << "." + format_leading_zeros( container.length-1)
+          if dot_key_values_map then
+            dot_key_values_map.store(dot_key, ((scalar_content and child.anchor) ? ("&" + child.anchor + " ") : "") + child.value)
+          end
+          if child.anchor then
+            anchors.store(child.anchor, child.value)
+          end
+          if in_sequence then
+            in_sequence =+ 1
+          else
+            in_sequence = 0
+          end
+        end
+        scalar_content = !scalar_content unless in_sequence
+      elsif child.is_a? Psych::Nodes::Alias
+        if container.is_a? Array then
+          # case of sequence
+          container.push child.anchor
+          dot_key = dot_key_stack.join(".") << "." + format_leading_zeros( container.length-1)
+          if dot_key_values_map then
+            dot_key_values_map.store(dot_key, "*" + child.anchor )
+          end
+          if in_sequence then
+            in_sequence =+ 1
+          else
+            in_sequence = 0
+          end
         else
-          in_sequence = 0
+          # must be a hash
+          dot_key = dot_key_stack.join "."
+          puts dot_key
+          if dot_key_values_map then
+            dot_key_values_map.store(dot_key, "*" + child.anchor)
+          end
+          container.store(dot_key_stack.pop, child.anchor)
+          write_translation_to_hash(  dot_key, anchors[child.anchor]) #, false, child.anchor)
+          scalar_content= false
         end
-      else
-        # must be a hash
+      elsif child.is_a? Psych::Nodes::Sequence
         dot_key = dot_key_stack.join "."
-        puts dot_key
-        if dot_key_values_map then
-          dot_key_values_map.store(dot_key, "*" + child.anchor)
-        end
-        container.store(dot_key_stack.pop, child.anchor)
-        write_translation_to_hash(  dot_key, anchors[child.anchor]) #, false, child.anchor)
-        scalar_content= false
+        array = Array.new
+        in_sequence = 0
+        traverse_yaml( child, dot_key_stack,  dot_key_values_map, array, anchors,  in_sequence)
+        in_sequence =nil
+        scalar_content=false
+        container.store(dot_key_stack.pop, array)
+        write_translation_to_hash(dot_key, array.to_s) #, false, child.anchor)
       end
-    elsif child.is_a? Psych::Nodes::Sequence
-      dot_key = dot_key_stack.join "."
-      array = Array.new
-      in_sequence = 0
-      traverse_yaml( child, dot_key_stack,  dot_key_values_map, array, anchors,  in_sequence)
-      in_sequence =nil
-      scalar_content=false
-      container.store(dot_key_stack.pop, array)
-      write_translation_to_hash(dot_key, array.to_s) #, false, child.anchor)
-    end
-  }
-  return container
+    }
+    return container
   end
 
   

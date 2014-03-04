@@ -108,7 +108,8 @@ en:
         error: Cannot delete this %{model}. It must have other things depending on it (e.g. cannot delete a venue that has courses)
       success: The %{model} was successfully deleted.
       error: The %{model} was not able to be deleted  
-
+      destroy_translation_data: 
+        warning: You will delete all translation data for this %{app} version %{version}. (Not yet implemented). Are you sure?
       #success: Deleted successfully
 
     create:

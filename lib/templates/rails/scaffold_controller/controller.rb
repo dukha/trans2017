@@ -81,7 +81,7 @@ if @<%= plural_table_name %>.count == 0 then
 end  
 respond_to do |format|
   format.html # index.html.erb
-  #format.json { render <%= key_value :json, "@#{plural_table_name}" %> }
+  #format.json { render < %= key_value :json, "@#{plural_table_name}" %> }
   format.xml  { render :xml => @<%= plural_table_name %> }
 end
   end

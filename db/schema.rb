@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 201204041046086) do
+ActiveRecord::Schema.define(version: 20140228011022) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -30,6 +30,8 @@ ActiveRecord::Schema.define(version: 201204041046086) do
     t.integer "redis_database_id"
     t.integer "release_status_id"
   end
+
+  add_index "calmapp_versions_redis_databases", ["calmapp_version_id", "redis_database_id"], name: "uix_cav_rdb_on_calmapp_version_id_and_redis_database_id", unique: true, using: :btree
 
   create_table "calmapp_versions_translation_languages", force: true do |t|
     t.integer "calmapp_version_id",      null: false
@@ -116,10 +118,9 @@ ActiveRecord::Schema.define(version: 201204041046086) do
   add_index "translation_languages", ["name"], name: "iu_tlanguages_name", unique: true, using: :btree
 
   create_table "translations", force: true do |t|
-    t.string   "dot_key_code",       null: false
-    t.text     "translation",        null: false
-    t.integer  "calmapp_version_id", null: false
-    t.integer  "upload_id"
+    t.string   "dot_key_code",           null: false
+    t.text     "translation",            null: false
+    t.integer  "translations_upload_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -127,13 +128,15 @@ ActiveRecord::Schema.define(version: 201204041046086) do
   add_index "translations", ["dot_key_code"], name: "iu_translations_dot_key_code", unique: true, using: :btree
 
   create_table "translations_uploads", force: true do |t|
-    t.integer  "translation_language_id"
     t.string   "description"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "calmapp_versions_translation_language_id"
-    t.string   "yaml_upload2"
+    t.integer  "cavs_translation_language_id"
+    t.string   "yaml_upload"
+    t.boolean  "written_to_db"
   end
+
+  add_index "translations_uploads", ["cavs_translation_language_id"], name: "index_translations_uploads_on_cavs_translation_language_id", using: :btree
 
   create_table "uploads", force: true do |t|
     t.integer  "language_id",              null: false

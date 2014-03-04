@@ -39,10 +39,12 @@ class CalmappsController < ApplicationController
       format.xml  { render :xml => @calmapp }
     end
   end
+=begin  
   class AppLang
-    attr_accessor :language_id, :iso_code, :write
-    #attr_accessible
+      attr_accessor :language_id, :iso_code, :write
+      #attr_accessible
   end
+=end
   # GET /calmapps/new
   # GET /applications/new.xml
   #def all_in_one_new
@@ -76,8 +78,8 @@ class CalmappsController < ApplicationController
     @calmapp = Calmapp.new
     @calmapp_version = CalmappVersion.new
     #statuses = ReleaseStatus.all
-    @redis_database=RedisDatabase.new
-    @redis_database.release_status_id = ReleaseStatus.where{status =~  'development'}.limit(1)[0].id
+    #@redis_database=RedisDatabase.new
+    #@redis_database.release_status_id = ReleaseStatus.where{status =~  'development'}.limit(1)[0].id
     #statuses.each{|s|
       #rdb= RedisDatabase.new
       #rdb.release_status_id=s.id

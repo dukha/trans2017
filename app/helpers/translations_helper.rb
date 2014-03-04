@@ -199,7 +199,7 @@ just substitute twill_paginate for will_paginate
       return ret_val
   end
   def tflash message_code,  category=:error, options ={}, now=false
-    #debugger
+    #binding.pry
     if ! category.is_a? Symbol then
       category = category.to_s.to_sym
     end

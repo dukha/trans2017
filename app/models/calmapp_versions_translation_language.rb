@@ -21,8 +21,8 @@ class CalmappVersionsTranslationLanguage < ActiveRecord::Base
   #validates :calmapp_version, :existence=>true
   #validates :language, :existence=>true
   #attr_accessor :write
-  has_many :translations_uploads
-  accepts_nested_attributes_for :translations_uploads
+  has_many :translations_uploads, :foreign_key=> "cavs_translation_language_id"
+  accepts_nested_attributes_for :translations_uploads, :reject_if => :all_blank, :allow_destroy => true
   
   def name
     return CalmappVersion.find(calmapp_version_id).name + " " + TranslationLanguage.find(translation_language_id).name

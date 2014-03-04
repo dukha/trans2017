@@ -48,10 +48,14 @@ en:
       add_server: Add Server
       add_calmapp_version: Add Calm App Version 
       remove_version: Remove Version
-      version_alterwithredisdb: Alter Publication Databases
+      version_alterwithredisdb: Change Publication Databases
       remove_redis_database: Remove This Redis Database
       change_uploads: Change Uploads
       remove_upload: Remove Upload
+      add_translation_upload: Add Upload
+      write_yaml_to_db: Write to Database
+      edit_and_change_languages: Edit (Including Languages)
+      add_redis_database: Add Redis Database for Publication
     labels:
       #redis_db_index: Redis Database Index
       #port: Linux Port
@@ -150,6 +154,9 @@ en:
       heading: Translation Parameters
     redis_database:
       publishing: Publish to  
+    upload: "Upload:"
+    edit_with_redis_databases:
+      heading: Change Publication(Redis) Databases for Version
     #redis_admin: Redis Admin
   activerecord:
     models:
@@ -257,8 +264,8 @@ en:
         translation_language: Translation Language
         calmapp_version_id: Version
         
-        yaml_upload: YAML Uploadable File
-        yaml_upoad_file_name: Uploaded File 
+        yaml_upload:  Uploadable YAML Translation File
+        yaml_upoad_file_path: Uploaded File 
   messages: 
     no_delete_if_versions_exist:
       notice: Delete all versions first before you can delete the application 
@@ -318,4 +325,5 @@ en:
       error: "'%{yu}' is not the correct file type (Must be 'x-yaml', having '.yml' suffix)"
     calmapp_versions_translation_language: 
       notice: To add a new upload first add the language to a version, then upload here.    
-       
+    write_yaml_file:
+      success: File successfully written to database    

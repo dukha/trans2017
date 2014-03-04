@@ -1,4 +1,6 @@
 Translator::Application.routes.draw do
+  resources :create_translation_editors
+
   #resources :calmapp_versions_translation_languages
 
   scope "/:locale" do
@@ -63,6 +65,8 @@ Translator::Application.routes.draw do
    #resources :uploads
    get "translations_uploads/file_to_redis/:id" => "translations_uploads#file_to_redis", :as => "to_redis", via: :all
    get "translations_uploads/select_translation_to_redis/:id" => "translations_uploads#select_translation_to_redis", :as => "select_to_redis", via: :all
+
+   get "translations_uploads/write_yaml_file_to_db/:id" => "calmapp_versions_translation_languages#write_file_to_db", :as=> "write_yaml_file_to_db", :via => :all
 
    get "redis_databases/redis_to_yaml/:id" => "redis_databases#redis_to_yaml", :as => "redis_to_yaml", via: :all
    

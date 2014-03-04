@@ -74,8 +74,28 @@ class CalmappVersionsTranslationLanguagesController < ApplicationController
     respond_to do |format|
       format.html { redirect_to calmapp_versions_translation_languages_url }
       format.json { head :no_content }
+    end  
+  end
+    
+  def write_file_to_db
+    @translations_upload = TranslationsUpload.find(params[:id])
+    @calmapp_versions_translation_language = CalmappVersionsTranslationLanguage.find(@translations_upload.cavs_translation_language_id)
+    if @translations_upload then
+      #file = @translations_upload.yaml_upload2
+      if @translations_upload.write_file_to_db then
+        respond_to do |format|
+          tflash("write_yaml_file", :success)
+          format.html {render :action => 'edit'}
+        end
+      end
+    else
+      #error  
     end
-end
+  end  
+  
+  
+  
+  
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_calmapp_versions_translation_language

@@ -46,7 +46,10 @@ module ButtonLinkHelper
   def link_edit url, resource, options={}, html_container='td'
     html = " "
     if permitted_to? :update, table_symbol_from(resource)
-      a =  tlink_to("edit", url, options)
+      if options[:edit].nil? then
+        options[:edit]="edit"
+      end
+      a =  tlink_to(options[:edit], url, options)
       html = wrap_in_html_container(a, html_container)
     end
     html.html_safe

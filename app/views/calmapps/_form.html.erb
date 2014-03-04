@@ -2,15 +2,17 @@
 	<%= f.inputs do %>
     <%= f.input :name %>
              <!--%binding.pry% -->
-              <p style="font-size:15px; font-weight:700;margin-left:20px;"><%=t($ARM + "calmapp_version", :count=>3)%></p>
+              <p class= "nesting-heading"><%=t($ARM + "calmapp_version", :count=>3)%></p>
              <%= f.semantic_fields_for :calmapp_versions do |cav| %>  
                
                <%= render :partial=>'calmapp_versions/calmapp_version_simple_details', :locals=>{:f=> cav}  %>            
              <%end%> 
-            <div class='add-tablecell'  style='margin-left:10px;' >
-              <%= link_to_add_association t($FA + 'add_calmapp_version'), f, :calmapp_versions, :partial => 'calmapp_versions/calmapp_version_simple_details', 
-              :style=>"font-size: smaller;" %>
-            </div -->
+            <li class='nesting-add-fields'  >
+              <%= link_to_add_association t($FA + 'add_calmapp_version'), f, :calmapp_versions, 
+              :partial => 'calmapp_versions/calmapp_version_simple_details',
+              'data-association-insertion-method' => "after" 
+               %>
+            </li>
           
    <%end%>
    <br>

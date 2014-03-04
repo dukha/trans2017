@@ -1,7 +1,7 @@
 class TranslationsUpload < ActiveRecord::Base
   include Validations
-  mount_uploader :yaml_upload2, YamlTranslationFileUploader
-  attr_accessible :description,  :calmapp_versions_translation_language_id, :yaml_upload2, :calmapp_versions_translation_language
+  mount_uploader :yaml_upload, YamlTranslationFileUploader
+  attr_accessible :description,  :cavs_translation_language_id, :yaml_upload, :calmapp_versions_translation_language
   belongs_to :calmapp_versions_translation_language
   #belongs_to :calmapp_version
   
@@ -12,8 +12,262 @@ class TranslationsUpload < ActiveRecord::Base
   #validates :calmapp_version_id, :existence => true
   
   validates :description,  :presence=>true
+=begin
+ Takes a yaml translation file, parses it, writes it as a tree and then converts the tree to a dot_key format
+ @return a hash in dot_key => string_data format, suitable for writing to the db  
+=end
+  def write_file_to_db2 overwrite =false
+    data  = YAML.load_file("public/" + yaml_upload.url)
+    TranslationsUpload.traverse_ruby(data)
+  end
   
+  def  self.traverse_ruby( node, dot_key_stack=Array.new, dot_key_values_map = Hash.new)#,  container=Hash.new, anchors = Hash.new, in_sequence=nil )
+    if node.is_a? Hash
+      #puts "Hash"
+      node.keys.each do |k|
+        dot_key_stack.push(k)
+        traverse_ruby(node[k], dot_key_stack, dot_key_values_map)    
+      end
+      dot_key_stack.pop 
+      #puts dot_key_values_map
+      return
+    elsif node.is_a? Array
+      # there should be no possibility of having hashes in arrays or arrays in arrays as there could not be a dot key system to manage this
+      # so we assume that each element of an array is a scalar
+      #puts "Array"
+      store_dot_key_value(dot_key_stack, node.to_s, dot_key_values_map) 
+      return    
+    elsif node.is_a? String
+      #puts "String"
+      store_dot_key_value(dot_key_stack, node, dot_key_values_map)
+      return
+    elsif (node.is_a? TrueClass ) || (node.is_a? FalseClass) then
+      #puts"Boolean"
+      puts node.to_s
+      store_dot_key_value(dot_key_stack, node.to_s, dot_key_values_map)
+      return 
+    elsif node.is_a? Integer
+       #puts "Integer"
+       puts node.to_s
+       store_dot_key_value(dot_key_stack, node.to_s, dot_key_values_map)
+       return
+    elsif node.is_a? Float
+       #puts "Float"
+       puts node.to_s
+       store_dot_key_value(dot_key_stack, node.to_s, dot_key_values_map)
+       return
+    elsif node.is_a? Symbol then
+      #puts "Symbol"
+      puts node.to_s
+      store_dot_key_value(dot_key_stack, node.to_s, dot_key_values_map)
+      return
+    elsif node.nil?
+      puts "NIL"
+      puts dot_key_stack
+      store_dot_key_value(dot_key_stack, "", dot_key_values_map)  
+    else
+      puts "UNKNOWN CLASS " + node.class.name
+    end
+  end
+  
+  def self.store_dot_key_value(dot_key_stack, node_str, dot_key_values)
+    dot_key_values.store(dot_key_stack.join('.'), node_str)
+    dot_key_stack.pop
+  end
+  
+=begin  
+  @deprecated
+  def write_file_to_db overwrite =false
+    @data_hash = Hash.new
+    file = File.new("public/" + yaml_upload.url)
+
+    tree = parse_yaml_file file
+    data = traverse_yaml( tree)
+=begin
+    @data_hash.keys.each do |k|
+      if not overwrite then
+        exists = Translation.where{dot_key_code==my{k}}.first
+      end
+      if not exists then
+        trans = Translation.new :dot_key_code => k, :translation => @data_hash[k], :translations_upload_id => id,
+                    :created_at => Time.now, :updated_at => Time.now
+        if not trans.save! then
+          puts "ERROR!!"
+          puts trans.errors.messages
+        end 
+      end
+      puts k
+             
+      
+      
+    end
+ =end
+#puts "tree"
+#puts tree
+#puts "data"
+#puts data
+    return @data_hash
+  end 
+=end
+
+=begin  
+  def parse_yaml_file file
+    puts "start"
+    listener = Psych::TreeBuilder.new
+    parser   = Psych::Parser.new  listener
+    parser.parse file
+    tree = parser.handler.root
+    #tree =nil
+    #dot_key_values_map = Hash.new
+    #dot_key_stack = Array.new
+    #anchors= Hash.new
+    #puts "before traverse"
+    
+    #return tree
+    #return traverse_yaml( tree)  #, dot_key_stack,  Hash.new, dot_key_values_map,anchors, nil )
+
+  end
+=end  
+  
+=begin
+ Traverses the AST tree from the psych parser handler root, building a map of dot_keys and translations
+ e.g. {"en.formtastic.labels.name" =>"Name", "en.formtastic.labels.dob"=>"Date of Birth"}
+ from the yaml file parsed into a tree.
+ Writes the dot_key and translation together with anchors and aliases to Translations objects and then to db.
+ @param node takes a parser.handler.root in node
+ @param dot_key_stack is an array of each partial key, removed as map etc is finished
+ @param dot_key_values_map If given then this will provide a way of recreating the yaml file
+ @param in_sequence is used as a boolean (=nil) and as a count of members of array
+ @param container can be a map, array, however to initiate the recursive calls give a hash
+ @param anchors Hash containing the keys and value for any anchors in the yaml file. Used for translating aliases.
+ @param dot_key_values_map is a hash of dot_keys with values (including anchors and aliases)
+
+
+ Note that in a translation file it is not possible to have a hash nested in an array (no dot_key possible), although this would be possible in yaml
+ This method will not deal with that possibility
+ Use like this
+ > listener= Psych::TreeBuilder.new
+ > parser   = Psych::Parser.new  listener
+ > parser.parse File.new "test/fixtures/yaml_file_parsing/yaml_test.yml"                 # default.en.yml"                 #{}tree_print.yml"   #{}yaml_test.yml"          #{}
+ > tree = parser.handler.root
+ > container = Hash.new
+ > dot_key_values_map = Hash.new
+ > traverse language_id, tree, Array.new,  dot_key_values_map, container, nil
+ > puts dot_key_values_map.to_s
+=end
+
+=begin
+ @deprecated 
+
+  def  traverse_yaml( node, dot_key_stack=Array.new, dot_key_values_map = nil,  container=Hash.new, anchors = Hash.new, in_sequence=nil )
+    puts node.to_s
    
+    scalar_content =false
+    node.children.each { |child|
+      
+      if child.is_a? Psych::Nodes::Stream then
+        map = Hash.new
+        traverse_yaml( child, dot_key_stack, dot_key_values_map )
+      elsif child.is_a? Psych::Nodes::Document then
+        map = Hash.new
+        puts child
+        traverse_yaml(  child, dot_key_stack, dot_key_values_map, map, anchors, nil)
+      elsif child.is_a? Psych::Nodes::Mapping then
+        map= Hash.new
+        scalar_content = false
+        in_sequence = nil
+        traverse_yaml( child, dot_key_stack, dot_key_values_map, map, anchors, in_sequence)
+        if container.is_a? Hash then
+          if dot_key_stack.length > 0 then
+            key = dot_key_stack.pop
+          else
+            key= "document"
+          end
+          container.store(key, map)
+        else
+          raise Exception.new( "Error in parsing file. Trying to insert into " + container.class + ". Only Array and Map are allowed by Calm. Problem data is " + map.to_s)
+        end
+      elsif child.is_a? Psych::Nodes::Scalar then
+        scalar_content = true if in_sequence
+        unless scalar_content then
+          dot_key_stack.push child.value
+        end
+        if scalar_content then
+          dot_key = dot_key_stack.join "."
+          if dot_key_values_map then
+            dot_key_values_map.store(dot_key, ((scalar_content and child.anchor) ? ("&" + child.anchor + " ") : "") + child.value)
+          end
+          if child.anchor then
+            anchors.store(child.anchor, child.value)
+          end
+          if container.is_a? Hash then
+            # case of content into hash
+            container.store(dot_key_stack.pop, child.value)
+            write_translation_to_hash(  dot_key, child.value) #, true, child.anchor)
+          end
+        end unless in_sequence
+        if container.is_a? Array then
+          # case of sequence
+          container.push child.value
+          dot_key = dot_key_stack.join(".") << "." + format_leading_zeros( container.length-1)
+          if dot_key_values_map then
+            dot_key_values_map.store(dot_key, ((scalar_content and child.anchor) ? ("&" + child.anchor + " ") : "") + child.value)
+          end
+          if child.anchor then
+            anchors.store(child.anchor, child.value)
+          end
+          if in_sequence then
+            in_sequence =+ 1
+          else
+            in_sequence = 0
+          end
+        end
+        scalar_content = !scalar_content unless in_sequence
+      elsif child.is_a? Psych::Nodes::Alias
+        if container.is_a? Array then
+          # case of sequence
+          container.push child.anchor
+          dot_key = dot_key_stack.join(".") << "." + format_leading_zeros( container.length-1)
+          if dot_key_values_map then
+            dot_key_values_map.store(dot_key, "*" + child.anchor )
+          end
+          if in_sequence then
+            in_sequence =+ 1
+          else
+            in_sequence = 0
+          end
+        else
+          # must be a hash
+          dot_key = dot_key_stack.join "."
+          puts dot_key
+          if dot_key_values_map then
+            dot_key_values_map.store(dot_key, "*" + child.anchor)
+          end
+          container.store(dot_key_stack.pop, child.anchor)
+          write_translation_to_hash(  dot_key, anchors[child.anchor]) #, false, child.anchor)
+          scalar_content= false
+        end
+      elsif child.is_a? Psych::Nodes::Sequence
+        dot_key = dot_key_stack.join "."
+        array = Array.new
+        in_sequence = 0
+        traverse_yaml( child, dot_key_stack,  dot_key_values_map, array, anchors,  in_sequence)
+        in_sequence =nil
+        scalar_content=false
+        container.store(dot_key_stack.pop, array)
+        write_translation_to_hash(dot_key, array.to_s) #, false, child.anchor)
+      else
+        puts "Error!!! " + child.class  
+      end
+    }
+    return container
+  end
+  
+  def write_translation_to_hash(key, translation ) #, translatable=true, anchor_or_alias=nil, tag=nil)
+    #@redis.set(key, translation)
+    @data_hash.store(key, translation)
+  end
+=end
   #puts "#{translation_language.iso_code}"
   #-----has_attached_file :yaml_upload, :styles => { :iso_code => 'en'}, :processors => [:parseyaml]#,# :styles => { :iso_code => translation_language.iso_code },
      #:url => "/uploads/upload/:id/:style/:basename.:extension",
@@ -32,7 +286,9 @@ class TranslationsUpload < ActiveRecord::Base
   #validates_attachment_content_type :yaml_upload, :content_type=>"application/x-yaml", :message=>  I18n.t($MS + "yaml_attachment_content_type.error", :yu=> ->(translations_upload){translations_upload.to_s})#lambda{|yaml_upload| yaml_upload.original_filename}) #x.call(yaml_upload)) 
   
   #----validate :validate_content_type 
-=begin     
+=begin     def format_leading_zeros(num)
+    return "%03d"  % num
+  end
    def path2
      return Rails.root.to_s + '/public/system/' + self.class.name + '/yaml_upload/' + translation_language.iso_code + "/:filename"
    end
@@ -46,5 +302,15 @@ class TranslationsUpload < ActiveRecord::Base
     if not ['application/x-yaml'].include?(self.yaml_upload_content_type)
       errors.add(:yaml_upload_file_name,  I18n.t($MS + "yaml_upload_content_type.error", :yu=> self.yaml_upload_file_name))
     end
+  end
+=begin
+  formats an integer to have at least 3 digits 
+=end  
+  def format_leading_zeros(num)
+    return "%03d"  % num
+  end
+  
+  def yaml_to_array yaml
+    yaml.tr('[','').tr(']','').split(',')
   end
 end

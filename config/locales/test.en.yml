@@ -1,0 +1,11 @@
+en: 
+  house: &house
+    chair: Chair
+    table: Table
+  car: &car
+    tyre: Tyre
+    wheel: Wheel
+  thing:
+    tree: tree
+    <<: *house
+    shed: Shed

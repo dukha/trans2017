@@ -4,16 +4,25 @@
 }
 
 select.dualBox2{
-  height:300px;
+  height:300px;dual-listboxes-layoutdual-ldual-listboxes-layoutistboxes-layout
   width:50px;
 }*/
 /*this dual boxes stuff needs to be transfered to  reg.css.scss since it is all generic now */
+$dual-layout-width: 80%;
 $dualBoxWidth : 100%;/* in a table cell now 100px; */
 $filterBoxWidth: $dualBoxWidth /*- 5px*/ ;
 $dualBoxHeight : 120px;
 $filtermargintopbottom: 3px;
 $filtermarginright:0px;
 
+form.formtastic fieldset ol li table.dual-listboxes-layout{
+  width: $dual-layout-width; 
+  margin-left:20px;
+  
+}
+form.formtastic fieldset ol li table.dual-listboxes-layout td label{
+  width:100%
+}
 select.dual-listboxes-available-data{
   height:$dualBoxHeight;
   width:$dualBoxWidth;

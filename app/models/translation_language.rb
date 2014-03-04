@@ -17,6 +17,7 @@ class TranslationLanguage < ActiveRecord::Base
   
   #validates_with VenueValidator
   def self.demo
+    
     TranslationLanguage.create!(:iso_code=> "es", :name=>"Spanish")
     TranslationLanguage.create!(:iso_code=> "fr", :name=>"French")
     TranslationLanguage.create!(:iso_code=> "de", :name=>"German")

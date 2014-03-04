@@ -75,20 +75,20 @@ translation_organisation = Organisation.create :name=>"translation_organisation"
 en = TranslationLanguage.create!(:iso_code=> "en", :name=>"English") #, :parent_id=>translation_organisation.id)
 nl = TranslationLanguage.create!(:iso_code=> "nl", :name=>"Dutch")  
 
-TranslationLanguage.create!(:iso_code=> "en_US", :name=>"American English")
-TranslationLanguage.create!(:iso_code=> "zh", :name=>"Mandarin")
-TranslationLanguage.create!(:iso_code=> "zh_MY", :name=>"Malaysia Mandarin")
-TranslationLanguage.create!(:iso_code=> "el", :name=>"Greek")  
-TranslationLanguage.create!(:iso_code=> "hi", :name=>"Hindi") 
-TranslationLanguage.create!(:iso_code=> "id", :name=>"Indonesian")
-TranslationLanguage.create!(:iso_code=> "it", :name=>"Italian")
-TranslationLanguage.create!(:iso_code=> "es", :name=>"Spanish")     
+#TranslationLanguage.create!(:iso_code=> "en_US", :name=>"American English")
+#TranslationLanguage.create!(:iso_code=> "zh", :name=>"Mandarin")
+#TranslationLanguage.create!(:iso_code=> "zh_MY", :name=>"Malaysia Mandarin")
+#TranslationLanguage.create!(:iso_code=> "el", :name=>"Greek")  
+#TranslationLanguage.create!(:iso_code=> "hi", :name=>"Hindi") 
+#TranslationLanguage.create!(:iso_code=> "id", :name=>"Indonesian")
+#TranslationLanguage.create!(:iso_code=> "it", :name=>"Italian")
+#TranslationLanguage.create!(:iso_code=> "es", :name=>"Spanish")     
 
 
 
 
 
-
+# These are languages for this application
 Language.create!(:iso_code=> "en", :name=>"English") #, :parent_id=>translation_organisation.id)
 
 #log.info("Global area and vipassana org inserted")
@@ -149,7 +149,7 @@ log.info("Users inserted")
 #user_id = User.find_by_username('translator').id
 #nl_id = nl.id
 #c_rd_db_id = red_reg4_loc_test.id 
-UserWork.create!(:user_id=> User.find_by(username: 'translator').id, :translation_language_id => nl.id, :current_redis_database_id=> red_reg4_loc_test.id )
-UserWork.create!(:user_id=> User.find_by(username: 'developer').id, :translation_language_id => en.id, :current_redis_database_id=> red_trans1_int_dev.id)
-log.info("User works inserted")
+#UserWork.create!(:user_id=> User.find_by(username: 'translator').id, :translation_language_id => nl.id, :current_redis_database_id=> red_reg4_loc_test.id )
+#UserWork.create!(:user_id=> User.find_by(username: 'developer').id, :translation_language_id => en.id, :current_redis_database_id=> red_trans1_int_dev.id)
+#log.info("User works inserted")
 #=end

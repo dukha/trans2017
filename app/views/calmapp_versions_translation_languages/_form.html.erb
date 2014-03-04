@@ -2,16 +2,17 @@
   It is expected to be the only 1 used soon soon-->
 <%= semantic_form_for @calmapp_versions_translation_language do |f| %>
   <%= f.inputs do %>
-    <%= f.input :translation_language_id, :as=> :select, :collection=> TranslationLanguage.all.each{|l| [l.name, l.id]} %>
-    <%= f.input :calmapp_version_id, :as=> :select, :collection=>CalmappVersion.all.each{|v| [v.name, v.id]} %>
+    <%= f.input :translation_language_id, :as=> :select, :collection=> TranslationLanguage.all.each{|l| [l.name, l.id]}, :input_html=> {:disabled=>"disabled"} %>
+    <%= f.input :calmapp_version_id, :as=> :select, :collection=>CalmappVersion.all.each{|v| [v.name, v.id]}, :input_html=> {:disabled=>"disabled"} %>
     
   
   <%=f.semantic_fields_for :translations_uploads do |u|%>  
   
    <!--%binding.pry% -->
+   
      <%=render :partial=>  "shared/translation_uploads_fields", :locals=> {:f=>u}%>
    <% end %>
-    <li class='add-tablecell'>
+    <li class='nesting-add-fields'>
              <!--%binding.pry% -->
                 <%= link_to_add_association t($FA + 'add_translation_upload'), f, :translations_uploads,
                 
