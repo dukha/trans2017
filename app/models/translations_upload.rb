@@ -10,19 +10,33 @@ class TranslationsUpload < ActiveRecord::Base
   
   #validates :calmapp_version_id,  :presence=>true
   #validates :calmapp_version_id, :existence => true
-  
+  def self.Overwrite
+    {:all=>"OVERWRITE_ALL", :none=>"OVERWRITE_NONE", :cancel => "CANCEL_OPERATION"}
+  end
   validates :description,  :presence=>true
 =begin
  Takes a yaml translation file, parses it, writes it as a tree and then converts the tree to a dot_key format
  @return a hash in dot_key => string_data format, suitable for writing to the db  
 =end
-  def write_file_to_db2 overwrite =false
+  def write_file_to_db2 overwrite =Overwrite[:none]
+    #binding.pry
     data  = YAML.load_file("public/" + yaml_upload.url)
-    TranslationsUpload.traverse_ruby(data)
+    key_value_pairs = TranslationsUpload.traverse_ruby(data, overwrite)
+    #binding.pry
+    #ret_val = true 
+    ret_val= 'ok'
+    Translation.transaction do
+      t = Translations.translations_to_db_from_file(key_value_pairs, overwrite)
+      if not t.valid? then
+        ret_val = t
+        raise ActiveRecord::Rollback
+      end
+    end
+    return ret_val
   end
   
   def  self.traverse_ruby( node, dot_key_stack=Array.new, dot_key_values_map = Hash.new)#,  container=Hash.new, anchors = Hash.new, in_sequence=nil )
-    if node.is_a? Hash
+    if node.is_a? Hash then
       #puts "Hash"
       node.keys.each do |k|
         dot_key_stack.push(k)
@@ -30,44 +44,48 @@ class TranslationsUpload < ActiveRecord::Base
       end
       dot_key_stack.pop 
       #puts dot_key_values_map
-      return
-    elsif node.is_a? Array
+      #return
+    elsif node.is_a? Array then
       # there should be no possibility of having hashes in arrays or arrays in arrays as there could not be a dot key system to manage this
       # so we assume that each element of an array is a scalar
       #puts "Array"
+      #if node.to_s == 'order' then
+        #binding.pry
+      #end
       store_dot_key_value(dot_key_stack, node.to_s, dot_key_values_map) 
-      return    
-    elsif node.is_a? String
+      #return    
+    elsif node.is_a? String then
       #puts "String"
       store_dot_key_value(dot_key_stack, node, dot_key_values_map)
-      return
+      #return
     elsif (node.is_a? TrueClass ) || (node.is_a? FalseClass) then
-      #puts"Boolean"
+      puts"Boolean"
       puts node.to_s
       store_dot_key_value(dot_key_stack, node.to_s, dot_key_values_map)
-      return 
-    elsif node.is_a? Integer
-       #puts "Integer"
+      #return 
+    elsif node.is_a? Integer then
+       puts "Integer"
        puts node.to_s
        store_dot_key_value(dot_key_stack, node.to_s, dot_key_values_map)
-       return
-    elsif node.is_a? Float
-       #puts "Float"
+       #return
+    elsif node.is_a? Float then
+       puts "Float"
        puts node.to_s
        store_dot_key_value(dot_key_stack, node.to_s, dot_key_values_map)
-       return
+       #return
     elsif node.is_a? Symbol then
-      #puts "Symbol"
+      puts "Symbol"
       puts node.to_s
       store_dot_key_value(dot_key_stack, node.to_s, dot_key_values_map)
-      return
-    elsif node.nil?
+      #return
+    elsif node.nil? then
       puts "NIL"
       puts dot_key_stack
       store_dot_key_value(dot_key_stack, "", dot_key_values_map)  
     else
       puts "UNKNOWN CLASS " + node.class.name
     end
+    return dot_key_values_map
   end
   
   def self.store_dot_key_value(dot_key_stack, node_str, dot_key_values)
@@ -75,6 +93,7 @@ class TranslationsUpload < ActiveRecord::Base
     dot_key_stack.pop
   end
   
+
 =begin  
   @deprecated
   def write_file_to_db overwrite =false

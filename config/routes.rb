@@ -1,5 +1,5 @@
 Translator::Application.routes.draw do
-  resources :create_translation_editors
+  
 
   #resources :calmapp_versions_translation_languages
 
@@ -72,6 +72,9 @@ Translator::Application.routes.draw do
    
    get "calmapp_version/version_alterwithredisdb/:id" => "calmapp_versions#version_alterwithredisdb", :as => "version_alterwithredisdb", via: :all
    
+   resources :translation_editor_params
+
+   resources :translation_editors
    #get "calmapps/all_in_one_new/" => "calmapps#all_in_one_new", :as => "all_in_one_new"
    #get "calmapps/all_in_one_create" => "calmapps#all_in_one_create"
    #match "upload"

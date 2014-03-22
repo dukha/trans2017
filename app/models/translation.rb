@@ -11,8 +11,12 @@ class Translation < ActiveRecord::Base
   
  
   #scope :all, -> {order('dot_key_code asc')}
-  validates :dot_key_code, :uniqueness=>true#, :presence=>true 
+  validates :dot_key_code, :uniqueness=>{:scope=> :language}#, :presence=>true 
   
+  def full_dot_key_code
+    return language + "." + dot_key_code
+  end
+=begin
   def english_translation 
     new_locale = replace_locale_in_dot_key_code('en')
     en = Translation.where{dot_key_code == my{new_locale}}
@@ -28,6 +32,7 @@ class Translation < ActiveRecord::Base
   def replace_locale_in_dot_key_code new_locale
     new_locale + '.' +remove_locale_from_dot_key_code
   end
+=end
   def self.save_multiple translation_array
     #debugger
     transaction do 
@@ -99,6 +104,88 @@ class Translation < ActiveRecord::Base
     translations = build_lazy_loader(translations, criteria, operators)
     #puts translations.class.name
     return translations
+  end
+  
+    def self.translations_to_db_from_file hash, overwrite
+    keys =  hash.keys
+    
+    keys.each{ |k| puts k + ": " + hash[k]}
+    puts "Number of keys in hash " + keys.count.to_s
+    count=0
+    translation = nil
+    keys.each do |k| 
+      translation = translation_to_db_from_file(k, hash[k], overwrite)    
+      if not translation.valid? then
+        return translation
+      end
+      count += 1
+    end
+    puts "keys written to db = " + count.to_s
+    return translation
+  end
+=begin
+ Writes 1 key and translation to Translation 
+=end
+  def self.translation_to_db_from_file key, translation, overwrite
+    split_hash= split_full_dot_key_code key
+    exists = Translation.where{(dot_key_code == split_hash[:dot_key_code]) & (language== split_hash[:language])} 
+    if exists.count > 0
+     object = exists.first
+     puts "object exists"
+    end
+    object_persisted = false
+    if overwrite == Overwrite[:all] then
+      if not object.nil?
+        puts "all object to be persisted persisted because of all"
+        b = object.update_attributes(:translation=> translation)
+        #binding.pry
+        object_persisted = true
+        puts "all object persisted"
+        return object
+      end
+      "object is nil : major error"
+    elsif overwrite == Overwrite[:none] then
+      puts "none"
+      if object && object.translation.nil? then 
+        #We update where the transaltion is nil anyway
+        b = object.update_attributes(:translation=> translation)
+        object_persisted = true
+        puts "none: persisted anyway"
+        return object
+      else
+        "none correctly not persisted"
+        # We don't persist because of :none condition
+      end 
+    elsif overwrite == Overwrite[:cancel]
+      puts "cancel"
+      if not object.nil? then
+       object.errors.messages << I18n.t("messages.write_file_to_db.cancel", {:language=> object.language, :dot_key_code=> object.dot_key_code})
+       return object 
+      end
+      puts "cancel but no return"
+    end
+    
+    # if not overwrite or match language and keys count=0 then this code executes
+    if not object_persisted then
+      puts "Write new"
+      t = Translation.new(:language => split_hash[:language], :dot_key_code=> split_hash[:dot_key_code], :translation=>translation)
+      b = t.save
+      binding.pry
+      return t
+     else
+       "error"
+       # this is an error
+       raise RuntimeError, I18n,t("messages.write_file_to_db.object_persisted_but_not_returned", {:language=> object.language, :dot_key_code=> object.dot_key_code}), caller
+     end  
+  end
+
+=begin
+ Splits a full_dot_key_code into language and dot_key_code (without language)
+ #return hash keyed by ":language" and ":dot_key_code" 
+=end  
+  def self.split_full_dot_key_code full_dot_key_code
+    code_array = full_dot_key_code.split(".") 
+    return {:language=> code_array[0], :dot_key_code=> code_array[1..(code_array.length-1)].join(".")}
   end
 end
 

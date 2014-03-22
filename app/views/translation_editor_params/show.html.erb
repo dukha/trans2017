@@ -1,0 +1,26 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b><%= tlabel('dot_key_code') %>:</b>
+  <%= @translation_editor_param.dot_key_code %>
+</p>
+
+<p>
+  <b><%= tlabel('param_name') %>:</b>
+  <%= @translation_editor_param.param_name %>
+</p>
+
+<p>
+  <b><%= tlabel('param_sequence') %>:</b>
+  <%= @translation_editor_param.param_order %>
+</p>
+
+<p>
+  <b><%= tlabel('param_default') %>:</b>
+  <%= @translation_editor_param.param_default %>
+</p>
+
+
+<%=link_edit('edit', edit_translation_editor_param_path(@translation_editor_param)) %> |
+<%= link_back(translation_editor_params_path) %>
+

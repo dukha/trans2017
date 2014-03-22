@@ -326,4 +326,8 @@ en:
     calmapp_versions_translation_language: 
       notice: To add a new upload first add the language to a version, then upload here.    
     write_yaml_file:
-      success: File successfully written to database    
+      success: "File '%{file}' successfully written to database"   
+      error: "File could not be written: %{cause}" 
+    write_file_to_db:
+      cancel: "Operation cancelled because a translation is already in database: language = %{langauge}, code = %{dot_key_code} "
+      object_persisted_but_not_returned: "Translation has apparently been persisted but not returned correctly by code: language = %{langauge}, code = %{dot_key_code}"  

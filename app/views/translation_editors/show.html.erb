@@ -1,0 +1,18 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b><%= tlabel('dot_key_code') %>:</b>
+  <%= @translation_editor.dot_key_code %>
+</p>
+
+<p>
+  <b><%= tlabel('editor') %>:</b>
+  <%= @translation_editor.editor %>
+</p>
+
+
+
+
+<%=link_edit('edit', edit_translation_editor_path(@translation_editor)) %> |
+<%= link_back(translation_editors_path) %>
+

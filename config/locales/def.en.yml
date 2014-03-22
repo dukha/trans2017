@@ -197,7 +197,10 @@ en:
 #expected the node content, but found ':'
 #  in "<unicode string>", line 196, column 14:
 #        order: [ :year, :month, :day ]
-#    order: [ :year, :month, :day ]
+    order:  
+    - :year 
+    - :month 
+    - :day 
 
   time:
     formats:

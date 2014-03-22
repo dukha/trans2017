@@ -6,12 +6,13 @@
 <table class="data">
   <tr class="dataheader">
 
-    <th class ="dataheader"><%=tlabel('redis_db_index', 'redis_database') %></th>
+    
 
-    <th class ="dataheader"><%=tlabel('calmapp_version_id', 'redis_database' ) %></th>
+    <!--th class ="dataheader">< %=tlabel('calmapp_version_id', 'redis_database' ) %></th  -->
 
     <th class ="dataheader"><%=tlabel('redis_instance_id', 'redis_database') %></th>
-    <th class ="dataheader"><%=tlabel('release_status_id', 'redis_database') %></th>
+    <th class ="dataheader"><%=tlabel('redis_db_index', 'redis_database') %></th>
+    <!--th class ="dataheader">< %=tlabel('release_status_id', 'redis_database') %></th -->
 
     
 
@@ -27,16 +28,16 @@
 <% @redis_databases.each do |redis_database| %>
 
   <tr class = "<%= cycle('dataeven', 'dataodd') %>" >
-  
+      <td class="<%= cell_class %>"><%= RedisInstance.find(redis_database.redis_instance_id).description %></td>
       <td class="<%= cell_class %>"><%= redis_database.redis_db_index %></td>
 
   
-      <td class="<%= cell_class %>"><%= CalmappVersion.find(redis_database.calmapp_version_id).calmapp_name_with_version %></td>
+      <!-- td class="< %= cell_class %>">< %= CalmappVersion.find(redis_database.calmapp_version_id).calmapp_name_with_version %></td -->
 
   
-      <td class="<%= cell_class %>"><%= RedisInstance.find(redis_database.redis_instance_id).description %></td>
       
-       <td class="<%= cell_class %>"><%=ReleaseStatus.find(redis_database.release_status_id).status %></td>
+      
+       <!--td class="< %= cell_class %>">< %=ReleaseStatus.find(redis_database.release_status_id).status %></td -->
   
     
     <td class="<%= link_cell_class %>"><%= tlink_to  'edit', edit_redis_database_path(redis_database) %></td>

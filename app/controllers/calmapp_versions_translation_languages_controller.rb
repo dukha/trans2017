@@ -78,13 +78,25 @@ class CalmappVersionsTranslationLanguagesController < ApplicationController
   end
     
   def write_file_to_db
+    #binding.pry
     @translations_upload = TranslationsUpload.find(params[:id])
     @calmapp_versions_translation_language = CalmappVersionsTranslationLanguage.find(@translations_upload.cavs_translation_language_id)
     if @translations_upload then
       #file = @translations_upload.yaml_upload2
-      if @translations_upload.write_file_to_db then
+     # binding.pry
+      if @translations_upload.write_file_to_db2 then
         respond_to do |format|
-          tflash("write_yaml_file", :success)
+          binding.pry
+          tflash("write_yaml_file", :success, :file=>@translations_upload.yaml_upload.identifier)
+          format.html {render :action => 'edit'}
+        end
+      else
+        cause = ''
+        binding.pry
+        @calmapp_versions_translation_language.errors.each{|m| cause = cause + m + "; " }
+         
+        respond_to do |format|
+          tflash("write_yaml_file", :error, :cause=> cause) 
           format.html {render :action => 'edit'}
         end
       end
