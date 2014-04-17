@@ -75,6 +75,9 @@ en:
       translation_file_id_eq: Translation File equals
       max_redis_dbs: Maximum Number Redis Databases
       filter: Filter
+      skip: Only Save New Translations 
+      overwrite: Overwrite Translations Already Saved
+      cancel_operation: Cancel the upload. Rollback all new uploads.    
     hints:
       calmapp_version:
         version: "Enter the version here. Format is <major_version>.<minor_version> e.g. 12.23 (There is no distinct translation for maintenance versions, such as 1.20.3, so don't enter them here.)"
@@ -97,8 +100,9 @@ en:
         password: "Enter the actual password for this Redis Instance. If you don't know it then don't add a new record or change an existing password. For production the password should be greater than 100 characters, otherwise a brute force attack on Redis is too easy. If the password is left blank when editing then it will remain unchanged." 
         description: User Friendly name to indentify the host.
       translations_upload:
-        yaml_upload: Browse to a YAML translation file with a .yaml extension of the language specified above e.g. def.en.yml contains default English translation. 
+        yaml_upload: Browse to a YAML translation file with a .yml extension of the language specified above e.g. def.en.yml(or en.yml) contains default English translation. Make sure that the name of the file matches with the version languages that you are working with. 
         yaml_upoad_file_name: This is the file that has been uploaded.
+        duplicates_behavior: File will be written immediately to database. If there is a duplicate key, do you want to <b>Overwrite</b> the existing translation, <b>Skip<b/> to the next translation without overwriting or Cancel all new uploads?
       translation_language:
         iso_code: "ISO Code comes in a format of <language_code [+ underscore + REGION]> language_code is 2 chars, always lowercase. Look this up if you don't know it. REGION is always in upper case. eg. fr_CA refers to French as used in Canada"   
 #    actions:
@@ -321,13 +325,17 @@ en:
           warning: |
             Are you sure that you want to delete this file from the database?
             All translations in this file will also be deleted (from the database).
-    yaml_upload_content_type: 
-      error: "'%{yu}' is not the correct file type (Must be 'x-yaml', having '.yml' suffix)"
+    #yaml_upload_content_type: 
+      #error: "'%{yu}' is not the correct file type (Must be 'x-yaml', having '.yml' suffix)"
+    translations_upload:
+      yaml_upload:
+        error:
+          file_language_must_match_translation_language: "The selected file language(%{chosen_file_iso_code})  must match the language of the translation version translation(%{required_iso_code})."   
     calmapp_versions_translation_language: 
       notice: To add a new upload first add the language to a version, then upload here.    
     write_yaml_file:
       success: "File '%{file}' successfully written to database"   
       error: "File could not be written: %{cause}" 
     write_file_to_db:
-      cancel: "Operation cancelled because a translation is already in database: language = %{langauge}, code = %{dot_key_code} "
-      object_persisted_but_not_returned: "Translation has apparently been persisted but not returned correctly by code: language = %{langauge}, code = %{dot_key_code}"  
+      cancel: "operation cancelled because a translation is already in database: language = %{language}, code = %{dot_key_code} "
+      object_persisted_but_not_returned: "Translation has apparently been persisted but not returned correctly by code: language = %{language}, code = %{dot_key_code}"  

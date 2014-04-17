@@ -2,17 +2,168 @@ class Translation < ActiveRecord::Base
   # needed for self.search
   extend SearchModel
   
-  
+  belongs_to :calmapp_versions_translation_language, :foreign_key => "cavs_translation_language_id"
+  belongs_to :translations_upload
   #validates :translation, :presence=>true
-  
+  validates :dot_key_code, :uniqueness=>{:scope=> :cavs_translation_language_id},  :presence=>true 
+  validates :calmapp_versions_translation_language, :presence => true
   # for developers  we want to be able to process up to 3 translations from 1 form: thus extra virtual attributes
   # to be saved as separate translations
-  attr_accessor  :dot_key_code0, :translation0, :translation_message0, :dot_key_code1, :translation1, :translation_message1, :dot_key_code2, :translation2,  :translation_message2#, :developer_params
+  #attr_accessor  :english, :dot_key_code0, :translation0, :translation_message0, :dot_key_code1, :translation1, :translation_message1, :dot_key_code2, :translation2,  :translation_message2#, :developer_params
+  attr_accessor  :english 
+=begin
+  @param cavtl_alias_identifier a number(or string) to help uniquely identify the sql alias for calmapp_versions_translation_languages. Use this for complex self joins etc
+  @return AR Relation with a join between translations and  calmapp_versions_translation_languages
+  joins  calmapp_versions_translation_languages to translations
+=end  
+  scope :join_to_cavs_tls, ->(cavtl_alias_identifier = 1, translations_alias='translations', extra_and_clause = '' ) {
+    cavtl_alias = "cavtl" + cavtl_alias_identifier.to_s() 
+    joins("inner join calmapp_versions_translation_languages " + cavtl_alias + " on " + translations_alias + ".cavs_translation_language_id = " + cavtl_alias + ".id" + extra_and_clause)
+  }
+=begin
+  @param cavtl_alias_identifier a number(or string) to help uniquely identify the sql alias for calmapp_versions_translation_languages. Use this for complex self joins etc
+  @param tl_alias_identifier a number(or string) to help uniquely identify the sql alias for translation_languages. Use this for complex self joins etc
+  @return AR Relation with a join between translation_languages and  calmapp_versions_translation_languages
+  joins  calmapp_versions_translation_languages to translation_languages
+=end
+  scope :joins_to_tl, ->(cavtl_alias_identifier = 1, tl_alias_identifier = 1, extra_and_clause = '') {
+    cavtl_alias = "cavtl" + cavtl_alias_identifier.to_s() 
+    tl_alias = "tl" + tl_alias_identifier.to_s() 
+    joins("inner join translation_languages " + tl_alias + " on " + cavtl_alias + ".translation_language_id = " + tl_alias +".id" + extra_and_clause)
+  }
+=begin
+ @return a AR Relation that outer joins translations to translations to dot_key_code_translation_editors 
+ Ensures all translations are selected even if they do not have an editor
+=end  
+  scope :joins_editor, -> {
+    joins("left join dot_key_code_translation_editors dkcte on dkcte.dot_key_code = translations.dot_key_code")
+  }
   
- 
-  #scope :all, -> {order('dot_key_code asc')}
-  validates :dot_key_code, :uniqueness=>{:scope=> :language}#, :presence=>true 
+=begin
+ @ return the select list for the basic selection on translations, including translation_language.iso_code and dot_key_code_translation_editors.editor 
+=end  
+  scope :basic_select, -> {
+    select("translations.id as id, tl1.iso_code as iso_code, translations.dot_key_code as dot_key_code, dkcte.editor as editor")
+  }
   
+  scope :outer_join_to_english, ->(equal=true ){
+    if equal then
+      operator = ' = '
+    else 
+      opeartor = ' != ' 
+    end
+    joins("left  join translations as english on translations.dot_key_code " + operator + " english.dot_key_code")
+  }
+=begin
+  @param language expects translation_language.iso_code but  can also give id or object
+  @param calmapp_version_id identifies the relevant version
+  use result[n].attributes to get the data you need
+=end 
+  scope :single_lang_translations, ->(language, calmapp_version_id) {
+    if language.is_a? TranslationLanguage then
+      language = language.iso_code
+    elsif language.is_a? String then
+      # then we assume that it is the iso_code
+    elsif language.is_a? Integer then   
+      language = TranslationLanguage.find(language)
+    else
+      puts "language is a " + language.class.name
+      # raise error
+    end
+    join_to_cavs_tls.
+    joins_to_tl.
+    outer_join_to_english.
+    join_to_cavs_tls(2, "english", " and cavtl1.calmapp_version_id = cavtl2.calmapp_version_id").
+    
+    #joins("inner join calmapp_versions_translation_languages cavtl2 on english.cavs_translation_language_id = cavtl2.id and cavtl1.calmapp_version_id = cavtl2.calmapp_version_id ").
+    joins_to_tl(2, 2, " and tl2.iso_code='en'").
+    #joins("inner join translation_languages tl2 on cavtl2.translation_language_id = tl2.id and tl2.iso_code='en'").
+    joins_editor.
+    basic_select.
+    select("english.translation as en_translation, english.updated_at as en_updated_at, translations.translation as translation, 
+          translations.updated_at as updated_at ").
+    where( "cavtl1.calmapp_version_id = ?",calmapp_version_id).
+    where("tl1.iso_code = ?", language).
+    order("translations.dot_key_code asc")
+  }
+  
+  scope :new_single_lang, ->(language, calmapp_version_id) {
+    single_lang_translations(language, calmapp_version_id).
+    where{translations.translation == nil}
+  }
+=begin
+  @return all new and newly updated translations for the language and version 
+=end  
+  scope :new_updated_single_lang, ->(language, calmapp_version_id) {
+    single_lang_translations(language,calmapp_version_id).
+    where{(translations.translation == nil) | (translations.updated_at > english.updated_at )}
+  }  
+=begin
+ @return   AR Relation with all english translations for a version
+=end  
+  scope :english_translations, ->(calmapp_version_id) {
+    join_to_cavs_tls.
+    joins_to_tl.
+    joins_editor.
+    basic_select.
+    where( "cavtl1.calmapp_version_id = ?",calmapp_version_id).
+    where("tl1.iso_code =  'en'" )
+  }
+=begin
+ @return AR Relation with where clause precluding all dot_ley_codes that end in a CLDR plural 
+=end  
+  scope :not_in_cldr_plurals, ->{
+    conditions = ""
+    pl  = Translation.CLDR_plurals.each do |p|
+      p.prepend '%.'  
+      if  conditions.length > 0 then
+        conditions.concat ' and '    
+      end 
+      conditions.concat " dot_key_code not like  '#{p}'"  
+    end
+    return where(conditions)
+  }
+  
+  scope :dot_key_codes_for_language, ->(language, calmapp_version_id) {
+    
+  }   
+  scope :english_codes_missing_in_translation, ->(language, calmapp_version_id) {
+    select("dot_key_code"). 
+    join_to_cavs_tls.
+    joins_to_tl.
+    where("tl1.iso_code = 'en'").
+    where("cavtl1.calmapp_version_id = ?", calmapp_version_id).
+    not_in_cldr_plurals.
+    where{dot_key_code << (Translation.select("dot_key_code").
+    # we don't do a join between query and subquery because of the problems with aliases. Instead use the version data twice.
+             join_to_cavs_tls.
+             joins_to_tl.
+             where( "tl1.iso_code = ?", language).
+             where( "cavtl1.calmapp_version_id = ?", calmapp_version_id))
+         }
+  }
+
+
+=begin
+   cldr plurals (used for models and other things in translation files (different in different files))
+  zero
+  one (singular)
+  two (dual)
+  few (paucal)
+  many
+  other (general plural form -- also used if the language only has a single form, or for fractions if they are different)
+=end
+
+  def self.CLDR_plurals
+    return %w(zero one two few many other)
+  end
+
+  def self.Overwrite
+    # :all means all existing translations that are matched will be overwritten( except if the same as new)
+    # :continue_unless_blank means that no existing translations(by language and dot_code_key) will be overwritten unless translation is null
+    # :cancel means an the writing of a file will be rolled back if a duplicate language and key is found( where translation is not null )
+    {:all=>"OVERWRITE_ALL", :continue_unless_blank=>"OVERWRITE_CONTINUE", :cancel => "CANCEL_OPERATION"}
+  end
   def full_dot_key_code
     return language + "." + dot_key_code
   end
@@ -106,7 +257,7 @@ class Translation < ActiveRecord::Base
     return translations
   end
   
-    def self.translations_to_db_from_file hash, overwrite
+  def self.translations_to_db_from_file hash, translation_upload_id, calmapp_versions_translation_language, overwrite
     keys =  hash.keys
     
     keys.each{ |k| puts k + ": " + hash[k]}
@@ -114,8 +265,9 @@ class Translation < ActiveRecord::Base
     count=0
     translation = nil
     keys.each do |k| 
-      translation = translation_to_db_from_file(k, hash[k], overwrite)    
-      if not translation.valid? then
+      translation = translation_to_db_from_file(k, hash[k], translation_upload_id, calmapp_versions_translation_language, overwrite)    
+      #binding.pry
+      if  translation.errors.count > 0 then
         return translation
       end
       count += 1
@@ -126,59 +278,73 @@ class Translation < ActiveRecord::Base
 =begin
  Writes 1 key and translation to Translation 
 =end
-  def self.translation_to_db_from_file key, translation, overwrite
+  def self.translation_to_db_from_file key, translation,translations_upload_id, calmapp_versions_translation_language, overwrite
     split_hash= split_full_dot_key_code key
-    exists = Translation.where{(dot_key_code == split_hash[:dot_key_code]) & (language== split_hash[:language])} 
+    exists = Translation.where{(dot_key_code == split_hash[:dot_key_code]) & (cavs_translation_language_id == calmapp_versions_translation_language.id)}#(language== split_hash[:language])} 
+    language = calmapp_versions_translation_language.translation_language.iso_code
+    #binding.pry
     if exists.count > 0
      object = exists.first
      puts "object exists"
     end
     object_persisted = false
-    if overwrite == Overwrite[:all] then
-      if not object.nil?
-        puts "all object to be persisted persisted because of all"
-        b = object.update_attributes(:translation=> translation)
+    #binding.pry
+    if not object.nil?
+      if overwrite == Translation.Overwrite[:all] then
+        puts :all.to_s
+        #if not object.nil?
+          puts "all object to be persisted persisted because of all"
+          b = object.update_attributes(:translation=> translation, :cavs_translation_language_id => calmapp_versions_translation_language.id, :translations_upload_id=> translation_upload_id)
+          #binding.pry
+          object_persisted = true
+          puts "all object persisted"
+          return object
+        #end
+        #"object is nil : major error"
+      elsif overwrite == Translation.Overwrite[:continue_unless_blank] then
+        puts "none"
+        if object.translation.nil? then 
+          #We update where the transaltion is nil anyway
+          b = object.update_attributes(:translation=> translation, :cavs_translation_language_id => calmapp_versions_translation_language.id, :translations_upload_id=> translations_upload_id)
+          object_persisted = true
+          puts "none: persisted anyway"
+          return object
+        else
+          #"none correctly not persisted"
+         # # We don't persist because of no :continue_unless_blank condition
+        end 
+      elsif overwrite == Translation.Overwrite[:cancel]
+        puts "cancel"
         #binding.pry
-        object_persisted = true
-        puts "all object persisted"
-        return object
-      end
-      "object is nil : major error"
-    elsif overwrite == Overwrite[:none] then
-      puts "none"
-      if object && object.translation.nil? then 
-        #We update where the transaltion is nil anyway
-        b = object.update_attributes(:translation=> translation)
-        object_persisted = true
-        puts "none: persisted anyway"
-        return object
-      else
-        "none correctly not persisted"
-        # We don't persist because of :none condition
-      end 
-    elsif overwrite == Overwrite[:cancel]
-      puts "cancel"
-      if not object.nil? then
-       object.errors.messages << I18n.t("messages.write_file_to_db.cancel", {:language=> object.language, :dot_key_code=> object.dot_key_code})
-       return object 
-      end
-      puts "cancel but no return"
-    end
-    
+        #if not object.nil? then
+          t = Translation.new(:cavs_translation_language_id => calmapp_versions_translation_language.id, :dot_key_code=> split_hash[:dot_key_code], :translation=>translation, :translations_upload_id => translations_upload_id)
+          #binding.pry
+          #t.errors.add(:base, I18n.t("messages.write_file_to_db.cancel", {:language=> language, :dot_key_code => object.dot_key_code}))
+          t.errors.add(:dot_key_code, I18n.t("messages.write_file_to_db.cancel", {:language=> language, :dot_key_code => object.dot_key_code}))
+          #binding.pry
+          return t 
+        #end
+        #puts "cancel but no return"
+      end #overwrite
+    else 
+      #object is nil (not fouund in db)
     # if not overwrite or match language and keys count=0 then this code executes
-    if not object_persisted then
+    #if not object_persisted then
       puts "Write new"
-      t = Translation.new(:language => split_hash[:language], :dot_key_code=> split_hash[:dot_key_code], :translation=>translation)
+      #binding.pry
+      t = Translation.new(:cavs_translation_language_id => calmapp_versions_translation_language.id, :dot_key_code=> split_hash[:dot_key_code], :translation=>translation, :translations_upload_id => translations_upload_id)
+      #binding.pry
       b = t.save
-      binding.pry
+      
       return t
-     else
-       "error"
+     #else
        # this is an error
-       raise RuntimeError, I18n,t("messages.write_file_to_db.object_persisted_but_not_returned", {:language=> object.language, :dot_key_code=> object.dot_key_code}), caller
-     end  
+       #puts "object is persisted but drops thru to give an error"
+       #raise RuntimeError, I18n,t("messages.write_file_to_db.object_persisted_but_not_returned", {:language=> object.language, :dot_key_code=> object.dot_key_code}), caller
+    # end  
+    end # object is nil
   end
-
+  
 =begin
  Splits a full_dot_key_code into language and dot_key_code (without language)
  #return hash keyed by ":language" and ":dot_key_code" 
@@ -188,6 +354,7 @@ class Translation < ActiveRecord::Base
     return {:language=> code_array[0], :dot_key_code=> code_array[1..(code_array.length-1)].join(".")}
   end
 end
+
 
 # == Schema Information
 #

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140319223644) do
+ActiveRecord::Schema.define(version: 20140327045609) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -47,6 +47,13 @@ ActiveRecord::Schema.define(version: 20140319223644) do
   end
 
   add_index "calmapps", ["name"], name: "iu_calmapps_name", unique: true, using: :btree
+
+  create_table "dot_key_code_translation_editors", force: true do |t|
+    t.string   "dot_key_code"
+    t.string   "editor"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "languages", force: true do |t|
     t.string   "iso_code",   null: false
@@ -116,13 +123,6 @@ ActiveRecord::Schema.define(version: 20140319223644) do
     t.datetime "updated_at"
   end
 
-  create_table "translation_editors", force: true do |t|
-    t.string   "dot_key_code"
-    t.string   "editor"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "translation_languages", force: true do |t|
     t.string   "iso_code",   null: false
     t.string   "name",       null: false
@@ -134,16 +134,17 @@ ActiveRecord::Schema.define(version: 20140319223644) do
   add_index "translation_languages", ["name"], name: "iu_tlanguages_name", unique: true, using: :btree
 
   create_table "translations", force: true do |t|
-    t.string   "dot_key_code",           null: false
-    t.text     "translation",            null: false
+    t.string   "dot_key_code",                 null: false
+    t.text     "translation",                  null: false
     t.integer  "translations_upload_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "language"
+    t.integer  "cavs_translation_language_id"
   end
 
+  add_index "translations", ["cavs_translation_language_id", "dot_key_code"], name: "iu_translations_language_dot_key_code", unique: true, using: :btree
+  add_index "translations", ["cavs_translation_language_id"], name: "i_translations_language", using: :btree
   add_index "translations", ["dot_key_code"], name: "i_translations_dot_key_code", using: :btree
-  add_index "translations", ["language", "dot_key_code"], name: "iu_translations_language_dot_key_code", unique: true, using: :btree
 
   create_table "translations_uploads", force: true do |t|
     t.string   "description"

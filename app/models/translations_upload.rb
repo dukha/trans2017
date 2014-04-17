@@ -1,8 +1,10 @@
 class TranslationsUpload < ActiveRecord::Base
   include Validations
   mount_uploader :yaml_upload, YamlTranslationFileUploader
-  attr_accessible :description,  :cavs_translation_language_id, :yaml_upload, :calmapp_versions_translation_language
-  belongs_to :calmapp_versions_translation_language
+  attr_accessible :description,  :cavs_translation_language_id, :yaml_upload, 
+                  :calmapp_versions_translation_language, :duplicates_behavior, :written_to_db
+  attr_accessor :duplicates_behavior
+  belongs_to :calmapp_versions_translation_language, :foreign_key=>"cavs_translation_language_id"
   #belongs_to :calmapp_version
   
   #validates :translation_language_id,  :presence=>true
@@ -10,32 +12,61 @@ class TranslationsUpload < ActiveRecord::Base
   
   #validates :calmapp_version_id,  :presence=>true
   #validates :calmapp_version_id, :existence => true
-  def self.Overwrite
-    {:all=>"OVERWRITE_ALL", :none=>"OVERWRITE_NONE", :cancel => "CANCEL_OPERATION"}
-  end
+  
   validates :description,  :presence=>true
+  validate :upload_matches_translation_language_validation
+  after_create :write_file_to_db2
 =begin
  Takes a yaml translation file, parses it, writes it as a tree and then converts the tree to a dot_key format
  @return a hash in dot_key => string_data format, suitable for writing to the db  
 =end
-  def write_file_to_db2 overwrite =Overwrite[:none]
+  def write_file_to_db2 #overwrite  
     #binding.pry
+    if duplicates_behavior == "overwrite"
+        duplicates_behavior2 =   Translation.Overwrite[:all]
+    elsif duplicates_behavior ==  "skip" 
+        duplicates_behavior2 = Translation.Overwrite[:continue_unless_blank]
+    elsif duplicates_behavior == "cancel"
+      duplicates_behavior2 = Translation.Overwrite[:cancel]
+    else
+      duplicates_behavior2 = Translation.Overwrite[:continue_unless_blank]
+    end     
+    begin       
     data  = YAML.load_file("public/" + yaml_upload.url)
-    key_value_pairs = TranslationsUpload.traverse_ruby(data, overwrite)
+    key_value_pairs = TranslationsUpload.traverse_ruby(data)
     #binding.pry
-    #ret_val = true 
-    ret_val= 'ok'
+    rescue Psych::SyntaxError => pse
+      raise PsychSyntaxErrorWrapper.new(pse, yaml_upload_identifier)
+    end  
+    ret_val= 'ok' 
     Translation.transaction do
-      t = Translations.translations_to_db_from_file(key_value_pairs, overwrite)
-      if not t.valid? then
+      #binding.pry
+      t = Translation.translations_to_db_from_file(key_value_pairs, id, calmapp_versions_translation_language, duplicates_behavior2)
+      #binding.pry
+      #base_error = t.errors[:base]
+      if t.errors.count > 0 then
+        #binding.pry
         ret_val = t
-        raise ActiveRecord::Rollback
+        # @todo error handling, logging here
+        #raise ActiveRecord::Rollback
+#=begin
+        messages = ""
+        binding.pry
+        t.errors.full_messages.each { |msg| messages = messages + msg + " " } #each_full{  }
+        #messages = messages + "Failed to write file : " + yaml_upload_identifier
+        raise  UploadTranslationError.new(messages, yaml_upload_identifier)
+#=end
+      else
+      # set  written to db here
+      #binding.pry
+         update_attributes(:written_to_db => true)
       end
-    end
+    end # transaction
     return ret_val
   end
   
   def  self.traverse_ruby( node, dot_key_stack=Array.new, dot_key_values_map = Hash.new)#,  container=Hash.new, anchors = Hash.new, in_sequence=nil )
+    #binding.pry
     if node.is_a? Hash then
       #puts "Hash"
       node.keys.each do |k|
@@ -59,23 +90,23 @@ class TranslationsUpload < ActiveRecord::Base
       store_dot_key_value(dot_key_stack, node, dot_key_values_map)
       #return
     elsif (node.is_a? TrueClass ) || (node.is_a? FalseClass) then
-      puts"Boolean"
-      puts node.to_s
+      #puts"Boolean"
+      #puts node.to_s
       store_dot_key_value(dot_key_stack, node.to_s, dot_key_values_map)
       #return 
     elsif node.is_a? Integer then
-       puts "Integer"
-       puts node.to_s
+       #puts "Integer"
+       #puts node.to_s
        store_dot_key_value(dot_key_stack, node.to_s, dot_key_values_map)
        #return
     elsif node.is_a? Float then
-       puts "Float"
-       puts node.to_s
+       #puts "Float"
+       #puts node.to_s
        store_dot_key_value(dot_key_stack, node.to_s, dot_key_values_map)
        #return
     elsif node.is_a? Symbol then
-      puts "Symbol"
-      puts node.to_s
+      #puts "Symbol"
+      #puts node.to_s
       store_dot_key_value(dot_key_stack, node.to_s, dot_key_values_map)
       #return
     elsif node.nil? then
@@ -93,7 +124,26 @@ class TranslationsUpload < ActiveRecord::Base
     dot_key_stack.pop
   end
   
-
+  def upload_matches_translation_language_validation
+    #binding.pry
+    #identifier_array  = yaml_upload.identifier.split(".")
+    errors.add(:yaml_upload, I18n.t($MS + "translations_upload.yaml_upload." + "error.file_language_must_match_translation_language",:required_iso_code=>iso_code(), :chosen_file_iso_code=>iso_code_from_yaml_file_name())) unless iso_code_from_yaml_file_name() ==  iso_code()
+    
+  end
+  
+  def iso_code_from_yaml_file_name
+    identifier_array  = yaml_upload_identifier.split(".")
+    return identifier_array[identifier_array.length-2]
+  end 
+  
+  def iso_code
+    return calmapp_versions_translation_language.translation_language.iso_code 
+  end   
+  #  documentation says the should get this with yaml_upload.indentifier. It quite often returns nil
+  # So we work around
+  def yaml_upload_identifier
+    return yaml_upload.url.split('/').last
+  end
 =begin  
   @deprecated
   def write_file_to_db overwrite =false
@@ -317,11 +367,13 @@ class TranslationsUpload < ActiveRecord::Base
  I needed to do things this way rather than use the validates_attachment_content_type helper because 
    there was no way of including the name of the wrongly chosen file in the helper (that I could find!)
 =end
+=begin
   def validate_content_type
     if not ['application/x-yaml'].include?(self.yaml_upload_content_type)
       errors.add(:yaml_upload_file_name,  I18n.t($MS + "yaml_upload_content_type.error", :yu=> self.yaml_upload_file_name))
     end
   end
+=end
 =begin
   formats an integer to have at least 3 digits 
 =end  
@@ -331,5 +383,27 @@ class TranslationsUpload < ActiveRecord::Base
   
   def yaml_to_array yaml
     yaml.tr('[','').tr(']','').split(',')
+  end
+end
+
+class UploadTranslationError < StandardError
+  attr_accessor :file_name
+  
+  def initialize(message, file_name_param)
+    super message
+    @file_name = file_name_param
+  end
+end
+
+class PsychSyntaxErrorWrapper < StandardError
+  attr_accessor :file_name
+  def initialize(psych_syntax_error, file_name_param)
+    if psych_syntax_error.message.include?("):") then
+      msg = psych_syntax_error.message.split('):')[1]
+    else
+      msg = psych_syntax_error
+    end
+    super msg
+    @file_name = file_name_param
   end
 end

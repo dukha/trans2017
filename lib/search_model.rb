@@ -3,7 +3,7 @@ module SearchModel
   def build_lazy_loader ar_relation, criteria ={},  operators= {}
     criteria.each { |k,v|
        #binding.pry
-       attr= 'squeel.' + k
+       attr= 'squeel.' + k.to_s
       if operators[k]== 'eq'  then
         ar_relation= ar_relation.where{|squeel| eval(attr) == v }
       elsif operators[k] == 'not_eq'  then       
@@ -68,7 +68,7 @@ module SearchModel
      else
        lazy_loader = activerecord_relation  
      end
-     binding.pry
+     #binding.pry
      lazy_loader = build_lazy_loader(lazy_loader, search_info[:criteria], search_info[:operators])
      lazy_loader =  build_lazy_loading_sorter(lazy_loader, search_info[:sorting])
      return lazy_loader

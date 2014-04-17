@@ -81,9 +81,9 @@
 
     
 
-    <th class ="dataheader" style="display:<%=full_key_display%>;"> <%=tlabel('dot_key_code', 'translation') %></th>
+    <!--th class ="dataheader" style="display:< %=full_key_display%>;"> <%=tlabel('dot_key_code', 'translation') %></th-->
     <th class ="dataheader" style="display:<%=wrapped_key_display%>;"><%=tlabel('dot_key_code', 'translation') %></th>
-    <th class ="dataheader" style="display:<%=short_key_display%>;" ><%=tlabel('dot_key_code', 'translation') %></th>
+    <!--th class ="dataheader" style="display:<%=short_key_display%>;" ><%=tlabel('dot_key_code', 'translation') %></th -->
 
     <th class ="dataheader"><%=tlabel('translation', 'translation') %></th>
 
@@ -102,11 +102,11 @@
   <tr class = "<%= cycle('dataeven', 'dataodd') %>" >
   
       
-
+<!--%binding.pry% -->
   
-      <td class="<%= cell_class%>" style="display:<%=full_key_display%>;"><%= translation.dot_key_code %></td>
-      <td class="<%= cell_class %>" style="display:<%=wrapped_key_display%>;"><%= dot_key_code_wrapped(translation.dot_key_code) %></td>
-      <td class="<%= cell_class %>" style="display:<%=short_key_display%>; "><%= dot_key_code_last_key(translation.dot_key_code) %></td>
+      <td class="<%= cell_class%>" style="display:<%=wrapped_key_display%>;"><%= translation.dot_key_code %></td>
+      <!--td class="< %= cell_class %>" style="display:< %=wrapped_key_display%>;">< %= dot_key_code_wrapped(translation.dot_key_code) %></td -->
+      <!--td class="< %= cell_class %>" style="display:< %=short_key_display%>; ">< %= dot_key_code_last_key(translation.dot_key_code) %></td -->
 <!-- It seems like best_in_place needs to work with an instance variable so we need to make things a bit more complicated here below-->
       <td><%= best_in_place translation, :translation, :path => translation_path(translation.id), :type=> :input, :ok_button=>"ok", :cancel_button=>"cancel", :nil=>"Click to edit"  %></td>
       

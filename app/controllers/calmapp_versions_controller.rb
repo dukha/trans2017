@@ -58,6 +58,7 @@ class CalmappVersionsController < ApplicationController
     end
 =end
     prepare_params
+    #new_calmapp_versions_translations_languages = new_languages()
     @calmapp_version = CalmappVersion.new(params[:calmapp_version])
     #binding.pry
     respond_to do |format|
@@ -78,20 +79,20 @@ class CalmappVersionsController < ApplicationController
   def update
     @calmapp_version = CalmappVersion.find(params[:id])
     #binding.pry
-    prepare_params 
+    prepare_params
+    #new_calmapp_versions_translations_languages = new_languages() 
     #binding.pry
     respond_to do |format|
       begin
-        
-        #valid_new_associations = @calmapp_version.check_translation_languages_validity(params[:calmapp_version][:calmapp_versions_translation_language_ids])
         #binding.pry
-        #params[:calmapp_version][:calmapp_versions_translation_languages_attributes] = []
-        
         if @calmapp_version.update_attributes(params[:calmapp_version])
           tflash('update', :success, {:model=>@@model, :count=>1})
           format.html { redirect_to( :action => "index")} #(@calmapp_version, :notice => 'Application version was successfully updated.') }
           format.xml  { head :ok }
         else
+          #binding.pry
+          # @todo get the errors from the after_save parts of the transaction and put them up
+          flash[:error] = "Record not saved."
           if redis_db_update? then
             format.html { render :action => "version_alterwithredisdb" }
           else
@@ -100,13 +101,16 @@ class CalmappVersionsController < ApplicationController
           
           format.xml  { render :xml => @calmapp_version.errors, :status => :unprocessable_entity }
         end
-      rescue ActiveRecord::RecordNotSaved => e
+      rescue Exception => e #ActiveRecord::RecordNotSaved => e
+         # @todo This branch doesn't actually execute. Needs removing
+         
          #tflash('update', :error,{:model=>@@model, :count=>1}  )
          #binding.pry
          #errors = []
          # @calmapp_version.calmapp_versions_translation_languages.each do |tl|
          #          errors << tl.errors.full_messages
          #end
+         #binding.pry
          flash[:error] = e.to_s
          format.html { render :action => "edit" }
       end
@@ -200,19 +204,24 @@ delete third task
        if not redis_db_update? then
         attr_hash = prepare_params_with_translation_language(params[:id], params[:calmapp_version][:calmapp_versions_translation_language_ids])
         params["calmapp_version"]["calmapp_versions_translation_languages_attributes"] = attr_hash
-        params[:calmapp_version].delete(:calmapp_versions_translation_language_ids)
+        #params[:calmapp_version].delete(:calmapp_versions_translation_language_ids)
       end
      end
      
      def prepare_params_with_translation_language calmapp_version_id, translation_language_ids 
       translation_language_ids.delete ""
       #translation_language_ids.uniq!
+      
+      #These lines should be in the model
       en_id = TranslationLanguage.where{iso_code=='en'}.first.id
+=begin
       if not translation_language_ids.include?(en_id.to_s) then
         translation_language_ids << en_id.to_s
       end
+=end
       attr_hash = {}
       if not calmapp_version_id.nil? then
+        # a new version
         index = 0
         # Do deletes first
         languages_to_be_deleted = CalmappVersionsTranslationLanguage.find_languages_not_in_version(translation_language_ids ,calmapp_version_id).all
@@ -245,4 +254,31 @@ delete third task
       end #each
     return attr_hash
    end
+=begin
+   def new_languages
+     attr_hash = params["calmapp_version"]["calmapp_versions_translation_languages_attributes"]
+     new_record_hash={}
+     attr_hash.keys.each do |key|
+       #if there is
+       if params[:id].nil? || key.to_i > 1000 then
+         #it is a new record
+         new_record_hash[key]  = attr_hash[key]
+       end
+     end
+     binding.pry
+     return new_record_hash
+   end
+   def base_locale_translations_for_new_translation_languages
+     new_records_hash = new_languages()
+     new_records_hash.keys.each do |k|
+       cavs_translation_language_id =k[:cavs_translation_language_id]
+     end
+     
+     #tu = TranslationUpload.new(:yaml_upload => "base_locaales")
+     #upload file from base 
+     #TranslationsUplad.new
+     #write_file_to_db with upload_id
+     
+   end
+=end  
 end

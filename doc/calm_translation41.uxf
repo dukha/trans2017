@@ -35,7 +35,7 @@
     <panel_attributes>*TranslationsUpload*
 id:integer
 cavs_translation_language_id:integer
-yaml_upload2:string (carrierwave attributes)
+yaml_upload:string (carrierwave attributes)
 description:string
 bg=orange</panel_attributes>
     <additional_attributes/>

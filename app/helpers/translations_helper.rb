@@ -12,7 +12,7 @@ module TranslationsHelper
   $C ="commons."
   $F="formtastic."
   $FL= $F+"labels."
-  $FH=$F+"hints."
+  $FH = $F+"hints."
   $FA = $F + "actions."
   #$L="links."
   $LU="lookups."

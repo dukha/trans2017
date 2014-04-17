@@ -11,9 +11,15 @@
             <span style= "border-style:solid;border-color:lightgray;border-radius:4px;"><%= f.object.yaml_upload.url %></span>
             </li>
           <%end%>
-          <%if not f.object.new_record?%>
+          <%if f.object.new_record?%>
             <li>
-               <a href ="<%= write_yaml_file_to_db_path(f.object.id)%>"><%=t($FA + "write_yaml_to_db") %></a>
+              
+               <%=f.input :duplicates_behavior, :as=> :radio, :collection => {t($FL + "overwrite")=> "overwrite", 
+                                                                              t($FL + "skip")=>"skip", 
+                                                                              t($FL + "cancel_operation")=>"cancel"
+                                                                              },
+                          :hint=> t($FH + "translations_upload.duplicates_behavior")%>
+               <!--a href ="< %= write_yaml_file_to_db_path(f.object.id)%>">< %=t($FA + "write_yaml_to_db") %></a -->
             </li>
           <%end%>
            <li>

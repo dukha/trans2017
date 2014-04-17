@@ -1,4 +1,5 @@
 class TranslationsController < ApplicationController
+  
   before_action :authenticate_user!
   filter_access_to :all
   # RecordInvalid is thrown when a constaint is violated (e.g. uniqueness)
@@ -60,7 +61,7 @@ class TranslationsController < ApplicationController
     require 'will_paginate/array'
     search()
     #binding.pry
-    @translations =@translations.paginate(:page => params[:page], :per_page => 7)
+    @translations =@translations.paginate(:page => params[:page], :per_page => 30)
     # Fix this when we get devise
    # current_user = UserWork.current_user_id
     # We need current_user for auth
@@ -74,7 +75,7 @@ class TranslationsController < ApplicationController
   end
   # contains a table that is editable
   def editable_list
-    debugger
+    
      @translations = Translation.paginate(:page => params[:page], :per_page=>25) 
     #puts "@translations: " + @translations.first.dot_key_code
     respond_to do |format|
@@ -173,9 +174,10 @@ class TranslationsController < ApplicationController
   end
   
   def search
+    #binding.pry
     # We need to make a preliminary ar relation so that we can do the join. The selects are important so that we can get the region (for translation) 
     activerecord_relation = Translation.all #, @language)
-    #binding.pry
+    #
     if Translation.respond_to? :searchable_attr  
       searchable_attr = Translation.searchable_attr 
     else 

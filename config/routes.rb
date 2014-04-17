@@ -49,7 +49,7 @@ Translator::Application.routes.draw do
    resources :calmapps
    resources :calmapp_versions
    resources :release_statuses
-   resources :redis_databases
+   resources :redis_databases, :only=>[:index, :destroy]
    resources :redis_instances
    get 'unused_redis_database_indexes' => 'redis_instances#unused_redis_database_indexes', :as => 'redis_databases_getunused', via: :all
    get 'next_unused_redis_database_index'=> 'redis_instances#next_redis_database_index'  , :as => 'redis_databases_getnextindex', :via=> :all

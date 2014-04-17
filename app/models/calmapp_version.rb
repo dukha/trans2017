@@ -31,7 +31,7 @@ class CalmappVersion < ActiveRecord::Base
   has_many :translation_languages , :through => :calmapp_versions_translation_languages
   #validates :calmapp_id, :existence=>true
   
-  
+  after_save :add_english
   
 =begin
 @return a collection of all calmapp names with versions
@@ -69,20 +69,24 @@ class CalmappVersion < ActiveRecord::Base
   def available_translation_languages
       return TranslationLanguage.all - translation_languages
   end
-  
+   
   def to_s
     name
   end
+  
+  def add_english
+    "after save in add_english"
+    #binding.pry
+    english = TranslationLanguage.where{iso_code == 'en'}.first
+    english_id = english.id
+    if translation_languages.where{id == my{english_id}}.empty?#bsearch{ |x|   x.id == english_id }
+        translation_languages <<  english
+        puts "ADD_EN"
+    else
+      "DONT ADD EN"
+    end
+  end
 end
 
-# == Schema Information
-#
-# Table name: calmapp_versions
-#
-#  id         :integer         not null, primary key
-#  calmapp_id :integer         not null
-#  version    :integer         not null
-#  created_at :datetime
-#  updated_at :datetime
-#
+
 

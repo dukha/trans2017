@@ -1,4 +1,4 @@
-class TranslationEditorsController < ApplicationController
+class DotKeycodeTranslationEditorsController < ApplicationController
   # The line below only when fixed attr_accessible
   # before_action :set_translation_editor, only: [:show, :edit, :update, :destroy]
 =begin

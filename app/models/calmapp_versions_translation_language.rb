@@ -23,11 +23,51 @@ class CalmappVersionsTranslationLanguage < ActiveRecord::Base
   #attr_accessor :write
   has_many :translations_uploads, :foreign_key=> "cavs_translation_language_id"
   accepts_nested_attributes_for :translations_uploads, :reject_if => :all_blank, :allow_destroy => true
+  # once we have saved a new language then we upload the base file for that translation 
+  after_create :base_locale_translations_for_new_translation_languages
   
   def name
     return CalmappVersion.find(calmapp_version_id).name + " " + TranslationLanguage.find(translation_language_id).name
   end
   
+  def base_locale_translations_for_new_translation_languages
+    puts "after save in base_locale_translations_for_new_translation_languages"
+    #binding.pry
+    uploads =  TranslationsUpload.where{cavs_translation_language_id == my{id}}.load
+    found=false
+    if not uploads.empty? then
+      # the file is already uploaded
+      uploads.each do |u|
+        # This doesn't always work: if u.yaml_upload.identifier == base_locale_file_name then
+        if u.yaml_upload_identifier == base_locale_file_name then
+          found=true
+          return
+        end
+      end  #each       
+    end # not empty
+    if not found then
+         # all the standard base files are in a rails dir as below (they havebeen downloaded from /home/mark/.rvm/gems/ruby-2.0.0-p247/gems/rails-i18n-4.0.1/rails/locale/)
+        file_to_upload = File.join(Rails.root, "base_locales",  base_locale_file_name())
+        
+        if File.exists?(file_to_upload) then          
+          tu = TranslationsUpload.new(:cavs_translation_language_id=>id, 
+               :yaml_upload=> File.open(file_to_upload) , :description=> "Automatic base locale upload " + base_locale_file_name())
+          #binding.pry
+          tu.save
+          #if tu.save then
+            #tu.write_file_to_db2 #Translation.Overwrite[:continue_unless_blank]
+          #end #upload saved
+        else
+          # The file may not exist, in which case we don"t write but warn"
+          Rails.logger.warn "The file " + base_locale_file_name + " does not exist in " + File.join(Rails.root, "base_locales") + " You will have to fill in about 160 more translations if you can't find this file. You can also copy and rename a file from a close locale. e.g. copy zh-CN.yml renaming to zh-MY.yml for Mayaysian Chinese."
+        end # base file exists
+   end # not found
+  end # def
+  
+  
+  def base_locale_file_name
+    translation_language.iso_code + ".yml"
+  end
   def self.find_by_language_and_version language_id, version_id
     where{calmapp_version_id == version_id}.where{translation_language_id == language_id}
     

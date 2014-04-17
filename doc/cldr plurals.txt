@@ -1,0 +1,7 @@
+Common Language Data Repository
+zero
+one (singular)
+two (dual)
+few (paucal)
+many
+other (general plural form -- also used if the language only has a single form, or for fractions if they are different)

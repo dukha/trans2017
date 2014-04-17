@@ -40,7 +40,7 @@
        <!--td class="< %= cell_class %>">< %=ReleaseStatus.find(redis_database.release_status_id).status %></td -->
   
     
-    <td class="<%= link_cell_class %>"><%= tlink_to  'edit', edit_redis_database_path(redis_database) %></td>
+    <!--td class="< %= link_cell_class %>">< %= tlink_to  'edit', edit_redis_database_path(redis_database) %></td -->
     <td class="<%= link_cell_class %>"><%= tlink_to 'destroy',  redis_database , :confirm => 'delete.are_you_sure', :model => "redis_database", :value=>('Index: '+ redis_database.redis_db_index.to_s), :method => :delete %></td>
     <td class="<%= link_cell_class %>"><%= tlink_to 'redis_to_yaml',  redis_database  %></td>
   </tr>
@@ -50,4 +50,4 @@
 <%end%>
 <br />
 
-<%= tlink_to 'new_model', new_redis_database_path, :model=> 'redis_database' %>
+<!--%= tlink_to 'new_model', new_redis_database_path, :model=> 'redis_database' % -->

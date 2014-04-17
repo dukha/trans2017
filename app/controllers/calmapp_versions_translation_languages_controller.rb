@@ -53,17 +53,36 @@ class CalmappVersionsTranslationLanguagesController < ApplicationController
   # PATCH/PUT /calmapp_versions_translation_languages/1
   # PATCH/PUT /calmapp_versions_translation_languages/1.json
   def update
+    
+    @calmapp_versions_translation_language.assign_attributes(params[:calmapp_versions_translation_language])
     #binding.pry
-    @calmapp_versions_translation_language.update_attributes(params[:calmapp_versions_translation_language])
     respond_to do |format|
+      begin
       if @calmapp_versions_translation_language.save
+        #binding.pry
         tflash('update', :success, {:model=>@@model, :count=>1})
         format.html { redirect_to( :action => "index")}#, notice: 'Calmapp versions translation language was successfully updated.') }
         format.json { head :no_content }
       else
+        #binding.pry
         format.html { render action: 'edit' }
         format.json { render json: @calmapp_versions_translation_language.errors, status: :unprocessable_entity }
-      end
+      end # save
+      rescue PsychSyntaxErrorWrapper => psew
+        flash[:error]= "Format of file : " + psew.file_name + " is bad. Copy the following error message and contact tech support with the file. Error message : " + psew.message
+        #flash[:notice] = "Failed to write file : " + pse.file_name + ". The syntax in the file was wrong. Ask for technical help. No upload done."
+        format.html { redirect_to action: 'edit' }
+      rescue UploadTranslationError => ute
+        #binding.pry
+        flash[:error]= ute.message
+        flash[:notice] = "Failed to write file : " + ute.file_name + ". No upload done."
+        format.html { redirect_to action: 'edit' } 
+      #rescue StandardError => e
+        #binding.pry
+        #flash[:error]= e.message 
+        #flash[:notice] = "Failed to write file : " + e.file_name + ". No upload done."
+        #format.html { redirect_to action: 'edit' } 
+      end  
     end
   end
 
@@ -76,7 +95,7 @@ class CalmappVersionsTranslationLanguagesController < ApplicationController
       format.json { head :no_content }
     end  
   end
-    
+=begin    
   def write_file_to_db
     #binding.pry
     @translations_upload = TranslationsUpload.find(params[:id])
@@ -84,10 +103,10 @@ class CalmappVersionsTranslationLanguagesController < ApplicationController
     if @translations_upload then
       #file = @translations_upload.yaml_upload2
      # binding.pry
-      if @translations_upload.write_file_to_db2 then
+      if @translations_upload.write_file_to_db2(Translation.Overwrite[:all]) then
         respond_to do |format|
-          binding.pry
-          tflash("write_yaml_file", :success, :file=>@translations_upload.yaml_upload.identifier)
+          #binding.pry
+          tflash("write_yaml_file", :success, :file=>@translations_upload.yaml_upload_identifier)
           format.html {render :action => 'edit'}
         end
       else
@@ -104,7 +123,7 @@ class CalmappVersionsTranslationLanguagesController < ApplicationController
       #error  
     end
   end  
-  
+=end  
   
   
   

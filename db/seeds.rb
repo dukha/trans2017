@@ -48,7 +48,7 @@ trans = Calmapp.create!(:name=>"calm_translator")
 log.info("Calm applications inserted")
 
 # delete or change below usernameonce login is added
-
+en = TranslationLanguage.create!(:iso_code=> "en", :name=>"English")
 reg4 = CalmappVersion.create!(:calmapp_id => reg.id, :version => 4)
 trans1=CalmappVersion.create!(:calmapp_id => trans.id, :version => 1)
 log.info("Calm application version inserted")
@@ -72,9 +72,9 @@ User.create_root_user
 #global = Area.create :name => "Global" , :parent_id => Location.localhost.id
 vipassana =  Area.create :name => "Vipassana" , :parent_id => Location.find_by_name(Location.localhost_name).id
 translation_organisation = Organisation.create :name=>"translation_organisation", :parent_id => vipassana.id
-en = TranslationLanguage.create!(:iso_code=> "en", :name=>"English") #, :parent_id=>translation_organisation.id)
-nl = TranslationLanguage.create!(:iso_code=> "nl", :name=>"Dutch")  
-
+ #, :parent_id=>translation_organisation.id)
+  
+DotKeyCodeTranslationEditor.seed
 #TranslationLanguage.create!(:iso_code=> "en_US", :name=>"American English")
 #TranslationLanguage.create!(:iso_code=> "zh", :name=>"Mandarin")
 #TranslationLanguage.create!(:iso_code=> "zh_MY", :name=>"Malaysia Mandarin")
