@@ -52,7 +52,6 @@ en:
         and: and
         or: or
         empty_string: is Empty Text
-        
     error:
       one: "%{count} error"
       other: "%{count} errors"

@@ -29,7 +29,7 @@ class CalmappVersionsController < ApplicationController
   end
 
   # GET /calmapp_versions/new
-  # GET /calmapp_versions/new.xml
+  # GET /calmapp_versions/new.xmlcalmapp_version_tl.
   def new
     @calmapp_version = CalmappVersion.new
     @calmapp_version.translation_languages << TranslationLanguage.where{iso_code == 'en'}.first#CalmappVersionsTranslationLanguage.new(:translation_language_id => TranslationLanguage.where{iso_code == 'en'}.first)
@@ -77,16 +77,20 @@ class CalmappVersionsController < ApplicationController
   # PUT /calmapp_versions/1
   # PUT /calmapp_versions/1.xml
   def update
+    #binding.pry
     @calmapp_version = CalmappVersion.find(params[:id])
     #binding.pry
     prepare_params
     #new_calmapp_versions_translations_languages = new_languages() 
     #binding.pry
     respond_to do |format|
-      begin
+      #begin
         #binding.pry
         if @calmapp_version.update_attributes(params[:calmapp_version])
           tflash('update', :success, {:model=>@@model, :count=>1})
+          
+          flash[:warning] = @calmapp_version.warnings.messages[:base] if @calmapp_version.warnings 
+          
           format.html { redirect_to( :action => "index")} #(@calmapp_version, :notice => 'Application version was successfully updated.') }
           format.xml  { head :ok }
         else
@@ -101,7 +105,7 @@ class CalmappVersionsController < ApplicationController
           
           format.xml  { render :xml => @calmapp_version.errors, :status => :unprocessable_entity }
         end
-      rescue Exception => e #ActiveRecord::RecordNotSaved => e
+      #rescue Exception => e #ActiveRecord::RecordNotSaved => e
          # @todo This branch doesn't actually execute. Needs removing
          
          #tflash('update', :error,{:model=>@@model, :count=>1}  )
@@ -111,9 +115,9 @@ class CalmappVersionsController < ApplicationController
          #          errors << tl.errors.full_messages
          #end
          #binding.pry
-         flash[:error] = e.to_s
-         format.html { render :action => "edit" }
-      end
+         #flash[:error] = e.to_s
+         #format.html { render :action => "edit" }
+      #end
     end
   end
 
@@ -202,16 +206,21 @@ delete third task
        return if not params[:calmapp_version]
    
        if not redis_db_update? then
-        attr_hash = prepare_params_with_translation_language(params[:id], params[:calmapp_version][:calmapp_versions_translation_language_ids])
-        params["calmapp_version"]["calmapp_versions_translation_languages_attributes"] = attr_hash
-        #params[:calmapp_version].delete(:calmapp_versions_translation_language_ids)
+         # This puts the params in the correct format for accepts_nested_attributes_for() 
+         attr_hash = prepare_params_with_translation_language(params[:id], params[:calmapp_version][:calmapp_versions_translation_language_ids])
+         params["calmapp_version"]["calmapp_versions_translation_languages_attributes"] = attr_hash
+         # Now remove the param that is not part of the update: it only brought in the 2 languages
+         # It will bomb if this delete is not done.
+         params[:calmapp_version].delete(:calmapp_versions_translation_language_ids)
+         params[:calmapp_version].delete(:translation_languages_available)
       end
      end
      
      def prepare_params_with_translation_language calmapp_version_id, translation_language_ids 
+      #binding.pry
       translation_language_ids.delete ""
       #translation_language_ids.uniq!
-      
+      #binding.pry
       #These lines should be in the model
       en_id = TranslationLanguage.where{iso_code=='en'}.first.id
 =begin
@@ -242,7 +251,7 @@ delete third task
         cvtl = CalmappVersionsTranslationLanguage.find_by_language_and_version(tl_id,calmapp_version_id )#.first
         
         if not cvtl.empty? then
-          puts "cvtl " + cvtl.to_s
+          #puts "cvtl " + cvtl.to_s
           attr_hash[index.to_s] =  {"translation_language_id"=>cvtl.first.translation_language_id, 
               "calmapp_version_id"=>calmapp_version_id, "_destroy"=>false, "id"=>cvtl.first.id}
           index += 1
@@ -252,33 +261,8 @@ delete third task
         end # empty
         puts "end prepare_params_with_translation_language"
       end #each
+      #binding.pry
     return attr_hash
    end
-=begin
-   def new_languages
-     attr_hash = params["calmapp_version"]["calmapp_versions_translation_languages_attributes"]
-     new_record_hash={}
-     attr_hash.keys.each do |key|
-       #if there is
-       if params[:id].nil? || key.to_i > 1000 then
-         #it is a new record
-         new_record_hash[key]  = attr_hash[key]
-       end
-     end
-     binding.pry
-     return new_record_hash
-   end
-   def base_locale_translations_for_new_translation_languages
-     new_records_hash = new_languages()
-     new_records_hash.keys.each do |k|
-       cavs_translation_language_id =k[:cavs_translation_language_id]
-     end
-     
-     #tu = TranslationUpload.new(:yaml_upload => "base_locaales")
-     #upload file from base 
-     #TranslationsUplad.new
-     #write_file_to_db with upload_id
-     
-   end
-=end  
+
 end

@@ -1,6 +1,8 @@
 Translator::Application.routes.draw do
   
 
+  resources :special_partial_dot_keys
+
   #resources :calmapp_versions_translation_languages
 
   scope "/:locale" do
@@ -61,6 +63,7 @@ Translator::Application.routes.draw do
    #match "translations_editable_list" => "translations#editable_list", :as => "translators_index"
    #match "redis_translations/edito" => "redis_translations#edito", :as => "edito_translation"
    resources :translation_parameters, :only=> [ :new, :index]
+   resources :special_partial_dot_keys
    #match "translation_parameters/save" => "translation_parameters#save", :as => "save_translation_params"
    #resources :uploads
    get "translations_uploads/file_to_redis/:id" => "translations_uploads#file_to_redis", :as => "to_redis", via: :all
@@ -74,7 +77,7 @@ Translator::Application.routes.draw do
    
    resources :translation_editor_params
 
-   resources :translation_editors
+   resources :dot_key_code_translation_editors, :only=> [:index, :edit, :show] 
    #get "calmapps/all_in_one_new/" => "calmapps#all_in_one_new", :as => "all_in_one_new"
    #get "calmapps/all_in_one_create" => "calmapps#all_in_one_create"
    #match "upload"

@@ -53,9 +53,10 @@ class CalmappVersionsTranslationLanguagesController < ApplicationController
   # PATCH/PUT /calmapp_versions_translation_languages/1
   # PATCH/PUT /calmapp_versions_translation_languages/1.json
   def update
-    
-    @calmapp_versions_translation_language.assign_attributes(params[:calmapp_versions_translation_language])
     #binding.pry
+    @calmapp_versions_translation_language = CalamppVersionTranslationLanguage.find(params[:id])
+    @calmapp_versions_translation_language.assign_attributes(params[:calmapp_versions_translation_language])
+    
     respond_to do |format|
       begin
       if @calmapp_versions_translation_language.save

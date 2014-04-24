@@ -2,7 +2,37 @@ module SearchHelper
    # This function just for documentation.
    # You actually wouldn't use all operators at once
    def all_operators translated = nil
-       ar = %w(eq not_eq eq_str not_eq_str matches does_not_match gt gte gte_date lt lte lte_date in not_in is_null not_null empty_string starts_with ends_with) 
+       ar = %w(eq not_eq eq_str not_eq_str matches does_not_match gt gte gte_date lt lte lte_date in not_in is_null not_null empty_string starts_with ends_with between) 
+      if translated then
+        return translate_operators ar 
+      else 
+        return ar  
+      end
+     
+    end
+    
+    def operators_that_dont_need_criterion translated = nil
+      ar = %w( is_null not_null empty_string) 
+      if translated then
+        return translate_operators ar 
+      else 
+        return ar  
+      end
+    end
+    
+    def operators_that_need_2_criteria translated = nil
+      ar = %w( between) 
+      if translated then
+        return translate_operators ar 
+      else 
+        return ar  
+      end
+    end
+=begin
+ operators with zero...n criteria 
+=end    
+    def operators_that_need_multiple_criteria translated = nil
+       ar = %w( in not_in) 
       if translated then
         return translate_operators ar 
       else 
@@ -31,7 +61,7 @@ module SearchHelper
     def compare_operators translated = nil
       ar = %w(eq not_eq gt gte lt lte)
       if translated then
-       return translate_operators ar
+        return translate_operators ar
       else 
         return ar  
       end
@@ -45,7 +75,10 @@ module SearchHelper
         return ar  
       end
     end
-    def operators_to_options array#, options={}
+=begin
+  Converts and array of operators to html options for a select control <option value = 'op_code'>translated op</option> 
+=end
+    def operators_to_html_options array#, options={}
       texts = translate_operators array
       values= array
       #options =[]
@@ -57,7 +90,9 @@ module SearchHelper
       }
       return options.html_safe
     end 
-    
+=begin
+ @return an array of option arrays that can be used by a collection in a view [[option_translation, option_op_code],...] 
+=end    
      def operators_2_options array#, options={}
       # debugger
       texts = translate_operators array

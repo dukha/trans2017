@@ -7,7 +7,7 @@
     $(criteriaDiv).hide(); 
     $(criteriaButton).html(criteriaHiddenText);
     
-    if( <%= @translation_editors.count==0 %>){
+    if( <%= @dot_key_code_translation_editors.count==0 %>){
       toggleCriteria();
     }
     
@@ -28,14 +28,14 @@
   }
   
 </script>
-<%=theading("listing", :model=>'translation_editor', :count=>11) %>
+<%=theading("listing", :model=>'dot_key_code_translation_editor', :count=>11) %>
 <%if TranslationEditor.respond_to?( :searchable_attr ) and TranslationEditor.searchable_attr.any? then %>
 <button id="showHideCriteria" type='button'>x</button>
 <div id='criteria' class="criteria" >
   <!-- Use form_tag here because we are not going to work with a new AR model. form_tag doesn't work with formtastic either -->
   <!-- See controller#index doc for how to use this stuff below. 
     YOU NEED TO ADD METHODS TO MODEL BEFORE THIS PAGE WILL WORK -->
-  <%= form_tag translation_editors_path, :method => 'get', :class=>'formtastic' do %>
+  <%= form_tag dot_key_code_translation_editors_path, :method => 'get', :class=>'formtastic' do %>
     <!--    These next 2 hidden fields needed for sorting from column headers -->
     <%= hidden_field_tag :direction, params[:direction] %>
     <%= hidden_field_tag :sort, params[:sort] %>
@@ -43,8 +43,8 @@
       <ol>
      
       <%if TranslationEditor.searchable_attr.include?("dot_key_code") %>  
-      <li class="string optional" id="translation_editor_dot_key_code_input"><label for="criteriondot_key_code" class="criteria-label" >
-        <%= tlabel("dot_key_code", "translation_editor") %> </label>
+      <li class="string optional" id="dot_key_code_translation_editor_dot_key_code_input"><label for="criteriondot_key_code" class="criteria-label" >
+        <%= tlabel("dot_key_code", "dot_key_code_translation_editor") %> </label>
            <%=select_tag(  :operator_dot_key_code, options_for_select(operators_2_options(equal_operator), params[:operator_dot_key_code]),{:include_blank=> true,:class=>'criteria-operators-select', :readonly=>true} ) %> 
            <!-- The date pikcer here cannot reset itself: once a user chooses a date then the only way of having it not considered it to set it to, say 2000-01-01 and criterion to after
              Not pretty but whoever makes datepicker doesn't want a reset function as part of it http://jsbin.com/ofare/edit#javascript,html may be a work around -->
@@ -53,8 +53,8 @@
       <%end #if  attribute in searchable %> 
      
       <%if TranslationEditor.searchable_attr.include?("editor") %>  
-      <li class="string optional" id="translation_editor_editor_input"><label for="criterioneditor" class="criteria-label" >
-        <%= tlabel("editor", "translation_editor") %> </label>
+      <li class="string optional" id="dot_key_code_translation_editor_editor_input"><label for="criterioneditor" class="criteria-label" >
+        <%= tlabel("editor", "dot_key_code_translation_editor") %> </label>
            <%=select_tag(  :operator_editor, options_for_select(operators_2_options(equal_operator), params[:operator_editor]),{:include_blank=> true,:class=>'criteria-operators-select', :readonly=>true} ) %> 
            <!-- The date pikcer here cannot reset itself: once a user chooses a date then the only way of having it not considered it to set it to, say 2000-01-01 and criterion to after
              Not pretty but whoever makes datepicker doesn't want a reset function as part of it http://jsbin.com/ofare/edit#javascript,html may be a work around -->
@@ -63,8 +63,8 @@
       <%end #if  attribute in searchable %> 
      
       <%if TranslationEditor.searchable_attr.include?("lambda") %>  
-      <li class="string optional" id="translation_editor_lambda_input"><label for="criterionlambda" class="criteria-label" >
-        <%= tlabel("lambda", "translation_editor") %> </label>
+      <li class="string optional" id="dot_key_code_translation_editor_lambda_input"><label for="criterionlambda" class="criteria-label" >
+        <%= tlabel("lambda", "dot_key_code_translation_editor") %> </label>
            <%=select_tag(  :operator_lambda, options_for_select(operators_2_options(equal_operator), params[:operator_lambda]),{:include_blank=> true,:class=>'criteria-operators-select', :readonly=>true} ) %> 
            <!-- The date pikcer here cannot reset itself: once a user chooses a date then the only way of having it not considered it to set it to, say 2000-01-01 and criterion to after
              Not pretty but whoever makes datepicker doesn't want a reset function as part of it http://jsbin.com/ofare/edit#javascript,html may be a work around -->
@@ -81,7 +81,7 @@
 </div>
 <%end # if searchable_attr %>
 
-<% if @translation_editors.count == 0 then %>
+<% if @dot_key_code_translation_editors.count == 0 then %>
   
 <%  else %>
     <%= twill_paginate %>
@@ -95,13 +95,13 @@
   <table class="data">
     <tr class="dataheader">
     
-      <th class ="dataheader"><%=sortable("dot_key_code","translation_editor", sortable_cols.include?("dot_key_code"))%></th> 
+      <th class ="dataheader"><%=sortable("dot_key_code","dot_key_code_translation_editor", sortable_cols.include?("dot_key_code"))%></th> 
   
     
-      <th class ="dataheader"><%=sortable("editor","translation_editor", sortable_cols.include?("editor"))%></th> 
+      <th class ="dataheader"><%=sortable("editor","dot_key_code_translation_editor", sortable_cols.include?("editor"))%></th> 
   
     
-      <th class ="dataheader"><%=sortable("lambda","translation_editor", sortable_cols.include?("lambda"))%></th> 
+      <!--th class ="dataheader">< %=sortable("lambda","dot_key_code_translation_editor", sortable_cols.include?("lambda"))%></th --> 
   
         <%= link_header 2 %>
       
@@ -110,17 +110,17 @@
     
   <% cell_class = "data" %>
   <% link_cell_class="link"%>  
-  <% @translation_editors.each do |translation_editor| %>
+  <% @dot_key_code_translation_editors.each do |translation_editor| %>
   
     <tr class = "<%= cycle('dataeven', 'dataodd') %>" >
             <td class="<%= cell_class %>"><%= translation_editor.dot_key_code %></td>
   
             <td class="<%= cell_class %>"><%= translation_editor.editor %></td>
+             <td class="<%= cell_class %>"><%= link_show(translation_editor, "dot_key_code_translator_editor") %> </td>
+            <!--td class="<%= cell_class %>">< %= translation_editor.lambda %></td -->
   
-            <td class="<%= cell_class %>"><%= translation_editor.lambda %></td>
-  
-          <%= link_edit( edit_translation_editor_path(translation_editor), :translation_editors  ) %>
-      <%= link_destroy( translation_editor, :translation_editors ) %>
+          <!--%= link_edit( edit_dot_key_code_translation_editor_path(translation_editor), :translation_editors  ) %-->
+      <!--%= link_destroy( translation_editor, "dot_key_code_translation_editor" ) % -->
       
     </tr>
   <% end #do data %>
@@ -129,4 +129,4 @@
 
 <br />
 <%end # if else count %>
-<%=link_new( new_translation_editor_path, :translation_editor)  %>
+<!--%=link_new( new_dot_key_code_translation_editor_path, :dot_key_code_translation_editor)  % -->

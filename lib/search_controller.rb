@@ -1,4 +1,5 @@
 module SearchController 
+  
   # sort_list is used by screens that show sorting by clicking on column headers. Generic
   # called sort_list but actually only 1 sort attr is possible. The list is the attr plus direction (ie 2 values in the hash)
   def sort_list  sortable_attr
@@ -17,23 +18,32 @@ module SearchController
   # operator_list produces a list of operators in an hash that match the criteria and can be used by squeel
   # searchable_attr are a list of attribtes of the primary model which are searchable. usually accessed from the model like accessible_attr
   def operator_list searchable_attr = {}, criteria_symbols ={}
-    #debugger
+    #binding.pry
     operators = {}
     searchable_attr.each{|attr|
+      operator_key = attr_2_operator_sym(attr)
       if criteria_symbols.include?(attr) then
-        operator_key = attr_2_operator_sym(attr)
+        
         if params[operator_key] then
-          if ! params[operator_key].blank?
+          if not params[operator_key].blank?
             operators[attr]=params[operator_key]
           else
            # should raise an exception 
            operators[attr]='matches'
-          end 
+          end # not params
         else
           # should raise an exception
           operators[attr]='matches'  
-        end  
-      end     
+        end  # not params
+      else
+        #binding.pry
+        # These criteria are missed in the run through the criteria, so we here add the operator and attr even though there is only an operator
+        if operators_that_dont_need_criterion.include?(params[operator_key]) then
+          operators[attr] = params[operator_key]
+          criterion_key = attr_2_criterion_sym(attr)
+          criteria_symbols[attr] = criterion_key
+        end # operator does not need criterion
+      end  # include?    
     }
     return operators
   end
@@ -42,22 +52,26 @@ module SearchController
   # Note that dates will only be processed properly if attr ends with '_date' or _at
   # @param searchable_attr are a hash of attribtes of the primary model which are searchable. usually accessed from the model like accessible_attr
   # @param formats is a hash of formats(primarily dates strftime )  , keyed by criterion where a date is in a format other than default  
-  def criterion_list searchable_attr = {}, formats ={}
+  def criterion_list searchable_attr = {}, formats ={}, 
     
     #binding.pry
     criteria = {}
     searchable_attr.each{|attr|
       criterion_key = attr_2_criterion_sym(attr)
+      #operator_key = attr_2_operator(attr)
       if params[criterion_key] then
-        if ! params[criterion_key].blank? then
+        if not params[criterion_key].blank? then
           if criterion_key.to_s.ends_with?('_date') || criterion_key.to_s.ends_with?('_at') then
             # This is  a bit shakey: duck programming at its "best" providing you know ath all date attributes must end with "_date"
             #criteria[attr] = DateTime.strptime(params[criterion_key], ((formats[criterion_key].nil?)?t($DF + "default") : t(formats[criterion_key])))
             criteria[attr] = DateTime.strptime(params[criterion_key], ((formats[criterion_key].nil?)?$DATE_TRANSFER_FORMAT : t(formats[criterion_key])))
           else
             criteria[attr] =params[criterion_key]
-          end  
-        end
+          end
+        #else
+          
+              
+        end # not blank
       end    
     }
     return criteria
@@ -97,6 +111,7 @@ module SearchController
     info[:criteria] = criteria
     info[:operators] = operators
     info[:sorting] = sorting
+    info[:messages] =[]
     return info
    end
 end

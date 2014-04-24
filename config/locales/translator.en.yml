@@ -16,10 +16,12 @@ en:
       delete: *ad
       new: New
       back: Back
+      show: Show
       create_model: Add %{model}
       save: Save %{model}
       update: Update %{model}
       new_model: Add %{model}
+      show_model: Show  %{model}
       submit: Submit
       show_something: Show %{something}
       hide_something: Hide %{something}
@@ -33,7 +35,7 @@ en:
       edit_permissions: Edit Permissions
       display: "Display"
       show_original: "Original"
-      back: "Back"
+      #back: "Back"
       remove: Remove
       publish: Publish 
       no_delete: Undeletable
@@ -147,9 +149,11 @@ en:
     translations: Translations
     translation_parameters: Translation Parameters
     developers: Developers
-    developers_new_translation: Developers Translation
+    developers_new_translations: Developers Translation
     #redis_admins: Redis Administration
     translations_uploads: Translation Uploads via Languages
+    special_partial_dot_keys: Special Keys
+    dot_key_code_translation_editors: Editors
   headings:
     application_subheading: Calm Translator M1
     write_to_database:
@@ -222,6 +226,12 @@ en:
       translations_upload:
         one: Translation Upload
         other: Translation Uploads
+      dot_key_code_translation_editor:
+        one: Editor
+        other: Editors
+      special_partial_dot_key:
+        one: Special Key
+        other: Special Keys
     attributes:
       calmapp:
         new_redis_dev_db: Add Redis Developers Database
@@ -230,10 +240,19 @@ en:
       translation_parameter:
         language_id: Language
         redis_database_id: Redis Database
+      dot_key_code_translation_editor:
+        editor: Editor
+        dot_key_code: Code
+      special_partial_dot_key:
+        cldr: Dot Key is Plural
+        sort: Type
+        partial_dot_key: Partial code with wildcard(s)  
       translation:
         dot_key_code: Key
         translation: Translation
         iso_code: Language
+        calmapp_version: App Version
+        cav_id: App Version
       calmapp_version:
         calmapp_id: Calm App
         version: Version
@@ -320,6 +339,8 @@ en:
     create_relationaldb_redis:
       success: "Sucessfully created translation for '%{code}' in both redis and relational database."
       warning: "Failed to create '%{code}'  in redis. "
+    base_locale_file_not_found:
+      warning: "The file '%{file_name}' does not exist in '%{folder}'. Someone will have to fill in about 160 more translations if you can't find this file. You can also copy and rename a file from a close locale. e.g. copy zh-CN.yml renaming to zh-MY.yml for Malaysian Chinese. You can also look for it at %{fuchs}."   
     are_you_sure:
         all_translations_also_deleted:
           warning: |

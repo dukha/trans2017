@@ -1,0 +1,19 @@
+calmapp_versions_translation_language: 
+after_create :base_locale_translations_for_new_translation_languages
+Adds the base translations for the language
+
+calmapp_version: 
+after_save :add_english
+Adds the Englsih language to the version if the user left it out. Englsh is required for all versions
+
+redis_instance 
+after_initialize :default values
+Adds the default port and default maximum databases to the instance
+
+translation 
+after_create :add_other_language_records_to_version, :if => Proc.new { |translation| translation.language.iso_code=='en'}
+When a new English translation is added, it adds nil translations for all other existing languages.
+
+translations_upload  
+after_create :write_file_to_db2
+After a yaml translation file is uploaded it writes the yaml translations to the db as dot.key.codes 

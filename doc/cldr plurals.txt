@@ -5,3 +5,31 @@ two (dual)
 few (paucal)
 many
 other (general plural form -- also used if the language only has a single form, or for fractions if they are different)
+
+
+east_slavic one few many other
+Belarusian, Bosnian, Croatian, Russian, Serbian, Serbo-Croatian, Ukrainian, Polish.
+
+one_other one other
+default
+
+one_upto_two_other one other
+French, Fulah, Kabyle
+
+one_two_other one two other
+Cornish, Inari Sami, Inuktitut, Lule Sami, Nama, Northern Sami,Sami Language, Skolt Sami, Southern Sami
+
+onewithzero_other  one other 
+Akan, Amharic, Bihari, Filipino, guw, Hindi, Lingala, Malagasy,Northen Sotho, Tachelhit, Tagalog, Tigrinya, Walloon 
+
+
+other other
+
+romanian one few other
+Romanian, Moldovian
+
+west_slavic one few other
+Czech, Slovak, Lithuanian, Slovenian
+
+all zero one two few many other
+Arabic

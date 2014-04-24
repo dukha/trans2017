@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140327045609) do
+ActiveRecord::Schema.define(version: 20140422234214) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -114,6 +114,16 @@ ActiveRecord::Schema.define(version: 20140327045609) do
     t.datetime "updated_at"
   end
 
+  create_table "special_partial_dot_keys", force: true do |t|
+    t.string   "partial_dot_key"
+    t.string   "sort"
+    t.boolean  "cldr"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "special_partial_dot_keys", ["partial_dot_key"], name: "index_special_partial_dot_keys_on_partial_dot_key", using: :btree
+
   create_table "translation_editor_params", force: true do |t|
     t.integer  "translation_editor_id"
     t.string   "param_name"
@@ -124,10 +134,11 @@ ActiveRecord::Schema.define(version: 20140327045609) do
   end
 
   create_table "translation_languages", force: true do |t|
-    t.string   "iso_code",   null: false
-    t.string   "name",       null: false
+    t.string   "iso_code",                         null: false
+    t.string   "name",                             null: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "cldr_type",  default: "one_other"
   end
 
   add_index "translation_languages", ["iso_code"], name: "iu_tlanguages_iso_code", unique: true, using: :btree

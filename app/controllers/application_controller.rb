@@ -6,6 +6,7 @@ class ApplicationController < ActionController::Base
 
   include SearchController
   include Exceptions
+  include SearchHelper
   #include SearchModel
   protect_from_forgery
 =begin  

@@ -1,0 +1,132 @@
+<script type="text/javascript">
+//This script  handles showing and hiding selection criteria
+  var criteriaDiv ="#criteria";
+  var criteriaButton = "#showHideCriteria";
+  $().ready(function(){
+    //Initialise the criteria to be hidden on first display
+    $(criteriaDiv).hide(); 
+    $(criteriaButton).html(criteriaHiddenText);
+    
+    if( <%= @special_partial_dot_keys.count==0 %>){
+      toggleCriteria();
+    }
+    
+    $(criteriaButton).click(function(){
+      toggleCriteria();
+    }); //end click
+  });//end ready
+  var   criteriaHiddenText = "<%=t($FA +'show_something', :something=>t($SC))%>";
+  var   criteriaVisibleText = "<%=t($FA +'hide_something', :something=>t($SC))%>";
+  function toggleCriteria(){
+    if($(criteriaDiv).is(':visible')){ 
+        $(criteriaButton).html(criteriaHiddenText);
+    }else{
+        $(criteriaButton).html(criteriaVisibleText);
+    }
+    // toggle has to be after setting button text otherwise is(':visible') will not work properly
+    $(criteriaDiv).slideToggle('slow');  
+  }
+  
+</script>
+<%=theading("listing", :model=>'special_partial_dot_key', :count=>11) %>
+<%if SpecialPartialDotKey.respond_to?( :searchable_attr ) and SpecialPartialDotKey.searchable_attr.any? then %>
+<button id="showHideCriteria" type='button'>x</button>
+<div id='criteria' class="criteria" >
+  <!-- Use form_tag here because we are not going to work with a new AR model. form_tag doesn't work with formtastic either -->
+  <!-- See controller#index doc for how to use this stuff below. 
+    YOU NEED TO ADD METHODS TO MODEL BEFORE THIS PAGE WILL WORK -->
+  <%= form_tag special_partial_dot_keys_path, :method => 'get', :class=>'formtastic' do %>
+    <!--    These next 2 hidden fields needed for sorting from column headers -->
+    <%= hidden_field_tag :direction, params[:direction] %>
+    <%= hidden_field_tag :sort, params[:sort] %>
+    <fieldset class="inputs">
+      <ol>
+     
+      <%if SpecialPartialDotKey.searchable_attr.include?("partial_dot_key") %>  
+      <li class="string optional" id="special_partial_dot_key_partial_dot_key_input"><label for="criterionpartial_dot_key" class="criteria-label" >
+        <%= tlabel("partial_dot_key", "special_partial_dot_key") %> </label>
+           <%=select_tag(  :operator_partial_dot_key, options_for_select(operators_2_options(equal_operator), params[:operator_partial_dot_key]),{:include_blank=> true,:class=>'criteria-operators-select', :readonly=>true} ) %> 
+           <!-- The date pikcer here cannot reset itself: once a user chooses a date then the only way of having it not considered it to set it to, say 2000-01-01 and criterion to after
+             Not pretty but whoever makes datepicker doesn't want a reset function as part of it http://jsbin.com/ofare/edit#javascript,html may be a work around -->
+           <%=text_field_tag( :criterion_partial_dot_key, params[:criterion_partial_dot_key])%>
+      </li> 
+      <%end #if  attribute in searchable %> 
+     
+      <%if SpecialPartialDotKey.searchable_attr.include?("sort") %>  
+      <li class="string optional" id="special_partial_dot_key_sort_input"><label for="criterionsort" class="criteria-label" >
+        <%= tlabel("sort", "special_partial_dot_key") %> </label>
+           <%=select_tag(  :operator_sort, options_for_select(operators_2_options(equal_operator), params[:operator_sort]),{:include_blank=> true,:class=>'criteria-operators-select', :readonly=>true} ) %> 
+           <!-- The date pikcer here cannot reset itself: once a user chooses a date then the only way of having it not considered it to set it to, say 2000-01-01 and criterion to after
+             Not pretty but whoever makes datepicker doesn't want a reset function as part of it http://jsbin.com/ofare/edit#javascript,html may be a work around -->
+           <%=text_field_tag( :criterion_sort, params[:criterion_sort])%>
+      </li> 
+      <%end #if  attribute in searchable %> 
+     
+      <%if SpecialPartialDotKey.searchable_attr.include?("cldr") %>  
+      <li class="string optional" id="special_partial_dot_key_cldr_input"><label for="criterioncldr" class="criteria-label" >
+        <%= tlabel("cldr", "special_partial_dot_key") %> </label>
+           <%=select_tag(  :operator_cldr, options_for_select(operators_2_options(equal_operator), params[:operator_cldr]),{:include_blank=> true,:class=>'criteria-operators-select', :readonly=>true} ) %> 
+           <!-- The date pikcer here cannot reset itself: once a user chooses a date then the only way of having it not considered it to set it to, say 2000-01-01 and criterion to after
+             Not pretty but whoever makes datepicker doesn't want a reset function as part of it http://jsbin.com/ofare/edit#javascript,html may be a work around -->
+           <%=text_field_tag( :criterion_cldr, params[:criterion_cldr])%>
+      </li> 
+      <%end #if  attribute in searchable %> 
+     
+     </ol> 
+   </fieldset>
+      
+      <%= submit_tag "Search", :name => nil %>
+  <%end  #end form_tag do%>
+
+</div>
+<%end # if searchable_attr %>
+
+<% if @special_partial_dot_keys.count == 0 then %>
+  
+<%  else %>
+    <%= twill_paginate %>
+
+    <% if SpecialPartialDotKey.respond_to? :sortable_attr
+      sortable_cols = SpecialPartialDotKey.sortable_attr
+    else
+      sortable_cols = []
+    end %>
+
+  <table class="data">
+    <tr class="dataheader">
+    
+      <th class ="dataheader"><%=sortable("partial_dot_key","special_partial_dot_key", sortable_cols.include?("partial_dot_key"))%></th> 
+  
+    
+      <th class ="dataheader"><%=sortable("sort","special_partial_dot_key", sortable_cols.include?("sort"))%></th> 
+  
+    
+      <th class ="dataheader"><%=sortable("cldr","special_partial_dot_key", sortable_cols.include?("cldr"))%></th> 
+  
+        <%= link_header 2 %>
+      
+    </tr>
+  
+    
+  <% cell_class = "data" %>
+  <% link_cell_class="link"%>  
+  <% @special_partial_dot_keys.each do |special_partial_dot_key| %>
+  
+    <tr class = "<%= cycle('dataeven', 'dataodd') %>" >
+            <td class="<%= cell_class %>"><%= special_partial_dot_key.partial_dot_key %></td>
+  
+            <td class="<%= cell_class %>"><%= special_partial_dot_key.sort %></td>
+  
+            <td class="<%= cell_class %>"><%= special_partial_dot_key.cldr %></td>
+  
+          <%= link_edit( edit_special_partial_dot_key_path(special_partial_dot_key), :special_partial_dot_keys  ) %>
+      <%= link_destroy( special_partial_dot_key, "special_partial_dot_key" ) %>
+      
+    </tr>
+  <% end #do data %>
+  </table>
+  <%= twill_paginate %>
+
+<br />
+<%end # if else count %>
+<%=link_new( new_special_partial_dot_key_path, :special_partial_dot_key)  %>

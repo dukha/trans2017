@@ -105,7 +105,7 @@ end
 
     if @<%= orm_instance.save %>
       tflash('create', :success, {:model=>@@model, :count=>1})  
-      redirect_to @<%= singular_table_name %>, notice: <%= "'#{human_name} was successfully created.'" %>
+      redirect_to @<%= plural_table_name %>, notice: <%= "'#{human_name} was successfully created.'" %>
     else
       render action: 'new'
     end
@@ -115,7 +115,7 @@ end
   def update
     if @<%= orm_instance.update("#{singular_table_name}_params") %>
        tflash('update', :success, {:model=>@@model, :count=>1})
-      redirect_to @<%= singular_table_name %>, notice: <%= "'#{human_name} was successfully updated.'" %>
+      redirect_to @<%= plural_table_name %>, notice: <%= "'#{human_name} was successfully updated.'" %>
     else
       render action: 'edit'
     end

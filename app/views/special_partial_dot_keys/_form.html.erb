@@ -1,0 +1,14 @@
+<%= semantic_form_for(@special_partial_dot_key) do |f| %>
+	<%= f.inputs do %>
+				   <%= f.input :partial_dot_key  %>   
+				   <%= f.input :sort  %>   
+				   <%= f.input :cldr  %>   
+		
+	<% end %>	
+
+        <%= f.actions do %>
+          <%= f.action(:submit) %>
+
+        <% end %>
+<% end %>
+

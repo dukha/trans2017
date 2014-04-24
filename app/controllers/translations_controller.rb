@@ -37,7 +37,7 @@ class TranslationsController < ApplicationController
   end
 
   def index
-    
+    @translations = []
     #@translation_redises = TranslationRedis.find(@redis_connection, @language_id).paginate(:page => params[:page], :per_page=>25)  #Translation.all
     # We now do all our primary io via activerecord/postgres and only publish to redis....
    
@@ -46,27 +46,42 @@ class TranslationsController < ApplicationController
     # Thus use to use will_paginate we eagerly load, giving an array by using .all 
     # The array will still paginate provided we have will_paginate/array
     # messy but it works!! 
-    
-=begin
-    sorting=sort_list(sortable_attr)
-    searchable_attr = Translation.searchable_attr
-    criteria=criterion_list(searchable_attr)
-  
-    operators=operator_list(searchable_attr, criteria)
-  
-    sortable_attr=Translation.sortable_attr
-    sorting=sort_list(sortable_attr)
-=end
-    #binding.pry
     require 'will_paginate/array'
-    search()
+    #binding.pry
+    #if params["criterion_iso_code"].nil? or params["criterion_cav_id"].nil? then 
+      
+      #
+    #else
+      search_info = prepare_search()
+      if Translation.valid_criteria?(search_info) then
+        @translations = Translation.search(current_user, search_info)
+        #binding.pry
+      else  
+        msg = 'Criteria: '
+        flash_now= false
+        #binding.pry
+        search_info[:messages].each do |m|
+          m.keys.each{ |k,v| 
+            #binding.pry
+            flash_now = true
+            msg.concat( "#{m[k] + '. '}") 
+          }
+        end
+        flash.now[:error] = msg if flash_now
+        #flash.now[:error] = ("Search criteria for both language and application version must be given. Given version = " + (params["criterion_cav_id"].nil?? "nil":["criterion_cav_id"].to_s)  + ". Given language = " + (params["criterion_ciso_code"].nil?? "nil":["criterion_iso_code"].to_s))
+        # in this case we make an ActivRecord Relation with 0 records so that we can redisplay
+        @translations =  Translation.where{id == -1}
+      #end
+      #binding.pry
+      end
+   
     #binding.pry
     @translations =@translations.paginate(:page => params[:page], :per_page => 30)
     # Fix this when we get devise
    # current_user = UserWork.current_user_id
     # We need current_user for auth
     #@translations = Translation.search(current_user, criteria, operators, sorting).paginate(:page => params[:page], :per_page=>25)
-     
+    
     #puts "@translations: " + @translations.first.dot_key_code
     respond_to do |format|
       format.html # index.html.erb
@@ -172,40 +187,51 @@ class TranslationsController < ApplicationController
 
   def destroy
   end
-  
-  def search
-    #binding.pry
-    # We need to make a preliminary ar relation so that we can do the join. The selects are important so that we can get the region (for translation) 
-    activerecord_relation = Translation.all #, @language)
-    #
+  def prepare_search
+    #if Translation.valid_criteria? then
     if Translation.respond_to? :searchable_attr  
       searchable_attr = Translation.searchable_attr 
     else 
       searchable_attr = [] 
-    end
-
-    criteria=criterion_list(searchable_attr)
-    operators=operator_list( searchable_attr, criteria)
-
+    end # respond_to
+   #end # valid
     if Translation.respond_to? :sortable_attr  
       sortable_attr = Translation.sortable_attr     
     else   
       sortable_attr = []   
     end
+     return search_info = init_search(current_user, searchable_attr, sortable_attr)
     
-    # because registrars is a many to many aqssociation with course, we have to do this part of the search customized
-=begin
-    if ! params[:registrars_criterion].blank?
-      registrars_array= Array.new(1,params[:registrars_criterion])
-      activerecord_relation = activerecord_relation.joins{courses_user}.joins{registrars}.where{registrars.id >> my{registrars_array} }.uniq
+  end
+=begin  
+  def search
+    #binding.pry
+    # We need to make a preliminary ar relation so that we can do the join. The selects are important so that we can get the region (for translation) 
+    #activerecord_relation = Translation.all #, @language)
+    #
+    
+    if Translation.respond_to? :searchable_attr  
+      searchable_attr = Translation.searchable_attr 
+    else 
+      searchable_attr = Translation.sortable_attr 
     end
-=end
+
+    criteria=criterion_list(searchable_attr)
+    operators=operator_list( searchable_attr, criteria)
+
+    
     # Uses params to prepare the criteria and operators for the search  
     search_info = init_search(current_user, searchable_attr, sortable_attr)
-    
+    binding.pry
+    activerecord_relation = Translation.single_lang_translations(search_info[:criteria].delete("iso_code"), search_info[:criteria].delete("cav_id"))
+    search_info[:operators].delete("iso_code")
+    search_info[:operators].delete("cav_id")
+     #binding.pry
     # Does the search
     @translations = Translation.search(current_user, search_info, activerecord_relation)
+    #binding.pry
   end
+=end
   protected
     # This method called when the DB uniqueness constraint is violated
     def record_not_unique exception

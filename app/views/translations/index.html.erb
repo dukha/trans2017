@@ -45,27 +45,41 @@
 <div id='criteria' class="criteria" >
   <!-- Use form_tag here because we are not going to work with a model. form_tag doesn't work with formtastic either -->
   <%= form_tag translations_path, :method => 'get', :class=>'formtastic' do %>
+  <!--%= semantic_form_for translations_path, :method => 'get' do |f| % -->
+    <!--%=f.inputs do%-->
     <%= hidden_field_tag :direction, params[:direction] %>
     <%= hidden_field_tag :sort, params[:sort] %>
     
-    <fieldset class="inputs"><ol>
-    <li class="string optional" id="translation_language_id_input"><label for="criterion_language_id", class="criteria-label" ><%=tlabel("iso_code", "translation")%></label>
-         <%=select_tag(  :operator_iso_code, options_for_select(operators_2_options(equal_operator), params[:operator_iso_code]),{:include_blank=> false,:class=>'criteria-operators-select', :readonly=>true} )%> 
-         <!-- < %=text_field_tag( :criterion_language_id, params[:criterion_language_id])%> -->
-         <%=select_tag( :criterion_iso_code, options_from_collection_for_select(Language.all, "iso_code","name", params[:criterion_iso_code]), {:include_blank=> false})%>  
-    </li>  
-     <li class="string optional" id="translation_dot_key_code_input"><label for="criterion_dot_key_code", class="criteria-label" ><%=tlabel("dot_key_code", "translation")%></label>
-         <%=select_tag(  :operator_dot_key_code, options_for_select(operators_2_options(Translation.search_dot_key_code_operators), params[:operator_dot_key_code]),{:include_blank=> true,:class=>'criteria-operators-select', :readonly=>true} )%> 
-         
-         <%=text_field_tag( :criterion_dot_key_code, params[:criterion_dot_key_code])%>   
-    </li> 
-     <li class="string optional" id="translation_translation_input"><label for="criterion_translation", class="criteria-label" ><%=tlabel("translation", "translation")%></label>
-         <%=select_tag(  :operator_translation, options_for_select(operators_2_options(Translation.search_translation_operators), params[:operator_translation]),{:include_blank=> true,:class=>'criteria-operators-select', :readonly=>true} )%> 
-         <%=text_field_tag( :criterion_translation, params[:criterion_translation])%>   
-    </li>
+    <fieldset class="inputs">
+      <ol>
+      <li class="string optional" id="translation_language_id_input"><label for="criterion_language_id", class="criteria-label" ><%=tlabel("iso_code", "translation")%></label>
+           <%=select_tag(  :operator_iso_code, options_for_select(operators_2_options(equal_operator), params[:operator_iso_code]),{:include_blank=> false,:class=>'criteria-operators-select', :readonly=>true} )%> 
+           <!-- < %=text_field_tag( :criterion_language_id, params[:criterion_language_id])%> -->
+           <%=select_tag( :criterion_iso_code, options_from_collection_for_select(TranslationLanguage.translators_language_select(current_user), "iso_code","name", params[:criterion_iso_code]), {:include_blank=> true})%>
+           <!--%=select_tag( :criterion_iso_code, options_from_collection_for_select(TranslationLanguage.all, "iso_code","name", params[:criterion_iso_code]), {:include_blank=> false})% -->
+           <!--%binding.pry%-->
+           <!--%=f.semantic_errors :translations_upload_id %--> 
+      </li>  
+      <li class="string optional" id="translation_language_id_input"><label for="criterion_language_id", class="criteria-label" ><%=tlabel("calmapp_version", "translation")%></label>
+           <%=select_tag(  :operator_cav_id, options_for_select(operators_2_options(equal_operator), params[:operator_cav_id]),{:include_blank=> false,:class=>'criteria-operators-select', :readonly=>true} )%> 
+           <!-- < %=text_field_tag( :criterion_language_id, params[:criterion_language_id])%> -->
+           <%=select_tag( :criterion_cav_id, options_from_collection_for_select(CalmappVersion.all, "id","name", params[:criterion_cav_id]), {:include_blank=> true})%>
+           <!--%=f.semantic_errors :criterion_cav_id % -->  
+      </li>
+      
+       <li class="string optional" id="translation_dot_key_code_input"><label for="criterion_dot_key_code", class="criteria-label" ><%=tlabel("dot_key_code", "translation")%></label>
+           <%=select_tag(  :operator_dot_key_code, options_for_select(operators_2_options(Translation.search_dot_key_code_operators), params[:operator_dot_key_code]),{:include_blank=> true,:class=>'criteria-operators-select', :readonly=>true} )%> 
+           
+           <%=text_field_tag( :criterion_dot_key_code, params[:criterion_dot_key_code])%>   
+      </li> 
+       <li class="string optional" id="translation_translation_input"><label for="criterion_translation", class="criteria-label" ><%=tlabel("translation", "translation")%></label>
+           <%=select_tag(  :operator_translation, options_for_select(operators_2_options(Translation.search_translation_operators), params[:operator_translation]),{:include_blank=> true,:class=>'criteria-operators-select', :readonly=>true} )%> 
+           <%=text_field_tag( :criterion_translation, params[:criterion_translation])%>   
+      </li>
     
      </ol> 
-   </fieldset>  
+   </fieldset>
+   <!--%end%-->  
       <%= submit_tag "Search", :name => nil %>
     
   <%end%>

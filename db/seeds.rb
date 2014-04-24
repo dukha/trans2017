@@ -17,7 +17,9 @@ WhiteboardType.delete_all
 Location.delete_all
 Profile.delete_all    
 Permission.delete_all
-
+SpecialPartialDotKey.delete_all
+DotKeyCodeTranslationEditor.delete_all
+TranslationEditorParam.delete_all
 
 systemWBType = WhiteboardType.create(:name_english=>"system", :translation_code=>"system")
 regionalWBType =WhiteboardType.create(:name_english=>"regional admin", :translation_code=>"regionaladmin")
@@ -73,7 +75,7 @@ User.create_root_user
 vipassana =  Area.create :name => "Vipassana" , :parent_id => Location.find_by_name(Location.localhost_name).id
 translation_organisation = Organisation.create :name=>"translation_organisation", :parent_id => vipassana.id
  #, :parent_id=>translation_organisation.id)
-  
+SpecialPartialDotKey.seed  
 DotKeyCodeTranslationEditor.seed
 #TranslationLanguage.create!(:iso_code=> "en_US", :name=>"American English")
 #TranslationLanguage.create!(:iso_code=> "zh", :name=>"Mandarin")

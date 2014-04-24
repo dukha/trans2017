@@ -1,7 +1,7 @@
-<%= semantic_form_for(@translation_editor) do |f| %>
+<%= semantic_form_for(@dot_key_code_translation_editor) do |f| %>
 	<%= f.inputs do %>
-				   <%= f.input :dot_key_code  %>   
-				   <%= f.input :editor  %>   
+				   <%= f.input :dot_key_code,  :input_html => {:size => '50', :readonly=> 'readonly'}%>   
+				   <%= f.input :editor, :input_html => { :readonly=> 'readonly'}  %>   
 				    
 		
 	<% end %>	

@@ -1,0 +1,21 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b><%= tlabel('partial_dot_key', 'special_partial_dot_key') %>:</b>
+  <%= @special_partial_dot_key.partial_dot_key %>
+</p>
+
+<p>
+  <b><%= tlabel('sort', 'special_partial_dot_key') %>:</b>
+  <%= @special_partial_dot_key.sort %>
+</p>
+
+<p>
+  <b><%= tlabel('cldr', 'special_partial_dot_key') %>:</b>
+  <%= @special_partial_dot_key.cldr %>
+</p>
+
+
+<%=link_edit('edit', edit_special_partial_dot_key_path(@special_partial_dot_key)) %> |
+<%= link_back(special_partial_dot_keys_path) %>
+

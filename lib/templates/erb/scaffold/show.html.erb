@@ -2,7 +2,7 @@
 
 <% for attribute in attributes -%>
 <p>
-  <b><%%= tlabel('<%=attribute.name%>') %>:</b>
+  <b><%%= tlabel('<%=attribute.name%>', '<%singular_table_name %>') %>:</b>
   <%%= @<%= singular_table_name %>.<%= attribute.name %> %>
 </p>
 

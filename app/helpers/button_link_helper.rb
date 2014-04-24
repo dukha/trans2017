@@ -98,7 +98,20 @@ module ButtonLinkHelper
     end
   end
 
-
+  def link_show(url, resource, options= {})
+     html = " "
+    if options[:model].nil? then
+      options[:model]= singular_table_name_from(resource)
+    end
+    if options[:count].nil? then
+      options[:count]=1
+    end
+    if permitted_to? :create, table_symbol_from(resource) then
+      html =  tlink_to( "show", url, options )
+    end
+    html.html_safe
+  end
+  
   def link_new url, resource, options={}
     html = " "
     #debugger

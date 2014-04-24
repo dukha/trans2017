@@ -16,6 +16,14 @@ class TranslationsUpload < ActiveRecord::Base
   validates :description,  :presence=>true
   validate :upload_matches_translation_language_validation
   after_create :write_file_to_db2
+  
+  def self.base_locales_folder
+    File.join(Rails.root, "base_locales")
+  end 
+  
+  def self.uploaded_to_folder
+    return "public/"
+  end   
 =begin
  Takes a yaml translation file, parses it, writes it as a tree and then converts the tree to a dot_key format
  @return a hash in dot_key => string_data format, suitable for writing to the db  
@@ -32,7 +40,7 @@ class TranslationsUpload < ActiveRecord::Base
       duplicates_behavior2 = Translation.Overwrite[:continue_unless_blank]
     end     
     begin       
-    data  = YAML.load_file("public/" + yaml_upload.url)
+    data  = YAML.load_file(TranslationsUpload.uploaded_to_folder + yaml_upload.url)
     key_value_pairs = TranslationsUpload.traverse_ruby(data)
     #binding.pry
     rescue Psych::SyntaxError => pse
@@ -374,6 +382,19 @@ class TranslationsUpload < ActiveRecord::Base
     end
   end
 =end
+
+=begin
+ Adds Czech to Calmapp version. (Works via callbacks in calmapp_version) 
+=end
+  def self.demo
+    #TranslationsUpload.transaction do
+      version = CalmappVersion.joins{calmapp}.where{calmapp.name =~ 'calm%'}.first     
+      cs = TranslationLanguage.where{iso_code == 'cs'}.first
+      version.translation_languages << cs
+      #cavtl = CalmappVersionsTranslationLanguage.create!(:calmapp_version_id => version.id, :translation_language_id => cs.id )
+      #tu = TranslationsUpload.create!(:yaml_upload=> "cs.yml", :cavs_translation_language_id => cavtl.id, :description=>"demo",:written_to_db=>true )
+    #end
+  end
 =begin
   formats an integer to have at least 3 digits 
 =end  

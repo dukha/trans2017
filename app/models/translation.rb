@@ -4,13 +4,15 @@ class Translation < ActiveRecord::Base
   
   belongs_to :calmapp_versions_translation_language, :foreign_key => "cavs_translation_language_id"
   belongs_to :translations_upload
+  
+  after_create :add_other_language_records_to_version, :if => Proc.new { |translation| translation.language.iso_code=='en'}
   #validates :translation, :presence=>true
   validates :dot_key_code, :uniqueness=>{:scope=> :cavs_translation_language_id},  :presence=>true 
   validates :calmapp_versions_translation_language, :presence => true
   # for developers  we want to be able to process up to 3 translations from 1 form: thus extra virtual attributes
   # to be saved as separate translations
   #attr_accessor  :english, :dot_key_code0, :translation0, :translation_message0, :dot_key_code1, :translation1, :translation_message1, :dot_key_code2, :translation2,  :translation_message2#, :developer_params
-  attr_accessor  :english 
+  attr_accessor  :english, :criterion_iso_code, :criterion_cav_id 
 =begin
   @param cavtl_alias_identifier a number(or string) to help uniquely identify the sql alias for calmapp_versions_translation_languages. Use this for complex self joins etc
   @return AR Relation with a join between translations and  calmapp_versions_translation_languages
@@ -39,6 +41,13 @@ class Translation < ActiveRecord::Base
     joins("left join dot_key_code_translation_editors dkcte on dkcte.dot_key_code = translations.dot_key_code")
   }
   
+=begin
+ This selects an indication that the key has plurals that have to be dealt with according to the language 
+=end  
+  scope :joins_cldr, -> {
+    #left join  special_partial_dot_keys as special on translations.dot_key_code  ilike  special.partial_dot_key  and special.cldr ='t'
+    joins("left join special_partial_dot_keys as special on translations.dot_key_code  ilike  special.partial_dot_key  and special.cldr ='t'")
+  }
 =begin
  @ return the select list for the basic selection on translations, including translation_language.iso_code and dot_key_code_translation_editors.editor 
 =end  
@@ -79,9 +88,10 @@ class Translation < ActiveRecord::Base
     joins_to_tl(2, 2, " and tl2.iso_code='en'").
     #joins("inner join translation_languages tl2 on cavtl2.translation_language_id = tl2.id and tl2.iso_code='en'").
     joins_editor.
+    joins_cldr.
     basic_select.
     select("english.translation as en_translation, english.updated_at as en_updated_at, translations.translation as translation, 
-          translations.updated_at as updated_at ").
+          translations.updated_at as updated_at, special.cldr as cldr").
     where( "cavtl1.calmapp_version_id = ?",calmapp_version_id).
     where("tl1.iso_code = ?", language).
     order("translations.dot_key_code asc")
@@ -142,7 +152,9 @@ class Translation < ActiveRecord::Base
              where( "cavtl1.calmapp_version_id = ?", calmapp_version_id))
          }
   }
-
+  scope :only_cldr_plurals, -> {
+    where("cldr = ?", true)
+  }
 
 =begin
    cldr plurals (used for models and other things in translation files (different in different files))
@@ -153,7 +165,6 @@ class Translation < ActiveRecord::Base
   many
   other (general plural form -- also used if the language only has a single form, or for fractions if they are different)
 =end
-
   def self.CLDR_plurals
     return %w(zero one two few many other)
   end
@@ -166,6 +177,28 @@ class Translation < ActiveRecord::Base
   end
   def full_dot_key_code
     return language + "." + dot_key_code
+  end
+  
+  def language
+    return calmapp_versions_translation_language.translation_language
+  end 
+  
+  def calmapp_version
+    return calmapp_versions_translation_language.calmapp_version_tl
+  end
+  
+  def add_other_language_records_to_version
+     calmapp_version.translation_languages.each do |tl|
+     #calmapp_versions_translation_language.each do |cavtl|
+       if not tl.iso_code == 'en' then
+         cavtl=  CalmappVersionsTranslationLanguage.where{calmapp_version_id  == my{calmapp_version.id}}.where{translation_language_id == my{tl.id}}.first
+         #cavtl = CalmappVersionsTranslationLanguage.new(:calmapp_version_id=>calmapp_version.id, :translation_language=> tl.id)
+         #cavtl.save!
+         t = Translation.new(:dot_key_code => dot_key_code, :cavs_translation_language_id => cavtl.id)
+         t.save!
+       end  
+     end
+    
   end
 =begin
   def english_translation 
@@ -201,11 +234,11 @@ class Translation < ActiveRecord::Base
   end
 =end
   def self.searchable_attr
-    %w(iso_code dot_key_code translation)
+    %w(iso_code dot_key_code cav_id translation)
   end
   
   def self.sortable_attr
-    %w(dot_key_code translation)
+    %w(dot_key_code translation translation)
   end
   def self.search_dot_key_code_operators
      %w(ends_with matches does_not_match equals )
@@ -213,26 +246,35 @@ class Translation < ActiveRecord::Base
   def self.search_translation_operators
     %w(begins_with ends_with matches  does_not_match equals is_null is_not_null)
   end
-  # need a model as param
+  def self.valid_criteria? search_info
+    #"Search criteria for both language and application version must be given. Given version = " + (params["criterion_cav_id"].nil?? "nil":["criterion_cav_id"].to_s)  + ". Given language = " + (params["criterion_iso_code"].nil?? "nil":["criterion_iso_code"].to_s))
+    if search_info[:criteria]["iso_code"].nil? then
+      message = message = I18n.t($ARA + "translation.iso_code") + " " + I18n.t($EM + "blank", "iso_code" )
+      search_info[:messages]=[] if search_info[:messages].nil?
+      search_info[:messages] << {"iso_code" => message}
+    end
+    if search_info[:criteria]["cav_id"].nil? then
+      message = I18n.t($ARA + "translation.cav_id") + " " + I18n.t($EM + "blank", "cav_id" )
+      search_info[:messages]=[] if search_info[:messages].nil?
+      search_info[:messages] << {"criterion_cav_id" => message}
+    end
+    #binding.pry
+    return search_info[:messages].empty?
+  end
+  
+  # not working @todo
+  def cldr?
+    return SpecialPartialDotKey.where{my{dot_key_code} =~ partial_dot_key }.cldr
+  end
   # overrides search() in search_model.rb
   def self.search(current_user, search_info={}, ar_relation = nil)
     criteria = search_info[:criteria]
     operators = search_info[:operators]
-    sorting= search_info[:sorting]
-    translations= all
-    #puts translations.class.name
-    #debugger
-    #@val=nil
-    if ! criteria['iso_code'].nil? then
-      #operators["dot_key_code"] = 'begins_with'
-      #criteria["dot_key_code"] = criteria['iso_code'] + '.'
-      # We have to do it like this as language is a separate selection criterion which uses dot_key_code
-      # This ways we can select again on dot_key_code to narrow the selection further 
-      
-      translations= translations.where{ dot_key_code  =~ criteria['iso_code'] + '.%' }
-      operators.delete('iso_code')
-      criteria.delete('iso_code')
-    end
+    sorting = search_info[:sorting]
+    translations = single_lang_translations(criteria.delete("iso_code"), criteria.delete("cav_id"))
+    operators.delete("iso_code")
+    operators..delete("cav_id")
+ 
     # We need to do this for dot key code otherwise it will split on '.'
     # in and not_in are a bit shakey. They come to the controller as lists as a string. So we try to split
     # using space, or comma
@@ -244,19 +286,26 @@ class Translation < ActiveRecord::Base
           if array.size == 1 then
             array = criteria['dot_key_code'].split(",")
             criteria['dot_key_code']= array
-          end 
+          end # size
         else
           criteria['dot_key_code']= array  
-        end
+        end # size
       end
-    end
+    end # dot_key_code
 
     #binding.pry
     translations = build_lazy_loader(translations, criteria, operators)
     #puts translations.class.name
     return translations
   end
-  
+=begin
+ After a yaml translation file is uploaded this method writes the translation to the db
+ @param hash. A hash containing the contents of the file keyed by dot_key_code
+ @param translation_upload_id the upload from where the hash came
+ @param the versiona dn language of the file contents
+ @param overwrite any of self.Overwrite
+ @return the written translation
+=end  
   def self.translations_to_db_from_file hash, translation_upload_id, calmapp_versions_translation_language, overwrite
     keys =  hash.keys
     
