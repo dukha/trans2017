@@ -2,7 +2,7 @@ class CreateTranslations < ActiveRecord::Migration
   def up
     create_table :translations do |t|
       t.string :dot_key_code, :null=> false 
-      t.text :translation,    :null=> false
+      t.text :translation#,    :null=> false
       t.references :calmapp_version, :null=> false
       # origin is the name of the file if it was bulk loaded from a yaml file
       #t.string :origin

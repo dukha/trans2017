@@ -1,4 +1,6 @@
-source 'http://rubygems.org'
+gem 'sass-rails', '~>4.0.0' #:git=> "git://github.com/rails/sass-rails"#, " ~> 3.2.5"
+  #gem 'coffee-rails', '~>4.0.0'#, "~> 3.2.1"
+  gem 'uglifier','~>2.2.1'
  
 gem 'rails', '~>4.0.0'#'~>3.2.8'
 
@@ -29,7 +31,6 @@ gem 'will_paginate','~>3.0.4'
 
 # rails 4 use this gem until you have implemented strong params
 gem 'protected_attributes'
-
 
 # using jquery for ajax, not prototype > rails g jquery:install
 gem 'jquery-rails'#, '~>1.0.12' #, '0.2.7'

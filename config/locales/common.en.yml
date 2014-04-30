@@ -32,7 +32,7 @@ en:
         lt: less Than
         lte: less than or equals
         matches: contains
-        does_not_match: "doesn't' contain"
+        does_not_match: "doesn't contain"
         starts_with: starts with
         ends_with: ends with
         not_starts_with: "doesn't start with"
@@ -52,6 +52,7 @@ en:
         and: and
         or: or
         empty_string: is Empty Text
+        is_not_null: is Not Blank
     error:
       one: "%{count} error"
       other: "%{count} errors"

@@ -22,7 +22,7 @@ class TranslationsController < ApplicationController
     end
   end
   def update
-    #debugger
+    #binding.pry
     @translation = Translation.find params[:id]
 
   respond_to do |format|

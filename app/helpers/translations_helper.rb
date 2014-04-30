@@ -6,6 +6,7 @@ module TranslationsHelper
   These global constants are used as partial keys in yaml translation files
 =end
   $A="actions."
+  $AM ="activemodel."
   $AR="activerecord."
   $ARA=$AR + "attributes."
   $ARM= $AR + "models."

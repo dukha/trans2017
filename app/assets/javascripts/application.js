@@ -29,6 +29,10 @@
 //= require jquery.purr
 //= require best_in_place
 //= require popup
+// utility functions like _.escape()
+//= require underscore
+// not working
+//= jQuery.Autosize.Input.js
 // require redis_databases
 // require translations_uploads
 //= require_self

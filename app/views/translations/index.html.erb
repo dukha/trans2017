@@ -1,40 +1,5 @@
-<script type="text/javascript">
-//This script  handles showing and hiding selection criteria
-  $().ready(function(){
-    //Set the initila text of the button
-    $("#showHideCriteria").html(criteriaVisibleText);
-    if( <%= @translations.count==0 %>){
-      toggleCriteria();
-    }
-    
-    $("#showHideCriteria").click(function(){
-      //alert("Test");
-      
-      toggleCriteria();
-      
-    }); //end click
-  });//end ready
-  var   criteriaHiddenText = "<%=t($FA +'show_something', :something=>t($SC))%>";
-  var   criteriaVisibleText = "<%=t($FA +'hide_something', :something=>t($SC))%>";
-  function toggleCriteria(){
-    
-    if($("#criteria").is(':visible')){ 
-        $("#showHideCriteria").html(criteriaHiddenText);
-    }else{
-        $("#showHideCriteria").html(criteriaVisibleText);
-        console.log("show");
-    }
-    // toggle has to be after setting button text otherwise is(':visible') will not work properly
-    $("#criteria").slideToggle('slow');  
-  }
-  
-</script>
-<script type="text/javascript"> 
-//This script sets up inplace editing
-  $().ready(function(){
-    $('.best_in_place').best_in_place();
-  });
-</script>
+<%=image_tag( "treeview/plus.gif", :alt => "+", :height=>"15", :id => "maximise", :style=>"float:right")%>
+<%=image_tag( "treeview/minus.gif", :alt => "-", :height=>"15", :id => "minimise", :style=>"float:right")%>
 <%=theading("listing", :model=>"translation", :count=>10) %>
 
 <%full_key_display='none'%>
@@ -90,19 +55,20 @@
 < %  else %> -->
 
 <%= twill_paginate %>
-<table class="data">
+<table class="data" style="table-layout: fixed; width: 100%">
   <tr class="dataheader">
 
     
 
     <!--th class ="dataheader" style="display:< %=full_key_display%>;"> <%=tlabel('dot_key_code', 'translation') %></th-->
-    <th class ="dataheader" style="display:<%=wrapped_key_display%>;"><%=tlabel('dot_key_code', 'translation') %></th>
+    <th class ="dataheader" style="display:<%=wrapped_key_display%>;  width:20%;"><%=tlabel('dot_key_code', 'translation') %></th>
+    <th class ="dataheader" ><%=tlabel('en_translation', 'translation') %></th>
     <!--th class ="dataheader" style="display:<%=short_key_display%>;" ><%=tlabel('dot_key_code', 'translation') %></th -->
-
-    <th class ="dataheader"><%=tlabel('translation', 'translation') %></th>
-
-    <th class="linkheader"></th>
-    <th class="linkheader"></th>
+   
+    <th class ="dataheader"><%= (@translations.empty? ? '' : @translations[0].attributes["language"] + " ") + tlabel('translation', 'translation') %></th>
+     
+    <!--th class="linkheader"></th>
+    <th class="linkheader"></th-->
     
   </tr>
 
@@ -116,15 +82,19 @@
   <tr class = "<%= cycle('dataeven', 'dataodd') %>" >
   
       
-<!--%binding.pry% -->
-  
-      <td class="<%= cell_class%>" style="display:<%=wrapped_key_display%>;"><%= translation.dot_key_code %></td>
+ 
+      
+      <td class="<%= cell_class%>" style="word-wrap: break-word;" ><span style="max-width:20px;"><%= translation.dot_key_code %></span></td>
       <!--td class="< %= cell_class %>" style="display:< %=wrapped_key_display%>;">< %= dot_key_code_wrapped(translation.dot_key_code) %></td -->
       <!--td class="< %= cell_class %>" style="display:< %=short_key_display%>; ">< %= dot_key_code_last_key(translation.dot_key_code) %></td -->
 <!-- It seems like best_in_place needs to work with an instance variable so we need to make things a bit more complicated here below-->
-      <td><%= best_in_place translation, :translation, :path => translation_path(translation.id), :type=> :input, :ok_button=>"ok", :cancel_button=>"cancel", :nil=>"Click to edit"  %></td>
-      
-  
+      <td class="<%= cell_class%>" style="max-width:40%;" ><%= editor_date_time_select?(translation.attributes) ? english_date_format_example(translation.attributes) : translation.attributes["en_translation"] %></td>
+      <td style="max-width:40%;">
+        <%= best_in_place_if  best_in_place?(translation.attributes), translation, :translation, :path => translation_path(translation.id),
+             :type=> input_control(translation.attributes), :collection=> collection?(translation.attributes), 
+             :ok_button=>"Save", :ok_button_class=> "ok", :cancel_button=>"Cancel", :cancel_button_class => "cancel",
+             :nil=>"Click to edit", :html_attrs=> html_attrs(translation.attributes)  %>
+      </td>
     
   <!-- <td class="< %= link_cell_class %>">< %= tlink_to  'edit', edito_translation_path + '?dot_key_code_no_lang=' +dot_key_code_no_lang(translation.dot_key_code) %></td> -->
     <!-- <td class="< %= link_cell_class %>">< %= tlink_to 'destroy',  translation , :confirm => 'delete.are_you_sure', :model => "translation", :value=>('Index: '+ translation.dot_key), :method => :delete %></td> -->
@@ -133,4 +103,87 @@
 <% end %>
 </table>
 <%= twill_paginate %>
-<!-- < %end%> -->
+
+<script type="text/javascript">
+/*
+ * Script enlarges and restores editing index for translatiosn
+ */
+console.log("In script");
+  var maximiseSelector = 'img#maximise';
+  var minimiseSelector = 'img#minimise'; 
+  
+  var headerDiv ='div#appheader';
+  var appMenuSelector = 'td#appmenutd';
+  var appMainSelector ='#appmaintd';
+  var appMainContainerDivSelector = '#container';
+  $().ready(function(){
+    console.log("ready");
+    $(maximiseSelector).show();
+    $(minimiseSelector).hide();
+    
+  });  
+  $(maximiseSelector).click(function(){
+    toggleHeaderMenu();
+    toggleMaxMinImages();
+  });
+  
+  $(minimiseSelector).click(function(){
+    
+    toggleHeaderMenu();
+    toggleMaxMinImages();
+  });
+  var toggleHeaderMenu = function(){
+    $(headerDiv).toggle();
+    $(appMenuSelector).toggle();
+  }
+  var toggleMaxMinImages = function(){
+    $(maximiseSelector).toggle();
+    $(minimiseSelector).toggle();
+  }
+  var toggleContainerPadding =function(){
+    padding = $(appMainContainerDivSelector).css("padding");
+    if(padding == '0'){
+      $(appMainContainerDivSelector).css("padding", "20px 40px");
+    } else{
+      padding = '0';
+    }
+  }
+</script>
+
+<script type="text/javascript">
+//This script  handles showing and hiding selection criteria
+  $().ready(function(){
+    //Set the initial text of the button
+    $("#showHideCriteria").html(criteriaVisibleText);
+    if( <%= @translations.count==0 %>){
+      toggleCriteria();
+    }
+    
+    $("#showHideCriteria").click(function(){
+      //alert("Test");
+      
+      toggleCriteria();
+      
+    }); //end click
+  });//end ready
+  var   criteriaHiddenText = "<%=t($FA +'show_something', :something=>t($SC))%>";
+  var   criteriaVisibleText = "<%=t($FA +'hide_something', :something=>t($SC))%>";
+  function toggleCriteria(){
+    
+    if($("#criteria").is(':visible')){ 
+        $("#showHideCriteria").html(criteriaHiddenText);
+    }else{
+        $("#showHideCriteria").html(criteriaVisibleText);
+        console.log("show");
+    }
+    // toggle has to be after setting button text otherwise is(':visible') will not work properly
+    $("#criteria").slideToggle('slow');  
+  }
+  
+</script>
+<script type="text/javascript"> 
+//This script sets up inplace editing
+  $().ready(function(){
+    $('.best_in_place').best_in_place();
+  });
+</script>

@@ -17,6 +17,8 @@ class DotKeyCodeTranslationEditor < ActiveRecord::Base
       {:dot_key_code =>"date.formats.long", :editor=>"date_format"},
       {:dot_key_code =>"date.formats.short", :editor=>"date_format"},
       
+      {:dot_key_code =>"datetime.formats.course_form", :editor=>"datetime_format"},
+      
       {:dot_key_code =>"date.abbr_day_names", :editor=>"array"}, # first_nil, member_count
       {:dot_key_code =>"date.min_day_names", :editor=>"array"},
       {:dot_key_code =>"date.day_names", :editor=>"array"},

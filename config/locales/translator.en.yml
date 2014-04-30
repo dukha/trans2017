@@ -243,16 +243,7 @@ en:
       dot_key_code_translation_editor:
         editor: Editor
         dot_key_code: Code
-      special_partial_dot_key:
-        cldr: Dot Key is Plural
-        sort: Type
-        partial_dot_key: Partial code with wildcard(s)  
-      translation:
-        dot_key_code: Key
-        translation: Translation
-        iso_code: Language
-        calmapp_version: App Version
-        cav_id: App Version
+
       calmapp_version:
         calmapp_id: Calm App
         version: Version
@@ -263,6 +254,8 @@ en:
       calmapp_versions_translation_language:
         calmapp_version_id: Version
         translation_language: Language
+      language:
+        name: Language
       redis_database:
         redis_db_index: Redis Database Index
         calmapp_version_id: Calm App Version
@@ -275,8 +268,17 @@ en:
         password: Password
         max_databases: Maximum Permitted Redis Databases on this server
         description: Description
-      language:
-        name: Language
+      special_partial_dot_key:
+        cldr: Dot Key is Plural
+        sort: Type
+        partial_dot_key: Partial code with wildcard(s)  
+      translation:
+        dot_key_code: Key
+        translation: Translation
+        iso_code: Language
+        calmapp_version: App Version
+        cav_id: App Version
+        en_translation: English
       translation_language:
         name: Language Name
         iso_code: ISO Code

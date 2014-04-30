@@ -8,6 +8,7 @@
 * =require popup 
 *=require trans
 *= require_self
+*= require_tree .
 */
 
 /* form nifty   * require ui-lightness/jquery-ui-1.8.6.custom.css*/

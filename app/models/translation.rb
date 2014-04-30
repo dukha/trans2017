@@ -1,6 +1,7 @@
 class Translation < ActiveRecord::Base
   # needed for self.search
   extend SearchModel
+  include SearchModel
   
   belongs_to :calmapp_versions_translation_language, :foreign_key => "cavs_translation_language_id"
   belongs_to :translations_upload
@@ -66,7 +67,21 @@ class Translation < ActiveRecord::Base
 =begin
   @param language expects translation_language.iso_code but  can also give id or object
   @param calmapp_version_id identifies the relevant version
+  All attributes, including those from other objects that are selected appear in translation.attributes, presumably not updatable. 
   use result[n].attributes to get the data you need
+  eg 
+  > x = Translation.single_lang_translations('cs',1).first.attributes
+  => {"id"=>673,
+ "iso_code"=>"cs",
+ "dot_key_code"=>"activerecord.errors.messages.empty",
+ "editor"=>nil,
+ "en_translation"=>"can't be empty",
+ "en_updated_at"=>2014-04-23 23:34:48 UTC,
+ "translation"=>"nesmí být prázdný/á/é",
+ "updated_at"=>Wed, 23 Apr 2014 23:58:41 UTC +00:00,
+ "cldr"=>nil}
+
+ 
 =end 
   scope :single_lang_translations, ->(language, calmapp_version_id) {
     if language.is_a? TranslationLanguage then
@@ -91,6 +106,7 @@ class Translation < ActiveRecord::Base
     joins_cldr.
     basic_select.
     select("english.translation as en_translation, english.updated_at as en_updated_at, translations.translation as translation, 
+          tl1.name as language,
           translations.updated_at as updated_at, special.cldr as cldr").
     where( "cavtl1.calmapp_version_id = ?",calmapp_version_id).
     where("tl1.iso_code = ?", language).
@@ -225,6 +241,11 @@ class Translation < ActiveRecord::Base
       end
     end
   end
+  
+  @@operators = Operators.new
+  def self.ops
+    return @@operators
+  end
 =begin
    def self.searchable_attr 
     return %w[dot_key_code0 translation0 translation_message dot_key_code1 translation1 translation_message1 dot_key_code2 translation2  translation_message2]
@@ -241,10 +262,10 @@ class Translation < ActiveRecord::Base
     %w(dot_key_code translation translation)
   end
   def self.search_dot_key_code_operators
-     %w(ends_with matches does_not_match equals )
+     [ ops.ends_with,  ops.matches,  ops.does_not_match,  ops.equals ]
   end
   def self.search_translation_operators
-    %w(begins_with ends_with matches  does_not_match equals is_null is_not_null)
+    [ ops.starts_with,  ops.ends_with,  ops.matches,  ops.does_not_match,  ops.equals,  ops.is_null,  ops.not_null]
   end
   def self.valid_criteria? search_info
     #"Search criteria for both language and application version must be given. Given version = " + (params["criterion_cav_id"].nil?? "nil":["criterion_cav_id"].to_s)  + ". Given language = " + (params["criterion_iso_code"].nil?? "nil":["criterion_iso_code"].to_s))
@@ -315,7 +336,9 @@ class Translation < ActiveRecord::Base
     translation = nil
     keys.each do |k| 
       translation = translation_to_db_from_file(k, hash[k], translation_upload_id, calmapp_versions_translation_language, overwrite)    
-      #binding.pry
+      if translation.nil? or translation.errors.nil?
+      binding.pry
+      end
       if  translation.errors.count > 0 then
         return translation
       end
