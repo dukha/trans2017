@@ -7,6 +7,8 @@
 *= require dual-listboxes
 * =require popup 
 *=require trans
+*= require scaffold
+
 *= require_self
 *= require_tree .
 */
@@ -22,9 +24,7 @@ a img {
   border: none;
 }
 
-a {
-  color: #0000FF;
-}
+
 
 .clear {
   clear: both;

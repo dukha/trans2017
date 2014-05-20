@@ -58,6 +58,7 @@ en:
       write_yaml_to_db: Write to Database
       edit_and_change_languages: Edit (Including Languages)
       add_redis_database: Add Redis Database for Publication
+      go_to_translations: Go to Translations
     labels:
       #redis_db_index: Redis Database Index
       #port: Linux Port
@@ -355,7 +356,9 @@ en:
         error:
           file_language_must_match_translation_language: "The selected file language(%{chosen_file_iso_code})  must match the language of the translation version translation(%{required_iso_code})."   
     calmapp_versions_translation_language: 
-      notice: To add a new upload first add the language to a version, then upload here.    
+      notice: To add a new upload first add the language to a version, then upload here. 
+    valid_version_on_queue:
+      success: "Base translations are queued to be written to the database for the languages just added to the version"   
     write_yaml_file:
       success: "File '%{file}' successfully written to database"   
       error: "File could not be written: %{cause}" 

@@ -10,11 +10,18 @@
 
 class CalmappVersionsTranslationLanguage < ActiveRecord::Base
   include Validations
+  extend SearchModel
+  include SearchModel
   attr_accessible :calmapp_version_id, :calmapp_version, :translation_language_id, 
   :translation_language, :translations_uploads_attributes, :calmapp_versions_translation_languages_attributes
   
   #attr_accessor :warnings
-  
+  def self.searchable_attr 
+     %w(calmapp_version_id translation_language_id )
+  end
+  def self.sortable_attr
+      []
+  end
   belongs_to :calmapp_version_tl, :inverse_of=>:calmapp_versions_translation_languages, :class_name => "CalmappVersion", :foreign_key =>"calmapp_version_id"
   belongs_to :translation_language
 

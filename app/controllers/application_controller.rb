@@ -118,8 +118,30 @@ This function, together with the scope in routes.rb allows the setting of urls l
   def pgerror? exception
     exception.message.start_with? "PGError:"
   end
-
-
+=begin
+ This is all taking too long to do with rake and rabbitmq(bunny). 
+   Switching to delayed_job with a  fudge as it doesn't do creates. 
+   Have to have an AR before you can do it 
+     @deprecated for this version
+=end
+  def call_rake(task, options = {})
+    options[:RAILS_ENV] ||= Rails.env
+    #binding.pry
+    options["params"] = JSON.generate(params["calmapp_version"])#options.map { |n, v| "#{n.to_s}=#{JSON.generate(v)}}" }
+    #puts args 
+    args = options.map{ |k,v| "#{k.to_s} = #{v}"  } 
+    # add 2>&1 into that command somewhere so that you capture STDERR into your log file as well as STDOUT
+    cmd =  "rake #{task} #{args.join(' ')} --trace 2>&1 >> #{Rails.root}/log/rake.log &"
+    puts cmd
+    system cmd 
+  end
+  
+  def self.start_delayed_jobs_queue
+    #binding.pry
+    #system "RAILS_ENV=#{Rails.env} bin/delayed_job start --exit-on-complete 2>&1 >> #{Rails.root}/log/background.log"
+    system "RAILS_ENV=#{Rails.env} bin/delayed_job start --exit-on-complete 2>&1"
+    binding.pry
+  end
 =begin
   Use this function to rescue all situations
   Add exception for no

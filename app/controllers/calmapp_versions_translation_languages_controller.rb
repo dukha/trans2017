@@ -11,8 +11,33 @@ class CalmappVersionsTranslationLanguagesController < ApplicationController
   # GET /calmapp_versions_translation_languages.json
   def index
     #binding.pry
-    @calmapp_versions_translation_languages = CalmappVersionsTranslationLanguage.paginate(:page => params[:page], :per_page=>15)
-    
+    #@calmapp_versions_translation_languages = CalmappVersionsTranslationLanguage.paginate(:page => params[:page], :per_page=>15)
+    search_info = init_search(current_user, CalmappVersionsTranslationLanguage.searchable_attr, CalmappVersionsTranslationLanguage.sortable_attr)
+      #if Translation.valid_criteria?(search_info) then
+        @calmapp_versions_translation_languages = CalmappVersionsTranslationLanguage.search(current_user, search_info)
+        #binding.pry
+      #else  
+        #msg = 'Criteria: '
+        #flash_now= false
+        #binding.pry
+        #search_info[:messages].each do |m|
+         # m.keys.each{ |k,v| 
+            #binding.pry
+          #  flash_now = true
+           # msg.concat( "#{m[k] + '. '}") 
+          #}
+        #end
+        #flash.now[:error] = msg if flash_now
+        #flash.now[:error] = ("Search criteria for both language and application version must be given. Given version = " + (params["criterion_cav_id"].nil?? "nil":["criterion_cav_id"].to_s)  + ". Given language = " + (params["criterion_ciso_code"].nil?? "nil":["criterion_iso_code"].to_s))
+        # in this case we make an ActivRecord Relation with 0 records so that we can redisplay
+        #@translations =  Translation.where{id == -1}
+      #end
+      #binding.pry
+      #end
+   
+    #binding.pry
+    @calmapp_versions_translation_languages = @calmapp_versions_translation_languages.paginate(:page => params[:page], :per_page => 30)
+    #binding.pry
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @calmapp_versions_translation_languages }

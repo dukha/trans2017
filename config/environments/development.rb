@@ -23,6 +23,8 @@ Translator::Application.configure do
   # Print deprecation notices to the Rails logger
   config.active_support.deprecation = :log
   
+  config.logger = Logger.new(config.paths['log'].first, 1, 3*1024*1024)
+  
   # Debug mode disables concatenation and preprocessing of assets.
   # This option may cause significant delays in view rendering with a large
   # number of complex assets.

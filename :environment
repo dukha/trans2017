@@ -1,0 +1,21 @@
+** Invoke version:create (first_time)
+** Invoke environment (first_time)
+** Execute environment
+** Execute version:create
+rake aborted!
+Don't know how to build task '[params'
+/home/mark/.rvm/gems/ruby-2.0.0-p247/gems/rake-10.3.1/lib/rake/task_manager.rb:62:in `[]'
+/home/mark/.rvm/gems/ruby-2.0.0-p247/gems/rake-10.3.1/lib/rake/application.rb:149:in `invoke_task'
+/home/mark/.rvm/gems/ruby-2.0.0-p247/gems/rake-10.3.1/lib/rake/application.rb:106:in `block (2 levels) in top_level'
+/home/mark/.rvm/gems/ruby-2.0.0-p247/gems/rake-10.3.1/lib/rake/application.rb:106:in `each'
+/home/mark/.rvm/gems/ruby-2.0.0-p247/gems/rake-10.3.1/lib/rake/application.rb:106:in `block in top_level'
+/home/mark/.rvm/gems/ruby-2.0.0-p247/gems/rake-10.3.1/lib/rake/application.rb:115:in `run_with_threads'
+/home/mark/.rvm/gems/ruby-2.0.0-p247/gems/rake-10.3.1/lib/rake/application.rb:100:in `top_level'
+/home/mark/.rvm/gems/ruby-2.0.0-p247/gems/rake-10.3.1/lib/rake/application.rb:78:in `block in run'
+/home/mark/.rvm/gems/ruby-2.0.0-p247/gems/rake-10.3.1/lib/rake/application.rb:176:in `standard_exception_handling'
+/home/mark/.rvm/gems/ruby-2.0.0-p247/gems/rake-10.3.1/lib/rake/application.rb:75:in `run'
+/home/mark/.rvm/gems/ruby-2.0.0-p247/gems/rake-10.3.1/bin/rake:33:in `<top (required)>'
+/home/mark/.rvm/gems/ruby-2.0.0-p247/bin/rake:23:in `load'
+/home/mark/.rvm/gems/ruby-2.0.0-p247/bin/rake:23:in `<main>'
+/home/mark/.rvm/gems/ruby-2.0.0-p247/bin/ruby_noexec_wrapper:14:in `eval'
+/home/mark/.rvm/gems/ruby-2.0.0-p247/bin/ruby_noexec_wrapper:14:in `<main>'

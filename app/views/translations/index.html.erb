@@ -20,7 +20,7 @@
       <li class="string optional" id="translation_language_id_input"><label for="criterion_language_id", class="criteria-label" ><%=tlabel("iso_code", "translation")%></label>
            <%=select_tag(  :operator_iso_code, options_for_select(operators_2_options(equal_operator), params[:operator_iso_code]),{:include_blank=> false,:class=>'criteria-operators-select', :readonly=>true} )%> 
            <!-- < %=text_field_tag( :criterion_language_id, params[:criterion_language_id])%> -->
-           <%=select_tag( :criterion_iso_code, options_from_collection_for_select(TranslationLanguage.translators_language_select(current_user), "iso_code","name", params[:criterion_iso_code]), {:include_blank=> true})%>
+           <%=select_tag( :criterion_iso_code, options_from_collection_for_select(TranslationLanguage.translators_language_select(current_user), "iso_code","full_name", params[:criterion_iso_code]), {:include_blank=> true})%>
            <!--%=select_tag( :criterion_iso_code, options_from_collection_for_select(TranslationLanguage.all, "iso_code","name", params[:criterion_iso_code]), {:include_blank=> false})% -->
            <!--%binding.pry%-->
            <!--%=f.semantic_errors :translations_upload_id %--> 
@@ -71,6 +71,13 @@
     <th class="linkheader"></th-->
     
   </tr>
+<style>
+  .ok{
+    color:red;
+    font-size:100%;
+    
+  }  
+</style>
 
   
 <% cell_class = "data" %>
@@ -103,7 +110,20 @@
 <% end %>
 </table>
 <%= twill_paginate %>
-
+<script>
+  $().ready(function(){
+    $(".ok").click(function(){
+      console.log("ok button");
+      console.log($(this).css());
+      return false;
+    });
+    $('span').click(function(){
+      console.log( "in span");
+      //$(this).find(".ok").value
+      //return false;
+    });
+  });
+</script>
 <script type="text/javascript">
 /*
  * Script enlarges and restores editing index for translatiosn
@@ -117,7 +137,7 @@ console.log("In script");
   var appMainSelector ='#appmaintd';
   var appMainContainerDivSelector = '#container';
   $().ready(function(){
-    console.log("ready");
+    //console.log("ready");
     $(maximiseSelector).show();
     $(minimiseSelector).hide();
     

@@ -11,7 +11,7 @@ class TranslationEditorParamsController < ApplicationController
 =end
   # Comment out the next 2 lines if not using authentication and authorisation
   before_filter :authenticate_user!
-  filter_access_to :all
+  #filter_access_to :all
 
   @@model ="translation_editor_param"
 

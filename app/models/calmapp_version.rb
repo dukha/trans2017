@@ -21,7 +21,7 @@ class CalmappVersion < ActiveRecord::Base
   has_many :redis_databases, :through =>:calmapp_versions_redis_database#, :source=>:calmapp_version_rd
   #accepts_nested_attributes_for :redis_databases, :reject_if => :all_blank, :allow_destroy => true
  
-  validates  :version,  :presence=>true
+  validates  :version,  :presence=>true, :uniqueness=>{:scope =>:calmapp_id}
   validates :version, :numericality=>true#=> {:only_integer=>false, :allow_nil =>false}
   
   #validates :calmapp, :presence=>true
@@ -32,8 +32,9 @@ class CalmappVersion < ActiveRecord::Base
   has_many :translation_languages , :through => :calmapp_versions_translation_languages
   #validates :calmapp_id, :existence=>true
   
-  after_save :add_english
-  
+  # should be after_save, however we can't do this
+  #after_update :add_english
+  after_create :add_english
 =begin
 @return a collection of all calmapp names with versions
 =end
@@ -66,15 +67,26 @@ class CalmappVersion < ActiveRecord::Base
   #end
 
   # Don't confuse the virtual attribute translation_languages_available that is just to keep AR happy
-  # Returns translation_languages not already assigned to this course.
+  # Returns translation_languages not already assigned to this course, but not english
+  def already_added_translation_languages_not_en
+    translation_languages - en_in_array
+  end
+  
+  def en_in_array
+    [TranslationLanguage.find_by(iso_code: 'en')]
+  end
+  
   def available_translation_languages
-      return TranslationLanguage.all - translation_languages
+      return TranslationLanguage.all - en_in_array - already_added_translation_languages_not_en
   end
    
   def to_s
     name
   end
   
+  def self.version_select
+    joins("join calmapps on calmapp_id = calmapps.id ").order( "calmapps.name asc")
+  end
   def add_english
     puts "after save in add_english"
     #binding.pry

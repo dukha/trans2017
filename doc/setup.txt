@@ -1,0 +1,4 @@
+Run the following for a new installation
+
+raisl g devise
+rails g delayed_job

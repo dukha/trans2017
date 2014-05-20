@@ -154,7 +154,7 @@ module SearchModel
      else
        lazy_loader = activerecord_relation  
      end
-     #binding.pry
+     binding.pry
      lazy_loader = build_lazy_loader(lazy_loader, search_info[:criteria], search_info[:operators])
      lazy_loader =  build_lazy_loading_sorter(lazy_loader, search_info[:sorting])
      return lazy_loader

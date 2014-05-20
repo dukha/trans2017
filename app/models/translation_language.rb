@@ -27,7 +27,7 @@ class TranslationLanguage < ActiveRecord::Base
     TranslationLanguage.create!(:iso_code=> "en-US", :name=>"English(US)")
     TranslationLanguage.create!(:iso_code=> "zh-TW", :name=>"Chinese(Taiwan)")
     TranslationLanguage.create!(:iso_code=> "zh-CN", :name=>"Chinese(China)")
-    TranslationLanguage.create!(:iso_code=> "dk", :name=>"Danish")
+    TranslationLanguage.create!(:iso_code=> "da", :name=>"Danish")
     TranslationLanguage.create!(:iso_code=> "pt", :name=>"Portuguese")
     TranslationLanguage.create!(:iso_code=> "it", :name=>"Italian")
     TranslationLanguage.create!(:iso_code=> "el", :name=>"Greek")
@@ -72,6 +72,15 @@ class TranslationLanguage < ActiveRecord::Base
     return where{iso_code != 'en'}.order("name asc")
         
   end
+  
+  def self.language_select
+    return order "name asc"
+  end
+
+  def full_name
+    return name + " (" + iso_code + ")"
+  end
+
 =begin 
   def allow_organisation_child?
     false

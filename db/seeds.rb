@@ -45,19 +45,12 @@ log.info("Whiteboards data inserted successfully.")
 #log.info("Languages inserted")
 
 
-reg = Calmapp.create!( :name=>"calm_registrar")
-trans = Calmapp.create!(:name=>"calm_translator")
-log.info("Calm applications inserted")
+
 
 # delete or change below usernameonce login is added
 en = TranslationLanguage.create!(:iso_code=> "en", :name=>"English")
-reg4 = CalmappVersion.create!(:calmapp_id => reg.id, :version => 4)
-trans1=CalmappVersion.create!(:calmapp_id => trans.id, :version => 1)
-log.info("Calm application version inserted")
 
-ri_local = RedisInstance.create!(:host=>"192.168.0.1", :password => '123456', :port => '6379', :max_databases=>16, :description=> "Developer's Desktop Computer(only)")
-ri_integration = RedisInstance.create!(:host=>"31.222.138.180", :password => '123456', :port => '6379', :max_databases=>32, :description=>'Integration Server')
-log.info("Redis instances inserted")
+
 
 #red_reg4_loc_dev = RedisDatabase.create!(:calmapp_version_id => reg4.id, :redis_instance_id => ri_local.id, :redis_db_index => 1, :release_status_id => vs_dev.id)
 #red_reg4_loc_test = RedisDatabase.create!(:calmapp_version_id => reg4.id, :redis_instance_id => ri_local.id, :redis_db_index => 2, :release_status_id => vs_test.id)

@@ -1,3 +1,4 @@
+source 'http://rubygems.org'
 gem 'sass-rails', '~>4.0.0' #:git=> "git://github.com/rails/sass-rails"#, " ~> 3.2.5"
   #gem 'coffee-rails', '~>4.0.0'#, "~> 3.2.1"
   gem 'uglifier','~>2.2.1'
@@ -66,6 +67,12 @@ gem 'acts_as_tree'#,'0.1.1'
 gem 'carrierwave'
 
 gem "redis" #, :git => "git://github.com/ezmobius/redis-rb.git"
+
+# Can be used to set up an interface for rabbitmq
+#gem "bunny"
+# runs long running jobs in background
+gem 'delayed_job_active_record'
+gem 'daemons'
 # foreigner is a gem that allows the insertion of foreign keys into migrations.
 # Doesn't work with automigrate. Too bad.
 #gem "foreigner"
@@ -84,7 +91,8 @@ gem 'passenger' #, '~>3.0.11'
 gem 'cocoon','~>1.2.0'
 # thin is a faster dev webserver than webrick
 #gem 'thin'
-
+# web server used in pace of webrick or thin but also in production
+gem 'puma'
 # email notification of exceptions (if sendmail is installed)
 gem 'exception_notification_rails3', :require => 'exception_notifier'
 

@@ -1,7 +1,47 @@
 <%=theading("listing", :model=>"calmapp_versions_translation_language",:count=>10 )%>
 <% cell_class = "data" %>
 <% link_cell_class="link"%> 
-<% if CalmappVersionsTranslationLanguage.count==0 then %>
+
+<%if CalmappVersionsTranslationLanguage.respond_to?( :searchable_attr ) and CalmappVersionsTranslationLanguage.searchable_attr.any? then %>
+<button id="showHideCriteria" type='button'>x</button>
+<div id='criteria' class="criteria" >
+  <!-- Use form_tag here because we are not going to work with a new AR model. form_tag doesn't work with formtastic either -->
+  <!-- See controller#index doc for how to use this stuff below. 
+    YOU NEED TO ADD METHODS TO MODEL BEFORE THIS PAGE WILL WORK -->
+  <%= form_tag calmapp_versions_translation_languages_path, :method => 'get', :class=>'formtastic' do %>
+    <!--    These next 2 hidden fields needed for sorting from column headers -->
+    <%= hidden_field_tag :direction, params[:direction] %>
+    <%= hidden_field_tag :sort, params[:sort] %>
+    <fieldset class="inputs">
+      <ol>
+     
+      <%if CalmappVersionsTranslationLanguage.searchable_attr.include?("translation_language_id") %>  
+      <li class="string optional" id="calmapp_versions_translation_language_translation_language_id_input"><label for="criterion_translation_language_id" class="criteria-label" >
+        <%= tlabel( "translation_language_id", "calmapp_versions_translation_language") %> </label>
+           <%=select_tag(  :operator_translation_language_id, options_for_select(operators_2_options(equal_operator), params[:operator_translation_language_id]),{:include_blank=> true,:class=>'criteria-operators-select', :readonly=>true} ) %> 
+           <!--%=text_field_tag( :criterion_translation_language_id, params[:criterion_translation_language_id])% -->
+           <%=select_tag(:criterion_translation_language_id, options_from_collection_for_select(TranslationLanguage.language_select , "id", "full_name", params[:criterion_translation_language_id]), {:include_blank=>true})%>
+      </li> 
+      <%end #if  attribute in searchable %> 
+      <%if CalmappVersionsTranslationLanguage.searchable_attr.include?("calmapp_version_id") %>  
+      <li class="string optional" id="calmapp_versions_translation_language_calmapp_version_id_input"><label for="criterion_calmapp_version_id" class="criteria-label" >
+        <%= tlabel( "calmapp_version_id", "calmapp_versions_translation_language") %> </label>
+           <%=select_tag(  :operator_calmapp_version_id, options_for_select(operators_2_options(equal_operator), params[:operator_calmapp_version_id]),{:include_blank=> true,:class=>'criteria-operators-select', :readonly=>true} ) %> 
+           <!--%=text_field_tag( :criterion_calmapp_version_id, params[:criterion_calmapp_version_id])%-->
+           <%=select_tag(:criterion_calmapp_version_id, options_from_collection_for_select(CalmappVersion.version_select , "id", "name", params[:criterion_calmapp_version_id]), {:include_blank=>true})%>
+      </li> 
+      <%end #if  attribute in searchable %> 
+     
+     </ol> 
+   </fieldset>
+      
+      <%= submit_tag "Search", :name => nil %>
+  <%end  #end form_tag do%>
+
+</div>
+<%end # if searchable_attr %>
+
+<% if @calmapp_versions_translation_languages.count==0 then %>
   <%=tflash( "no_records_found", :warning)%><br/>
 <%  else %> 
 
@@ -14,6 +54,7 @@
         
         <th class="linkheader"></th>
         <th class="linkheader"></th>
+        <th class="linkheader"></th>
       </tr>
     </thead>
   
@@ -24,6 +65,7 @@
           <td class="<%= cell_class %>"><%= calmapp_versions_translation_language.calmapp_version_tl.name %></td>
           
           <td class="<%= link_cell_class %>"><%= tlink_to  'change_uploads', edit_calmapp_versions_translation_language_path(calmapp_versions_translation_language) %></td>
+          <td class="<%= link_cell_class %>"><%= tlink_to  'go_to_translations', translations_path + "/?criterion_iso_code=" + calmapp_versions_translation_language.translation_language.iso_code + "&criterion_cav_id=" + calmapp_versions_translation_language.calmapp_version_tl.id.to_s %></td>
           <!--td class="< %= link_cell_class %>">< %= link_destroy calmapp_versions_translation_language, "calmapp_versions_translation_language" %></td -->
         </tr>
       <% end %>
@@ -37,3 +79,36 @@
 <div class="inline-hints">
      <%=t($MS + "calmapp_versions_translation_language." + $N)%>
   </div>
+
+
+<script type="text/javascript">
+//This script  handles showing and hiding selection criteria
+  var criteriaDiv ="#criteria";
+  var criteriaButton = "#showHideCriteria";
+  var   criteriaHiddenText = "<%=t($FA + 'show_something', :something=>t($SC))%>";
+  var   criteriaVisibleText = "<%=t($FA + 'hide_something', :something=>t($SC))%>";
+  $().ready(function(){
+    //Initialise the criteria to be hidden on first display
+    $(criteriaDiv).hide(); 
+    $(criteriaButton).html(criteriaHiddenText);
+    
+    if( <%= @calmapp_versions_translation_languages.count==0 %>){
+      toggleCriteria();
+    }
+    
+    $(criteriaButton).click(function(){
+      toggleCriteria();
+    }); //end click
+  });//end ready
+  
+  function toggleCriteria(){
+    if($(criteriaDiv).is(':visible')){ 
+        $(criteriaButton).html(criteriaHiddenText);
+    }else{
+        $(criteriaButton).html(criteriaVisibleText);
+    }
+    // toggle has to be after setting button text otherwise is(':visible') will not work properly
+    $(criteriaDiv).slideToggle('slow');  
+  }
+  
+</script>

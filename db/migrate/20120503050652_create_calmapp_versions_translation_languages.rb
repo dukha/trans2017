@@ -3,6 +3,8 @@ class CreateCalmappVersionsTranslationLanguages < ActiveRecord::Migration
     create_table :calmapp_versions_translation_languages, :force=> true do |t|
     t.references :calmapp_version, :null=>false
     t.references :translation_language, :null=> false
+		
+		t.timestamps
   end
 =begin  
    execute <<-SQL

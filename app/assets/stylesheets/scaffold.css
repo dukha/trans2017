@@ -13,7 +13,7 @@ pre {
   padding: 10px;
   font-size: 11px;
 }
-
+/*
 a { 
   color: #0000ff; 
   }
@@ -24,7 +24,7 @@ a:hover {
   color: #0f0f0f; 
   background-color:#000; 
   }
-
+*/
 div.field, div.actions {
   margin-bottom: 10px;
 }

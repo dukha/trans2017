@@ -32,7 +32,7 @@ class CalmappVersionsController < ApplicationController
   # GET /calmapp_versions/new.xmlcalmapp_version_tl.
   def new
     @calmapp_version = CalmappVersion.new
-    @calmapp_version.translation_languages << TranslationLanguage.where{iso_code == 'en'}.first#CalmappVersionsTranslationLanguage.new(:translation_language_id => TranslationLanguage.where{iso_code == 'en'}.first)
+    #@calmapp_version.translation_languages << TranslationLanguage.where{iso_code == 'en'}.first#CalmappVersionsTranslationLanguage.new(:translation_language_id => TranslationLanguage.where{iso_code == 'en'}.first)
     #@calmapp_version.translation_languages_assigned = [] 
     #@calmapp_version.translation_languages_assigned << TranslationLanguage.where{iso_code == 'en'}.first#CalmappVersionsTranslationLanguage.new(:translation_language_id => TranslationLanguage.where{iso_code == 'en'}.first)
     respond_to do |format|
@@ -59,19 +59,33 @@ class CalmappVersionsController < ApplicationController
 =end
     prepare_params
     #new_calmapp_versions_translations_languages = new_languages()
-    @calmapp_version = CalmappVersion.new(params[:calmapp_version])
+    #We are going to create just the basic version with none of the assoications
+    # We then use a delayed update to add all the associations
+    @calmapp_version = CalmappVersion.new({:version=>params[:calmapp_version][:version], :calmapp_id=>params[:calmapp_version][:calmapp_id] })
     #binding.pry
     respond_to do |format|
       if @calmapp_version.save
-        tflash('create', :success, {:model=>@@model, :count=>1})
-        format.html { redirect_to( :action => "index")} #(@calmapp_version #, :notice => 'Application version was successfully created.') }
-        format.xml  { render :xml => @calmapp_version, :status => :created, :location => @calmapp_version }
+        #binding.pry
+        if @calmapp_version.delay.update_attributes(params[:calmapp_version])
+          #binding.pry
+          ApplicationController.start_delayed_jobs_queue()
+        #if @calmapp_version.delay.save
+      #if @calmapp_version.valid? then
+        #if version_create_detached then
+          tflash('valid_version_on_queue', :success, {:model=>@@model, :count=>1})
+          format.html { redirect_to( :action => "index")} #(@calmapp_version #, :notice => 'Application version was successfully created.') }
+          format.xml  { render :xml => @calmapp_version, :status => :created, :location => @calmapp_version }
+        #end 
       else
         #binding.pry
         format.html { render :action => "new" }
         format.xml  { render :xml => @calmapp_version.errors, :status => :unprocessable_entity }
-      end
-    end
+      end # save
+     else
+       format.html { render :action => "new" }
+        format.xml  { render :xml => @calmapp_version.errors, :status => :unprocessable_entity }
+     end #save 2   
+    end #do
   end
 
   # PUT /calmapp_versions/1
@@ -86,7 +100,8 @@ class CalmappVersionsController < ApplicationController
     respond_to do |format|
       #begin
         #binding.pry
-        if @calmapp_version.update_attributes(params[:calmapp_version])
+        if @calmapp_version.delay.update_attributes(params[:calmapp_version])
+          system "RAILS_ENV=#{Rails.env} bin/delayed_job start --exit-on-complete"
           tflash('update', :success, {:model=>@@model, :count=>1})
           
           flash[:warning] = @calmapp_version.warnings.messages[:base] if @calmapp_version.warnings 
@@ -133,6 +148,17 @@ class CalmappVersionsController < ApplicationController
       format.xml  { head :ok }
     end
   end
+=begin
+ We are not going to use it. Too hard to call rake from within giving it params as json
+ We'll fudge and use delayed_job instead 
+ @deprecated until next version
+=end  
+  def version_create_detached
+    #@calmapp_version = CalmappVersion.new(params[:calmapp_version])
+    #params_json = JSON.generate(params)
+    return call_rake("version:create")
+  end
+  
   
   def version_alterwithredisdb
     @calmapp_version = CalmappVersion.find(params[:id])
@@ -141,59 +167,6 @@ class CalmappVersionsController < ApplicationController
   def publish_to_redis
     
   end
-=begin
-  prepare_params_with_translation_language(translation_language_ids)
- 
-  This method allows the use of the dual listbox for adding and subtracting languages from a version. 
-  (We may have to stop removal as this would require the removal of all individual translations as well as publications)
-  
-  It seems easier to setup the params properly and let rails to the transaction. 
-  Another alternative would be to do the database stuff here inside a transaction. Seems messy.
-  
-  @param calmapp_version_id usuallu obtained from params[:id]
-  @param translation_language_ids normally obtained from the params.Ok to have empty strings
-  @ return A hash that can be added to params. The format of the hash is like the tasks attribute in each of the projects below (for project has many tasks)
-  project with 2nd task updated
-"project"=>
-  {"name"=>"mark proj",
-   "description"=>" marks project",
-   "tasks_attributes"=>
-    {"0"=>
-      {"description"=>"create erb", "done"=>"0", "_destroy"=>"", "id"=>"3"},
-     "1"=>
-      {"description"=>"test erb", "done"=>"1", "_destroy"=>"", "id"=>"4"}}}
-
-with third task added
-"project"=>
-  {"name"=>"mark proj",
-   "description"=>" marks project",
-   "tasks_attributes"=>
-    {"0"=>
-      {"description"=>"create erb",
-       "done"=>"0",
-       "_destroy"=>"false",
-       "id"=>"3"},
-     "1"=>
-      {"description"=>"test erb", "done"=>"1", "_destroy"=>"false", "id"=>"4"},
-     "1387255366300"=>
-      {"description"=>"run test", "done"=>"0", "_destroy"=>"false"}}}
-
-delete third task
-
-"project"=>
-  {"name"=>"mark proj",
-   "description"=>" marks project",
-   "tasks_attributes"=>
-    {"0"=>
-      {"description"=>"create erb",
-       "done"=>"0",
-       "_destroy"=>"false",
-       "id"=>"3"},
-     "1"=>
-      {"description"=>"test erb", "done"=>"1", "_destroy"=>"false", "id"=>"4"},
-     "2"=>
-      {"description"=>"run test", "done"=>"0", "_destroy"=>"1", "id"=>"8"}}}
-=end  
 
    private
      def redis_db_update? 

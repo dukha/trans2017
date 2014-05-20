@@ -23,16 +23,48 @@ describe TranslationsUploadsController do
   # This should return the minimal set of attributes required to create a valid
   # TranslationsUpload. As you add validations to TranslationsUpload, be sure to
   # adjust the attributes here as well.
-  let(:valid_attributes) { { "translation_language_id" => "1" } }
+  
+  yyyy let(:subscription) { mock(:subscription) }
+  zzz current_user.stub_chain(:subscriptions, :find) { subscription }
+  
+  
+  let(:en_att) {{
+    "id" => 1,
+    "iso_code" => "en",
+    "name" => "English"
+  }}
+  let(:reg_attr) {{
+    "id" => 1,
+    "name" => "registration",
+    
+  }}
+  let(:reg_v1_attr) {{
+    "id" => 1,
+    "calmapp_id" => 1,
+    "version" => "1"
+  }}
+  let( :valid_cavs_t_l_attr) {{
+    "calmapp_version_id" => 1,
+    "translation_language_id" => 1
+  }}
+  let(:valid_attributes) { { 
+    "description" => "test desc",
+    "yaml_upload" => "en.yml",
+    "cavs_translation_language" =>  valid_cavs_t_l
+    #"calmapp_versions_translation_language" => CalmappVersionsTranslationLanguage.find_by(:translation_language_id => 1)
+    
+    } }
 
   # This should return the minimal set of values that should be in the session
   # in order to pass any filters (e.g. authentication) defined in
   # TranslationsUploadsController. Be sure to keep this updated too.
   let(:valid_session) { {} }
-
+  before 
   describe "GET index" do
     it "assigns all translations_uploads as @translations_uploads" do
+      binding.pry
       translations_upload = TranslationsUpload.create! valid_attributes
+      
       get :index, {}, valid_session
       assigns(:translations_uploads).should eq([translations_upload])
     end

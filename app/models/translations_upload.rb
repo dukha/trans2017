@@ -5,18 +5,11 @@ class TranslationsUpload < ActiveRecord::Base
                   :calmapp_versions_translation_language, :duplicates_behavior, :written_to_db
   attr_accessor :duplicates_behavior
   belongs_to :calmapp_versions_translation_language, :foreign_key=>"cavs_translation_language_id"
-  #belongs_to :calmapp_version
-  
-  #validates :translation_language_id,  :presence=>true
-  #validates :translation_language_id, :existence => true
-  
-  #validates :calmapp_version_id,  :presence=>true
-  #validates :calmapp_version_id, :existence => true
   
   validates :description,  :presence=>true
   validate :upload_matches_translation_language_validation
-  after_create :write_file_to_db2
-  
+  #after_create :write_file_to_db2#, :on => :create
+  after_commit :do_after_commit, :on => :create
   def self.base_locales_folder
     File.join(Rails.root, "base_locales")
   end 
@@ -29,7 +22,8 @@ class TranslationsUpload < ActiveRecord::Base
  @return a hash in dot_key => string_data format, suitable for writing to the db  
 =end
   def write_file_to_db2 #overwrite  
-    #binding.pry
+    binding.pry
+    puts "db2"
     if duplicates_behavior == "overwrite"
         duplicates_behavior2 =   Translation.Overwrite[:all]
     elsif duplicates_behavior ==  "skip" 
@@ -44,35 +38,68 @@ class TranslationsUpload < ActiveRecord::Base
     key_value_pairs = TranslationsUpload.traverse_ruby(data)
     #binding.pry
     rescue Psych::SyntaxError => pse
-      raise PsychSyntaxErrorWrapper.new(pse, yaml_upload_identifier)
+      #logger.error( yaml_upload_identifier() + " has produced the following error: " + pse + " Have a technical person check the syntax of the file")
+      error =  PsychSyntaxErrorWrapper.new(pse, yaml_upload_identifier)
+      puts error
+      logger.error(error)
+      binding.pry
+      raise error
     end  
+    #binding.pry
     ret_val= 'ok' 
+    begin
     Translation.transaction do
-      #binding.pry
-      t = Translation.translations_to_db_from_file(key_value_pairs, id, calmapp_versions_translation_language, duplicates_behavior2)
-      #binding.pry
-      #base_error = t.errors[:base]
-      if t.errors.count > 0 then
-        #binding.pry
-        ret_val = t
-        # @todo error handling, logging here
-        #raise ActiveRecord::Rollback
-#=begin
-        messages = ""
+      #
+    
+        t = Translation.translations_to_db_from_file(key_value_pairs, id, calmapp_versions_translation_language, duplicates_behavior2)
+        if t.nil? then
+          binding.pry
+        end #nil
         binding.pry
-        t.errors.full_messages.each { |msg| messages = messages + msg + " " } #each_full{  }
-        #messages = messages + "Failed to write file : " + yaml_upload_identifier
-        raise  UploadTranslationError.new(messages, yaml_upload_identifier)
-#=end
-      else
-      # set  written to db here
-      #binding.pry
-         update_attributes(:written_to_db => true)
-      end
-    end # transaction
+        
+        #update_attributes(:written_to_db => true)
+        #base_error = t.errors[:base]
+
+        if t.errors.count > 0 then
+          #binding.pry
+          ret_val = t
+          # @todo error handling, logging here
+          #raise ActiveRecord::Rollback
+  #=begin
+          messages = ""
+          #binding.pry
+          t.errors.full_messages.each { |msg| messages = messages + msg + " " } #each_full{  }
+          #messages = messages + "Failed to write file : " + yaml_upload_identifier
+          logger.error(messages)
+         raise  UploadTranslationError.new(messages, yaml_upload_identifier)
+  #=end
+        else
+        # set  written to db here
+        #binding.pry
+#           update_attributes(:written_to_db => true)
+        end #errors.count
+      end #trans 
+      rescue UploadTranslationError => error
+        msg = "Error while writing " + error.file_name + " message: " + error.message + " No translations written to database"
+        puts msg
+        logger.error(msg)
+        binding.pry
+        
+        
+    rescue StandardError => error
+        msg =  "Error while writing " + yaml_upload_identifier + " message: " + error.message + " No translations written to database"
+        puts msg
+        logger.error(msg)
+        binding.pry
+        #raise     
+    end#  outside block
+    
+    # end #begin before trans
+    #binding.pry
     return ret_val
-  end
+  end #def
   
+  #handle_asynchronously :write_file_to_db2
   def  self.traverse_ruby( node, dot_key_stack=Array.new, dot_key_values_map = Hash.new)#,  container=Hash.new, anchors = Hash.new, in_sequence=nil )
     #binding.pry
     if node.is_a? Hash then
@@ -133,7 +160,7 @@ class TranslationsUpload < ActiveRecord::Base
   end
   
   def upload_matches_translation_language_validation
-    #binding.pry
+    binding.pry
     #identifier_array  = yaml_upload.identifier.split(".")
     errors.add(:yaml_upload, I18n.t($MS + "translations_upload.yaml_upload." + "error.file_language_must_match_translation_language",:required_iso_code=>iso_code(), :chosen_file_iso_code=>iso_code_from_yaml_file_name())) unless iso_code_from_yaml_file_name() ==  iso_code()
     
@@ -145,6 +172,7 @@ class TranslationsUpload < ActiveRecord::Base
   end 
   
   def iso_code
+    binding.pry
     return calmapp_versions_translation_language.translation_language.iso_code 
   end   
   #  documentation says the should get this with yaml_upload.indentifier. It quite often returns nil
@@ -152,59 +180,13 @@ class TranslationsUpload < ActiveRecord::Base
   def yaml_upload_identifier
     return yaml_upload.url.split('/').last
   end
-=begin  
-  @deprecated
-  def write_file_to_db overwrite =false
-    @data_hash = Hash.new
-    file = File.new("public/" + yaml_upload.url)
 
-    tree = parse_yaml_file file
-    data = traverse_yaml( tree)
-=begin
-    @data_hash.keys.each do |k|
-      if not overwrite then
-        exists = Translation.where{dot_key_code==my{k}}.first
-      end
-      if not exists then
-        trans = Translation.new :dot_key_code => k, :translation => @data_hash[k], :translations_upload_id => id,
-                    :created_at => Time.now, :updated_at => Time.now
-        if not trans.save! then
-          puts "ERROR!!"
-          puts trans.errors.messages
-        end 
-      end
-      puts k
-             
-      
-      
-    end
- =end
-#puts "tree"
-#puts tree
-#puts "data"
-#puts data
-    return @data_hash
-  end 
-=end
-
-=begin  
-  def parse_yaml_file file
-    puts "start"
-    listener = Psych::TreeBuilder.new
-    parser   = Psych::Parser.new  listener
-    parser.parse file
-    tree = parser.handler.root
-    #tree =nil
-    #dot_key_values_map = Hash.new
-    #dot_key_stack = Array.new
-    #anchors= Hash.new
-    #puts "before traverse"
-    
-    #return tree
-    #return traverse_yaml( tree)  #, dot_key_stack,  Hash.new, dot_key_values_map,anchors, nil )
-
+  def start_background_process
+    puts "sbp"
+    ApplicationController.start_delayed_jobs_queue
   end
-=end  
+=begin  
+ 
   
 =begin
  Traverses the AST tree from the psych parser handler root, building a map of dot_keys and translations
@@ -235,7 +217,6 @@ class TranslationsUpload < ActiveRecord::Base
 
 =begin
  @deprecated 
-
   def  traverse_yaml( node, dot_key_stack=Array.new, dot_key_values_map = nil,  container=Hash.new, anchors = Hash.new, in_sequence=nil )
     puts node.to_s
    
@@ -339,61 +320,22 @@ class TranslationsUpload < ActiveRecord::Base
     }
     return container
   end
-  
-  def write_translation_to_hash(key, translation ) #, translatable=true, anchor_or_alias=nil, tag=nil)
-    #@redis.set(key, translation)
-    @data_hash.store(key, translation)
-  end
-=end
-  #puts "#{translation_language.iso_code}"
-  #-----has_attached_file :yaml_upload, :styles => { :iso_code => 'en'}, :processors => [:parseyaml]#,# :styles => { :iso_code => translation_language.iso_code },
-     #:url => "/uploads/upload/:id/:style/:basename.:extension",
-     #:path => ":rails_root/public/uploads/uploads/:id/:basename.:extension"
-     #:path => :path2
-     #:path => ":rails_root/public/system/:class/:attachment/:id_partition/:style/:filename"
-     #:path => :rails_root/public/system/:class/:attachment/:id_partition/:style/:filename
-=begin
- !!! Gotcha 
- The validates statement below must come after the has_attached_file call
-=end
-  #x = lambda{|tu| tu.yaml_upload.original_filename}
-  #x = lambda{|tu| tu.original_filename}
-  #x = lambda{|yaml_upload| yaml_upload.original_filename}
-  #-----validates_attachment :yaml_upload, :presence => true 
-  #validates_attachment_content_type :yaml_upload, :content_type=>"application/x-yaml", :message=>  I18n.t($MS + "yaml_attachment_content_type.error", :yu=> ->(translations_upload){translations_upload.to_s})#lambda{|yaml_upload| yaml_upload.original_filename}) #x.call(yaml_upload)) 
-  
-  #----validate :validate_content_type 
-=begin     def format_leading_zeros(num)
-    return "%03d"  % num
-  end
-   def path2
-     return Rails.root.to_s + '/public/system/' + self.class.name + '/yaml_upload/' + translation_language.iso_code + "/:filename"
-   end
-=end  
-
-=begin
- I needed to do things this way rather than use the validates_attachment_content_type helper because 
-   there was no way of including the name of the wrongly chosen file in the helper (that I could find!)
-=end
-=begin
-  def validate_content_type
-    if not ['application/x-yaml'].include?(self.yaml_upload_content_type)
-      errors.add(:yaml_upload_file_name,  I18n.t($MS + "yaml_upload_content_type.error", :yu=> self.yaml_upload_file_name))
-    end
-  end
 =end
 
+=begin
+ Call back to write the translations after a file is uploaded 
+=end
+  def do_after_commit
+    write_file_to_db2()
+    ApplicationController.start_delayed_jobs_queue
+  end
 =begin
  Adds Czech to Calmapp version. (Works via callbacks in calmapp_version) 
 =end
   def self.demo
-    #TranslationsUpload.transaction do
       version = CalmappVersion.joins{calmapp}.where{calmapp.name =~ 'calm%'}.first     
       cs = TranslationLanguage.where{iso_code == 'cs'}.first
       version.translation_languages << cs
-      #cavtl = CalmappVersionsTranslationLanguage.create!(:calmapp_version_id => version.id, :translation_language_id => cs.id )
-      #tu = TranslationsUpload.create!(:yaml_upload=> "cs.yml", :cavs_translation_language_id => cavtl.id, :description=>"demo",:written_to_db=>true )
-    #end
   end
 =begin
   formats an integer to have at least 3 digits 

@@ -109,7 +109,7 @@ end
   # POST /translations_uploads
   # POST /translations_uploads.xml
   def create
-    binding.pry
+    #binding.pry
     @translations_upload = TranslationsUpload.new(params[:translations_upload])
     
     respond_to do |format|

@@ -7,12 +7,8 @@ class Translation < ActiveRecord::Base
   belongs_to :translations_upload
   
   after_create :add_other_language_records_to_version, :if => Proc.new { |translation| translation.language.iso_code=='en'}
-  #validates :translation, :presence=>true
   validates :dot_key_code, :uniqueness=>{:scope=> :cavs_translation_language_id},  :presence=>true 
   validates :calmapp_versions_translation_language, :presence => true
-  # for developers  we want to be able to process up to 3 translations from 1 form: thus extra virtual attributes
-  # to be saved as separate translations
-  #attr_accessor  :english, :dot_key_code0, :translation0, :translation_message0, :dot_key_code1, :translation1, :translation_message1, :dot_key_code2, :translation2,  :translation_message2#, :developer_params
   attr_accessor  :english, :criterion_iso_code, :criterion_cav_id 
 =begin
   @param cavtl_alias_identifier a number(or string) to help uniquely identify the sql alias for calmapp_versions_translation_languages. Use this for complex self joins etc
@@ -336,17 +332,17 @@ class Translation < ActiveRecord::Base
     translation = nil
     keys.each do |k| 
       translation = translation_to_db_from_file(k, hash[k], translation_upload_id, calmapp_versions_translation_language, overwrite)    
-      if translation.nil? or translation.errors.nil?
-      binding.pry
-      end
+      #if translation.nil? or translation.errors.nil?
+      #binding.pry
+      #end
       if  translation.errors.count > 0 then
         return translation
       end
       count += 1
-    end
+    end # do
     puts "keys written to db = " + count.to_s
     return translation
-  end
+  end # def
 =begin
  Writes 1 key and translation to Translation 
 =end
@@ -361,59 +357,67 @@ class Translation < ActiveRecord::Base
     end
     object_persisted = false
     #binding.pry
+    dot_key_code = split_hash[:dot_key_code]
+    msg_data = translation + " for " + language + " key " + dot_key_code
     if not object.nil?
       if overwrite == Translation.Overwrite[:all] then
-        puts :all.to_s
-        #if not object.nil?
-          puts "all object to be persisted persisted because of all"
-          b = object.update_attributes(:translation=> translation, :cavs_translation_language_id => calmapp_versions_translation_language.id, :translations_upload_id=> translation_upload_id)
-          #binding.pry
-          object_persisted = true
-          puts "all object persisted"
+          msg = "all object to be persisted because all parameter chosen"
+          if object.translation != translation then
+            b = object.update_attributes!(:translation=> translation, :cavs_translation_language_id => calmapp_versions_translation_language.id, :translations_upload_id=> translations_upload_id)
+            #binding.pry
+            object_persisted = true
+            msg  "object persisted: old translation: " + object.translation + " replaced with new translation: " + msg_data
+            Rails.logger.info
+            puts msg
+          end
+          if object.nil? then
+            binding.pry
+          end  
           return object
-        #end
-        #"object is nil : major error"
       elsif overwrite == Translation.Overwrite[:continue_unless_blank] then
-        puts "none"
+        puts "if duplicate key then continue unless translation blank"
         if object.translation.nil? then 
           #We update where the transaltion is nil anyway
-          b = object.update_attributes(:translation=> translation, :cavs_translation_language_id => calmapp_versions_translation_language.id, :translations_upload_id=> translations_upload_id)
+          b = object.update_attributes!(:translation=> translation, :cavs_translation_language_id => calmapp_versions_translation_language.id, :translations_upload_id=> translations_upload_id)
           object_persisted = true
-          puts "none: persisted anyway"
+          msg = "overwrite: persisted anyway because tranlation blank: translation: " + msg_data
+          Rails.logger.info msg
+          puts msg
+          
+        else
+          # we do nothing here. The translation continues becaue we don't overwrite an existing translation
+        end 
+        return object
+      elsif overwrite == Translation.Overwrite[:cancel]
+        # object is already in db
+        # We write it anyway if translation is null
+        if object.translation.nil? then 
+          #We update where the transaltion is nil anyway
+          b = object.update_attributes!(:translation=> translation, :cavs_translation_language_id => calmapp_versions_translation_language.id, :translations_upload_id=> translations_upload_id)
+          object_persisted = true
+          msg = "overwrite: persisted anyway because tranlation blank: translation: " + msg_data
+          Rails.logger.info msg
+          puts msg
           return object
         else
-          #"none correctly not persisted"
-         # # We don't persist because of no :continue_unless_blank condition
-        end 
-      elsif overwrite == Translation.Overwrite[:cancel]
-        puts "cancel"
-        #binding.pry
-        #if not object.nil? then
-          t = Translation.new(:cavs_translation_language_id => calmapp_versions_translation_language.id, :dot_key_code=> split_hash[:dot_key_code], :translation=>translation, :translations_upload_id => translations_upload_id)
-          #binding.pry
-          #t.errors.add(:base, I18n.t("messages.write_file_to_db.cancel", {:language=> language, :dot_key_code => object.dot_key_code}))
+          msg = "cancel when duplicate keys"
+          puts msg
+          t = Translation.new(:cavs_translation_language_id => calmapp_versions_translation_language.id, :dot_key_code=> dot_key_code, :translation=>translation, :translations_upload_id => translations_upload_id)
           t.errors.add(:dot_key_code, I18n.t("messages.write_file_to_db.cancel", {:language=> language, :dot_key_code => object.dot_key_code}))
-          #binding.pry
           return t 
-        #end
-        #puts "cancel but no return"
-      end #overwrite
+        end  
+      else
+        object.errors.add(:base, "Invalid value for overwrite condition. Invalid value = " + overwrite)
+      end #overwrite condition
     else 
       #object is nil (not fouund in db)
-    # if not overwrite or match language and keys count=0 then this code executes
-    #if not object_persisted then
-      puts "Write new"
-      #binding.pry
-      t = Translation.new(:cavs_translation_language_id => calmapp_versions_translation_language.id, :dot_key_code=> split_hash[:dot_key_code], :translation=>translation, :translations_upload_id => translations_upload_id)
-      #binding.pry
-      b = t.save
-      
-      return t
-     #else
-       # this is an error
-       #puts "object is persisted but drops thru to give an error"
-       #raise RuntimeError, I18n,t("messages.write_file_to_db.object_persisted_but_not_returned", {:language=> object.language, :dot_key_code=> object.dot_key_code}), caller
-    # end  
+      # if not overwrite or match language and keys count=0 then this code executes
+      msg = "Write new translation: " + msg_data
+      puts msg
+      Rails.logger.info msg
+      t = Translation.new(:cavs_translation_language_id => calmapp_versions_translation_language.id, :dot_key_code=> dot_key_code, :translation=>translation, :translations_upload_id => translations_upload_id)
+      t.save!       
+      return t 
     end # object is nil
   end
   
@@ -427,17 +431,4 @@ class Translation < ActiveRecord::Base
   end
 end
 
-
-# == Schema Information
-#
-# Table name: translations
-#
-#  id                 :integer         not null, primary key
-#  dot_key_code       :string(255)     not null
-#  translation        :text            not null
-#  calmapp_version_id :integer         not null
-#  origin             :string(255)
-#  created_at         :datetime
-#  updated_at         :datetime
-#
 

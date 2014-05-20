@@ -55,11 +55,11 @@ class TranslationsController < ApplicationController
       search_info = prepare_search()
       if Translation.valid_criteria?(search_info) then
         @translations = Translation.search(current_user, search_info)
-        #binding.pry
+        binding.pry
       else  
         msg = 'Criteria: '
         flash_now= false
-        #binding.pry
+        binding.pry
         search_info[:messages].each do |m|
           m.keys.each{ |k,v| 
             #binding.pry

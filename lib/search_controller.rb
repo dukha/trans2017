@@ -29,11 +29,15 @@ module SearchController
             operators[attr]=params[operator_key]
           else
            # should raise an exception 
-           operators[attr]='matches'
+           #operators[attr]='matches'
+           #cannot be matches as this does not work for all data types in db
+           operators[attr]='eq'
           end # not params
         else
           # should raise an exception
-          operators[attr]='matches'  
+          #operators[attr]='matches'
+          #cannot be matches as this does not work for all data types in db
+          operators[attr]='eq'  
         end  # not params
       else
         #binding.pry
@@ -104,7 +108,7 @@ module SearchController
     #binding.pry
     criteria=criterion_list(searchable_attr)
     operators=operator_list( searchable_attr, criteria)
-    
+    #binding.pry
     #sortable_attr=AssistantTeacher.sortable_attr
     sorting=sort_list(sortable_attr)
     info = {}

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140422234214) do
+ActiveRecord::Schema.define(version: 20140510231637) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -34,8 +34,10 @@ ActiveRecord::Schema.define(version: 20140422234214) do
   add_index "calmapp_versions_redis_databases", ["calmapp_version_id", "redis_database_id"], name: "uix_cav_rdb_on_calmapp_version_id_and_redis_database_id", unique: true, using: :btree
 
   create_table "calmapp_versions_translation_languages", force: true do |t|
-    t.integer "calmapp_version_id",      null: false
-    t.integer "translation_language_id", null: false
+    t.integer  "calmapp_version_id",      null: false
+    t.integer  "translation_language_id", null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "calmapp_versions_translation_languages", ["calmapp_version_id", "translation_language_id"], name: "iu_calmapp_versions_languages_calmapp_id_lanugage_id", unique: true, using: :btree
@@ -47,6 +49,22 @@ ActiveRecord::Schema.define(version: 20140422234214) do
   end
 
   add_index "calmapps", ["name"], name: "iu_calmapps_name", unique: true, using: :btree
+
+  create_table "delayed_jobs", force: true do |t|
+    t.integer  "priority",   default: 0, null: false
+    t.integer  "attempts",   default: 0, null: false
+    t.text     "handler",                null: false
+    t.text     "last_error"
+    t.datetime "run_at"
+    t.datetime "locked_at"
+    t.datetime "failed_at"
+    t.string   "locked_by"
+    t.string   "queue"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "delayed_jobs", ["priority", "run_at"], name: "delayed_jobs_priority", using: :btree
 
   create_table "dot_key_code_translation_editors", force: true do |t|
     t.string   "dot_key_code"
@@ -146,7 +164,7 @@ ActiveRecord::Schema.define(version: 20140422234214) do
 
   create_table "translations", force: true do |t|
     t.string   "dot_key_code",                 null: false
-    t.text     "translation",                  null: false
+    t.text     "translation"
     t.integer  "translations_upload_id"
     t.datetime "created_at"
     t.datetime "updated_at"

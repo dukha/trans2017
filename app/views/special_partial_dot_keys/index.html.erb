@@ -1,33 +1,3 @@
-<script type="text/javascript">
-//This script  handles showing and hiding selection criteria
-  var criteriaDiv ="#criteria";
-  var criteriaButton = "#showHideCriteria";
-  $().ready(function(){
-    //Initialise the criteria to be hidden on first display
-    $(criteriaDiv).hide(); 
-    $(criteriaButton).html(criteriaHiddenText);
-    
-    if( <%= @special_partial_dot_keys.count==0 %>){
-      toggleCriteria();
-    }
-    
-    $(criteriaButton).click(function(){
-      toggleCriteria();
-    }); //end click
-  });//end ready
-  var   criteriaHiddenText = "<%=t($FA +'show_something', :something=>t($SC))%>";
-  var   criteriaVisibleText = "<%=t($FA +'hide_something', :something=>t($SC))%>";
-  function toggleCriteria(){
-    if($(criteriaDiv).is(':visible')){ 
-        $(criteriaButton).html(criteriaHiddenText);
-    }else{
-        $(criteriaButton).html(criteriaVisibleText);
-    }
-    // toggle has to be after setting button text otherwise is(':visible') will not work properly
-    $(criteriaDiv).slideToggle('slow');  
-  }
-  
-</script>
 <%=theading("listing", :model=>'special_partial_dot_key', :count=>11) %>
 <%if SpecialPartialDotKey.respond_to?( :searchable_attr ) and SpecialPartialDotKey.searchable_attr.any? then %>
 <button id="showHideCriteria" type='button'>x</button>
@@ -82,8 +52,8 @@
 <%end # if searchable_attr %>
 
 <% if @special_partial_dot_keys.count == 0 then %>
-  
-<%  else %>
+   <%=tflash( "no_records_found", :warning)%><br/>
+   <% else%>
     <%= twill_paginate %>
 
     <% if SpecialPartialDotKey.respond_to? :sortable_attr
@@ -130,3 +100,35 @@
 <br />
 <%end # if else count %>
 <%=link_new( new_special_partial_dot_key_path, :special_partial_dot_key)  %>
+
+
+<script type="text/javascript">
+//This script  handles showing and hiding selection criteria
+  var criteriaDiv ="#criteria";
+  var criteriaButton = "#showHideCriteria";
+  $().ready(function(){
+    //Initialise the criteria to be hidden on first display
+    $(criteriaDiv).hide(); 
+    $(criteriaButton).html(criteriaHiddenText);
+    
+    if( <%= @special_partial_dot_keys.count==0 %>){
+      toggleCriteria();
+    }
+    
+    $(criteriaButton).click(function(){
+      toggleCriteria();
+    }); //end click
+  });//end ready
+  var   criteriaHiddenText = "<%=t($FA +'show_something', :something=>t($SC))%>";
+  var   criteriaVisibleText = "<%=t($FA +'hide_something', :something=>t($SC))%>";
+  function toggleCriteria(){
+    if($(criteriaDiv).is(':visible')){ 
+        $(criteriaButton).html(criteriaHiddenText);
+    }else{
+        $(criteriaButton).html(criteriaVisibleText);
+    }
+    // toggle has to be after setting button text otherwise is(':visible') will not work properly
+    $(criteriaDiv).slideToggle('slow');  
+  }
+  
+</script>

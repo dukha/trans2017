@@ -4,31 +4,31 @@ describe SpecialPartialDotKeysController do
   describe "routing" do
 
     it "routes to #index" do
-      get("/special_partial_dot_keys").should route_to("special_partial_dot_keys#index")
+      get("/en/special_partial_dot_keys").should route_to("special_partial_dot_keys#index", :locale=>'en')
     end
 
     it "routes to #new" do
-      get("/special_partial_dot_keys/new").should route_to("special_partial_dot_keys#new")
+      get("/en/special_partial_dot_keys/new").should route_to("special_partial_dot_keys#new", :locale=>'en')
     end
 
     it "routes to #show" do
-      get("/special_partial_dot_keys/1").should route_to("special_partial_dot_keys#show", :id => "1")
+      get("/en/special_partial_dot_keys/1").should route_to("special_partial_dot_keys#show", :id => "1", :locale=>'en')
     end
 
     it "routes to #edit" do
-      get("/special_partial_dot_keys/1/edit").should route_to("special_partial_dot_keys#edit", :id => "1")
+      get("/en/special_partial_dot_keys/1/edit").should route_to("special_partial_dot_keys#edit", :id => "1", :locale=>'en')
     end
 
     it "routes to #create" do
-      post("/special_partial_dot_keys").should route_to("special_partial_dot_keys#create")
+      post("/en/special_partial_dot_keys").should route_to("special_partial_dot_keys#create", :locale=>'en')
     end
 
     it "routes to #update" do
-      put("/special_partial_dot_keys/1").should route_to("special_partial_dot_keys#update", :id => "1")
+      put("/en/special_partial_dot_keys/1").should route_to("special_partial_dot_keys#update", :id => "1", :locale=>'en')
     end
 
     it "routes to #destroy" do
-      delete("/special_partial_dot_keys/1").should route_to("special_partial_dot_keys#destroy", :id => "1")
+      delete("/en/special_partial_dot_keys/1").should route_to("special_partial_dot_keys#destroy", :id => "1", :locale=>'en')
     end
 
   end

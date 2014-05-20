@@ -9,6 +9,7 @@ $indexfont-weight:550;
 $indexfont-size: small;
 $anchorcolor: #0000ff;
 $anchorhovercolor: #008000;
+
 /*#CAEAFF;*/
 
 html,body{
@@ -351,12 +352,19 @@ button.toFrom{
 #translation_dot_key_code, #translation_translation,#translation1_dot_key_code, #translation1_translation,#translation2_dot_key_code, #translation2_translation{
   width:500px;
 }
-
-ul.menu a{
+a, .ui-widget-color a, .ui-widget-content a {
   color: $anchorcolor;
+  background-color: transparent;
+  //color: #0000FF;
 }
-ul.menu a:hover{
+//ul.menu 
+a{
+  
+}
+//ul.menu 
+a:hover{
   color: $anchorhovercolor;
+  background-color: transparent;
 }
 /* Goes with Best in place */
 .purr {

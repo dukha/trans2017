@@ -1,7 +1,7 @@
 Translator::Application.routes.draw do
   
 
-  resources :special_partial_dot_keys
+  
 
   #resources :calmapp_versions_translation_languages
 
@@ -76,7 +76,7 @@ Translator::Application.routes.draw do
    get "calmapp_version/version_alterwithredisdb/:id" => "calmapp_versions#version_alterwithredisdb", :as => "version_alterwithredisdb", via: :all
    
    resources :translation_editor_params
-
+   resources :special_partial_dot_keys
    resources :dot_key_code_translation_editors, :only=> [:index, :edit, :show] 
    #get "calmapps/all_in_one_new/" => "calmapps#all_in_one_new", :as => "all_in_one_new"
    #get "calmapps/all_in_one_create" => "calmapps#all_in_one_create"
