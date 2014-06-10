@@ -22,7 +22,7 @@ class TranslationLanguage < ActiveRecord::Base
   def self.demo
     TranslationLanguage.create!(:iso_code=> "nl", :name=>"Dutch")
     TranslationLanguage.create!(:iso_code=> "es", :name=>"Spanish")
-    TranslationLanguage.create!(:iso_code=> "fr", :name=>"French", :cldr_type =>'one_upto_two_other')
+    TranslationLanguage.create!(:iso_code=> "fr", :name=>"French", :cldr_type =>CldrType.CLDR_PLURALS[:one_upto_two_other])
     TranslationLanguage.create!(:iso_code=> "de", :name=>"German")
     TranslationLanguage.create!(:iso_code=> "en-US", :name=>"English(US)")
     TranslationLanguage.create!(:iso_code=> "zh-TW", :name=>"Chinese(Taiwan)")
@@ -33,33 +33,33 @@ class TranslationLanguage < ActiveRecord::Base
     TranslationLanguage.create!(:iso_code=> "el", :name=>"Greek")
     TranslationLanguage.create!(:iso_code=> "ja", :name=>"Japanese")
     TranslationLanguage.create!(:iso_code=> "sv", :name=>"Swedish")
-    TranslationLanguage.create!(:iso_code=> "hu", :name=>"Hungarian", :cldr_type =>'east_slavic')
+    TranslationLanguage.create!(:iso_code=> "hu", :name=>"Hungarian", :cldr_type =>CldrType.CLDR_PLURALS[:east_slavic])
     TranslationLanguage.create!(:iso_code=> "sr", :name=>"Serbian")
     TranslationLanguage.create!(:iso_code=> "id", :name=>"Indonesian")
     TranslationLanguage.create!(:iso_code=> "th", :name=>"Thai")
-    TranslationLanguage.create!(:iso_code=> "hi", :name=>"Hindi", :cldr_type =>'onewithzero_other')
-    TranslationLanguage.create!(:iso_code=> "ne", :name=>"Nepali", :cldr_type =>'onewithzero_other' )
+    TranslationLanguage.create!(:iso_code=> "hi", :name=>"Hindi", :cldr_type =>CldrType.CLDR_PLURALS[:onewithzero_other])
+    TranslationLanguage.create!(:iso_code=> "ne", :name=>"Nepali", :cldr_type =>CldrType.CLDR_PLURALS[:onewithzero_other] )
     TranslationLanguage.create!(:iso_code=> "ko", :name=>"Korean")
     TranslationLanguage.create!(:iso_code=> "nb", :name=>"Norwegian")
     TranslationLanguage.create!(:iso_code=> "fi", :name=>"Finnish")
     TranslationLanguage.create!(:iso_code=> "en-AU", :name=>"English(Australia)")
     TranslationLanguage.create!(:iso_code=> "en-UK", :name=>"English(UK)")
     TranslationLanguage.create!(:iso_code=> "zh-HK", :name=>"Chinese(Hong Kong)")
-    TranslationLanguage.create!(:iso_code=> "pl", :name=>"Polish", :cldr_type =>'east_slavic')
+    TranslationLanguage.create!(:iso_code=> "pl", :name=>"Polish", :cldr_type =>CldrType.CLDR_PLURALS[:east_slavic])
     TranslationLanguage.create!(:iso_code=> "et", :name=>"Estonian")
-    TranslationLanguage.create!(:iso_code=> "lt", :name=>"Lithuanian", :cldr_type =>'west_slavic')
+    TranslationLanguage.create!(:iso_code=> "lt", :name=>"Lithuanian", :cldr_type =>CldrType.CLDR_PLURALS[:west_slavic])
     TranslationLanguage.create!(:iso_code=> "lv", :name=>"Latvian")
-    TranslationLanguage.create!(:iso_code=> "sk", :name=>"Slovak", :cldr_type =>'west_slavic')
-    TranslationLanguage.create!(:iso_code=> "cs", :name=>"Czech", :cldr_type =>'west_slavic')
-    TranslationLanguage.create!(:iso_code=> "sl", :name=>"Slovenian", :cldr_type =>'west_slavic')
+    TranslationLanguage.create!(:iso_code=> "sk", :name=>"Slovak", :cldr_type =>CldrType.CLDR_PLURALS[:west_slavic])
+    TranslationLanguage.create!(:iso_code=> "cs", :name=>"Czech", :cldr_type =>CldrType.CLDR_PLURALS[:west_slavic])
+    TranslationLanguage.create!(:iso_code=> "sl", :name=>"Slovenian", :cldr_type =>CldrType.CLDR_PLURALS[:west_slavic])
     TranslationLanguage.create!(:iso_code=> "kh", :name=>"Khymer")
     TranslationLanguage.create!(:iso_code=> "vi", :name=>"Vietnamese")
     TranslationLanguage.create!(:iso_code=> "my", :name=>"Burmese")
     TranslationLanguage.create!(:iso_code=> "mk", :name=>"Macedonian")
     TranslationLanguage.create!(:iso_code=> "af", :name=>"Afrikaans")
     TranslationLanguage.create!(:iso_code=> "zh-MY", :name=>"Chinese(Malaysia)")
-    TranslationLanguage.create!(:iso_code=> "ru", :name=>"Russian", :cldr_type =>'east_slavic')
-    TranslationLanguage.create!(:iso_code=> "uk", :name=>"Ukrainian", :cldr_type =>'east_slavic')
+    TranslationLanguage.create!(:iso_code=> "ru", :name=>"Russian", :cldr_type =>CldrType.CLDR_PLURALS[:east_slavic])
+    TranslationLanguage.create!(:iso_code=> "uk", :name=>"Ukrainian", :cldr_type =>CldrType.CLDR_PLURALS[:east_slavic])
     TranslationLanguage.create!(:iso_code=> "mn", :name=>"Mongolian")
     
     puts "Translation Languages inserted"
@@ -81,6 +81,9 @@ class TranslationLanguage < ActiveRecord::Base
     return name + " (" + iso_code + ")"
   end
 
+  def plurals
+    return CldrType.cldr_types[cldr_type]
+  end
 =begin 
   def allow_organisation_child?
     false

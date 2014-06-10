@@ -21,9 +21,10 @@ class TranslationsUpload < ActiveRecord::Base
  Takes a yaml translation file, parses it, writes it as a tree and then converts the tree to a dot_key format
  @return a hash in dot_key => string_data format, suitable for writing to the db  
 =end
-  def write_file_to_db2 #overwrite  
-    binding.pry
+  def write_yaml_file_to_db #overwrite  
+    #binding.pry
     puts "db2"
+    puts CalmappVersion.find(calmapp_versions_translation_language.calmapp_version_id).name
     if duplicates_behavior == "overwrite"
         duplicates_behavior2 =   Translation.Overwrite[:all]
     elsif duplicates_behavior ==  "skip" 
@@ -49,13 +50,14 @@ class TranslationsUpload < ActiveRecord::Base
     ret_val= 'ok' 
     begin
     Translation.transaction do
-      #
-    
+      #binding.pry
+      puts yaml_upload.url
+      puts calmapp_versions_translation_language.id
         t = Translation.translations_to_db_from_file(key_value_pairs, id, calmapp_versions_translation_language, duplicates_behavior2)
         if t.nil? then
-          binding.pry
+          #binding.pry
         end #nil
-        binding.pry
+        #binding.pry
         
         #update_attributes(:written_to_db => true)
         #base_error = t.errors[:base]
@@ -91,7 +93,7 @@ class TranslationsUpload < ActiveRecord::Base
         puts msg
         logger.error(msg)
         binding.pry
-        #raise     
+        raise     
     end#  outside block
     
     # end #begin before trans
@@ -160,7 +162,7 @@ class TranslationsUpload < ActiveRecord::Base
   end
   
   def upload_matches_translation_language_validation
-    binding.pry
+    #binding.pry
     #identifier_array  = yaml_upload.identifier.split(".")
     errors.add(:yaml_upload, I18n.t($MS + "translations_upload.yaml_upload." + "error.file_language_must_match_translation_language",:required_iso_code=>iso_code(), :chosen_file_iso_code=>iso_code_from_yaml_file_name())) unless iso_code_from_yaml_file_name() ==  iso_code()
     
@@ -172,7 +174,7 @@ class TranslationsUpload < ActiveRecord::Base
   end 
   
   def iso_code
-    binding.pry
+    #binding.pry
     return calmapp_versions_translation_language.translation_language.iso_code 
   end   
   #  documentation says the should get this with yaml_upload.indentifier. It quite often returns nil
@@ -326,7 +328,7 @@ class TranslationsUpload < ActiveRecord::Base
  Call back to write the translations after a file is uploaded 
 =end
   def do_after_commit
-    write_file_to_db2()
+    write_yaml_file_to_db()
     ApplicationController.start_delayed_jobs_queue
   end
 =begin

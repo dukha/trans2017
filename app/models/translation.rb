@@ -9,7 +9,7 @@ class Translation < ActiveRecord::Base
   after_create :add_other_language_records_to_version, :if => Proc.new { |translation| translation.language.iso_code=='en'}
   validates :dot_key_code, :uniqueness=>{:scope=> :cavs_translation_language_id},  :presence=>true 
   validates :calmapp_versions_translation_language, :presence => true
-  attr_accessor  :english, :criterion_iso_code, :criterion_cav_id 
+  attr_accessor  :english, :criterion_iso_code, :criterion_cav_id, :written 
 =begin
   @param cavtl_alias_identifier a number(or string) to help uniquely identify the sql alias for calmapp_versions_translation_languages. Use this for complex self joins etc
   @return AR Relation with a join between translations and  calmapp_versions_translation_languages
@@ -326,11 +326,13 @@ class Translation < ActiveRecord::Base
   def self.translations_to_db_from_file hash, translation_upload_id, calmapp_versions_translation_language, overwrite
     keys =  hash.keys
     
-    keys.each{ |k| puts k + ": " + hash[k]}
-    puts "Number of keys in hash " + keys.count.to_s
+    #keys.each{ |k| puts k + ": " + hash[k]}
+    puts "Number of keys in hash to be written " + keys.count.to_s
     count=0
     translation = nil
-    keys.each do |k| 
+    
+    keys.each do |k|
+      #binding.pry 
       translation = translation_to_db_from_file(k, hash[k], translation_upload_id, calmapp_versions_translation_language, overwrite)    
       #if translation.nil? or translation.errors.nil?
       #binding.pry
@@ -338,87 +340,130 @@ class Translation < ActiveRecord::Base
       if  translation.errors.count > 0 then
         return translation
       end
-      count += 1
+      
+      count += 1 if translation.written
+      
+      #binding.pry
     end # do
     puts "keys written to db = " + count.to_s
     return translation
   end # def
 =begin
- Writes 1 key and translation to Translation 
+  @param key is the iso_code + '.' + dot_key_code
+  @param translation
+  @param  translations_upload_id is the id of the upload if writing from an uploaded file 
+  @param calmapp_versions_translation_language the version translation language for this translation
+  @param the manner in which to handle existing dot keys in the db ( Translation.Overwrite[:all] 
+       | Translation.Overwrite[:continue_unless_blank] | Translation.Overwrite[:cancel])
+  Writes 1 key and translation to Translation 
+  Writes all translations for en but for other locales, only translations that have a dot key code already in en
 =end
   def self.translation_to_db_from_file key, translation,translations_upload_id, calmapp_versions_translation_language, overwrite
     split_hash= split_full_dot_key_code key
-    exists = Translation.where{(dot_key_code == split_hash[:dot_key_code]) & (cavs_translation_language_id == calmapp_versions_translation_language.id)}#(language== split_hash[:language])} 
     language = calmapp_versions_translation_language.translation_language.iso_code
-    #binding.pry
-    if exists.count > 0
-     object = exists.first
-     puts "object exists"
+    dkc = split_hash[:dot_key_code]
+    msg_data = "Translation: '" + translation + "' for " + language + " key " + dkc
+    en_translation_exists = nil
+    if language != 'en' then 
+      
+      en_translation_exists = english_translation_exists(calmapp_versions_translation_language, dkc)
+      msg = "English translation exists for " + msg_data
+      Rails.logger.info msg
+      
     end
-    object_persisted = false
-    #binding.pry
-    dot_key_code = split_hash[:dot_key_code]
-    msg_data = translation + " for " + language + " key " + dot_key_code
-    if not object.nil?
-      if overwrite == Translation.Overwrite[:all] then
-          msg = "all object to be persisted because all parameter chosen"
-          if object.translation != translation then
-            b = object.update_attributes!(:translation=> translation, :cavs_translation_language_id => calmapp_versions_translation_language.id, :translations_upload_id=> translations_upload_id)
-            #binding.pry
-            object_persisted = true
-            msg  "object persisted: old translation: " + object.translation + " replaced with new translation: " + msg_data
-            Rails.logger.info
+    if language == 'en' || en_translation_exists then
+      exists = Translation.where{(dot_key_code == dkc) & (cavs_translation_language_id == calmapp_versions_translation_language.id)}#(language== split_hash[:language])} 
+      #binding.pry
+      if exists.count > 0
+        object = exists.first
+        puts "Dot_key_code already exists for " + msg_data
+      end
+      object_persisted = false
+      #binding.pry
+      
+      if not object.nil?
+        if overwrite == Translation.Overwrite[:all] then
+            #msg = "Object to be persisted because 'all' parameter chosen"
+            if object.translation != translation then
+              b = object.update_attributes!(:translation=> translation, :cavs_translation_language_id => calmapp_versions_translation_language.id, :translations_upload_id=> translations_upload_id)
+              #binding.pry
+              object_persisted = true
+              msg = "Object persisted: old translation: " + object.translation + " replaced with new translation: " + msg_data
+              
+            else
+               msg = "Object to be prsisted is the same as already stored: " + msg_data
+            end
+            Rails.logger.info msg
             puts msg
-          end
-          if object.nil? then
-            binding.pry
+            if object.nil? then
+              binding.pry
+            end  
+            object.written = true
+            return object
+        elsif overwrite == Translation.Overwrite[:continue_unless_blank] then
+          #puts "If duplicate key then continue unless translation blank"
+          if object.translation.nil? then 
+            #We update where the transaltion is nil anyway
+            b = object.update_attributes!(:translation=> translation, :cavs_translation_language_id => calmapp_versions_translation_language.id, :translations_upload_id=> translations_upload_id)
+            object_persisted = true
+            msg = "overwrite: persisted anyway because tranlation blank: translation: " + msg_data
+            Rails.logger.info msg
+            puts msg
+            object.written = true
+          else
+            # we do nothing here. The translation continues because we don't overwrite an existing translation
+            object.written = false
+            msg = "Existing translation not blank so nothing written for "  + msg_data
+          end 
+          Rails.logger.info msg
+          puts msg
+          return object
+        elsif overwrite == Translation.Overwrite[:cancel]
+          # object is already in db
+          # We write it anyway if translation is null
+          if object.translation.nil? then 
+            #We update where the transaltion is nil anyway
+            object.update_attributes!(:translation=> translation, :cavs_translation_language_id => calmapp_versions_translation_language.id, :translations_upload_id=> translations_upload_id)
+            object_persisted = true
+            msg = "Overwrite: persisted anyway because tranlation blank: translation: " + msg_data
+            Rails.logger.info msg
+            puts msg
+            object.written = true
+            return object
+          else
+            msg = "Cancelled because of duplicate dot_key_code: data " + msg_data
+            Rails.logger.info msg
+            puts msg
+            t = Translation.new(:cavs_translation_language_id => calmapp_versions_translation_language.id, :dot_key_code=> dkc, :translation=>translation, :translations_upload_id => translations_upload_id)
+            t.errors.add(:dot_key_code, I18n.t("messages.write_file_to_db.cancel", {:language=> language, :dot_key_code => object.dot_key_code}))
+            t.written = false
+            return t 
           end  
-          return object
-      elsif overwrite == Translation.Overwrite[:continue_unless_blank] then
-        puts "if duplicate key then continue unless translation blank"
-        if object.translation.nil? then 
-          #We update where the transaltion is nil anyway
-          b = object.update_attributes!(:translation=> translation, :cavs_translation_language_id => calmapp_versions_translation_language.id, :translations_upload_id=> translations_upload_id)
-          object_persisted = true
-          msg = "overwrite: persisted anyway because tranlation blank: translation: " + msg_data
-          Rails.logger.info msg
-          puts msg
-          
         else
-          # we do nothing here. The translation continues becaue we don't overwrite an existing translation
-        end 
-        return object
-      elsif overwrite == Translation.Overwrite[:cancel]
-        # object is already in db
-        # We write it anyway if translation is null
-        if object.translation.nil? then 
-          #We update where the transaltion is nil anyway
-          b = object.update_attributes!(:translation=> translation, :cavs_translation_language_id => calmapp_versions_translation_language.id, :translations_upload_id=> translations_upload_id)
-          object_persisted = true
-          msg = "overwrite: persisted anyway because tranlation blank: translation: " + msg_data
-          Rails.logger.info msg
-          puts msg
+          msg = "Invalid value for overwrite condition. Invalid value = " + overwrite + ". Data is " + msg_data
+          object.errors.add(:base, msg)
+          object.written = false
           return object
-        else
-          msg = "cancel when duplicate keys"
-          puts msg
-          t = Translation.new(:cavs_translation_language_id => calmapp_versions_translation_language.id, :dot_key_code=> dot_key_code, :translation=>translation, :translations_upload_id => translations_upload_id)
-          t.errors.add(:dot_key_code, I18n.t("messages.write_file_to_db.cancel", {:language=> language, :dot_key_code => object.dot_key_code}))
-          return t 
-        end  
-      else
-        object.errors.add(:base, "Invalid value for overwrite condition. Invalid value = " + overwrite)
-      end #overwrite condition
-    else 
-      #object is nil (not fouund in db)
-      # if not overwrite or match language and keys count=0 then this code executes
-      msg = "Write new translation: " + msg_data
+        end #overwrite condition
+      else 
+        #object is nil (not fouund in db)
+        # if not overwrite or match language and keys count=0 then this code executes
+        msg = "Write new translation: " + msg_data
+        puts msg
+        Rails.logger.info msg
+        t = Translation.new(:cavs_translation_language_id => calmapp_versions_translation_language.id, :dot_key_code=> dkc, :translation=>translation, :translations_upload_id => translations_upload_id)
+        t.save!       
+        t.written = true
+        return t 
+      end # object is nil
+    else
+      #english translation does not exist
+      msg = "English translation does not exist so not saving " + msg_data
       puts msg
       Rails.logger.info msg
-      t = Translation.new(:cavs_translation_language_id => calmapp_versions_translation_language.id, :dot_key_code=> dot_key_code, :translation=>translation, :translations_upload_id => translations_upload_id)
-      t.save!       
-      return t 
-    end # object is nil
+      t = Translation.new(:cavs_translation_language_id => calmapp_versions_translation_language.id, :dot_key_code=> dkc, :translation=>translation, :translations_upload_id => translations_upload_id)
+      return t
+    end    
   end
   
 =begin
@@ -428,6 +473,23 @@ class Translation < ActiveRecord::Base
   def self.split_full_dot_key_code full_dot_key_code
     code_array = full_dot_key_code.split(".") 
     return {:language=> code_array[0], :dot_key_code=> code_array[1..(code_array.length-1)].join(".")}
+  end
+  
+  def self.english_translation_exists(calmapp_versions_translation_language, dkc)
+    english_tl = TranslationLanguage.where{iso_code == 'en'}
+    
+    cav_id = calmapp_versions_translation_language.calmapp_version_id
+    tl_id = english_tl.first.id
+    english_calmapp_versions_translation_language = CalmappVersionsTranslationLanguage.where{(calmapp_version_id == my{cav_id}) & (translation_language_id ==  my{tl_id})}.first
+    en_cav_tl_id = english_calmapp_versions_translation_language.id
+    en_translation_ar_relation = Translation.where{(dot_key_code == my{dkc}) &  (cavs_translation_language_id == my{en_cav_tl_id})}
+    english_translation_exists =  en_translation_ar_relation.count
+    #binding.pry
+    if english_translation_exists > 0 then
+      return en_translation_ar_relation.first 
+    else
+      return nil
+    end
   end
 end
 

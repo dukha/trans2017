@@ -109,13 +109,13 @@ group :development, :test do
  # gem 'cucumber'
   #gem 'cucumber-rails'
   gem 'database_cleaner'
+  gem 'shoulda'
   
   gem 'launchy'
   gem 'autotest'#, '4.4.6'
     # rspec advises not to install autotest-rails (but says nothing about autotest-rails-pure). rspec advises only autotest
   gem 'autotest-rails-pure'#,'4.1.2'
   # test server for rspec
-  gem 'spork'#, '~> 0.9.0'
 
   # will document model according to migrations (actually according to schema)
   #gem 'annotate-models', '1.0.4'
@@ -155,9 +155,9 @@ display/undisplay
   2. rake i18n:missing translations
 =end
   #gem 'faker'
-  gem 'guard'
+  
   # generate test data
-  gem 'factory_girl_rails', '~> 4.2.1'
+  gem 'factory_girl_rails', '~> 4.4.0'
 
 end # end group dev, test
 
@@ -166,7 +166,14 @@ end # end group dev, test
   #gem 'coffee-rails', '~>4.0.0'#, "~> 3.2.1"
   gem 'uglifier','~>2.2.1'
 
-
+group :test do
+  gem 'shoulda-matchers'#, '~>2.6.0'
+  gem 'guard-rspec'
+  gem 'libnotify', '0.8.0'
+  gem 'spork-rails'#, '~> 0.9.0'
+  gem 'guard-spork', '1.5.0'
+  gem 'childprocess', '0.3.6'
+end
 group :development do
   gem 'capistrano'
   

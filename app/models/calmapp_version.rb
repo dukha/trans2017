@@ -22,7 +22,7 @@ class CalmappVersion < ActiveRecord::Base
   #accepts_nested_attributes_for :redis_databases, :reject_if => :all_blank, :allow_destroy => true
  
   validates  :version,  :presence=>true, :uniqueness=>{:scope =>:calmapp_id}
-  validates :version, :numericality=>true#=> {:only_integer=>false, :allow_nil =>false}
+  #validates :version, :numericality=>true#=> {:only_integer=>false, :allow_nil =>false}
   
   #validates :calmapp, :presence=>true
 

@@ -2,7 +2,7 @@
 
 FactoryGirl.define do
   factory :calmapp_versions_translation_language do
-    edit "MyString"
-    index "MyString"
+    #edit "MyString"
+    #index "MyString"
   end
 end

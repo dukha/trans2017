@@ -36,9 +36,9 @@ class Calmapp < ActiveRecord::Base
   #validates :languages, :associated => true
   #validates :calmapp_versions, :associated => true
   validates :name, :presence=>true, :uniqueness=>true
-  #validates :name, :uniqueness=>true
+ 
   
-  
+=begin  
   def save_app_version_database_languages(version=nil, redis_database=nil, languages=nil )
       Calmapp.transaction do
         save!
@@ -62,8 +62,8 @@ class Calmapp < ActiveRecord::Base
       end # calmapp transaction
     return self
   end #save_app_version_database
-
+=end
   def can_destroy?
-    return calmapp_versions.empty?
+    return (not new_record?) && calmapp_versions.empty?
   end
 end

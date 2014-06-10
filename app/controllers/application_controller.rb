@@ -140,7 +140,7 @@ This function, together with the scope in routes.rb allows the setting of urls l
     #binding.pry
     #system "RAILS_ENV=#{Rails.env} bin/delayed_job start --exit-on-complete 2>&1 >> #{Rails.root}/log/background.log"
     system "RAILS_ENV=#{Rails.env} bin/delayed_job start --exit-on-complete 2>&1"
-    binding.pry
+    #binding.pry
   end
 =begin
   Use this function to rescue all situations

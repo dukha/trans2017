@@ -2,9 +2,9 @@
 
 FactoryGirl.define do
   factory :translation_editor_param do
-    dot_key_code "MyString"
+    #dot_key_code "MyString"
     param_name "MyString"
-    param_order "MyString"
+    param_sequence "MyString"
     param_default "MyString"
   end
 end

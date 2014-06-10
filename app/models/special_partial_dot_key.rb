@@ -1,6 +1,8 @@
 class SpecialPartialDotKey < ActiveRecord::Base
 include TranslationsHelper
-
+  def self.cldr_keys
+    return SpecialPartialDotKey.where{cldr == true}
+  end
   def self.seed
     SpecialPartialDotKey.create(:partial_dot_key=> $ARM + '%', :sort=> "model", :cldr=>true)
     SpecialPartialDotKey.create(:partial_dot_key=> $ARA + '%', :sort=> "attribute", :cldr=>false)
