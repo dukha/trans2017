@@ -66,9 +66,10 @@ class CalmappVersionsController < ApplicationController
     respond_to do |format|
       if @calmapp_version.save
         #binding.pry
-        if @calmapp_version.delay.update_attributes(params[:calmapp_version])
+        #if @calmapp_version.delay.update_attributes(params[:calmapp_version])
+        if @calmapp_version.update_attributes(params[:calmapp_version])  
           #binding.pry
-          ApplicationController.start_delayed_jobs_queue()
+          #ApplicationController.start_delayed_jobs_queue()
         #if @calmapp_version.delay.save
       #if @calmapp_version.valid? then
         #if version_create_detached then
@@ -101,7 +102,7 @@ class CalmappVersionsController < ApplicationController
       #begin
         #binding.pry
         if @calmapp_version.delay.update_attributes(params[:calmapp_version])
-          system "RAILS_ENV=#{Rails.env} bin/delayed_job start --exit-on-complete"
+          #system "RAILS_ENV=#{Rails.env} bin/delayed_job start --exit-on-complete"
           tflash('update', :success, {:model=>@@model, :count=>1})
           
           flash[:warning] = @calmapp_version.warnings.messages[:base] if @calmapp_version.warnings 

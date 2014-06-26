@@ -152,11 +152,11 @@ ActiveRecord::Schema.define(version: 20140510231637) do
   end
 
   create_table "translation_languages", force: true do |t|
-    t.string   "iso_code",                         null: false
-    t.string   "name",                             null: false
+    t.string   "iso_code",                          null: false
+    t.string   "name",                              null: false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "cldr_type",  default: "one_other"
+    t.string   "plural_sort", default: "one_other", null: false
   end
 
   add_index "translation_languages", ["iso_code"], name: "iu_tlanguages_iso_code", unique: true, using: :btree

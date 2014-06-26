@@ -42,7 +42,7 @@ class TranslationsController < ApplicationController
     # We now do all our primary io via activerecord/postgres and only publish to redis....
    
     # to work with best_in_place to edit in the index html table we need to work with eager loading 
-    # so that we can reference @translations as an array @transaltions[1] etc in the erb page
+    # so that we can reference @translations as an array @translations[1] etc in the erb page
     # Thus use to use will_paginate we eagerly load, giving an array by using .all 
     # The array will still paginate provided we have will_paginate/array
     # messy but it works!! 

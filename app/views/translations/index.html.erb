@@ -25,7 +25,7 @@
            <!--%binding.pry%-->
            <!--%=f.semantic_errors :translations_upload_id %--> 
       </li>  
-      <li class="string optional" id="translation_language_id_input"><label for="criterion_language_id", class="criteria-label" ><%=tlabel("calmapp_version", "translation")%></label>
+      <li class="string optional" id="translation_language_id_input"><label for="criterion_translation_languge_id", class="criteria-label" ><%=tlabel("calmapp_version", "translation")%></label>
            <%=select_tag(  :operator_cav_id, options_for_select(operators_2_options(equal_operator), params[:operator_cav_id]),{:include_blank=> false,:class=>'criteria-operators-select', :readonly=>true} )%> 
            <!-- < %=text_field_tag( :criterion_language_id, params[:criterion_language_id])%> -->
            <%=select_tag( :criterion_cav_id, options_from_collection_for_select(CalmappVersion.all, "id","name", params[:criterion_cav_id]), {:include_blank=> true})%>
@@ -35,11 +35,11 @@
        <li class="string optional" id="translation_dot_key_code_input"><label for="criterion_dot_key_code", class="criteria-label" ><%=tlabel("dot_key_code", "translation")%></label>
            <%=select_tag(  :operator_dot_key_code, options_for_select(operators_2_options(Translation.search_dot_key_code_operators), params[:operator_dot_key_code]),{:include_blank=> true,:class=>'criteria-operators-select', :readonly=>true} )%> 
            
-           <%=text_field_tag( :criterion_dot_key_code, params[:criterion_dot_key_code])%>   
+           <%=text_field_tag( :criterion_dot_key_code, params[:criterion_dot_key_code], :style=>"width : 300px;")%>   
       </li> 
        <li class="string optional" id="translation_translation_input"><label for="criterion_translation", class="criteria-label" ><%=tlabel("translation", "translation")%></label>
            <%=select_tag(  :operator_translation, options_for_select(operators_2_options(Translation.search_translation_operators), params[:operator_translation]),{:include_blank=> true,:class=>'criteria-operators-select', :readonly=>true} )%> 
-           <%=text_field_tag( :criterion_translation, params[:criterion_translation])%>   
+           <%=text_field_tag( :criterion_translation, params[:criterion_translation], :style=>"width : 300px;")%>   
       </li>
     
      </ol> 
@@ -95,7 +95,7 @@
       <!--td class="< %= cell_class %>" style="display:< %=wrapped_key_display%>;">< %= dot_key_code_wrapped(translation.dot_key_code) %></td -->
       <!--td class="< %= cell_class %>" style="display:< %=short_key_display%>; ">< %= dot_key_code_last_key(translation.dot_key_code) %></td -->
 <!-- It seems like best_in_place needs to work with an instance variable so we need to make things a bit more complicated here below-->
-      <td class="<%= cell_class%>" style="max-width:40%;" ><%= editor_date_time_select?(translation.attributes) ? english_date_format_example(translation.attributes) : translation.attributes["en_translation"] %></td>
+      <td class="<%= cell_class%>" style="max-width:40%;" ><%= format_english(translation.attributes) %></td>
       <td style="max-width:40%;">
         <%= best_in_place_if  best_in_place?(translation.attributes), translation, :translation, :path => translation_path(translation.id),
              :type=> input_control(translation.attributes), :collection=> collection?(translation.attributes), 

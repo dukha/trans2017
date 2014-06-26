@@ -107,7 +107,8 @@ en:
         yaml_upoad_file_name: This is the file that has been uploaded.
         duplicates_behavior: File will be written immediately to database. If there is a duplicate key, do you want to <b>Overwrite</b> the existing translation, <b>Skip<b/> to the next translation without overwriting or Cancel all new uploads?
       translation_language:
-        iso_code: "ISO Code comes in a format of <language_code [+ underscore + REGION]> language_code is 2 chars, always lowercase. Look this up if you don't know it. REGION is always in upper case. eg. fr_CA refers to French as used in Canada"   
+        iso_code: "ISO Code comes in a format of <language_code [+ underscore + REGION]> language_code is 2 chars, always lowercase. Look this up if you don't know it. REGION is always in upper case. eg. fr_CA refers to French as used in Canada"
+        plural_sort: "Go to <a target='_blank' href = 'http://cldr.unicode.org/index/cldr-spec/plural-rules'>Common Locale Data Repository Plural Rules</a> for more information on this. Consult a speaker of the language before setting a category."   
 #    actions:
 
       #new_translation: New English Translation
@@ -170,7 +171,7 @@ en:
   activerecord:
     models:
       calmapp:
-        zero: Calm Applications
+        #zero: Calm Applications
         one: Calm Application
         other: Calm Applications
       translations_upload:
@@ -283,6 +284,7 @@ en:
       translation_language:
         name: Language Name
         iso_code: ISO Code
+        plural_sort: Category of Plural
       translations_upload:
         #upload: File Name
         #upload_file_name: Uploaded File Name

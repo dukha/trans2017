@@ -220,7 +220,7 @@ translation: string
 //iso_code (translationlanguage) is part 
 //of dot_key_code
 cavs_translation_language_id: integer
-upload_id:integer nullable 
+translation_upload_id:integer nullable 
 //translation may not have come from 
 //an upload
 bg=orange

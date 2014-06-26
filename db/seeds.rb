@@ -48,7 +48,7 @@ log.info("Whiteboards data inserted successfully.")
 
 
 # delete or change below usernameonce login is added
-en = TranslationLanguage.create!(:iso_code=> "en", :name=>"English")
+en = TranslationLanguage.seed#.create!(:iso_code=> "en", :name=>"English")
 
 
 

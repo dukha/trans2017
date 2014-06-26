@@ -24,7 +24,7 @@ class CalmappVersionsTranslationLanguage < ActiveRecord::Base
   end
   belongs_to :calmapp_version_tl, :inverse_of=>:calmapp_versions_translation_languages, :class_name => "CalmappVersion", :foreign_key =>"calmapp_version_id"
   belongs_to :translation_language
-
+  has_many :translations, :foreign_key=> "cavs_translation_language_id"
   validates :translation_language_id, :uniqueness => {:scope=> :calmapp_version_id}
   validates :calmapp_version_id, :uniqueness => {:scope=> :translation_language_id}
   #validates :calmapp_version, :existence=>true
@@ -34,18 +34,27 @@ class CalmappVersionsTranslationLanguage < ActiveRecord::Base
   accepts_nested_attributes_for :translations_uploads, :reject_if => :all_blank, :allow_destroy => true
   # once we have saved a new language then we upload the base file for that translation 
   after_create :base_locale_translations_for_new_translation_languages
- 
+  after_update :do_after_update
   
+  def create
+    binding.pry
+    super
+  end 
     
-    
- 
+  def do_after_update
+    binding.pry
+    puts "after translation upload"
+  end 
 
   def name
     return CalmappVersion.find(calmapp_version_id).name + " " + TranslationLanguage.find(translation_language_id).name
   end
-  
+=begin
+ Uploads the base translation for a new language after added (ie created)
+ saves new upload
+=end
   def base_locale_translations_for_new_translation_languages
-    
+    #binding.pry
     puts "after save in base_locale_translations_for_new_translation_languages"
     
     uploads =  TranslationsUpload.where{cavs_translation_language_id == my{id}}.load

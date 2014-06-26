@@ -49,52 +49,51 @@ class TranslationsUpload < ActiveRecord::Base
     #binding.pry
     ret_val= 'ok' 
     begin
-    Translation.transaction do
-      #binding.pry
-      puts yaml_upload.url
-      puts calmapp_versions_translation_language.id
-        t = Translation.translations_to_db_from_file(key_value_pairs, id, calmapp_versions_translation_language, duplicates_behavior2)
-        if t.nil? then
-          #binding.pry
-        end #nil
+      Translation.transaction do
         #binding.pry
-        
-        #update_attributes(:written_to_db => true)
-        #base_error = t.errors[:base]
-
-        if t.errors.count > 0 then
+        puts yaml_upload.url
+        puts calmapp_versions_translation_language.id
+        t = BulkTranslations.translations_to_db_from_file(key_value_pairs, id, calmapp_versions_translation_language, duplicates_behavior2)
+          #if t.nil? then
+            #binding.pry
+          #end #nil
           #binding.pry
-          ret_val = t
-          # @todo error handling, logging here
-          #raise ActiveRecord::Rollback
-  #=begin
-          messages = ""
+          
+          #update_attributes(:written_to_db => true)
+          #base_error = t.errors[:base]
           #binding.pry
-          t.errors.full_messages.each { |msg| messages = messages + msg + " " } #each_full{  }
-          #messages = messages + "Failed to write file : " + yaml_upload_identifier
-          logger.error(messages)
-         raise  UploadTranslationError.new(messages, yaml_upload_identifier)
-  #=end
-        else
-        # set  written to db here
-        #binding.pry
-#           update_attributes(:written_to_db => true)
-        end #errors.count
+          if t.errors.count > 0 then
+            #binding.pry
+            ret_val = t
+            # @todo error handling, logging here
+            #raise ActiveRecord::Rollback
+    #=begin
+            messages = ""
+            #binding.pry
+            t.errors.full_messages.each { |msg| messages = messages + msg + " " } #each_full{  }
+            #messages = messages + "Failed to write file : " + yaml_upload_identifier
+            logger.error(messages)
+           raise  UploadTranslationError.new(messages, yaml_upload_identifier)
+    #=end
+          else
+          # set  written to db here
+          #binding.pry
+  #           update_attributes(:written_to_db => true)
+          end #errors.count
       end #trans 
       rescue UploadTranslationError => error
         msg = "Error while writing " + error.file_name + " message: " + error.message + " No translations written to database"
         puts msg
-        logger.error(msg)
-        binding.pry
-        
-        
-    rescue StandardError => error
-        msg =  "Error while writing " + yaml_upload_identifier + " message: " + error.message + " No translations written to database"
-        puts msg
-        logger.error(msg)
-        binding.pry
-        raise     
-    end#  outside block
+        Rails.logger.error(msg)
+        #binding.pry
+       rescue StandardError => error
+         msg =  "Error while writing " + yaml_upload_identifier + " message: " + error.message + " No translations written to database"
+         puts msg
+         #binding.pry
+         Rails.logger.error(msg)
+         binding.pry
+         raise     
+       end#  outside block rescues
     
     # end #begin before trans
     #binding.pry
@@ -182,11 +181,12 @@ class TranslationsUpload < ActiveRecord::Base
   def yaml_upload_identifier
     return yaml_upload.url.split('/').last
   end
-
+=begin
   def start_background_process
     puts "sbp"
     ApplicationController.start_delayed_jobs_queue
   end
+=end
 =begin  
  
   
@@ -328,8 +328,9 @@ class TranslationsUpload < ActiveRecord::Base
  Call back to write the translations after a file is uploaded 
 =end
   def do_after_commit
+    #binding.pry
     write_yaml_file_to_db()
-    ApplicationController.start_delayed_jobs_queue
+#    ApplicationController.start_delayed_jobs_queue
   end
 =begin
  Adds Czech to Calmapp version. (Works via callbacks in calmapp_version) 

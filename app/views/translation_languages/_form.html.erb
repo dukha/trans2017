@@ -4,6 +4,7 @@
 	<%= f.inputs do %>
 	  <%= f.input :iso_code %>
 	  <%= f.input :name %>
+	  <%= f.input :plural_sort, :as => :select, :collection => CldrType.CLDR_PLURAL_TYPES.keys, :hint=>t("formtastic.hints.translation_language.plural_sort").html_safe, :required=> true %>
     
 	<% end %>
 	<%= f.actions do %>

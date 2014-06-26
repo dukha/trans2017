@@ -6,9 +6,12 @@ module TranslationHelper
 =end
   def best_in_place?(attrs)
     #binding.pry
-    return true if (attrs['cldr'].nil? and  attrs["editor"].nil?) or 
-                    editor_date_time_select?(attrs)
-#                   (attrs['editor'] == 'date_format' or attrs['editor'] == 'time_format'or attrs['editor'] == 'datetime_format')
+    #return true if (attrs['cldr'].nil? and  attrs["editor"].nil?) or 
+    #                editor_date_time_select?(attrs)
+    
+    return true if ( attrs["editor"].nil?) or 
+                editor_date_time_select?(attrs)
+    
     return false  
   end
 =begin
@@ -33,7 +36,8 @@ module TranslationHelper
  @return the correct input control for best in place editing 
 =end   
    def input_control(attrs)
-       if attrs["en_translation"].length  > 40 and attrs["editor"].nil? then
+     
+       if (not attrs["en_translation"].nil?) && attrs["en_translation"].length  > 40 && attrs["editor"].nil? then
          return :textarea
        elsif attrs["editor"] == "date_format" then
          return :select
@@ -42,6 +46,7 @@ module TranslationHelper
        elsif attrs["editor"] == "datetime_format" then  
          return :select
        end
+     
        return :input
    end
 =begin
@@ -50,6 +55,23 @@ module TranslationHelper
    def editor_date_time_select? attrs
      return %w(date_format time_format datetime_format).include? attrs['editor']
    end
+=begin   
+   def format_translation translation
+     return translation
+     
+   end
+=end
+
+=begin
+  Formats the english transation on the index
+=end   
+   def format_english attributes
+     return english_date_format_example(attributes) if editor_date_time_select?(attributes)  
+     return "<i>[This plural not used in English]</i>".html_safe if attributes["en_translation"].nil?
+     return "<i>[Not used in English, so left blank]</i>".html_safe if attributes["en_translation"].blank?
+     return attributes["en_translation"]
+   end
+   
 =begin
  #return the sample date for display of date and datetime formats 
 =end   
