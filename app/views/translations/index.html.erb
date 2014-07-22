@@ -84,51 +84,266 @@
 <% link_cell_class="link"%>  
 <% editable_cell_class = "best_in_place"%>
 <!-- < % i = 0 %>  -->
-<% @translations.each do |translation| %>
+<% @translations.each do |trans| %>
 
   <tr class = "<%= cycle('dataeven', 'dataodd') %>" >
   
       
  
       
-      <td class="<%= cell_class%>" style="word-wrap: break-word;" ><span style="max-width:20px;"><%= translation.dot_key_code %></span></td>
+      <td class="<%= cell_class%>" style="word-wrap: break-word;" ><span style="max-width:20px;"><%= trans.dot_key_code %></span></td>
       <!--td class="< %= cell_class %>" style="display:< %=wrapped_key_display%>;">< %= dot_key_code_wrapped(translation.dot_key_code) %></td -->
       <!--td class="< %= cell_class %>" style="display:< %=short_key_display%>; ">< %= dot_key_code_last_key(translation.dot_key_code) %></td -->
 <!-- It seems like best_in_place needs to work with an instance variable so we need to make things a bit more complicated here below-->
-      <td class="<%= cell_class%>" style="max-width:40%;" ><%= format_english(translation.attributes) %></td>
+      <td class="<%= cell_class%>" style="max-width:40%;" ><%= format_english(trans.attributes) %></td>
       <td style="max-width:40%;">
-        <%= best_in_place_if  best_in_place?(translation.attributes), translation, :translation, :path => translation_path(translation.id),
-             :type=> input_control(translation.attributes), :collection=> collection?(translation.attributes), 
-             :ok_button=>"Save", :ok_button_class=> "ok", :cancel_button=>"Cancel", :cancel_button_class => "cancel",
-             :nil=>"Click to edit", :html_attrs=> html_attrs(translation.attributes)  %>
+        <%hint = '' %>
+        <% if best_in_place?(trans.attributes) then%>
+          <%= best_in_place(trans, :translation, :path => translation_path(trans.id),
+               :type=> input_control(trans.attributes), :collection=> collection?(trans.attributes), 
+               :ok_button=>"Save", :ok_button_class=> "ok", :cancel_button=>"Cancel", :cancel_button_class => "cancel",
+               :nil=>"Click to edit", :html_attrs=> html_attrs(trans.attributes) ) %>
+         <%elsif trans.attributes["editor"] == 'array_order' then%>
+         <!-- ARRAY ORDER EDITOR -->
+          <a id = '<%=trans.dot_key_code%>' class = '<%="special_editor " + special_editor_name(trans.attributes)%>' 'href = '#' ><%= trans.translation%></a>
+          
+          <!--%= special_editor_div(trans.attributes, trans)% -->
+          <!--%= orm_for(translations_path(trans.id),  :html=>{:method=>'put', :remote=>true})  do |f| % -->
+         <%= form_for trans, as: :translation, url: translation_path(trans), method: :patch, remote: true,  html: { class: "edit", id: "edit_translation" } do |f| %>
+          <%=       f.text_field(:id, :style => "display:inline") %>
+             <%=   f.text_field(:translation) %>
+             <%= text_field_tag("editor", value = trans.attributes["editor"])%>
+             <%= text_field_tag("original_translation", value = "#{trans.attributes['translation']}")%>
+             <%= text_field_tag("dot_key_code", value = "#{trans.attributes['dot_key_code']}")%>
+                <!--%=button_to("Save", trans) %><button id= 'cancel-special-editor'>Cancel</button -->
+             <%= f.submit "Save" %>
+             <%=button_tag "Cancel", :type=>"button", :id=> 'cancel-special-editor'%>   
+             <!--% if special_editor_name(trans.attributes) == "array_order" then % -->
+             <%end #form%>
+               <ul id= 'sortable'>
+               </ul>
+               <%hint  = "Drag the elements into the correct order and then Save." %>
+             
+         <%else%>
+           <!-- OTHER EDITOR -->
+           
+          <a id = '<%=trans.dot_key_code%>' class = '<%="special_editor " + special_editor_name(trans.attributes)%>' 'href = '#' ><%= trans.attributes["translation"]%></a>
+          
+          <!--%=special_editor_div(trans.attributes, trans)% -->
+          <!--%=form_for(translations_path(trans.id),  :html=>{:method=>'put', :remote=>true})  do |f| % -->
+           
+         <%= form_for trans, as: :translation, url: translation_path(trans), method: :patch, remote: true,  html: { class: "edit", id: "edit_translation" } do |f| %>
+          <!--%=       f.text_field(:id, :style => "display:inline") %>
+             <%=   f.text_field(:translation) %>
+             <%= text_field_tag("editor", value = "not_bip")%>
+             <%= text_field_tag("original_translation", value = "#{trans.attributes['translation']}")%>
+             <%= text_field_tag("dot_key_code", value = "#{trans.attributes['dot_key_code']}")%>
+                <%=button_to("Save", trans) %><button id= 'cancel-special-editor'>Cancel</button>
+
+          < div id = '<%="#{trans.attributes['dot_key_code']}"%>' class = 'special_editor <%="#{special_editor_name(trans.attributes)}"%>' style = 'display:none;'>
+
+       <!--input id = 'original_translation' type= 'text' value ='< %="#{trans.attributes['translation']}"%>' style='display:inline;' readonly='readonly'>       
+     <input id = 'dot_key_code' type= 'text' value ='< %="#{trans.attributes['dot_key_code']}"%>' style='display:inline;' readonly='readonly' -->
+          <%end #form%>
+          
+         <%end #elsif%>
+         <p class='inline-hints'><%=hint%></p>
       </td>
     
   <!-- <td class="< %= link_cell_class %>">< %= tlink_to  'edit', edito_translation_path + '?dot_key_code_no_lang=' +dot_key_code_no_lang(translation.dot_key_code) %></td> -->
     <!-- <td class="< %= link_cell_class %>">< %= tlink_to 'destroy',  translation , :confirm => 'delete.are_you_sure', :model => "translation", :value=>('Index: '+ translation.dot_key), :method => :delete %></td> -->
   </tr>
   <!-- >< % i+=1%> -->
-<% end %>
+<% end # each trans%>
 </table>
+<style>
+  /*
+   * These styles style a sortable ul
+   */
+  #sortable { list-style-type: none; margin: 0; padding: 0; width: 100%; }
+  #sortable li { margin: 0 3px 3px 3px; padding: 0.4em; padding-left: 1.5em; font-size: 1.0em; height: 12px; }
+  #sortable li span { position: absolute; margin-left: -1.3em; }
+  div#order-editor {border: solid; width:200px;}
+  </style>
+  
+  <script>
+  
+  </script>
+  <script>
+    
+  </script>
+  
+<!--div id = "order-editor" >
+  <ul id="sortable">
+  <!--li class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item 1</li>
+  <li class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item 2</li>
+  <li class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item 3</li>
+  <li class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item 4</li>
+  <li class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item 5</li>
+  <li class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item 6</li>
+  <li class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item 7</li>
+</ul>
+
+</div -->
 <%= twill_paginate %>
 <script>
+  //This script is for overrides of the best in place functionality
   $().ready(function(){
     $(".ok").click(function(){
       console.log("ok button");
       console.log($(this).css());
       return false;
     });
+    /*
     $('span').click(function(){
       console.log( "in span");
       //$(this).find(".ok").value
       //return false;
     });
+    */
   });
+</script>
+<script>
+  //var itemSpan = $('<span/>', {class: "ui-icon ui-icon-arrowthick-2-n-s"});
+  /* 
+   *This script enables jquery ui sortable functionality for ul with id sortable
+   */
+  $(function() {
+    $( sortableUlSelector ).sortable();
+    $( sortableUlSelector ).disableSelection();
+  });
+  
+  
+  var itemList = function(val, html){
+      console.log("itemList");
+      return $('<li/>', {class: "ui-state-default",
+                         html: html}) ;
+    }
+  var anchorSelector = "a.special_editor";  
+  var saveButtonSelector =   "input#ok-special-editor";
+  var cancelButtonSelector = 'button#cancel-special-editor';
+  var originalTranslationSelector = 'input#original_translation';
+  var idInputSelector = 'input#id';
+  var dotKeyCodeInputSelector = 'input#dot_key_code';
+  var sortableUlSelector = 'ul#sortable';
+  //var specialEditorDivSelector = 'div.special_editor';
+  var translationSelector = 'input#translation_translation' 
+/*
+ * Sets each piece of data into a li inside the targetContainer after removing existing
+ */    
+  var setOrderData = function(targetContainer, array){
+    if($(targetContainer).children().length != 0){
+      targetContainer.empty();
+    } 
+    $.each(array,function(index ,text){
+        console.log("setOrderData each");
+        //$("ul#sortable").append(itemList('', value));
+        $(targetContainer).append(itemList('', text));
+    });
+  };
+/*
+ * Saves the translation to the db via ajax update
+ */
+  var saveToDb = function(dbId, translation ){
+ /*   $.ajax({
+      "url"        : "< %= translations_path() =>
+      "type"       : "put",
+      "dataType"   : "json",
+      "async"      : false,
+      "data"       : 
+      "success"    : function(json){ 
+                       alert("success");
+                      },
+      "error"      : function(xhrRequest, status, error){ 
+                      alert(error);
+                      alert(status);
+                      alert("Technical Error:\n " + xhrRequest.responseText);
+                      }
+    });*/
+  };  
+    
+  $().ready(function(){
+    $(anchorSelector).click(function(event){
+       anchor = $(this);//$(event.target);"ul#sortable"
+       containerTd = anchor.parent('td');
+       children = getTdChildren(containerTd);
+       setOrderData(children['ul'], $.parseJSON(decodeURI(encodeURI(anchor.text()))));//anchor.text());//decodeURI()  //$.parseJSON(unescape(anchor.text())));//[':day',':month', ':year']);
+       //div.position({my: "left top", at: "left top", of: containerTd, collision: 'flip'});
+       //div.zIndex(containerTd.zIndex() + 1);
+       //children['anchor'].css("display", "none");
+       anchor.css("display", "none");
+       children['form'].css("display", 'block');   
+    });
+    $(anchorSelector).bind('ajax:success', function(event, data, status, xhr) {
+      alert(data.name);
+    });
+    $(saveButtonSelector).click(function(event){
+      console.log("in save click");
+      containerTd = parentTd(event);
+      children = getTdChildren(containerTd);
+      
+      lis = children['ul'].children('li')
+      array = [];
+      $.each(lis,function(index ,value){
+        array.push(value.textContent);
+      });  
+      update = JSON.stringify(array)
+      //saveToDb(children["id"], update);
+      children[translation].value = update;
+      children['anchor'].text(update) ;
+      restoreTd(containerTd);
+      return true
+    });
+    
+    $(cancelButtonSelector).click(function(event){
+      console.log("in cancel click");
+      containerTd = parentTd(event);
+      children = getTdChildren(containerTd);
+      restoreTd(containerTd);
+      setOrderData(children['ul'], children['originalTranslation'].value); 
+    });  
+    
+    //initialiseAllOrderEditors();
+    //setData('div#order-editor > ul#sortable', $(anchorSelector).text());//[":year", ":month", ":day"]);
+  }); //end ready
+  /*var initialiseAllOrderEditors = function(){
+    divs = $('div#order-editor');
+    $.each(divs,function(index, div ){
+      setData($(div).children('ul#sortable'), $(div).children(anchorSelector).text() );
+    });
+  }*/
+
+  
+  var parentTd = function(event){
+    return $(event.target).parents('td')[0];
+  };
+  
+  var restoreTd = function(td){
+    console.log("in restor td");
+    children = getTdChildren(td);
+    children['anchor'].css("display", "inline");
+    children['form'].css("display", 'none');
+  };
+  var getTdChildren = function(td){
+    td = $(td);
+    anchor = td.find(anchorSelector);
+    form = td.find('form');
+    //div = td.find(specialEditorDivSelector);
+    ul = td.find(sortableUlSelector);
+    saveButton = td.find(saveButtonSelector);
+    cancelButton = td.find(cancelButtonSelector);
+    originalTranslation = td.find(originalTranslationSelector);
+    id = td.find(idInputSelector);
+    dotKeyCode = td.find(dotKeyCodeInputSelector);
+    translation = td.find(translationSelector);
+    return {saveButton: saveButton, cancelButton: cancelButton, /*div: div,*/form: form, ul: ul, anchor: anchor, id: id, dotKeyCode: dotKeyCode, originalTranslation: originalTranslation, translation: translation}
+  };
 </script>
 <script type="text/javascript">
 /*
- * Script enlarges and restores editing index for translatiosn
+ * Script enlarges and restores editing index for translations
  */
-console.log("In script");
+//console.log("In script");
   var maximiseSelector = 'img#maximise';
   var minimiseSelector = 'img#minimise'; 
   

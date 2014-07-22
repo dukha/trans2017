@@ -26,9 +26,19 @@ class TranslationsController < ApplicationController
     @translation = Translation.find params[:id]
 
   respond_to do |format|
+    
     if @translation.update_attributes(params[:translation])
       format.html { redirect_to(@translation, :notice => 'Translation was successfully updated.') }
-      format.json { respond_with_bip(@translation) }
+        format.js{}
+        format.json { 
+          if params["editor"].nil? then
+            binding.pry
+            respond_with_bip(@translation) 
+          else
+            binding.pry
+            render
+          end
+        }
     else
       format.html { render :action => "edit" }
       format.json { respond_with_bip(@translation) }

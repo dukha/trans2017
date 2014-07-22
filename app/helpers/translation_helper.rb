@@ -90,6 +90,9 @@ module TranslationHelper
    def english_date_format_example attrs
      return example_date.strftime(attrs['en_translation']) 
    end
+=begin
+ Contains all the short date formats for a drop down 
+=end
    def short_date_collection date
      return [["%-d %b", date.strftime("%-d %b")],
              ["%m/%d", date.strftime("%m/%d")],
@@ -110,7 +113,9 @@ module TranslationHelper
              ["%m/%d/%Y", date.strftime("%m/%d/%Y")],
              ["%d. %b", date.strftime("%d. %b")]]
    end
-   
+=begin
+  Contains all the default data formats suitable for listing in a drop down
+=end   
    def default_date_collection date
      return [["%d %B %Y", date.strftime("%d %B %Y")],
              ["%d. %m. %Y", date.strftime("%d. %m. %Y")],
@@ -124,7 +129,9 @@ module TranslationHelper
              ["%d-%m-%Y", date.strftime("%d-%m-%Y")],
              ["%Y/%m/%d", date.strftime("%Y/%m/%d")]] 
    end
-   
+=begin
+ Contains all the long date formats for a drop down 
+=end   
    def long_date_collection date
      return [["%Y年%b%d日", date.strftime("%Y年%b%d日")],
              ["%Y년 %m월 %d일 (%a)", date.strftime("%Y년 %m월 %d일 (%a)")],
@@ -149,13 +156,17 @@ module TranslationHelper
              ["%a %e-%b-%Y"], [date.strftime("%a %e-%b-%Y")],
              ["%d %B %Y", date.strftime("%d %B %Y")]]
    end 
-   
+=begin
+ Contains all the default datetime formats for a drop down 
+=end   
    def datetime_collection datetime
      return [["%a %b-%e-%Y"], [datetime.strftime("%a %b-%e-%Y")],
              ["%a %b/%e/%Y"], [datetime.strftime("%a %b/%e/%Y")],
              ["%a %e-%b-%Y"], [datetime.strftime("%a %e-%b-%Y")]] 
    end 
-   
+=begin
+ Contains all the short datetime formats for a drop down 
+=end   
    def short_time_collection time
        return [["%d. %m. %H:%M", time.strftime("%d. %m. %H:%M")],
            ["%e %b %H:%M", time.strftime("%e %b %H:%M")],
@@ -179,7 +190,9 @@ module TranslationHelper
            ["%d %b %H:%M น.", time.strftime("%d %b %H:%M น.")],
            ["%e. %B, %H:%M", time.strftime("%e. %B, %H:%M")] ]
    end
-   
+=begin
+ Contains all the default time formats for a drop down 
+=end   
    def default_time_collection time
      [ ["%A, %d %b %Y ob %H:%M:%S", time.strftime("%A, %d %b %Y ob %H:%M:%S")],
            ["%A %e. %Bta %Y %H:%M:%S %z", time.strftime("%A %e. %Bta %Y %H:%M:%S %z")],
@@ -207,7 +220,9 @@ module TranslationHelper
            ["%Y年%b%d號 %A %H:%M:%S %Z", time.strftime("%Y年%b%d號 %A %H:%M:%S %Z")],
            ["%a %d %b %Y %H:%M:%S %Z", time.strftime("%a %d %b %Y %H:%M:%S %Z")]]
    end
-   
+=begin
+ Contains all the long time formats for a drop down 
+=end   
    def long_time_collection time
      return [["%d. %B, %Y ob %H:%M", time.strftime("%d. %B, %Y ob %H:%M")],
              ["%d %B, %Y %H:%M", time.strftime("%d %B, %Y %H:%M")],
@@ -239,22 +254,73 @@ module TranslationHelper
  @return the correct collection of formats for date, datetime and time select controls
 =end   
    def collection? attrs 
-       # Arrays generated with sql : "select '["' || translation || '", time.strftime("' || translation || '")],' from  translations where dot_key_code ilike 'time.formats.short';"
-       if input_control(attrs) == :select then
-         if attrs["editor"] == "date_format" then
-           date = example_date
-           return short_date_collection(date) if attrs["dot_key_code"] == 'date.formats.short'
-           return default_date_collection(date) if attrs["dot_key_code"] == 'date.formats.default'
-           return long_date_collection(date) if attrs["dot_key_code"] == 'date.formats.long'
-         elsif  attrs["editor"] == "datetime_format" then  
-           datetime =  example_date                     
-           return datetime_collection(datetime)  if attrs["dot_key_code"] == 'datetime.formats.course_form'
-         elsif attrs["editor"] == "time_format" then
-           time = example_time
-           return short_time_collection(time) if attrs["dot_key_code"] == 'time.formats.short'
-           return default_time_collection(time) if attrs["dot_key_code"] == 'time.formats.default'
-           return long_time_collection(time) if attrs["dot_key_code"] == 'time.formats.long'  
-         end    
-       end  
-     end       
+     # Arrays generated with sql : "select '["' || translation || '", time.strftime("' || translation || '")],' from  translations where dot_key_code ilike 'time.formats.short';"
+     if input_control(attrs) == :select then
+       if attrs["editor"] == "date_format" then
+         date = example_date
+         return short_date_collection(date) if attrs["dot_key_code"] == 'date.formats.short'
+         return default_date_collection(date) if attrs["dot_key_code"] == 'date.formats.default'
+         return long_date_collection(date) if attrs["dot_key_code"] == 'date.formats.long'
+       elsif  attrs["editor"] == "datetime_format" then  
+         datetime =  example_date                     
+         return datetime_collection(datetime)  if attrs["dot_key_code"] == 'datetime.formats.course_form'
+       elsif attrs["editor"] == "time_format" then
+         time = example_time
+         return short_time_collection(time) if attrs["dot_key_code"] == 'time.formats.short'
+         return default_time_collection(time) if attrs["dot_key_code"] == 'time.formats.default'
+         return long_time_collection(time) if attrs["dot_key_code"] == 'time.formats.long'  
+       end    
+     end  
+   end #def     
+
+=begin
+ @return the name of the special editor (outside best in place) 
+=end     
+   def special_editor_name(attrs)
+     return attrs["editor"]
+   end 
+   def special_editor_div2(attrs, trans)
+     html = "<div id = '#{attrs['dot_key_code']}' class = 'special_editor #{special_editor_name(attrs)}' style = 'display:none;'>"
+     #binding.pry
+     html.concat(form_for(translation_path(364), :remote => true, :html=>{:method=>'get'})  do |f|
+       f.text_field(:id, :style => "display:inline")
+       f.text_field(:translation) 
+     end)
+     html.concat("<input id = 'dot_key_code' type= 'text' value ='" + attrs["dot_key_code"] + "' style='display:inline;' readonly='readonly'>")
+     html.concat("<input id = 'original_translation' type= 'text' value ='" + attrs["translation"] + "' style='display:inline;' readonly='readonly'>")
+     hint = ''
+     if special_editor_name(attrs) == "array_order" then
+       #binding.pry
+       html.concat("<ul id= 'sortable'>")
+       html.concat("</ul>")
+       hint  = "Drag the elements into the correct order and then Save."
+     end
+     html.concat("<p class='inline-hints'>" + hint + "</p>")
+     #html.concat("<button id= 'ok-special-editor'>Save</button>")
+     html.concat(button_to("Save", trans) )
+     html.concat("<button id= 'cancel-special-editor'>Cancel</button>")
+     html.concat("</div>")
+     return html.html_safe
+   end
+   
+   def special_editor_div(attrs, trans)
+     html = "<div id = '#{attrs['dot_key_code']}' class = 'special_editor #{special_editor_name(attrs)}' style = 'display:none;'>"
+     html.concat("<input id = 'id' type= 'text' value ='" + attrs["id"].to_s + "' style='display:inline;'  readonly='readonly'>")
+     html.concat("<input id = 'dot_key_code' type= 'text' value ='" + attrs["dot_key_code"] + "' style='display:inline;' readonly='readonly'>")
+     html.concat("<input id = 'original_translation' type= 'text' value ='" + attrs["translation"] + "' style='display:inline;' readonly='readonly'>")
+     hint = ''
+     if special_editor_name(attrs) == "array_order" then
+       #binding.pry
+       html.concat("<ul id= 'sortable'>")
+       html.concat("</ul>")
+       hint  = "Drag the elements into the correct order and then Save."
+     end
+     html.concat("<p class='inline-hints'>" + hint + "</p>")
+     html.concat("<button id= 'ok-special-editor'>Save</button>")
+     #html.concat(button_to("Save", trans) )
+     html.concat("<button id= 'cancel-special-editor'>Cancel</button>")
+     html.concat("</div>")
+     #binding.pry
+     return html.html_safe
+   end
 end #module

@@ -115,11 +115,16 @@ class TranslationsUpload < ActiveRecord::Base
     elsif node.is_a? Array then
       # there should be no possibility of having hashes in arrays or arrays in arrays as there could not be a dot key system to manage this
       # so we assume that each element of an array is a scalar
-      #puts "Array"
-      #if node.to_s == 'order' then
+      #binding.pry
+      # This needs to be broadened out to any array which contains symbols
+      #if node.to_s.include? ":year" then #node.to_s == 'order' #&& dot_key_stack.last = "datetime" then
+        # In this case the array values are symbols. Symbols don't parse in json!!
+        # we get rid of symbols when writing to  the db
+        #binding.pry
+        #node.each_index{ |index| node[index] = node[index].inspect}
         #binding.pry
       #end
-      store_dot_key_value(dot_key_stack, node.to_s, dot_key_values_map) 
+      store_dot_key_value(dot_key_stack, node.to_json, dot_key_values_map) 
       #return    
     elsif node.is_a? String then
       #puts "String"
