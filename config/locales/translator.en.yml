@@ -18,10 +18,11 @@ en:
       back: Back
       show: Show
       create_model: Add %{model}
-      save: Save %{model}
+      save: Save
       update: Update %{model}
       new_model: Add %{model}
       show_model: Show  %{model}
+      save_model: Save %{model}
       submit: Submit
       show_something: Show %{something}
       hide_something: Hide %{something}
@@ -108,7 +109,11 @@ en:
         duplicates_behavior: File will be written immediately to database. If there is a duplicate key, do you want to <b>Overwrite</b> the existing translation, <b>Skip<b/> to the next translation without overwriting or Cancel all new uploads?
       translation_language:
         iso_code: "ISO Code comes in a format of <language_code [+ underscore + REGION]> language_code is 2 chars, always lowercase. Look this up if you don't know it. REGION is always in upper case. eg. fr_CA refers to French as used in Canada"
-        plural_sort: "Go to <a target='_blank' href = 'http://cldr.unicode.org/index/cldr-spec/plural-rules'>Common Locale Data Repository Plural Rules</a> for more information on this. Consult a speaker of the language before setting a category."   
+        plural_sort: "Go to <a target='_blank' href = 'http://cldr.unicode.org/index/cldr-spec/plural-rules'>Common Locale Data Repository Plural Rules</a> for more information on this. Consult a speaker of the language before setting a category."
+      translation:
+        array_order: Drag the elements into the correct order and then Save. 
+        array: Add or change each translation to match the English translations.
+        array_first_element_null: Add or change each translation to match the English translations.    
 #    actions:
 
       #new_translation: New English Translation
@@ -281,6 +286,11 @@ en:
         calmapp_version: App Version
         cav_id: App Version
         en_translation: English
+        selection_mode: Selection Mode
+        selection_mode_all: All translations
+        selection_mode_untranslated: Untranslated
+        selection_mode_en_newer: Newer English Translation
+        selection_mode_untranslated_and_en_newer: Untranslated and Newer English Translation
       translation_language:
         name: Language Name
         iso_code: ISO Code

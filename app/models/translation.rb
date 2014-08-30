@@ -9,12 +9,18 @@ class Translation < ActiveRecord::Base
   
   validates :dot_key_code, :uniqueness=>{:scope=> :cavs_translation_language_id},  :presence=>true 
   validates :calmapp_versions_translation_language, :presence => true
-  attr_accessor  :english, :criterion_iso_code, :criterion_cav_id, :written 
-
+  attr_accessor  :english, :criterion_iso_code, :criterion_cav_id, :written#, :selection_mode 
+  @@selection_mode
+  def self.selection_mode mode
+    @@selection = mode
+  end
+  def self.selection_mode
+    @@selection_mode
+  end
   after_create :add_other_language_records_to_version, :if => Proc.new { |translation| translation.language.iso_code=='en'}
   
   def self.searchable_attr
-    %w(iso_code dot_key_code cav_id translation)
+    %w(iso_code dot_key_code cav_id translation updated_at)
   end
   
   def self.sortable_attr
@@ -132,7 +138,7 @@ class Translation < ActiveRecord::Base
     basic_select_arr.
     select("english.translation as en_translation, english.updated_at as en_updated_at, translations.translation as translation, 
           tl1.name as language,
-          translations.updated_at as updated_at, special.cldr as cldr").
+          translations.updated_at as updated_at, special.cldr as cldr, cavtl1.calmapp_version_id as version_id").
     where( "cavtl1.calmapp_version_id = ?",calmapp_version_id).
     where("tl1.iso_code = ?", language).
     order("translations.dot_key_code asc")
@@ -174,7 +180,7 @@ class Translation < ActiveRecord::Base
     basic_select_arr.
     select("english.translation as en_translation, english.updated_at as en_updated_at, translations.translation as translation, 
           tl1.name as language,
-          translations.updated_at as updated_at, special.cldr as cldr").
+          translations.updated_at as updated_at, special.cldr as cldr, cavtl1.calmapp_version_id as version_id").
     where( "cavtl1.calmapp_version_id = ?",calmapp_version_id).
     where("tl1.iso_code = ?", language).
     order("translations.dot_key_code asc")
@@ -429,15 +435,24 @@ scope :outer_join_to_english_arr2, ->( calmapp_version_id, equal=true ){
     return ! ret_val.empty?  
     #SpecialPartialDotKey.select("partial_dot_key_code").where{my{dot_key_code} =~ partial_dot_key }.first#.cldr
   end
+=begin
   # overrides search() in search_model.rb
-  def self.search(current_user, search_info={}, ar_relation = nil)
+  @param ar_relation will be used as the starting point
+  @param search_info must contain criteria and operators for iso_code and calamapp_version_id unless ar_relation is not nil
+  @param  conditions_between_joined_tables an array of strings with where clauses (eg "english.updated_at < translations.updated_at")
+=end  
+  def self.search(current_user, search_info={}, ar_relation = nil, conditions_between_joined_tables = [])
     criteria = search_info[:criteria]
     operators = search_info[:operators]
     sorting = search_info[:sorting]
-    translations = single_lang_translations_arr(criteria.delete("iso_code"), criteria.delete("cav_id"))
-    operators.delete("iso_code")
-    operators..delete("cav_id")
- 
+    # We get the first instance of activerecord_relation, then use it to add the rest of the user input criteria
+    if not ar_relation.nil? then
+      translations = ar_relation
+    else
+      translations = single_lang_translations_arr(criteria.delete("iso_code"), criteria.delete("cav_id"))
+      operators.delete("iso_code")
+      operators.delete("cav_id")
+    end
     # We need to do this for dot key code otherwise it will split on '.'
     # in and not_in are a bit shakey. They come to the controller as lists as a string. So we try to split
     # using space, or comma
@@ -456,6 +471,12 @@ scope :outer_join_to_english_arr2, ->( calmapp_version_id, equal=true ){
       end
     end # dot_key_code
     translations = build_lazy_loader(translations, criteria, operators)
+    #Now we have an extra condition involving a joined table
+    if not conditions_between_joined_tables.empty? then
+      conditions_between_joined_tables.each do |str|
+        translations = translations.where(str)
+      end
+    end
     return translations
   end
  

@@ -42,7 +42,7 @@ class CalmappVersionsTranslationLanguage < ActiveRecord::Base
   end 
     
   def do_after_update
-    binding.pry
+    #binding.pry
     puts "after translation upload"
   end 
 

@@ -4,11 +4,12 @@ class DotKeyCodeTranslationEditor < ActiveRecord::Base
   validates :editor, :presence => true
   def self.seed
     attrs = [
+=begin      
       {:dot_key_code =>"number.currency.format.format", :editor=>"decimal_format"},
       {:dot_key_code =>"number.human_decimal_units.format", :editor=>"decimal_format"},
       {:dot_key_code =>"number.human.storage_units.format", :editor=>"decimal_format"},
       {:dot_key_code =>"number.human.percentage.format", :editor=>"decimal_format"},
-     
+=end     
       {:dot_key_code =>"time.formats.default", :editor=>"time_format"},
       {:dot_key_code =>"time.formats.long", :editor=>"time_format"},
       {:dot_key_code =>"time.formats.short", :editor=>"time_format"},
@@ -23,9 +24,9 @@ class DotKeyCodeTranslationEditor < ActiveRecord::Base
       {:dot_key_code =>"date.min_day_names", :editor=>"array"},
       {:dot_key_code =>"date.day_names", :editor=>"array"},
       
-      {:dot_key_code =>"date.abbr_month_names", :editor=>"array"},
-      {:dot_key_code =>"date.min_month_names", :editor=>"array"},
-      {:dot_key_code =>"date.month_names", :editor=>"array"},
+      {:dot_key_code =>"date.abbr_month_names", :editor=>"array_first_element_null"},
+      {:dot_key_code =>"date.min_month_names", :editor=>"array_first_element_null"},
+      {:dot_key_code =>"date.month_names", :editor=>"array_first_element_null"},
       
       {:dot_key_code =>"date.order", :editor=>"array_order"}
     ]

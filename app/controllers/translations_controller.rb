@@ -26,20 +26,30 @@ class TranslationsController < ApplicationController
     @translation = Translation.find params[:id]
 
   respond_to do |format|
-    
+    #binding.pry
     if @translation.update_attributes(params[:translation])
-      format.html { redirect_to(@translation, :notice => 'Translation was successfully updated.') }
-        format.js{}
+      puts "successful update"
+      #binding.pry
+      format.html { 
+        redirect_to(@translation, :notice => 'Translation was successfully updated.') 
+      }
+        #format.js{
+          
+         # binding.pry
+          #render :json => {:result => "ok"}
+        #}
         format.json { 
           if params["editor"].nil? then
-            binding.pry
-            respond_with_bip(@translation) 
+            #binding.pry
+           respond_with_bip(@translation) 
           else
-            binding.pry
-            render
+            #binding.pry
+            #render
+            render :json => {:result => "ok"}
           end
-        }
+       }
     else
+      puts "unsuccessful update"
       format.html { render :action => "edit" }
       format.json { respond_with_bip(@translation) }
     end
@@ -62,9 +72,11 @@ class TranslationsController < ApplicationController
       
       #
     #else
+    #binding.pry
+      possible_where_clauses = prepare_mode()
       search_info = prepare_search()
       if Translation.valid_criteria?(search_info) then
-        @translations = Translation.search(current_user, search_info)
+        @translations = Translation.search(current_user, search_info, nil, possible_where_clauses)
         #binding.pry
       else  
         msg = 'Criteria: '
@@ -197,6 +209,33 @@ class TranslationsController < ApplicationController
 
   def destroy
   end
+  
+  def prepare_mode
+    mode = params["selection_mode"]
+    extra_where_clauses = []
+    en_newer_where = "english.updated_at > translations.updated_at"
+    untranslated_where = "translations.translation is null"
+    #binding.pry
+    if mode == "untranslated" then
+      #params["operator_translation"] = "is_null"
+      extra_where_clauses << untranslated_where
+    elsif mode == "en_newer" then
+      #params["operator_updated_at"] = 'lt' 
+      #params["criterion_updated_at"] =  "english.updated_at" 
+      extra_where_clauses << en_newer_where
+    elsif mode == 'both_untranslated_and_en_newer'  then
+      #params["operator_translation"] = "is_null"
+      #params["operator_updated_at"] = 'lt' 
+      #params["criterion_updated_at"] =  "english.updated_at" 
+      extra_where_clauses << en_newer_where
+      extra_where_clauses << untranslated_where
+    else # all
+      # do nothing    
+    end
+    return extra_where_clauses
+  end
+  
+  
   def prepare_search
     #if Translation.valid_criteria? then
     if Translation.respond_to? :searchable_attr  
@@ -210,6 +249,7 @@ class TranslationsController < ApplicationController
     else   
       sortable_attr = []   
     end
+    #binding.pry
      return search_info = init_search(current_user, searchable_attr, sortable_attr)
     
   end

@@ -5,7 +5,9 @@
 <%full_key_display='none'%>
 <%wrapped_key_display='table_cell'%>
 <%short_key_display='table-cell'%>
-
+<div id= >
+  
+</div>  
 <button id="showHideCriteria" type='button'>x</button>
 <div id='criteria' class="criteria" >
   <!-- Use form_tag here because we are not going to work with a model. form_tag doesn't work with formtastic either -->
@@ -14,31 +16,76 @@
     <!--%=f.inputs do%-->
     <%= hidden_field_tag :direction, params[:direction] %>
     <%= hidden_field_tag :sort, params[:sort] %>
-    
+    <div id="selection_mode" class = "radio">
+        
+       <input id="translation_selection_mode_all" name="selection_mode" type="radio" value="all" 
+                 <%=initialise_selection_mode_radio_buttons("all", params["selection_mode"])%>/>
+              <label for="translation_selection_mode_all"><%=tlabel("selection_mode_all", "translation")%>
+              </label>
+         
+                <input id="translation_selection_mode_untranslated" name="selection_mode" type="radio" value="untranslated"  
+                  <%=initialise_selection_mode_radio_buttons("untranslated", params["selection_mode"])%>/>
+                <label for="translation_selection_mode_untranslated"><%=tlabel("selection_mode_untranslated", "translation")%>
+              </label>
+         
+                <input id="translation_selection_mode_en_newer" name="selection_mode" type="radio" value="en_newer"  
+                    <%=initialise_selection_mode_radio_buttons("en_newer", params["selection_mode"])%>/>
+                 <label for="translation_selection_mode_en_newer"><%=tlabel("selection_mode_en_newer", "translation")%>
+              </label>
+              
+                <input id="translation_selection_mode_both_untranslated_and_en_newer" name="selection_mode" type="radio" value="both_untranslated_and_en_newer" 
+                   <%=initialise_selection_mode_radio_buttons("both_untranslated_and_en_newer", params["selection_mode"])%>/>
+                <label for="translation_selection_mode_both_untranslated_and_en_newer">   <%=tlabel("selection_mode_untranslated_and_en_newer", "translation")%>
+                
+              </label>
+    </div>  
     <fieldset class="inputs">
       <ol>
-      <li class="string optional" id="translation_language_id_input"><label for="criterion_language_id", class="criteria-label" ><%=tlabel("iso_code", "translation")%></label>
-           <%=select_tag(  :operator_iso_code, options_for_select(operators_2_options(equal_operator), params[:operator_iso_code]),{:include_blank=> false,:class=>'criteria-operators-select', :readonly=>true} )%> 
-           <!-- < %=text_field_tag( :criterion_language_id, params[:criterion_language_id])%> -->
-           <%=select_tag( :criterion_iso_code, options_from_collection_for_select(TranslationLanguage.translators_language_select(current_user), "iso_code","full_name", params[:criterion_iso_code]), {:include_blank=> true})%>
-           <!--%=select_tag( :criterion_iso_code, options_from_collection_for_select(TranslationLanguage.all, "iso_code","name", params[:criterion_iso_code]), {:include_blank=> false})% -->
-           <!--%binding.pry%-->
-           <!--%=f.semantic_errors :translations_upload_id %--> 
-      </li>  
-      <li class="string optional" id="translation_language_id_input"><label for="criterion_translation_languge_id", class="criteria-label" ><%=tlabel("calmapp_version", "translation")%></label>
-           <%=select_tag(  :operator_cav_id, options_for_select(operators_2_options(equal_operator), params[:operator_cav_id]),{:include_blank=> false,:class=>'criteria-operators-select', :readonly=>true} )%> 
-           <!-- < %=text_field_tag( :criterion_language_id, params[:criterion_language_id])%> -->
-           <%=select_tag( :criterion_cav_id, options_from_collection_for_select(CalmappVersion.all, "id","name", params[:criterion_cav_id]), {:include_blank=> true})%>
-           <!--%=f.semantic_errors :criterion_cav_id % -->  
+      <!--li class="string optional" id='selection-mode'>
+        <label for="selection-mode", class="criteria-label" >< %=tlabel("selection_mode", "translation")%></label> 
+        <!--input type="radio" name="selection_mode" value="all" checked= 'checked'>< %=tlabel("selection_mode_all", "translation")%>
+        <input type="radio" name = "selection_mode" value="untranslated">< %=tlabel("selection_mode_untranslated", "translation")%>
+        <input type="radio" name="selection_mode" value="en_newer">< %=tlabel("selection_mode_en_newer", "translation")%>
+        <input type="radio" name="selection_mode" value="both_untranslated_and_en_newer">< %=tlabel("selection_mode_untranslated_and_en_newer", "translation")%>-- >
+        < %=radio_button_tag "selection_mode", "all" %>< %=tlabel("selection_mode_all", "translation")%>
+        < %=radio_button_tag "selection_mode", "untranslated" %>< %=tlabel("selection_mode_untranslated", "translation")%>
+        < %=radio_button_tag "selection_mode", "en_newer" %>< %=tlabel("selection_mode_en_newer", "translation")%>
+        < %=radio_button_tag "selection_mode", "both_untranslated_and_en_newer" %>< %=tlabel("selection_mode_untranslated_and_en_newer", "translation")%>
+      </li -->   
+      
+      <!--li class="string optional" id="translation_language_id_input">
+         <label for="criterion_iso_code", class="criteria-label" ><%=tlabel("selection_mode", "translation")%></label>
+         <%=select_tag(  :selection_mode, options_for_select([["All", "all"], ["Untranslated","untranslated"], ["English Newer", "en_newer" ],["both_untranslated_and_en_newer", "both_untranslated_and_en_newer"]], 
+              params[:selection_mode]),{:include_blank=> false,:class=>'criteria-operators-select', :readonly=>true} )%> 
+        
+           
+      </li-->
+      <li class="string optional" id="translation_language_id_input">
+         <label for="criterion_cav_id", class="criteria-label" ><%=tlabel("calmapp_version", "translation")%></label>
+         <%=select_tag(  :operator_cav_id, options_for_select(operators_2_options(equal_operator), 
+             params[:operator_cav_id]),{:include_blank=> false,:class=>'criteria-operators-select', :readonly=>true} )%> 
+         <%=select_tag( :criterion_cav_id, options_from_collection_for_select(CalmappVersion.all, "id","name", 
+               params[:criterion_cav_id]), {:include_blank=> true})%>
       </li>
       
-       <li class="string optional" id="translation_dot_key_code_input"><label for="criterion_dot_key_code", class="criteria-label" ><%=tlabel("dot_key_code", "translation")%></label>
-           <%=select_tag(  :operator_dot_key_code, options_for_select(operators_2_options(Translation.search_dot_key_code_operators), params[:operator_dot_key_code]),{:include_blank=> true,:class=>'criteria-operators-select', :readonly=>true} )%> 
+      <li class="string optional" id="translation_language_id_input">
+         <label for="criterion_iso_code", class="criteria-label" ><%=tlabel("iso_code", "translation")%></label>
+         <%=select_tag(  :operator_iso_code, options_for_select(operators_2_options(equal_operator), 
+              params[:operator_iso_code]),{:include_blank=> false,:class=>'criteria-operators-select', :readonly=>true} )%> 
+         <%=select_tag( :criterion_iso_code, options_from_collection_for_select(TranslationLanguage.translators_language_select(current_user), "iso_code","full_name", 
+              params[:criterion_iso_code]), {:include_blank=> true})%>
            
-           <%=text_field_tag( :criterion_dot_key_code, params[:criterion_dot_key_code], :style=>"width : 300px;")%>   
+      </li>
+       <li class="string optional" id="translation_dot_key_code_input">
+         <label for="criterion_dot_key_code", class="criteria-label" ><%=tlabel("dot_key_code", "translation")%></label>
+         <%=select_tag(  :operator_dot_key_code, options_for_select(operators_2_options(Translation.search_dot_key_code_operators), 
+             params[:operator_dot_key_code]),{:include_blank=> true,:class=>'criteria-operators-select', :readonly=>true} )%> 
+         <%=text_field_tag( :criterion_dot_key_code, params[:criterion_dot_key_code], :style=>"width : 300px;")%>   
       </li> 
-       <li class="string optional" id="translation_translation_input"><label for="criterion_translation", class="criteria-label" ><%=tlabel("translation", "translation")%></label>
-           <%=select_tag(  :operator_translation, options_for_select(operators_2_options(Translation.search_translation_operators), params[:operator_translation]),{:include_blank=> true,:class=>'criteria-operators-select', :readonly=>true} )%> 
+       <li class="string optional" id="translation_translation_input">
+           <label for="criterion_translation", class="criteria-label"><%=tlabel("translation", "translation")%></label>
+           <%=select_tag(  :operator_translation, options_for_select(operators_2_options(Translation.search_translation_operators), 
+               params[:operator_translation]),{:include_blank=> true,:class=>'criteria-operators-select', :readonly=>true} )%> 
            <%=text_field_tag( :criterion_translation, params[:criterion_translation], :style=>"width : 300px;")%>   
       </li>
     
@@ -55,36 +102,31 @@
 < %  else %> -->
 
 <%= twill_paginate %>
-<table class="data" style="table-layout: fixed; width: 100%">
+<table class="data" style="table-layout: fixed; width: 100%; border-color:darkgoldenrod;">
+  <thead class="ui-widget-header" style = "color:black">
   <tr class="dataheader">
 
     
 
     <!--th class ="dataheader" style="display:< %=full_key_display%>;"> <%=tlabel('dot_key_code', 'translation') %></th-->
-    <th class ="dataheader" style="display:<%=wrapped_key_display%>;  width:20%;"><%=tlabel('dot_key_code', 'translation') %></th>
-    <th class ="dataheader" ><%=tlabel('en_translation', 'translation') %></th>
+    <th class ="dataheader" style="display:<%=wrapped_key_display%>;  width:20%; font-size:1.1em;"><%=tlabel('dot_key_code', 'translation') %></th>
+    <th class ="dataheader"  style= "font-size:1.1em;"><%=tlabel('en_translation', 'translation') %></th>
     <!--th class ="dataheader" style="display:<%=short_key_display%>;" ><%=tlabel('dot_key_code', 'translation') %></th -->
    
-    <th class ="dataheader"><%= (@translations.empty? ? '' : @translations[0].attributes["language"] + " ") + tlabel('translation', 'translation') %></th>
+    <th class ="dataheader" style= "font-size:1.1em;"><%= (@translations.empty? ? '' : @translations[0].attributes["language"] + " ") + tlabel('translation', 'translation') %></th>
      
     <!--th class="linkheader"></th>
     <th class="linkheader"></th-->
     
   </tr>
-<style>
-  .ok{
-    color:red;
-    font-size:100%;
-    
-  }  
-</style>
-
+</thead>
   
 <% cell_class = "data" %>
 <% link_cell_class="link"%>  
 <% editable_cell_class = "best_in_place"%>
 <!-- < % i = 0 %>  -->
-<% @translations.each do |trans| %>
+<tbody class="ui-widget-content">
+  <% @translations.each do |trans| %>
 
   <tr class = "<%= cycle('dataeven', 'dataodd') %>" >
   
@@ -95,39 +137,53 @@
       <!--td class="< %= cell_class %>" style="display:< %=wrapped_key_display%>;">< %= dot_key_code_wrapped(translation.dot_key_code) %></td -->
       <!--td class="< %= cell_class %>" style="display:< %=short_key_display%>; ">< %= dot_key_code_last_key(translation.dot_key_code) %></td -->
 <!-- It seems like best_in_place needs to work with an instance variable so we need to make things a bit more complicated here below-->
-      <td class="<%= cell_class%>" style="max-width:40%;" ><%= format_english(trans.attributes) %></td>
-      <td style="max-width:40%;">
-        <%hint = '' %>
+      <td class="<%= cell_class%>" style="max-width:40%;word-wrap: break-word;" ><%= format_english(trans.attributes) %></td>
+      
+      <!-- you cannot give this td below a class. It messes up bip -->
+      <td id= '<%(best_in_place?(trans.attributes) ? "best_in_place" : "special-editor")%>'  style="max-width:40%;">
         <% if best_in_place?(trans.attributes) then%>
+        
           <%= best_in_place(trans, :translation, :path => translation_path(trans.id),
                :type=> input_control(trans.attributes), :collection=> collection?(trans.attributes), 
                :ok_button=>"Save", :ok_button_class=> "ok", :cancel_button=>"Cancel", :cancel_button_class => "cancel",
                :nil=>"Click to edit", :html_attrs=> html_attrs(trans.attributes) ) %>
-         <%elsif trans.attributes["editor"] == 'array_order' then%>
+         <%elsif not trans.attributes["editor"] == nil then%>
          <!-- ARRAY ORDER EDITOR -->
-          <a id = '<%=trans.dot_key_code%>' class = '<%="special_editor " + special_editor_name(trans.attributes)%>' 'href = '#' ><%= trans.translation%></a>
+          <!--a id = '<%=trans.dot_key_code%>' class = '<%="special_editor " + special_editor_name(trans.attributes)%>' 'href = '#' ><%= trans.translation%></a -->
+          <span id = '<%=trans.dot_key_code%>' class = '<%="special_editor"%>' style = "color: blue; text_decoration: underline;  word-wrap: break-word;"><%= trans.translation%></span>
           
-          <!--%= special_editor_div(trans.attributes, trans)% -->
-          <!--%= orm_for(translations_path(trans.id),  :html=>{:method=>'put', :remote=>true})  do |f| % -->
          <%= form_for trans, as: :translation, url: translation_path(trans), method: :patch, remote: true,  html: { class: "edit", id: "edit_translation" } do |f| %>
-          <%=       f.text_field(:id, :style => "display:inline") %>
-             <%=   f.text_field(:translation) %>
-             <%= text_field_tag("editor", value = trans.attributes["editor"])%>
-             <%= text_field_tag("original_translation", value = "#{trans.attributes['translation']}")%>
-             <%= text_field_tag("dot_key_code", value = "#{trans.attributes['dot_key_code']}")%>
+          <!--%=       f.text_field(:id, :style => "display:inline") % -->
+          <%puts trans.attributes["translation"]%>
+          
+            
+        
+             <%=   f.text_field(:translation, :id => "translation_translation", :style=> "display:none") %>
+             <%= text_field_tag("editor",  "#{trans.attributes['editor']}", :style=> "display:none")%>
+             <%= text_field_tag("original_translation",  "#{trans.attributes['translation']}", :style=> "display:none")%>
+             <%= text_field_tag("dot_key_code",  "#{trans.attributes['dot_key_code']}", :style=> "display:none")%>
+             
+             <%= text_field_tag("english",  "#{trans.attributes['en_translation']}", :style=> "display:none")%>
                 <!--%=button_to("Save", trans) %><button id= 'cancel-special-editor'>Cancel</button -->
-             <%= f.submit "Save" %>
-             <%=button_tag "Cancel", :type=>"button", :id=> 'cancel-special-editor'%>   
+               
              <!--% if special_editor_name(trans.attributes) == "array_order" then % -->
-             <%end #form%>
-               <ul id= 'sortable'>
-               </ul>
-               <%hint  = "Drag the elements into the correct order and then Save." %>
+             <%if  trans.attributes["editor"] == 'array_order' then %>
+             <ul id= 'sortable' style="list-style: none; margin: 3px; padding: 3px;"></ul> 
+             <% elsif trans.attributes["editor"] == 'array' || trans.attributes["editor"] == 'array_first_element_null' then%>
+               
+               <table id = 'array-special-editor'> </table> 
+             <%end%>
+             <div id ="special-editor-hints" style="display:none;"> <%= t($FH + "translation." + special_editor_name(trans.attributes)) %></div>
+             <br> 
+             <%= f.submit t($FA + 'save'), :id=>"ok-special-editor", :style=> "display:none"%>
+             <%=button_tag t($FA +  "cancel"), :type=>"button", :id=> 'cancel-special-editor', :style=> "display:none"%> 
+             <%end #form %>
+               
              
          <%else%>
            <!-- OTHER EDITOR -->
            
-          <a id = '<%=trans.dot_key_code%>' class = '<%="special_editor " + special_editor_name(trans.attributes)%>' 'href = '#' ><%= trans.attributes["translation"]%></a>
+          <span id = '<%=trans.dot_key_code%>' class = '<%="special_editor " + special_editor_name(trans.attributes)%>' ><%= trans.attributes["translation"]%></span>
           
           <!--%=special_editor_div(trans.attributes, trans)% -->
           <!--%=form_for(translations_path(trans.id),  :html=>{:method=>'put', :remote=>true})  do |f| % -->
@@ -144,47 +200,24 @@
 
        <!--input id = 'original_translation' type= 'text' value ='< %="#{trans.attributes['translation']}"%>' style='display:inline;' readonly='readonly'>       
      <input id = 'dot_key_code' type= 'text' value ='< %="#{trans.attributes['dot_key_code']}"%>' style='display:inline;' readonly='readonly' -->
-          <%end #form%>
+          <%end #form %>
           
-         <%end #elsif%>
-         <p class='inline-hints'><%=hint%></p>
+         <%end #elsif %>
+         
       </td>
     
-  <!-- <td class="< %= link_cell_class %>">< %= tlink_to  'edit', edito_translation_path + '?dot_key_code_no_lang=' +dot_key_code_no_lang(translation.dot_key_code) %></td> -->
+  <!-- <!--td class="< %= link_cell_class %>">< %= tlink_to  'edit', edito_translation_path + '?dot_key_code_no_lang=' +dot_key_code_no_lang(translation.dot_key_code) %></td> -->
     <!-- <td class="< %= link_cell_class %>">< %= tlink_to 'destroy',  translation , :confirm => 'delete.are_you_sure', :model => "translation", :value=>('Index: '+ translation.dot_key), :method => :delete %></td> -->
   </tr>
+  </tbody>
   <!-- >< % i+=1%> -->
 <% end # each trans%>
 </table>
-<style>
-  /*
-   * These styles style a sortable ul
-   */
-  #sortable { list-style-type: none; margin: 0; padding: 0; width: 100%; }
-  #sortable li { margin: 0 3px 3px 3px; padding: 0.4em; padding-left: 1.5em; font-size: 1.0em; height: 12px; }
-  #sortable li span { position: absolute; margin-left: -1.3em; }
-  div#order-editor {border: solid; width:200px;}
-  </style>
-  
-  <script>
-  
-  </script>
-  <script>
-    
-  </script>
-  
-<!--div id = "order-editor" >
-  <ul id="sortable">
-  <!--li class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item 1</li>
-  <li class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item 2</li>
-  <li class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item 3</li>
-  <li class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item 4</li>
-  <li class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item 5</li>
-  <li class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item 6</li>
-  <li class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item 7</li>
-</ul>
 
-</div -->
+<!--div id="special-editor-background" class="special-editor-background" style="display:none; position:absolute;" </div -->
+  
+  
+
 <%= twill_paginate %>
 <script>
   //This script is for overrides of the best in place functionality
@@ -213,21 +246,31 @@
     $( sortableUlSelector ).disableSelection();
   });
   
-  
+  /*
+   * returns an li for a ul. Used for the sortable array.order dot_key_code
+   */
   var itemList = function(val, html){
       console.log("itemList");
       return $('<li/>', {class: "ui-state-default",
-                         html: html}) ;
+                         html: html, style: "margin: 3px; padding-left:3px;"}) ;
     }
-  var anchorSelector = "a.special_editor";  
+  var anchorSelector = "span.special_editor";  
   var saveButtonSelector =   "input#ok-special-editor";
   var cancelButtonSelector = 'button#cancel-special-editor';
   var originalTranslationSelector = 'input#original_translation';
   var idInputSelector = 'input#id';
   var dotKeyCodeInputSelector = 'input#dot_key_code';
   var sortableUlSelector = 'ul#sortable';
-  //var specialEditorDivSelector = 'div.special_editor';
-  var translationSelector = 'input#translation_translation' 
+  
+  var translationSelector = 'input#translation_translation'; 
+  var allSortableUlsSelector = 'ul#sortable';
+  var hintDivSelector ="div#special-editor-hints";
+  var formSelector = "#edit_translation";
+  var editorNameSelector = "input#editor";
+  
+  var englishTranslationSelector = 'input#english';
+  var arrayEditingTableSelector = 'table#array-special-editor';
+ 
 /*
  * Sets each piece of data into a li inside the targetContainer after removing existing
  */    
@@ -241,69 +284,133 @@
         $(targetContainer).append(itemList('', text));
     });
   };
-/*
- * Saves the translation to the db via ajax update
- */
-  var saveToDb = function(dbId, translation ){
- /*   $.ajax({
-      "url"        : "< %= translations_path() =>
-      "type"       : "put",
-      "dataType"   : "json",
-      "async"      : false,
-      "data"       : 
-      "success"    : function(json){ 
-                       alert("success");
-                      },
-      "error"      : function(xhrRequest, status, error){ 
-                      alert(error);
-                      alert(status);
-                      alert("Technical Error:\n " + xhrRequest.responseText);
-                      }
-    });*/
+  
+  var setArrayData = function(targetContainer, array, englishTranslationArray, first_element_null){
+    /*if( typeof first_element_null == "undefined"){ 
+      first_element_null = true;
+    }*/
+    first_element_null = (englishTranslationArray[0] == null);
+    if($(targetContainer).children().length != 0){
+      targetContainer.empty();
+    }
+    //if(typeof englishTranslation !== "undefined"){ 
+    html = '';
+    row_style_for_null = "style='display:none;'";
+    $.each(englishTranslationArray,function(index ,en_text){
+      
+      html = html + '<tr'+ ((first_element_null &&index == 0   )?(" " + row_style_for_null) : "")  + '><td>' + en_text +'</td><td>' + "<input class = 'array-element' type='text' value ='" + array[index] + "'/>" + '</td></tr>' 
+      
+    });  
+    //html = html + ""
+    $(targetContainer).prepend(html);//.html();
+    //}
   };  
-    
+ 
+  var closeOthers = function(event){
+    result = $("button.ok, input#ok-special-editor").filter(":visible");
+    $.each(result, function(index, value){
+      td = $(value).parents('td');
+      cancel($(td[0]));
+    });
+    return true;
+  };
+
   $().ready(function(){
+    //$(backgroundSelector).css("display","none");
+    //$(backgroundSelector).zIndex(-1); 
+    //hideBackground();
+    $('span.best_in_place').on('mousedown',closeOthers);
+    $('span.special_editor').on('mousedown',closeOthers); /*{
+      //array = $('td.special-editor');
+      //$.each(array, function(index, value){
+      result = $("button.ok, input#ok-special-editor").filter(":visible");
+      $.each(result, function(index, value){
+        td = $(value).parents('td');
+        cancel($(td[0]));
+      });
+      return true;
+    });*/
+    $(allSortableUlsSelector).css('display','none'); 
     $(anchorSelector).click(function(event){
        anchor = $(this);//$(event.target);"ul#sortable"
        containerTd = anchor.parent('td');
        children = getTdChildren(containerTd);
-       setOrderData(children['ul'], $.parseJSON(decodeURI(encodeURI(anchor.text()))));//anchor.text());//decodeURI()  //$.parseJSON(unescape(anchor.text())));//[':day',':month', ':year']);
-       //div.position({my: "left top", at: "left top", of: containerTd, collision: 'flip'});
-       //div.zIndex(containerTd.zIndex() + 1);
-       //children['anchor'].css("display", "none");
+       if(typeof children['editorName'] == 'undefined'){
+         // do nothing
+       }else if(children['editorName'] == 'array_order'){
+         setOrderData(children['ul'], $.parseJSON(decodeURI(encodeURI(anchor.text()))));  
+         children['ul'].css("display", "block");
+         /*containerTd.on('mouseleave', function(event){
+           event.data = this;
+           cancel(event);
+         });
+         */
+        
+        
+       }else if(children['editorName'] == 'array' || children['editorName'] == 'array_first_element_null'){
+         setArrayData(children['table'],$.parseJSON(decodeURI(encodeURI(anchor.text()))), children['englishTranslation'] );
+         children['table'].css("display", 'table');
+         /*containerTd.on('mouseleave', function(event){
+           event.data = this;
+           cancel(event);
+         });
+         */
+      /* }else if(children['editorName'] == 'array_first_element_null'){
+         setArrayData(children['table'],$.parseJSON(decodeURI(encodeURI(anchor.text()))), children['englishTranslation'], true );
+         containerTd.on('mouseleave', function(event){
+           event.data = this;
+           cancel(event);
+         });
+       }else if(children['editorName'] == 'decimal_format'){
+         
+       }else if(children['editorName'] == 'time_format'){
+                 
+       }else if(children['editorName'] == 'date_format'){ 
+         
+       }else if(children['editorName'] == 'datetime_format'){
+       */             
+       }else{
+         
+       }
+       //containerTd.css("z-index", "2");
+       /*$(backgroundSelector).click(function(event){
+         event.data = containerTd;
+         cancel(event);
+       })*/
+       //showBackground(containerTd);
        anchor.css("display", "none");
-       children['form'].css("display", 'block');   
+       children['form'].css("display", 'block');
+        
+       children['saveButton'].css("display", 'inline');
+       children['cancelButton'].css("display", 'inline'); 
+       children['hint'].css("display", 'inline'); 
+       
     });
-    $(anchorSelector).bind('ajax:success', function(event, data, status, xhr) {
+    /*$(anchorSelector).bind('ajax:success', function(event, data, status, xhr) {
       alert(data.name);
+    });*/
+    $(saveButtonSelector).on('ajax:success', function(event, data, status, xhr) {
+      //alert(data.name);
+      alert('ajax success from on button');
+    });
+    $(formSelector).on("ajax:success", function(e, data, status, xhr){
+       //alert(xhr.responseText);
+       //alert('ajax success from on form');
+    }
+    ).on("ajax:error", function(e, xhr, status, error){
+      alert("ajax error from on form");
     });
     $(saveButtonSelector).click(function(event){
       console.log("in save click");
-      containerTd = parentTd(event);
-      children = getTdChildren(containerTd);
-      
-      lis = children['ul'].children('li')
-      array = [];
-      $.each(lis,function(index ,value){
-        array.push(value.textContent);
-      });  
-      update = JSON.stringify(array)
-      //saveToDb(children["id"], update);
-      children[translation].value = update;
-      children['anchor'].text(update) ;
-      restoreTd(containerTd);
-      return true
+      return save(event);
     });
     
     $(cancelButtonSelector).click(function(event){
-      console.log("in cancel click");
-      containerTd = parentTd(event);
-      children = getTdChildren(containerTd);
-      restoreTd(containerTd);
-      setOrderData(children['ul'], children['originalTranslation'].value); 
+      //return cancel(event);
+      return cancel($(this).parents('td')[0]);
     });  
     
-    //initialiseAllOrderEditors();
+    //initialiseAllOrderEditors();children["translation"]
     //setData('div#order-editor > ul#sortable', $(anchorSelector).text());//[":year", ":month", ":day"]);
   }); //end ready
   /*var initialiseAllOrderEditors = function(){
@@ -312,7 +419,95 @@
       setData($(div).children('ul#sortable'), $(div).children(anchorSelector).text() );
     });
   }*/
-
+  
+  var save = function(event){
+    containerTd = parentTd(event);
+      children = getTdChildren(containerTd);
+      array = [];
+      if(typeof children['editorName'] == 'undefined'){
+         // do nothing
+      }else if(children['editorName'] == 'array_order'){ 
+         lis = children['ul'].children('li') 
+         $.each(lis,function(index ,value){
+           array.push(value.textContent);
+         });
+         //containerTd.off('mouseleave'); 
+      }else if(children['editorName'] == 'array' || children['editorName'] == 'array_first_element_null'){
+         inputs = children.table.find('input.array-element')
+         $.each(inputs, function(index, input){
+           array.push($(input).val());
+         });
+         //containerTd.off('mouseleave');
+         
+      /*}else if(children['editorName'] == 'array_first_element_null'){
+         //xxxxxxxxxx
+       //  children['table'].off('mouseleave');
+      //}else if(children['editorName'] == 'decimal_format'){
+         
+      //}else if(children['editorName'] == 'time_format'){
+                 
+      //}else if(children['editorName'] == 'date_format'){ 
+         
+      //}else if(children['editorName'] == 'datetime_format'){
+      */              
+      }else{
+         
+      }
+      //containerTd.css("z-index", "1");
+      //hideBackground(containerTd);  
+      update = JSON.stringify(array);
+      //saveToDb(children["id"], update);
+      children["translation"].val(update);
+      children['anchor'].text(update) ;
+      restoreTd(containerTd);
+      return true;
+  }
+  var cancel = function(containerTd){
+    console.log("in cancel ");
+    /*if(event.data != null){
+     containerTd = event.data; 
+    }else{  
+     containerTd = parentTd(event);
+    }*/
+    children = getTdChildren(containerTd);
+    restoreTd(containerTd);
+    if(typeof children['editorName'] == 'undefined'){
+       // do nothing
+    }else if(children['editorName'] == 'array_order'){
+      //console.log(children['ul']);
+      //console.log(children['originalTranslation']);
+      setOrderData(children['ul'], $.parseJSON(decodeURI(encodeURI(children['originalTranslation'][0].value))));
+      //console.log(containerTd);
+      
+      //containerTd.off('mouseleave'); 
+    }else if(children['editorName'] == 'array' || children['editorName'] == 'array_first_element_null'){
+       console.log(children['originalTranslation']);
+       if($(children["table"]).children().length != 0){
+         $(children["table"]).empty();
+       }
+       //setArrayData(children.table, $.parseJSON(decodeURI(encodeURI(children['originalTranslation'][0].value))), children['englishTranslation']);
+       //hideBackground();
+       //containerTd.off('mouseleave');
+    /*}else if(children['editorName'] == 'array_first_element_null'){
+       console.log(children['originalTranslation']);
+       setArrayData(children.table, $.parseJSON(decodeURI(encodeURI(children['originalTranslation'][0].value))));
+       containerTd.off('mouseleave');
+    }else if(children['editorName'] == 'decimal_format'){
+       
+    }else if(children['editorName'] == 'time_format'){
+               
+    }else if(children['editorName'] == 'date_format'){ 
+       
+    }else if(children['editorName'] == 'datetime_format'){
+    */              
+    }else{
+       
+    }
+    //$(backgroundSelector).off("click");
+    //$(containerTd).css("z-index", "1");
+    //hideBackground(containerTd);
+    return true;
+  };
   
   var parentTd = function(event){
     return $(event.target).parents('td')[0];
@@ -323,20 +518,81 @@
     children = getTdChildren(td);
     children['anchor'].css("display", "inline");
     children['form'].css("display", 'none');
+    children['saveButton'].css("display", 'none');
+    children['cancelButton'].css("display", 'none');
+    children['hint'].css("display", 'none');
+    console.log(typeof children['ul']);
+    console.log(typeof children['div']); 
+    console.log(typeof children['table']);    
+    if(typeof children['ul'] != 'undefined'){
+      children['ul'].css("display", 'none');
+    }else if(typeof children['table'] != 'undefined'){
+      children['table'].css("display", 'none');
+    }else{
+      
+    }   
+    //children['editorName'].val(null);
   };
+  /*
+   * @param td the cell in which the objects for a translation update are contained
+   * @return a hash of the objects in the td, except for the editorName which is the string from the editorName object.
+   * We need to return a string in the case of editorName because the value only appears as a defaultValue. 
+   * Only the text of the editorName object is required. 
+   */
   var getTdChildren = function(td){
     td = $(td);
     anchor = td.find(anchorSelector);
     form = td.find('form');
     //div = td.find(specialEditorDivSelector);
-    ul = td.find(sortableUlSelector);
+    
     saveButton = td.find(saveButtonSelector);
     cancelButton = td.find(cancelButtonSelector);
     originalTranslation = td.find(originalTranslationSelector);
     id = td.find(idInputSelector);
     dotKeyCode = td.find(dotKeyCodeInputSelector);
     translation = td.find(translationSelector);
-    return {saveButton: saveButton, cancelButton: cancelButton, /*div: div,*/form: form, ul: ul, anchor: anchor, id: id, dotKeyCode: dotKeyCode, originalTranslation: originalTranslation, translation: translation}
+    hint = td.find(hintDivSelector);
+    editorName = td.find(editorNameSelector)[0].defaultValue;
+    
+    englishJson = td.find(englishTranslationSelector)[0].value;
+    //console.log('x' + englishJson + 'x');
+    english = $.parseJSON(decodeURI(encodeURI(englishJson)));
+    ul = undefined;
+    div = undefined;
+    table = undefined;
+    if(editorName == 'array_order' ){
+      ul = td.find(sortableUlSelector);
+    }else if(editorName == 'array'){
+      //div = td.find(divEditorSelector);
+      table = td.find(arrayEditingTableSelector);
+    }else if(editorName == 'array_first_element_null'){
+      //div = td.find(divEditorSelector);
+      table = td.find(arrayEditingTableSelector);
+    }else if(children['editorName'] == 'decimal_format'){
+         
+    }else if(children['editorName'] == 'time_format'){
+                 
+    }else if(children['editorName'] == 'date_format'){ 
+         
+    }else if(children['editorName'] == 'datetime_format'){
+      
+    }else{
+      
+    }    
+    return {saveButton: saveButton, 
+            cancelButton: cancelButton, 
+            form: form, 
+            ul: ul,
+            div: div, 
+            table: table,
+            anchor: anchor, 
+            id: id, 
+            dotKeyCode: dotKeyCode, 
+            originalTranslation: originalTranslation, 
+            translation: translation,
+            hint: hint,
+            editorName: editorName,
+            englishTranslation: english };
   };
 </script>
 <script type="text/javascript">
@@ -420,5 +676,11 @@
 //This script sets up inplace editing
   $().ready(function(){
     $('.best_in_place').best_in_place();
+  });
+</script>
+<script>
+//This script sets up the selection mode radio buttons
+  $(function(){
+    $( "div#selection_mode" ).buttonset();
   });
 </script>

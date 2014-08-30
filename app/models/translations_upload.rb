@@ -37,7 +37,7 @@ class TranslationsUpload < ActiveRecord::Base
     begin       
     data  = YAML.load_file(TranslationsUpload.uploaded_to_folder + yaml_upload.url)
     key_value_pairs = TranslationsUpload.traverse_ruby(data)
-    #binding.pry
+    binding.pry
     rescue Psych::SyntaxError => pse
       #logger.error( yaml_upload_identifier() + " has produced the following error: " + pse + " Have a technical person check the syntax of the file")
       error =  PsychSyntaxErrorWrapper.new(pse, yaml_upload_identifier)
@@ -103,6 +103,12 @@ class TranslationsUpload < ActiveRecord::Base
   #handle_asynchronously :write_file_to_db2
   def  self.traverse_ruby( node, dot_key_stack=Array.new, dot_key_values_map = Hash.new)#,  container=Hash.new, anchors = Hash.new, in_sequence=nil )
     #binding.pry
+    #if node.to_s == "%n %u" or node.to_s == "%n%u" then
+     # binding.pry
+    #end
+    if node.to_s == "4"  then
+      binding.pry
+    end
     if node.is_a? Hash then
       #puts "Hash"
       node.keys.each do |k|

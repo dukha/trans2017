@@ -12,7 +12,7 @@ The following style may be *conditionally* included for improved support on olde
 form.formtastic fieldset ol li fieldset legend { margin-left: -6px;}
 
 --------------------------------------------------------------------------------------------------*/
-p.inline-hints, div.inline-hints{
+p.inline-hints, div.inline-hints, div#special-editor-hints {
 	font-style:italic;
 	font-size:smaller;
 	padding-top:0px;

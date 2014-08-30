@@ -32,7 +32,7 @@ class Calmapp < ActiveRecord::Base
   #attr_accessor :add_first_version, :version_name, :add_non_english_languages, :language_ids
   attr_accessible :name, :calmapp_versions#:new_version  #,  :new_redis_db  #, :language_ids
 
-
+  #attr_accessor :selection_mode
   #validates :languages, :associated => true
   #validates :calmapp_versions, :associated => true
   validates :name, :presence=>true, :uniqueness=>true

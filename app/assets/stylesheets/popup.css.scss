@@ -1,4 +1,4 @@
-.popup-background{  
+.popup-background, .special-editor-background{  
 display:none;  
 position:fixed;  
 _position:absolute; /* hack for internet explorer 6*/  
@@ -6,10 +6,11 @@ height:100%;
 width:100%;  
 top:0;  
 left:0;  
-background:#555555;  
+#background:#555555;  
 border:1px solid #cecece;  
 z-index:1;  
-}  
+}
+  
 .popup{  
 display:none;  
 position:fixed;  
