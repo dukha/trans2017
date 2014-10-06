@@ -37,7 +37,7 @@ class TranslationsUpload < ActiveRecord::Base
     begin       
     data  = YAML.load_file(TranslationsUpload.uploaded_to_folder + yaml_upload.url)
     key_value_pairs = TranslationsUpload.traverse_ruby(data)
-    binding.pry
+    #binding.pry
     rescue Psych::SyntaxError => pse
       #logger.error( yaml_upload_identifier() + " has produced the following error: " + pse + " Have a technical person check the syntax of the file")
       error =  PsychSyntaxErrorWrapper.new(pse, yaml_upload_identifier)

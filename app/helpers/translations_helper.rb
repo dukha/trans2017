@@ -65,6 +65,9 @@ module TranslationsHelper
 =end
 
    def tlink_to(translation_code, url, options = {})
+     #if translation_code =='new'
+      #binding.pry
+     #end
      options[:count] = 1 if options[:model] && options[:count].nil?
      model = options[:model]
      if !model.nil?
@@ -92,27 +95,32 @@ module TranslationsHelper
        #end
        
        
-       
-     link_to tlabel, url, options
+     if options[:navigate].nil? or options[:navigate] then   
+         link_to tlabel, url, options
+     else #options[:navigate] == false
+       button_to tlabel, url, options
+     end  
    end
 
    def tconfirm_option options
+     binding.pry
      if options[:data].nil? then
          options[:data] = {}
        end
        #binding.pry
        if options[:data][:confirm] then
-         options.delete(:count)
+         count = options.delete(:count)
          options[:data][:confirm] = tmessage( options[:data][:confirm], $W, options)
        end
        if options[:confirm] then
          # can't use :count for a translation of a message unless it is expected.
-         options.delete(:count)
+         count = options.delete(:count)
          #binding.pry
          
          options[:data][:confirm] =  tmessage( options[:confirm], $W, options)
        end
-       options.delete(:confirm)  
+       options.delete(:confirm)
+       options[:count] = count  
        return options
    end
   # e.g. <%=theading("listing", :model=> "course_type",:count => 2) %>

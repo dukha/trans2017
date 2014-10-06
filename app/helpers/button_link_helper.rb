@@ -72,7 +72,7 @@ module ButtonLinkHelper
       options[:data][:confirm] = 'delete.are_you_sure' if options[:data][:confirm].nil?
       
       if options[:model].nil? then 
-        #options[:model]= singular_table_name_from(obj.class.name)
+        #options[:model]= singular_table_name_from(obj.class.name), {:data=>{:confirm=>"delete.are_you_sure"}
         #this is not actually the model class name (LetterTranslation) but a string (letter translation) to show in the confirm pop up !
         options[:model]= resource.to_s.singularize.humanize.downcase
       end
@@ -81,6 +81,7 @@ module ButtonLinkHelper
       #options[:count]=1
       #end
       options[:method] = :delete   
+      options[:navigate] = false
       #binding.pry
       a= tlink_to("destroy", obj, options) 
 

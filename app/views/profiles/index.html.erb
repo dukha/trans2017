@@ -23,7 +23,8 @@
   
     
     <td class="<%= link_cell_class %>"><%= tlink_to  'edit', edit_profile_path(profile) %></td>
-    <td class="<%= link_cell_class %>"><%= tlink_to('destroy',  profile ,{:confirm => 'delete.are_you_sure', :model => "profile", :count=>1, :method => :delete}) %></td>
+    <!--td class="< %= link_cell_class %>"><%= tlink_to('destroy',  profile ,{:confirm => 'delete.are_you_sure', :model => "profile", :count=>1, :method => :delete}) %></td -->
+    <%=link_destroy(profile, "profile") %>  
   </tr>
 <% end %>
 </table>

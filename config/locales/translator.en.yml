@@ -52,6 +52,8 @@ en:
       add_calmapp_version: Add Calm App Version 
       remove_version: Remove Version
       version_alterwithredisdb: Change Publication Databases
+      version_redis: Publication to Redis
+      version_publish: Publish to Redis
       remove_redis_database: Remove This Redis Database
       change_uploads: Change Uploads
       remove_upload: Remove Upload
@@ -60,6 +62,9 @@ en:
       edit_and_change_languages: Edit (Including Languages)
       add_redis_database: Add Redis Database for Publication
       go_to_translations: Go to Translations
+      new_redis_for_version: New Redis for Version
+      back_to_redis_databases: "Back to Redis Db's"
+      back_to_versions: Back to Versions
     labels:
       #redis_db_index: Redis Database Index
       #port: Linux Port
@@ -269,6 +274,7 @@ en:
         redis_instance_id: Redis Instance
         redis_database: Redis Database
         release_status_id: Release Status
+        calmapp_version: Version
       redis_instance:
         port: Linux Port
         host: Computer with Redis Database

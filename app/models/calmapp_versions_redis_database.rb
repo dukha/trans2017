@@ -26,7 +26,7 @@ class CalmappVersionsRedisDatabase < ActiveRecord::Base
   def redis_database_attributes_present
     if redis_database.redis_db_index ==nil then
       
-      add_to_base("msg")
+      add_to_base("Redis_db_index cannot be null")
     end  
   end
   

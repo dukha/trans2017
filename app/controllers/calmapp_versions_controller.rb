@@ -101,7 +101,7 @@ class CalmappVersionsController < ApplicationController
     respond_to do |format|
       #begin
         #binding.pry
-        if @calmapp_version.delay.update_attributes(params[:calmapp_version])
+        if @calmapp_version.update_attributes(params[:calmapp_version])
           #system "RAILS_ENV=#{Rails.env} bin/delayed_job start --exit-on-complete"
           tflash('update', :success, {:model=>@@model, :count=>1})
           

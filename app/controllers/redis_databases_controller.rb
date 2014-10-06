@@ -104,5 +104,25 @@ class RedisDatabasesController < ApplicationController
     @redis_database.redis_to_yaml @file
   end
   
-  
+  def publish
+    #puts "7777777"
+    #puts redis_databases_path
+    #session[:return_to] = request.referer
+    #puts session[:return_to]
+    #puts params
+    #binding.pry
+    redis_db = RedisDatabase.find(params[:id])
+    count = redis_db.publish_version
+    #puts "ttttttttt " + count.to_s
+    if request.xhr? then
+      #binding.pry
+      render :json => count#.to_json #("Total translations written = " + count.to_s)
+    #else
+      #respond_to do |format|
+        #puts format.to_s
+        #format.html redirect_to session.delete(:return_to)#:back #render :index #redirect_to redis_databases_path
+        #format.json true.to_json
+      #end
+    end
+  end
 end

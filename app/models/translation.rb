@@ -90,27 +90,9 @@ class Translation < ActiveRecord::Base
     end
     joins("full  join translations as english on translations.dot_key_code " + operator + " english.dot_key_code")
   }
+
+
 =begin
-  @return all translations, joined to english translations and editor and plurals 
-
-  @param language expects translation_language.iso_code but  can also give id or object
-  @param calmapp_version_id identifies the relevant version
-  All attributes, including those from other objects that are selected appear in translation.attributes, presumably not updatable. 
-  use result[n].attributes to get the data you need
-  eg 
-  > x = Translation.single_lang_translations('cs',1).first.attributes
-  => {"id"=>673,
- "iso_code"=>"cs",
- "dot_key_code"=>"activerecord.errors.messages.empty",
- "editor"=>nil,
- "en_translation"=>"can't be empty",
- "en_updated_at"=>2014-04-23 23:34:48 UTC,
- "translation"=>"nesmí být prázdný/á/é",
- "updated_at"=>Wed, 23 Apr 2014 23:58:41 UTC +00:00,
- "cldr"=>nil}
-
- NB cldr = nil means that the dot_key_code does not have plurals to translate 
-=end 
   scope :single_lang_translations_arr_old, ->(language, calmapp_version_id) {
     if language.is_a? TranslationLanguage then
       language = language.iso_code
@@ -143,7 +125,31 @@ class Translation < ActiveRecord::Base
     where("tl1.iso_code = ?", language).
     order("translations.dot_key_code asc")
   }
-  
+=end  
+
+
+=begin
+  @return all translations, joined to english translations and editor and plurals 
+
+  @param language expects translation_language.iso_code but  can also give id or object
+  @param calmapp_version_id identifies the relevant version
+  All attributes, including those from other objects that are selected appear in translation.attributes, presumably not updatable. 
+  use result[n].attributes to get the data you need
+  eg 
+  > x = Translation.single_lang_translations('cs',1).first.attributes
+  => {"id"=>673,
+ "iso_code"=>"cs",
+ "dot_key_code"=>"activerecord.errors.messages.empty",
+ "editor"=>nil,
+ "en_translation"=>"can't be empty",
+ "en_updated_at"=>2014-04-23 23:34:48 UTC,
+ "translation"=>"nesmí být prázdný/á/é",
+ "updated_at"=>Wed, 23 Apr 2014 23:58:41 UTC +00:00,
+ "cldr"=>nil}
+
+ NB cldr = nil means that the dot_key_code does not have plurals to translate 
+=end 
+
   scope :single_lang_translations_arr, ->(language, calmapp_version_id) {
     if language.is_a? TranslationLanguage then
       language = language.iso_code
@@ -153,16 +159,17 @@ class Translation < ActiveRecord::Base
       language = TranslationLanguage.find(language)
     else
       puts "language is a " + language.class.name
-      # raise error  scope :outer_join_to_english_arr2, ->( calmapp_version_id, equal=true ){
+      # raise error  scope :outer_join_to_english_arr2, ->( calmapp_version, equal=true ){
+=begin
     if equal then
       operator = ' = '
     else 
       operator = ' != ' 
     end
     joins("full  join translations as english on translations.dot_key_code " + operator + " english.dot_key_code
-          and english.cavs_translation_language_id = (select id from calmapp_versions_translation_languages as cavtl2 where cavtl2.calmapp_version_id = " + calmapp_version_id.to_s  +
+          and english.cavs_translation_language_id = (select id from calmapp_versions_translation_languages as cavtl2 where cavtl2.calmapp_version = " + calmapp_version_id.to_s  +
         + "  and cavtl2.translation_language_id = " + TranslationLanguage.TL_EN.id.to_s  + "))")
-
+=end
     end
     join_to_cavs_tls_arr(calmapp_version_id).
     joins_to_tl_arr.
@@ -326,15 +333,22 @@ scope :outer_join_to_english_arr2, ->( calmapp_version_id, equal=true ){
     # :cancel means an the writing of a file will be rolled back if a duplicate language and key is found( where translation is not null )
     {:all=>"OVERWRITE_ALL", :continue_unless_blank=>"OVERWRITE_CONTINUE", :cancel => "CANCEL_OPERATION"}
   end
-  def full_dot_key_code
-    return language + "." + dot_key_code
-  end
   
+=begin
+ @return prepend iso_code to dot_key_code  
+=end  
+  def full_dot_key_code
+    return language.iso_code + "." + dot_key_code
+  end
+
+=begin
+  @return Language object for this translation
+=end  
   def language
     return calmapp_versions_translation_language.translation_language
   end 
 =begin
- @ return the calmapp_version object of this translation  
+ @return the calmapp_version object of this translation  
 =end  
   def calmapp_version
     return calmapp_versions_translation_language.calmapp_version_tl
@@ -495,6 +509,12 @@ scope :outer_join_to_english_arr2, ->( calmapp_version_id, equal=true ){
   def write_new_dot_key calmapp_versions_translation_language, dkc
     Translation.create(:dot_key_code=> dkc, :cavs_translation_language_id => calmapp_versions_translation_language.id)
   end
+=end
+=begin
+ def publish_translation(calmapp_versions_redis_database)
+   calmapp_versions_redis_database = CalmappVersionsRedisDatabase.find(calmapp_versions_redis_database) if calmapp_versions_redis_database.is_a?(Integer)
+    
+ end
 =end
 end
 

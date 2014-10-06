@@ -12,13 +12,15 @@
 
     <th class ="dataheader"><%=tlabel('redis_instance_id', 'redis_database') %></th>
     <th class ="dataheader"><%=tlabel('redis_db_index', 'redis_database') %></th>
+    <th class ="dataheader"><%=tlabel('calmapp_version', 'redis_database') %></th>
     <!--th class ="dataheader">< %=tlabel('release_status_id', 'redis_database') %></th -->
 
     
-
+    <th class="linkheader"></th>
+    <th class="linkheader"></th> 
     <th class="linkheader"></th>
     <th class="linkheader"></th>
-    <th class="linkheader"></th>
+    <!--th class="linkheader"></th -->
     
   </tr>
 
@@ -30,8 +32,7 @@
   <tr class = "<%= cycle('dataeven', 'dataodd') %>" >
       <td class="<%= cell_class %>"><%= RedisInstance.find(redis_database.redis_instance_id).description %></td>
       <td class="<%= cell_class %>"><%= redis_database.redis_db_index %></td>
-
-  
+      <td class="<%= cell_class %>"><%= redis_database.calmapp_version.name %></td>
       <!-- td class="< %= cell_class %>">< %= CalmappVersion.find(redis_database.calmapp_version_id).calmapp_name_with_version %></td -->
 
   
@@ -40,9 +41,13 @@
        <!--td class="< %= cell_class %>">< %=ReleaseStatus.find(redis_database.release_status_id).status %></td -->
   
     
-    <!--td class="< %= link_cell_class %>">< %= tlink_to  'edit', edit_redis_database_path(redis_database) %></td -->
-    <td class="<%= link_cell_class %>"><%= tlink_to 'destroy',  redis_database , :confirm => 'delete.are_you_sure', :model => "redis_database", :value=>('Index: '+ redis_database.redis_db_index.to_s), :method => :delete %></td>
-    <td class="<%= link_cell_class %>"><%= tlink_to 'redis_to_yaml',  redis_database  %></td>
+    <td class="<%= link_cell_class %>"><%= tlink_to  'edit', version_alterwithredisdb_path(redis_database.calmapp_version) %></td>
+    <td class="<%= link_cell_class %>"><%= tlink_to  'new_redis_for_version', version_alterwithredisdb_path(redis_database.calmapp_version.id) %></td>
+    <!--td class="< %= link_cell_class %>"><%= button_to t($FA + 'sign_out', :username=>current_user.username), destroy_user_session_path, :method => :delete ,:form_class => "button_to_fake", :id => 'signout' %></td -->
+    <%=link_destroy redis_database, "redis_database"%>
+    <!--td class="< %= link_cell_class %>">< %= tlink_to 'destroy',  redis_database , :confirm => 'delete.are_you_sure', :model => "redis_database", :value=>('Index: '+ redis_database.redis_db_index.to_s), :method => :delete, :navigate=>false %></td -->
+    <!--td class="< %= link_cell_class %>">< %= tlink_to 'redis_to_yaml',  redis_database  %></td-->
+    <td class="<%= link_cell_class %>"><%= tlink_to 'version_publish',version_publish_path(redis_database),{:data=>{:type=>"json", :disable_with=> "Publishing...."}, :method=> "post", :form=>{:id=>"publish"}, :remote=> true, :navigate=>false} %></td> <!--, :id=>"ajax-publish"-->
   </tr>
 <% end %>
 </table>
@@ -51,3 +56,14 @@
 <br />
 
 <!--%= tlink_to 'new_model', new_redis_database_path, :model=> 'redis_database' % -->
+
+<script>
+  $('form.button_to').on('ajax:success', function(event, data, status, xhr) {
+  //alert("success");
+  alert("Number of translations written to Redis: " + data);
+  });
+  $('form.button_to').on('ajax:error', function(event, xhr,  status, error) {
+  //alert("error");
+  alert(error);
+  });
+</script>

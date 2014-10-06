@@ -5,6 +5,8 @@ class RedisDatabase < ActiveRecord::Base
   belongs_to :redis_instance
   #belongs_to :calmapp_versions_redis_database
   has_one :calmapp_versions_redis_database
+  # has_one through does not permit multiple association instances in this direction. 
+  # The association is not an array, even though the reverse association is a has_many through
   has_one :calmapp_version, :through => :calmapp_versions_redis_database
   #belongs_to :release_status
   #has_many :uploads_redis_databases
@@ -29,8 +31,9 @@ class RedisDatabase < ActiveRecord::Base
   #validates  :redis_db_index, :redis_db => true
   
   #validates_with Validations::TranslationValidator
-
-  
+  #after_save :name_database
+  #before_delete -> (model) {model.calmapp_versions_redis_database.destroy}, :unless => model.calmapp_versions_redis_database.nil?}#:delete_calmapp_versions_redis_database
+  before_destroy :delete_calmapp_versions_redis_database
   @connection=nil
 =begin
   def save!
@@ -56,18 +59,35 @@ class RedisDatabase < ActiveRecord::Base
     end
   end
 =end
-  def name
-    return (calmapp_version_id ? CalmappVersion.find(calmapp_version_id).name : "") + " / Redis Instance: " + RedisInstance.find(redis_instance_id).description + 
-    " / Redis Database Index: " + redis_db_index.to_s
+  def delete_calmapp_versions_redis_database
+      calmapp_versions_redis_database.destroy
   end
+  
+  def name_database
+    #binding.pry
+    db_name = calmapp_version.name + " / Redis Instance: " + redis_instance.description + #RedisInstance.find(redis_instance_id).description + 
+    " / Redis Database Index: " + redis_db_index.to_s
+    #binding.pry
+    #connect.setname db_name
+  end
+  #def name
+    ##end
   # returns an instance of Redis class
+  # use this singleton for very short transaction. May not be a good idea
   def connect
+    #binding.pry
     #@connection is a singleton: only 1 connection per database" will need testing in a multiuser situation
     if ! @connection then
-      @connection = Redis.new :db=> redis_db_index, :password=> redis_instance.password, :host=> redis_instance.host, :port=> redis_instance.port
+      @connection = new_connection
     end
     return @connection
-     
+  end
+  
+  def new_connection
+    con = Redis.new :db=> redis_db_index, :password=> redis_instance.password, :host=> redis_instance.host, :port=> redis_instance.port
+    #con.auth(password)
+    #con.select con.db
+    return con
   end
 
   def database_supports_language? language
@@ -107,8 +127,79 @@ class RedisDatabase < ActiveRecord::Base
   def password
     return redis_instance.password
   end
+
   
+=begin
+ publishes 1 Translation to redis database
+ does not disconnect 
+=end  
+  def publish_one_translation(translation, connection)
+    #binding.pry
+    translation = Translation.find(translation) if translation.is_a? Integer
+    #binding.pry
+    dot_key= translation.full_dot_key_code
+    #connect.auth(password)
+    connection.set(dot_key, translation.translation.to_json)
+    puts "Published " + dot_key + " = " + connect.get(dot_key)
+    
+  end
+
+=begin
+ removes 1 Translation from redis database 
+=end   
+  def unpublish_one_translation(translation)
+    translation = Translation.find(translation) if translation.is_a? Integer
+     dot_key= translation.full_dot_key_code
+     connect.del(dot_key)
+  end
   
+=begin
+  
+=end
+  def publish_version_language(calmapp_versions_translation_language)
+    #raise "Languages don't match" if 
+    
+  end
+
+=begin
+ publishes all translations(for all languages) for the calmapp_version of this redis_database 
+=end  
+  def publish_version 
+    #calmapp_version.translation_languages.each{ |tl|
+      #translations  = Translation.join_to_cavs_tls_arr(calmapp_version.id).joins_to_tl_arr.where{tl1.iso_code == tl}
+      #translations.each{ |t|
+        #t.publish_translation(id)         
+      #}
+      
+    #}
+    
+    translations  = Translation.join_to_cavs_tls_arr(calmapp_version.id)
+    #binding.pry
+    con = new_connection
+    # This removes all key value pairs from the db
+    con.flushdb 
+    count = 0
+    translations.each{ |t|
+        #t.publish_translation(id)   
+        publish_one_translation(t, con)
+        count +=1      
+      }
+    con.bgsave
+    con.quit  
+    return count
+  end  
+
+=begin
+ Publishes all translations for the given translation language
+ @param TranslationLanguage instance 
+=end  
+  def publish_version_language translation_language
+      translations  = Translation.join_to_cavs_tls_arr(calmapp_version.id).joins_to_tl_arr.where{tl1.iso_code == transaltion_language.iso_code}
+      translations.each{ |t|
+        #t.publish_translation(id) 
+        publish_one_translation(t)        
+      }
+  end  
 =begin
   # This method takes a key and value, for example from redis and puts it into container, in a form readily converted to yaml
   def emit_1_dot_key_value(dot_key, val, container)

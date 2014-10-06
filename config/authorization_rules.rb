@@ -64,6 +64,9 @@ authorization do
   role  :version_alterwithredisdb do
     has_permission_on [:calmapp_versions], :to => [:version_alterwithredisdb]
   end
+  role :version_publish do
+    has_permission_on [:redis_databases], :to => [:publish]
+  end
   standard_roles :profiles
   #standard_roles :locations
   standard_roles :languages

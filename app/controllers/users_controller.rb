@@ -50,5 +50,13 @@ class UsersController < ApplicationController
     end
   end
 
-
+  def destroy
+    @user = User.find(params[:id])
+    @user.destroy
+    tflash('delete', :success, {:model=>@@model, :count=>1})
+    respond_to do |format|
+      format.html { redirect_to(users_select_path) }
+      format.xml  { head :ok }
+    end
+  end
 end

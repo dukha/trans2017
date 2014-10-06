@@ -22,6 +22,9 @@
       <td class = '<%=link_cell_class%>'><%= tlink_to 'edit_permissions', permissions_path(user) %></td>
       <td class = '<%=link_cell_class%>'><%= tlink_to 'reset_password', edit_password_path(user) %></td>
       <td class = '<%=link_cell_class%>'><%= unlock_link(user) %></td>
+      <!--td class = '< %=link_cell_class%>'>< %= button_to "Cancel my account", registration_path(user), data: { confirm: "Are you sure?" }, method: :delete %></td -->
+      <td class = '<%=link_cell_class%>'><%= tlink_to("destroy", destroy_user_path(user), {:navigate=>false, :method=>'delete', :remote=>true, :data=>{:confirm=>tmessage( 'delete.are_you_sure', $W, {:model=>user.username}) }})%></td>
+      <!--%=link_destroy(user, "user") % -->
     </tr>
     <%end%>
 </table>

@@ -25,7 +25,8 @@
   
     
     <td class="<%= link_cell_class %>"><%= link_to  t('actions.edit'), edit_release_status_path(release_status) %></td>
-    <td class="<%= link_cell_class %>"><%= link_to t('actions.destroy'),  release_status , :confirm => t('messages.delete.are_you_sure', :model => t($ARM + "release_status", :count=>1)), :method => :delete %></td>
+    <!--td class="<%= link_cell_class %>"><%= link_to t('actions.destroy'),  release_status , :confirm => t('messages.delete.are_you_sure', :model => t($ARM + "release_status", :count=>1)), :method => :delete %></td -->
+    <%=link_destroy(release_status, "release_status") %>
   </tr>
 <% end %>
 </table>

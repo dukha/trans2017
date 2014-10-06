@@ -80,7 +80,7 @@ gem 'daemons'
 gem 'execjs'
 gem 'therubyracer'
 # in place editing
-gem 'best_in_place', '~>2.1.0', :git => "git://github.com/bernat/best_in_place"
+gem 'best_in_place'# '~>3.0.0.rc1', :git => "git://github.com/bernat/best_in_place"
 
 # for doing searches with criteria. Replaces meta_where for rails 3.1
 gem 'squeel'

@@ -24,6 +24,7 @@ Translator::Application.routes.draw do
    get '/users_select' => 'users#select',      :as => :users_select, via: :all
     
    devise_for :users
+   match '/users/:id', :to => 'users#destroy', :as => :destroy_user, :via => :delete
    
    get "users/:id/edit_password",   :to => "users#edit",   :as => :edit_password  
     patch "users/:id/update_password", :to => "users#update", :as => :update_password  
@@ -66,15 +67,15 @@ Translator::Application.routes.draw do
    resources :special_partial_dot_keys
    #match "translation_parameters/save" => "translation_parameters#save", :as => "save_translation_params"
    #resources :uploads
-   get "translations_uploads/file_to_redis/:id" => "translations_uploads#file_to_redis", :as => "to_redis", via: :all
-   get "translations_uploads/select_translation_to_redis/:id" => "translations_uploads#select_translation_to_redis", :as => "select_to_redis", via: :all
+   get "translations_uploads/file_to_redis/:id" => "translations_uploads#file_to_redis", :as => "to_redis"#, via: :all
+   get "translations_uploads/select_translation_to_redis/:id" => "translations_uploads#select_translation_to_redis", :as => "select_to_redis"# via: :all
 
-   get "translations_uploads/write_yaml_file_to_db/:id" => "calmapp_versions_translation_languages#write_file_to_db", :as=> "write_yaml_file_to_db", :via => :all
+   get "translations_uploads/write_yaml_file_to_db/:id" => "calmapp_versions_translation_languages#write_file_to_db", :as=> "write_yaml_file_to_db"#, :via => :all
 
    get "redis_databases/redis_to_yaml/:id" => "redis_databases#redis_to_yaml", :as => "redis_to_yaml", via: :all
    
-   get "calmapp_version/version_alterwithredisdb/:id" => "calmapp_versions#version_alterwithredisdb", :as => "version_alterwithredisdb", via: :all
-   
+   get "calmapp_version/version_alterwithredisdb/:id" => "calmapp_versions#version_alterwithredisdb", :as => "version_alterwithredisdb"#, via: :all
+   post "calmapp_version/version_publish/:id" => "redis_databases#publish", :as =>"version_publish" #, :via => :all
    resources :translation_editor_params
    resources :special_partial_dot_keys
    resources :dot_key_code_translation_editors, :only=> [:index, :edit, :show] 
