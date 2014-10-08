@@ -8,6 +8,7 @@
 * =require popup 
 *=require trans
 *= require scaffold
+*= require unobtrusive_flash_ui
 
 *= require_self
 *= require_tree .
@@ -31,7 +32,13 @@ a img {
   height: 0;
   overflow: hidden;
 }
-
+//These overwrite the co9lours in unobtrusive flash css
+#unobtrusive-flash-messages .unobtrusive-flash-message-wrapper.unobtrusive-flash-error{
+  background-color:hsla(360,70%,50%,0.5);
+}
+#unobtrusive-flash-messages .unobtrusive-flash-message-wrapper{
+  background-color:hsla(120,70%,70%,1.0);
+}
 #container {
   width: 75%;
   margin: 0 auto;

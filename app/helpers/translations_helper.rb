@@ -103,7 +103,7 @@ module TranslationsHelper
    end
 
    def tconfirm_option options
-     binding.pry
+     #binding.pry
      if options[:data].nil? then
          options[:data] = {}
        end

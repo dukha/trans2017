@@ -63,10 +63,10 @@ class RedisDatabase < ActiveRecord::Base
       calmapp_versions_redis_database.destroy
   end
   
-  def name_database
+  def name
     #binding.pry
     db_name = calmapp_version.name + " / Redis Instance: " + redis_instance.description + #RedisInstance.find(redis_instance_id).description + 
-    " / Redis Database Index: " + redis_db_index.to_s
+    "(Database Index: " + redis_db_index.to_s + ")"
     #binding.pry
     #connect.setname db_name
   end
@@ -177,6 +177,7 @@ class RedisDatabase < ActiveRecord::Base
     #binding.pry
     con = new_connection
     # This removes all key value pairs from the db
+    #binding.pry
     con.flushdb 
     count = 0
     translations.each{ |t|

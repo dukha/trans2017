@@ -25,6 +25,9 @@
 // require jquery.jeditable.js
 // require KeyTable.js
 
+//= require unobtrusive_flash
+//= require unobtrusive_flash_ui
+
 // These below are in and required by best_in_place gem
 //= require jquery.purr
 //= require best_in_place
@@ -38,6 +41,7 @@
 //= require_self
 //= require_tree .
 
+UnobtrusiveFlash.flashOptions['timeout'] = 10000;
 var HELP = namespace("help");
 
 function deleteBlanksFromSelectBox(boxId){

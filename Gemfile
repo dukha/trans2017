@@ -1,7 +1,7 @@
 source 'http://rubygems.org'
-gem 'sass-rails', '~>4.0.0' #:git=> "git://github.com/rails/sass-rails"#, " ~> 3.2.5"
+#gem 'sass-rails', '~>4.0.0' #:git=> "git://github.com/rails/sass-rails"#, " ~> 3.2.5"
   #gem 'coffee-rails', '~>4.0.0'#, "~> 3.2.1"
-  gem 'uglifier','~>2.2.1'
+  #gem 'uglifier','~>2.2.1'
  
 gem 'rails', '~>4.0.0'#'~>3.2.8'
 
@@ -100,6 +100,8 @@ gem 'rails-i18n', '~>4.0.0'
 
 #gem 'log4r', :git => "git://github.com/colbygk/log4r"
 gem 'logging'
+# allows for easy showing of flash even for ajax requests
+gem 'unobtrusive_flash', '>=3'
 
 group :development, :test do
   gem 'rspec-rails'#, '2.8.0'

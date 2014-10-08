@@ -59,11 +59,16 @@
 
 <script>
   $('form.button_to').on('ajax:success', function(event, data, status, xhr) {
-  //alert("success");
-  alert("Number of translations written to Redis: " + data);
+    //console.log("success");
+    //alert("Number of translations written to Redis: " + data.result);
+    //UnobtrusiveFlash.showFlashMessage('Hello World', {type: 'notice'})
   });
   $('form.button_to').on('ajax:error', function(event, xhr,  status, error) {
-  //alert("error");
-  alert(error);
+    //alert(xhr.responseJSON.toString());
+    //console.log("error");
+    //message = error + " " + xhr.responseJSON.result + " status: " + xhr.responseJSON.status;
+    //console.log(message);
+    //alert(message);
+    //UnobtrusiveFlash.showFlashMessage('Error', {type: 'error', timeout: 0})
   });
 </script>

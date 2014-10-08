@@ -5,6 +5,7 @@ class RedisDatabasesController < ApplicationController
   # GET /translations.xml
   before_action :authenticate_user!
   filter_access_to :all
+  after_filter :prepare_unobtrusive_flash
   @@model ="redis_database"
   def index
     @redis_databases = RedisDatabase.paginate(:page => params[:page], :per_page=>15)
@@ -110,19 +111,24 @@ class RedisDatabasesController < ApplicationController
     #session[:return_to] = request.referer
     #puts session[:return_to]
     #puts params
-    #binding.pry
-    redis_db = RedisDatabase.find(params[:id])
-    count = redis_db.publish_version
-    #puts "ttttttttt " + count.to_s
-    if request.xhr? then
+    
+    begin
+      redis_db = RedisDatabase.find(params[:id])
+      count = redis_db.publish_version
+
+      if request.xhr? then
+
+        payload = {"result" => count, "status" =>200}
+        flash.now[:notice] = "Published to Redis on #{redis_db.name} : #{count} translations"
+        render :js => {}# => payload, "status" =>:success #.to_json #("Total translations written = " + count.to_s)
+      end
+    rescue => e
       #binding.pry
-      render :json => count#.to_json #("Total translations written = " + count.to_s)
-    #else
-      #respond_to do |format|
-        #puts format.to_s
-        #format.html redirect_to session.delete(:return_to)#:back #render :index #redirect_to redis_databases_path
-        #format.json true.to_json
-      #end
-    end
+      payload = {"result" => (e.message + " on #{redis_db.name}."), "status" => 400}
+      flash[:error] = payload["result"] + " Try again later or contact yor system administrator."
+      Rails.logger.error(e.message)
+      render :js =>{}#=> payload, :status => :bad_request
+      #raise
+    end  
   end
 end

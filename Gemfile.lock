@@ -280,6 +280,8 @@ GEM
     uglifier (2.2.1)
       execjs (>= 0.3.0)
       multi_json (~> 1.0, >= 1.0.2)
+    unobtrusive_flash (3.1.0)
+      railties
     warden (1.2.3)
       rack (>= 1.0)
     will_paginate (3.0.5)
@@ -343,4 +345,5 @@ DEPENDENCIES
   turbolinks
   turn (~> 0.9.6)
   uglifier (~> 2.2.1)
+  unobtrusive_flash (>= 3)
   will_paginate (~> 3.0.4)
