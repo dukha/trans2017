@@ -177,7 +177,7 @@ class CalmappVersionsController < ApplicationController
      
      def prepare_params
        #binding.pry
-       return if not params[:calmapp_version]
+       return => [:translation_language_id] if not params[:calmapp_version]
    
        if not redis_db_update? then
          # This puts the params in the correct format for accepts_nested_attributes_for() 
@@ -239,4 +239,23 @@ class CalmappVersionsController < ApplicationController
     return attr_hash
    end
 
+    # Use callbacks to share common setup or constraints between actions.
+    def set_calmapp_version
+      @calmapp_version = RCalmappVersion.find(params[:id])
+    end
+
+    # Only allow a trusted parameter "white list" through.
+    def calmapp_version_params
+      params.require(:calmapp_version).permit(:calmapp_id, 
+         :version,  
+         :redis_databases, :translation_languages, 
+         :translation_languages_available, 
+         :cavs_translation_language_id,
+         :calmapp_version, 
+         #:calmapp_versions_translation_languages => [:translation_language_id], 
+         :calmapp_versions_redis_database, 
+         :calmapp_versions_redis_database => [:redis_database_id], 
+         :redis_databases=>[:redis_db_index, :redis_instance_id],
+         :calmapp_versions_translation_language_ids=>[])
+    end
 end

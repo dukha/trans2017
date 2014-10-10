@@ -1,6 +1,7 @@
 class UsersController < ApplicationController
 
   before_action :authenticate_user!
+  before_action :set_user, only: [ :edit, :update, :destroy, :unlock_user]
   filter_access_to :all
 
   @@model ="user"
@@ -17,12 +18,12 @@ class UsersController < ApplicationController
 
   #edit_password GET   /:locale/users/:id/edit_password(.:format)   {:controller=>"users", :action=>"edit"}
   def edit
-    @user = User.find(params[:id])
+    #@user = User.find(params[:id])
   end
 
   #update_password PUT /:locale/users/:id/update_password(.:format) {:controller=>"users", :action=>"update"}
   def update
-    @user = User.find(params[:id])
+    #@user = User.find(params[:id])
     @user.unlock_access! unless !@user.access_locked?
     respond_to do |format|
       if @user.update_attributes(params[:user])
@@ -37,7 +38,7 @@ class UsersController < ApplicationController
  
   #unlock_user PUT /:locale/users/:id/unlock_user(.:format) {:controller=>"users", :action=>"unlock_user"}
   def unlock_user
-    @user = User.find(params[:id])
+    #@user = User.find(params[:id])
     @user.unlock_access! unless !@user.access_locked?
     respond_to do |format|
       if @user.save
@@ -51,12 +52,21 @@ class UsersController < ApplicationController
   end
 
   def destroy
-    @user = User.find(params[:id])
+    #@user = User.find(params[:id])
     @user.destroy
     tflash('delete', :success, {:model=>@@model, :count=>1})
     respond_to do |format|
       format.html { redirect_to(users_select_path) }
       format.xml  { head :ok }
     end
+  end
+private
+  # Use callbacks to share common setup or constraints between actions.
+  def set_user
+    @user = User.find(params[:id])
+  end  
+  def  user_params
+  params.require(:user).permit(:email, :password, :password_confirmation, :remember_me,
+                :username, :login, :actual_name)
   end
 end

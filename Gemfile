@@ -24,14 +24,14 @@ gem 'nokogiri'#, '1.5.0'
 gem 'json'
 
 # authorisation No authorization solution compatible with rails 4: CanCan looks closest
-gem 'declarative_authorization'#, '0.5.3'
+gem 'declarative_authorization', :git => "git://github.com/stffn/declarative_authorization.git" #, '0.5.3'
 
 # paginate all index views
 
 gem 'will_paginate','~>3.0.4'
 
 # rails 4 use this gem until you have implemented strong params
-gem 'protected_attributes'
+#gem 'protected_attributes'
 
 # using jquery for ajax, not prototype > rails g jquery:install
 gem 'jquery-rails'#, '~>1.0.12' #, '0.2.7'

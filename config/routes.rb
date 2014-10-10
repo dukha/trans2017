@@ -35,12 +35,12 @@ Translator::Application.routes.draw do
    resources :whiteboard_types
    resources :whiteboards
    #resources :location_tree, :only => [:index, :show]
-   #resources :locations
+   resources :locations
    #resources :areas
 
     resources :translation_languages
 
-    #resources :organisations
+    resources :organisations
 
     #resources :servers
    # to create a new child we need the parent_id

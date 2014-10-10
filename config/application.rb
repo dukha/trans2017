@@ -71,7 +71,7 @@ module Translator
     # Configuring :sql means that for postgres, the schema will be created by pg_dump
     config.active_record.schema_format :sql
     # set this to false whilst transitioning to rails 4
-    config.active_record.whitelist_attributes=false  
+    #config.active_record.whitelist_attributes=false  
     # 3.1 Enable the asset pipeline
     config.assets.enabled = true
 =begin

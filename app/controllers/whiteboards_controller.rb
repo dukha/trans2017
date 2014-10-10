@@ -4,6 +4,7 @@ class WhiteboardsController < ApplicationController
   # GET /whiteboards
   # GET /whiteboards.xml
   before_filter :authenticate_user!
+  before_filter :set_whiteboard, :only => [:show, :edit, :update, :destroy]
   filter_access_to :edit, :create, :new, :delete, :update
   # almost replaced with global handler
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
@@ -25,7 +26,7 @@ class WhiteboardsController < ApplicationController
   # GET /whiteboards/1
   # GET /whiteboards/1.xml
   def show
-    @whiteboard = Whiteboard.find(params[:id])
+    #@whiteboard = Whiteboard.find(params[:id])
 
     respond_to do |format|
       format.html # show.html.erb
@@ -46,7 +47,7 @@ class WhiteboardsController < ApplicationController
 
   # GET /whiteboards/1/edit
   def edit
-    @whiteboard = Whiteboard.find(params[:id])
+    #@whiteboard = Whiteboard.find(params[:id])
   end
 
   # POST /whiteboards
@@ -70,7 +71,7 @@ class WhiteboardsController < ApplicationController
   # PUT /whiteboards/1
   # PUT /whiteboards/1.xml
   def update
-    @whiteboard = Whiteboard.find(params[:id])
+    #@whiteboard = Whiteboard.find(params[:id])
     #rescue ActiveRecord::RecordNotFound, :with => :record_not_found
     respond_to do |format|
       if @whiteboard.update_attributes(params[:whiteboard])
@@ -88,7 +89,7 @@ class WhiteboardsController < ApplicationController
   # DELETE /whiteboards/1
   # DELETE /whiteboards/1.xml
   def destroy
-    @whiteboard = Whiteboard.find(params[:id])
+    #@whiteboard = Whiteboard.find(params[:id])
     @whiteboard.destroy
     tflash('delete', :success, {:model=>@@model, :count=>1})
     respond_to do |format|
@@ -96,13 +97,20 @@ class WhiteboardsController < ApplicationController
       format.xml  { head :ok }
     end
   end
-  private
-    def record_not_found exception
-      tflash('record_not_found', :warning,  {:model=>t(@@model, :count=>1)})
-      flash[:error] = exception.message
-      respond_to do |format|
-        format.html { redirect_to(whiteboards_url) }
-        format.xml  { head :ok }
-      end
+private
+  def whiteboard_params
+    params.require(:whiteboard).permit(:info, :whiteboard_type_id)
+  end
+  
+  def set_whiteboard
+    @whiteboard = Whiteboard.find(params[:id])
+  end
+  def record_not_found exception
+    tflash('record_not_found', :warning,  {:model=>t(@@model, :count=>1)})
+    flash[:error] = exception.message
+    respond_to do |format|
+      format.html { redirect_to(whiteboards_url) }
+      format.xml  { head :ok }
     end
+  end
 end

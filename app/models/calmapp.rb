@@ -30,7 +30,7 @@ class Calmapp < ActiveRecord::Base
   language_ids is a collection of the language i's for the non english languages to be added
 =end
   #attr_accessor :add_first_version, :version_name, :add_non_english_languages, :language_ids
-  attr_accessible :name, :calmapp_versions#:new_version  #,  :new_redis_db  #, :language_ids
+  #attr_accessible :name, :calmapp_versions#:new_version  #,  :new_redis_db  #, :language_ids
 
   #attr_accessor :selection_mode
   #validates :languages, :associated => true

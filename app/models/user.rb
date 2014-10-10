@@ -13,9 +13,10 @@ class User < ActiveRecord::Base
          :timeoutable, :lockable #,:timeout_in => 10.minutes use value from  config/initializers/devise.rb
 
   # Setup accessible (or protected) attributes for your model
+=begin Rails4  
   attr_accessible :email, :password, :password_confirmation, :remember_me,
                   :username, :login, :actual_name
-
+=end 
   # username is unique by DB index :unique => true
   # username is required by DB :null => false
   validate :email, :username, :unique => true
@@ -201,6 +202,8 @@ class User < ActiveRecord::Base
    login = conditions.delete(:login)
    where(conditions).where(["username = :value OR email = :value", { :value => login }]).first
  end
+
+
 
 private
   # Others should use current_permission for its lazy initialisation. So making sure no one accesses current_permission_id

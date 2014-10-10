@@ -1,7 +1,8 @@
 # Actions are defined here, Subclass controllers only define 
 class LocationsController < ApplicationController
-
+  
   before_action :authenticate_user!
+  before_action :set_location, only: [ :edit, :update, :destroy, :show]
   #filter_access_to :all
 
   @@model = $ARM + "location"+".one"
@@ -40,7 +41,8 @@ class LocationsController < ApplicationController
   # GET /locations/1
   # GET /locations/1.xml
   def show
-    @location = model_class.find(params[:id])
+    #@location = model_class.find(params[:id])
+    binding.pry
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @location }
@@ -63,7 +65,8 @@ class LocationsController < ApplicationController
 
   # GET /locations/1/edit
   def edit
-    @location = model_class.find(params[:id])
+    #@location = model_class.find(params[:id])
+    binding.pry
   end
 
   # POST /locations
@@ -88,7 +91,7 @@ class LocationsController < ApplicationController
 
   # GET /locations/1/delete
   def destroy
-    @location = model_class.find(params[:id])
+    #@location = model_class.find(params[:id])
     if !@location.deletable?
       #flash[:warning] = t('messages.deletion.rejected', :model=>t(
       tflash('delete.deletion_rejected', :warning, :model=>@location.class.name)
@@ -106,7 +109,7 @@ class LocationsController < ApplicationController
 
   def update
     #debugger
-    @location = model_class.find(params[:id])
+    #@location = model_class.find(params[:id])
 
     respond_to do |format|
       if @location.update_attributes(params[model_sym])
@@ -140,5 +143,12 @@ class LocationsController < ApplicationController
   def mark_deleted
     update
   end
-
+private
+  def set_location
+    @location = model_class.find(params[:id])
+  end
+  
+  def location_params
+    params.require(:location).permit(:name, :type, :parent_id, :translation_code, :marked_deleted, :fqdn)
+  end
 end

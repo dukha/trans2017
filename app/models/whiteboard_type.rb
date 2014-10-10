@@ -2,7 +2,7 @@ class WhiteboardType < ActiveRecord::Base
   validates :name_english, :presence => true, :uniqueness=>true
   validates :translation_code, :presence => true, :uniqueness=>true
 
-  attr_accessible :name_english, :translation_code
+  #attr_accessible :name_english, :translation_code
   
   cattr_reader :per_page
   @@per_page = 10

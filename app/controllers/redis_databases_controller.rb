@@ -4,6 +4,7 @@ class RedisDatabasesController < ApplicationController
   # GET /translations
   # GET /translations.xml
   before_action :authenticate_user!
+  before_filter :set_redis_database, only: [ :edit, :update, :destroy, :show]
   filter_access_to :all
   after_filter :prepare_unobtrusive_flash
   @@model ="redis_database"
@@ -131,4 +132,15 @@ class RedisDatabasesController < ApplicationController
       #raise
     end  
   end
+  
+private
+    # Use callbacks to share common setup or constraints between actions.
+    def set_redis_database
+      @redis_database = RedisDatabase.find(params[:id])
+    end
+
+    # Only allow a trusted parameter "white list" through.
+    def redis_database_params
+      params.require(:redis_database).permit(:redis_instance_id, :redis_db_index)
+    end
 end

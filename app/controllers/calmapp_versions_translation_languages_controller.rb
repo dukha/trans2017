@@ -79,7 +79,7 @@ class CalmappVersionsTranslationLanguagesController < ApplicationController
   # PATCH/PUT /calmapp_versions_translation_languages/1.json
   def update
     #binding.pry
-    @calmapp_versions_translation_language = CalmappVersionsTranslationLanguage.find(params[:id])
+    #@calmapp_versions_translation_language = CalmappVersionsTranslationLanguage.find(params[:id])
     @calmapp_versions_translation_language.assign_attributes(params[:calmapp_versions_translation_language])
     
     respond_to do |format|
@@ -161,6 +161,7 @@ class CalmappVersionsTranslationLanguagesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def calmapp_versions_translation_language_params
-      params.require(:calmapp_versions_translation_language).permit(:translation_language_id, :calmapp_version_id)
+      params.require(:calmapp_versions_translation_language).permit(:translation_language_id, :calmapp_version_id,
+          :calmapp_version, :translation_language) #, :translations_uploads_attributes[], :calmapp_versions_translation_languages_attributes[]
     end
 end

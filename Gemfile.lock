@@ -1,3 +1,9 @@
+GIT
+  remote: git://github.com/stffn/declarative_authorization.git
+  revision: 45e91af20eba71b2828c5c84066bcce3ef032e8a
+  specs:
+    declarative_authorization (1.0.0.pre)
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -79,7 +85,6 @@ GEM
     daemons (1.1.9)
     database_cleaner (1.2.0)
     debug_inspector (0.0.2)
-    declarative_authorization (0.5.7)
     delayed_job (4.0.1)
       activesupport (>= 3.0, < 4.2)
     delayed_job_active_record (4.0.1)
@@ -164,8 +169,6 @@ GEM
     polyamorous (0.6.4)
       activerecord (>= 3.0)
     polyglot (0.3.4)
-    protected_attributes (1.0.7)
-      activemodel (>= 4.0.1, < 5.0)
     pry (0.9.12.6)
       coderay (~> 1.0)
       method_source (~> 0.8)
@@ -307,7 +310,7 @@ DEPENDENCIES
   cocoon (~> 1.2.0)
   daemons
   database_cleaner
-  declarative_authorization
+  declarative_authorization!
   delayed_job_active_record
   devise
   exception_notification_rails3
@@ -326,7 +329,6 @@ DEPENDENCIES
   nokogiri
   passenger
   pg
-  protected_attributes
   pry-doc
   pry-nav
   pry-rails

@@ -4,6 +4,7 @@ class WhiteboardTypesController < ApplicationController
   # GET /whiteboard_types
   # GET /whiteboard_types.xml
   before_action :authenticate_user!
+  before_filter :set_whiteboard_type, :only => [:show, :edit, :update, :destroy]
   filter_access_to :all
   
   @@model ="whiteboard_type"
@@ -20,7 +21,7 @@ class WhiteboardTypesController < ApplicationController
   # GET /whiteboard_types/1
   # GET /whiteboard_types/1.xml
   def show
-    @whiteboard_type = WhiteboardType.find(params[:id])
+    #@whiteboard_type = WhiteboardType.find(params[:id])
 
     respond_to do |format|
       format.html # show.html.erb
@@ -41,7 +42,7 @@ class WhiteboardTypesController < ApplicationController
 
   # GET /whiteboard_types/1/edit
   def edit
-    @whiteboard_type = WhiteboardType.find(params[:id])
+    #@whiteboard_type = WhiteboardType.find(params[:id])
   end
 
   # POST /whiteboard_types
@@ -70,7 +71,7 @@ class WhiteboardTypesController < ApplicationController
   # PUT /whiteboard_types/1
   # PUT /whiteboard_types/1.xml
   def update
-    @whiteboard_type = WhiteboardType.find(params[:id])
+    #@whiteboard_type = WhiteboardType.find(params[:id])
 
     respond_to do |format|
       if @whiteboard_type.update_attributes(params[:whiteboard_type])
@@ -87,12 +88,21 @@ class WhiteboardTypesController < ApplicationController
   # DELETE /whiteboard_types/1
   # DELETE /whiteboard_types/1.xml
   def destroy
-    @whiteboard_type = WhiteboardType.find(params[:id])
+    #@whiteboard_type = WhiteboardType.find(params[:id])
     @whiteboard_type.destroy
     tflash('delete', :success, {:model=>@@model, :count=>1})
     respond_to do |format|
       format.html { redirect_to(whiteboard_types_url) }
       format.xml  { head :ok }
     end
+  end
+  
+private
+  def set_whiteboard_type
+    @whiteboard_type = WhiteboardType.find(params[:id])
+  end
+  
+  def whiteboard_type_params
+    params.require(:whiteboard_type).permit(:name_english, :translation_code)
   end
 end

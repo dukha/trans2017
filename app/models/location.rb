@@ -12,7 +12,7 @@ class Location < ActiveRecord::Base
   validates :name, :presence   => true
   validates :name, :uniqueness => true
   # not that in virtually every lookup translation_code is not null, however in Location it is nullable.
-  attr_accessible :name, :type, :parent_id, :translation_code, :marked_deleted, :fqdn
+  #attr_accessible :name, :type, :parent_id, :translation_code, :marked_deleted, :fqdn
 
   #has_many :public_schedules, :dependent => :destroy
 

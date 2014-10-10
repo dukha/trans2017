@@ -1,7 +1,7 @@
 class PermissionsController < ApplicationController
 
   before_action :authenticate_user!
-  
+  before_action :set_permission, only: [:update, :destroy]
   filter_access_to :set_current_by_ajax do
     true                  # anyone can select from the permissions they were granted
   end
@@ -79,7 +79,7 @@ class PermissionsController < ApplicationController
   end
 
   # GET /permissions/1
-  # GET /permissions/1.xml
+  # GET /permissions/1.xmluser
   def show
 =begin rails 4
     @permission = Permission.find_by_id_and_user_id!(params[:id],params[:user_id])
@@ -143,7 +143,7 @@ class PermissionsController < ApplicationController
     #Rails.logger.info "&&&&&&&&&&&&"+ params.to_s
     #&&&&&&&&&&&&{"utf8"=>"✓", "_method"=>"put", "authenticity_token"=>"tzUAldwoIRBsSDKRiWrVygP2pTr6MUE82qnFCKLc21M=", "permission"=>{"user_id"=>"4", "organisation_id"=>"13", "profile_id"=>"2"}, "commit"=>"Update Access permission", "action"=>"update", "controller"=>"permissions", "locale"=>"en", "user_id"=>"4", "id"=>"26"}
 
-    @permission = Permission.find(params[:id])
+    #@permission = Permission.find(params[:id])
 
     respond_to do |format|
       if @permission.update_attributes(params[:permission])
@@ -159,7 +159,7 @@ class PermissionsController < ApplicationController
   # DELETE /permissions/1
   # DELETE /permissions/1.xml
   def destroy
-    @permission = Permission.find(params[:id])
+    #@permission = Permission.find(params[:id])
     @permission.destroy
 
     respond_to do |format|
@@ -167,8 +167,17 @@ class PermissionsController < ApplicationController
       format.xml  { head :ok }
     end
   end
-  
+private  
   def find_by_id_and_user_id( )
     return @permission = Permission.where(:id=>params[:id]).where(:user_id => params[:user_id]).take!
   end
+
+  def  permission_params
+    params.require(:permission).permit(:user_id, :organisation_id, :profile_id, :user, :organisation, :profile)
+  end
+  
+  def set_permission
+    @permission = Permission.find(params[:id])
+  end  
+
 end

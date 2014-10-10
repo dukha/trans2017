@@ -7,7 +7,7 @@ class Permission < ActiveRecord::Base
 
   # on production got error:
   # ActionView::Template::Error (undefined method `profile_id' for #<Permission:0xacf786c>):
-  attr_accessible :user_id, :organisation_id, :profile_id, :user, :organisation, :profile
+  #attr_accessible :user_id, :organisation_id, :profile_id, :user, :organisation, :profile
 
  scope :for_user, lambda { |user| where( 'user_id = ?', user.id) }
  scope :under_location, lambda { |org| where( 'organisation_id IN (?)', org.accessible_organisations.collect{|each| each.id} ) }

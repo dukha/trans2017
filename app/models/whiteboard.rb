@@ -12,7 +12,7 @@
 
 class Whiteboard < ActiveRecord::Base
   include Validations
-  attr_accessible  :info, :whiteboard_type_id
+  #attr_accessible  :info, :whiteboard_type_id
   belongs_to :whiteboard_type #, :class_name=>"WhiteboardType", :foreign_key=>"whiteboard_type_id"
 
   validates :whiteboard_type, :existence => true

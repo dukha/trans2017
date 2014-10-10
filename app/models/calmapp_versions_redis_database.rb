@@ -1,8 +1,10 @@
 class CalmappVersionsRedisDatabase < ActiveRecord::Base
   include Validations
+=begin  
   attr_accessible :calmapp_version,:calmapp_version_id, :release_status_id, :release_status, :redis_database, 
                  :redis_database_id, :redis_database_attributes
-  attr_accessor :redis_instance_id, :redis_db_index
+=end
+ attr_accessor :redis_instance_id, :redis_db_index
   
   belongs_to :calmapp_version#_rd,  :class_name=> "CalmappVersion", #:foreign_key=>"calmapp_version_id", :inverse_of=> :calmapp_versions_redis_database
   belongs_to :release_status
