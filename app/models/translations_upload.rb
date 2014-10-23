@@ -1,8 +1,10 @@
 class TranslationsUpload < ActiveRecord::Base
   include Validations
   mount_uploader :yaml_upload, YamlTranslationFileUploader
+=begin
   attr_accessible :description,  :cavs_translation_language_id, :yaml_upload, 
                   :calmapp_versions_translation_language, :duplicates_behavior, :written_to_db
+=end
   attr_accessor :duplicates_behavior
   belongs_to :calmapp_versions_translation_language, :foreign_key=>"cavs_translation_language_id"
   
@@ -50,9 +52,10 @@ class TranslationsUpload < ActiveRecord::Base
     ret_val= 'ok' 
     begin
       Translation.transaction do
-        #binding.pry
+        
         puts yaml_upload.url
-        puts calmapp_versions_translation_language.id
+        #puts calmapp_versions_translation_language.id
+        #binding.pry
         t = BulkTranslations.translations_to_db_from_file(key_value_pairs, id, calmapp_versions_translation_language, duplicates_behavior2)
           #if t.nil? then
             #binding.pry
@@ -85,13 +88,14 @@ class TranslationsUpload < ActiveRecord::Base
         msg = "Error while writing " + error.file_name + " message: " + error.message + " No translations written to database"
         puts msg
         Rails.logger.error(msg)
+        raise
         #binding.pry
        rescue StandardError => error
          msg =  "Error while writing " + yaml_upload_identifier + " message: " + error.message + " No translations written to database"
          puts msg
          #binding.pry
          Rails.logger.error(msg)
-         binding.pry
+         #binding.pry
          raise     
        end#  outside block rescues
     
@@ -182,7 +186,7 @@ class TranslationsUpload < ActiveRecord::Base
     identifier_array  = yaml_upload_identifier.split(".")
     return identifier_array[identifier_array.length-2]
   end 
-  
+   
   def iso_code
     #binding.pry
     return calmapp_versions_translation_language.translation_language.iso_code 

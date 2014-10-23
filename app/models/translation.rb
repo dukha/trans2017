@@ -358,9 +358,10 @@ scope :outer_join_to_english_arr2, ->( calmapp_version_id, equal=true ){
  other language (for the same version)
 =end  
   def add_other_language_records_to_version
+   #binding.pry
    calmapp_version().translation_languages.each do |tl|
    #calmapp_versions_translation_language.each do |cavtl|
-   
+     #binding.pry
      if not tl.iso_code == 'en' then
        
        cavtl=  CalmappVersionsTranslationLanguage.where{calmapp_version_id  == my{calmapp_version.id}}.where{translation_language_id == my{tl.id}}.first
@@ -368,14 +369,15 @@ scope :outer_join_to_english_arr2, ->( calmapp_version_id, equal=true ){
        #cavtl = CalmappVersionsTranslationLanguage.new(:calmapp_version_id=>calmapp_version.id, :translation_language=> tl.id)
        #cavtl.save!
        
-       if tl.plurals_same_as_en? || (not Translation.dot_key_code_plural?(dot_key_code,calmapp_version))
+       if tl.plurals_same_as_en? || (not Translation.dot_key_code_plural?(dot_key_code,calmapp_version.id))
+         #binding.pry
          t = Translation.new(:dot_key_code => dot_key_code, :cavs_translation_language_id => cavtl.id)
-         save!
+         t.save!
        else
          #
          # We must sort out the plurals and insert the correct plurals, not the ones from English
          #plurals = tl.plurals
-         
+         binding.pry
          BulkTranslations.save_new_plurals(tl.plurals, dot_key_code, cavtl)
        end # else not same as en
      end  # not en
@@ -442,10 +444,12 @@ scope :outer_join_to_english_arr2, ->( calmapp_version_id, equal=true ){
 =end
   def self.dot_key_code_plural?(dot_key, version_id)
     ret_val = Translation.outer_joins_special_dot_keys_arr.
-    join_to_cavs_tls_arr.
+    join_to_cavs_tls_arr(version_id).
     only_cldr_plurals_arr.
     where{dot_key_code == dot_key}.
-    where{cavtl1.calmapp_version_id == version_id}
+    #where{cavtl1.calmapp_version_id == version_id}
+    where("cavtl1.calmapp_version_id = ?", version_id)
+    #binding.pry
     return ! ret_val.empty?  
     #SpecialPartialDotKey.select("partial_dot_key_code").where{my{dot_key_code} =~ partial_dot_key }.first#.cldr
   end

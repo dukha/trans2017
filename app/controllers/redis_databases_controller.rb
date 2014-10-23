@@ -4,9 +4,9 @@ class RedisDatabasesController < ApplicationController
   # GET /translations
   # GET /translations.xml
   before_action :authenticate_user!
-  before_filter :set_redis_database, only: [ :edit, :update, :destroy, :show]
+  before_action :set_redis_database, only: [ :edit, :update, :destroy, :show]
   filter_access_to :all
-  after_filter :prepare_unobtrusive_flash
+  
   @@model ="redis_database"
   def index
     @redis_databases = RedisDatabase.paginate(:page => params[:page], :per_page=>15)
@@ -20,7 +20,7 @@ class RedisDatabasesController < ApplicationController
   # GET /redis_databases/1
   # GET /redis_databases/1.xml
   def show
-    @redis_database = RedisDatabase.find(params[:id])
+    #@redis_database = RedisDatabase.find(params[:id])
 
     respond_to do |format|
       format.html # show.html.erb
@@ -42,7 +42,7 @@ class RedisDatabasesController < ApplicationController
 
   # GET /redis_databases/1/edit
   def edit
-    @redis_database = RedisDatabase.find(params[:id])
+    #@redis_database = RedisDatabase.find(params[:id])
   end
 
   # POST /redis_databases
@@ -70,7 +70,7 @@ class RedisDatabasesController < ApplicationController
   # PUT /redis_databases/1
   # PUT /redis_databases/1.xml
   def update
-    @redis_database = RedisDatabase.find(params[:id])
+    #@redis_database = RedisDatabase.find(params[:id])
 
     respond_to do |format|
       if @redis_database.update_attributes(params[:redis_database])
@@ -87,7 +87,7 @@ class RedisDatabasesController < ApplicationController
   # DELETE /redis_databases/1
   # DELETE /redis_databases/1.xml
   def destroy
-    @redis_database = RedisDatabase.find(params[:id])
+    #@redis_database = RedisDatabase.find(params[:id])
     @redis_database.destroy
     tflash('delete', :success, {:model=>@@model, :count=>1})
     respond_to do |format|

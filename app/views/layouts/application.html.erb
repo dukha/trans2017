@@ -31,13 +31,13 @@
         <!-- /td -->
 				<td id="appmaintd"  class="maindisplay">
 					<div id="container">
-					  <!-- We are now using unobtrusive flash gem to don't need this
+					  <!-- We are now using unobtrusive flash gem to don't need this -->
 					  <div id="flash">
     			    <% flash.each do |name, msg| %>
     			        <%= content_tag :div, msg, :id => "flash_#{name}" %>
     			    <% end %> 
             </div>  
-        -->
+        
 
 			      <%= content_tag :h1, yield(:title) if show_title? %>
 			      <%= yield %>

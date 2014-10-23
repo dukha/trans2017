@@ -2,6 +2,7 @@ class CalmappsController < ApplicationController
   require 'translations_helper'
   include TranslationsHelper
   before_action :authenticate_user!
+  before_action :set_calmapp, only: [ :edit, :update, :destroy, :show]
   filter_access_to :all
   #after_create do |record|
    # @calmapp_version.id = record.id
@@ -32,7 +33,7 @@ class CalmappsController < ApplicationController
   # GET /applications/1.xml
   def show
     #binding.pry
-    @calmapp = Calmapp.find(params[:id])
+    #@calmapp = Calmapp.find(params[:id])
 
     respond_to do |format|
       format.html # show.html.erb
@@ -91,7 +92,7 @@ class CalmappsController < ApplicationController
     end
   end
   def create
-    @calmapp = Calmapp.new(params[:calmapp],without_protection: true)
+    @calmapp = Calmapp.new(calmapp_params) #params[:calmapp],without_protection: true)
     #binding.pry
     respond_to do |format|
       if @calmapp.save( )
@@ -170,7 +171,7 @@ class CalmappsController < ApplicationController
   end
   # GET /calmapps/1/edit
   def edit
-    @calmapp = Calmapp.find(params[:id])
+    #@calmapp = Calmapp.find(params[:id])
 
   end
 
@@ -212,7 +213,7 @@ class CalmappsController < ApplicationController
   # PUT /applications/1
   # PUT /calmapps/1.xml
   def update
-    @calmapp = Calmapp.find(params[:id])
+    #@calmapp = Calmapp.find(calmapp_params)#params[:id])
     #binding.pry
     #binding.pry
 =begin
@@ -223,7 +224,7 @@ class CalmappsController < ApplicationController
     
     respond_to do |format|
       #binding.pry
-      if @calmapp.update_attributes(params[:calmapp], without_protection: true)
+      if @calmapp.update(calmapp_params) #params[:calmapp], without_protection: true)
         
         tflash('update', :success, {:model=>@@model, :count=>1})
         format.html { redirect_to(:action=>:index) }
@@ -239,8 +240,9 @@ class CalmappsController < ApplicationController
   # DELETE /calmapps/1.xml
   def destroy
     #binding.pry
-    @calmapp = Calmapp.find(params[:id])
+    #@calmapp = Calmapp.find(params[:id])
     #binding.pry
+    
     begin
       @calmapp.destroy
       #tflash('delete', :success, {:model=>@@model, :count=>1})
@@ -260,6 +262,10 @@ class CalmappsController < ApplicationController
   # rails 4 Strong Params needs this: Not tested yet
   def calmapp_params
     params.require(:calmapp).permit(:name,  calmapp_versions_attributes: [:id, :version, :_destroy])
+  end
+  
+  def set_calmapp
+    @calmapp = Calmapp.find(params[:id])
   end
   private
 =begin

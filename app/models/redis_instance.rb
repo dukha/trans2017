@@ -62,8 +62,9 @@ class RedisInstance < ActiveRecord::Base
   
   private
     def default_values
+      return unless new_record?
       self.port ||= 6379
-      self.max_databases = 16
+      self.max_databases ||= 16
     end
     
     def not_localhost

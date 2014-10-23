@@ -163,7 +163,7 @@ en:
     developers: Developers
     developers_new_translations: Developers Translation
     #redis_admins: Redis Administration
-    translations_uploads: Translation Uploads via Languages
+    translations_uploads: Translation Uploads
     special_partial_dot_keys: Special Keys
     dot_key_code_translation_editors: Editors
   headings:

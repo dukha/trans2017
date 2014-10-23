@@ -24,12 +24,13 @@ class BulkTranslations
  @return array with saved plurals
 =end  
   def self.save_new_plurals(plurals, dot_key_code, cavtl, translation = nil)
-
+   binding.pry
    # this array will have its last element overridden in each iteration of plurals.each
    dot_key_code_array = dot_key_code.split('.')
    # We now have to check if the dot_key_code without the plural is in the 'en' translation
    ret_val = []
    plurals.each do |p|
+     binding.pry
      pl = save_one_new_plural(p, dot_key_code_array, cavtl, translation)
      pl.written = true
      ret_val << pl
@@ -101,7 +102,7 @@ class BulkTranslations
 =end  
   def self.translations_to_db_from_file hash, translation_upload_id, calmapp_versions_translation_language, overwrite
     keys =  hash.keys
-    
+    #binding.pry
     #keys.each{ |k| puts k + ": " + hash[k]}
     puts "Number of keys in hash to be written " + keys.count.to_s
     count=0
@@ -159,6 +160,7 @@ class BulkTranslations
         #puts translation
         #binding.pry
     #end
+    #binding.pry
     msg_data = trans_msg_data(translation, language, dkc)
     
     en_translation_exists = nil
@@ -350,12 +352,16 @@ class BulkTranslations
           return object
         end #overwrite condition 
      end #def
-       
+
+=begin
+ If the code is a new one for this calmapp_version_translation_language then write the translation with this method
+=end       
   def self.do_new_condition(dkc, translation, calmapp_versions_translation_language, translations_upload_id, msg_data)
     msg = "Write new translation: " + msg_data
     puts msg
     Rails.logger.info msg
     ret_val = Translation.new(:cavs_translation_language_id => calmapp_versions_translation_language.id, :dot_key_code=> dkc, :translation=>translation, :translations_upload_id => translations_upload_id)
+    #binding.pry
     ret_val.save!       
     ret_val.written = true
     return ret_val

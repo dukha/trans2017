@@ -53,7 +53,7 @@ class WhiteboardsController < ApplicationController
   # POST /whiteboards
   # POST /whiteboards.xml
   def create
-    @whiteboard = Whiteboard.new(params[:whiteboard])
+    @whiteboard = Whiteboard.new(whiteboard_params)#params[:whiteboard])
 
     respond_to do |format|
       if @whiteboard.save
@@ -74,7 +74,7 @@ class WhiteboardsController < ApplicationController
     #@whiteboard = Whiteboard.find(params[:id])
     #rescue ActiveRecord::RecordNotFound, :with => :record_not_found
     respond_to do |format|
-      if @whiteboard.update_attributes(params[:whiteboard])
+      if @whiteboard.update(whiteboard_params)#params[:whiteboard])
         tflash('update', :success, {:model=>@@model})
         format.html { redirect_to(:action=>"index")} #, :notice => t('messages.update.success', :model=>@@model)) }
         format.xml  { head :ok }

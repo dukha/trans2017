@@ -48,8 +48,8 @@ class WhiteboardTypesController < ApplicationController
   # POST /whiteboard_types
   # POST /whiteboard_types.xml
   def create
-    puts "aa:"
-    @whiteboard_type = WhiteboardType.new(params[:whiteboard_type])
+    #puts "aa:"
+    @whiteboard_type = WhiteboardType.new(whiteboard_type_params)#params[:whiteboard_type])
     #puts "xx:" #+ @whiteboard_type.to_s
     @whiteboard_type.save
     redirect_to(:action=>'index')
@@ -74,7 +74,7 @@ class WhiteboardTypesController < ApplicationController
     #@whiteboard_type = WhiteboardType.find(params[:id])
 
     respond_to do |format|
-      if @whiteboard_type.update_attributes(params[:whiteboard_type])
+      if @whiteboard_type.update(whiteboard_type_params)#params[:whiteboard_type])
         tflash('update', :success, {:model=>@@model, :count=>1})
         format.html { redirect_to(:action=>'index')} #, :notice => t('messages.update.success', :model=>@@model)) }
         format.xml  { head :ok }

@@ -4,6 +4,7 @@ class RedisInstancesController < ApplicationController
   # GET /translations
   # GET /translations.xml
   before_action :authenticate_user!
+  before_action :set_redis_instance, only: [ :edit, :update, :destroy, :show]
   filter_access_to :all
   @@model="redis_instance"
   def index
@@ -18,7 +19,7 @@ class RedisInstancesController < ApplicationController
   # GET /redis_instances/1
   # GET /redis_instances/1.xml
   def show
-    @redis_instance = RedisInstance.find(params[:id])
+    #@redis_instance = RedisInstance.find(params[:id])
 
     respond_to do |format|
       format.html # show.html.erb
@@ -38,13 +39,13 @@ class RedisInstancesController < ApplicationController
 
   # GET /redis_instances/1/edit
   def edit
-    @redis_instance = RedisInstance.find(params[:id])
+    
   end
 
   # POST /redis_instances
   # POST /redis_instances.xml
   def create
-    @redis_instance = RedisInstance.new(params[:redis_instance])
+    @redis_instance = RedisInstance.new(redis_instance_params)
 
 
     respond_to do |format|
@@ -67,10 +68,8 @@ class RedisInstancesController < ApplicationController
   # PUT /redis_instances/1
   # PUT /redis_instances/1.xml
   def update
-    @redis_instance = RedisInstance.find(params[:id])
-
     respond_to do |format|
-      if @redis_instance.update_attributes(params[:redis_instance])
+      if @redis_instance.update(redis_instance_params)
         tflash('update', :success, {:model=>@@model, :count=>1})
         format.html { redirect_to(:action=>:index) }
         format.xml  { head :ok }
@@ -84,7 +83,6 @@ class RedisInstancesController < ApplicationController
   # DELETE /redis_instances/1
   # DELETE /redis_instances/1.xml
   def destroy
-    @redis_instance = RedisInstance.find(params[:id])
     @redis_instance.destroy
     tflash('delete', :success, {:model=>@@model, :count=>1})
     respond_to do |format|
@@ -123,4 +121,14 @@ class RedisInstancesController < ApplicationController
       end #xhr 
   end #def
   
+  private
+    # Use callbacks to share common setup or constraints between actions.
+    def set_redis_instance
+      @redis_instance = RedisInstance.find(params[:id])
+    end
+
+    # Only allow a trusted parameter "white list" through.
+    def redis_instance_params
+      params.require(:redis_instance).permit(:host, :port, :password, :max_databases, :description)
+    end
 end #class

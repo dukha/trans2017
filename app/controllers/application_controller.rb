@@ -19,6 +19,7 @@ class ApplicationController < ActionController::Base
   end 
 =end 
   before_filter  :set_locale
+  after_filter :prepare_unobtrusive_flash
   #rescue_from ActiveRecord::RecordInvalid, :with => :record_invalid
   rescue_from ActiveRecord::RecordInvalid do |exception|
     #tflash[:error] = exception.message

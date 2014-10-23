@@ -4,6 +4,7 @@ class CalmappVersionsController < ApplicationController
   # GET /application_versions
   # GET /application_versions.xml
   before_action :authenticate_user!
+  before_action :set_calmapp_version, only: [ :edit, :update, :destroy, :show]
   filter_access_to :all
   @@model="calmapp_version"
   
@@ -61,7 +62,7 @@ class CalmappVersionsController < ApplicationController
     #new_calmapp_versions_translations_languages = new_languages()
     #We are going to create just the basic version with none of the assoications
     # We then use a delayed update to add all the associations
-    @calmapp_version = CalmappVersion.new({:version=>params[:calmapp_version][:version], :calmapp_id=>params[:calmapp_version][:calmapp_id] })
+    @calmapp_version = CalmappVersion.new(calmapp_version_params)#{:version=>params[:calmapp_version][:version], :calmapp_id=>params[:calmapp_version][:calmapp_id] })
     #binding.pry
     respond_to do |format|
       if @calmapp_version.save
@@ -77,11 +78,11 @@ class CalmappVersionsController < ApplicationController
           format.html { redirect_to( :action => "index")} #(@calmapp_version #, :notice => 'Application version was successfully created.') }
           format.xml  { render :xml => @calmapp_version, :status => :created, :location => @calmapp_version }
         #end 
-      else
+        else
         #binding.pry
-        format.html { render :action => "new" }
-        format.xml  { render :xml => @calmapp_version.errors, :status => :unprocessable_entity }
-      end # save
+          format.html { render :action => "new" }
+          format.xml  { render :xml => @calmapp_version.errors, :status => :unprocessable_entity }
+        end # save
      else
        format.html { render :action => "new" }
         format.xml  { render :xml => @calmapp_version.errors, :status => :unprocessable_entity }
@@ -93,15 +94,16 @@ class CalmappVersionsController < ApplicationController
   # PUT /calmapp_versions/1.xml
   def update
     #binding.pry
-    @calmapp_version = CalmappVersion.find(params[:id])
+    #@calmapp_version = CalmappVersion.find(params[:id])
     #binding.pry
+    set_calmapp_version
     prepare_params
     #new_calmapp_versions_translations_languages = new_languages() 
     #binding.pry
     respond_to do |format|
       #begin
         #binding.pry
-        if @calmapp_version.update_attributes(params[:calmapp_version])
+        if @calmapp_version.update(calmapp_version_params)#params[:calmapp_version])
           #system "RAILS_ENV=#{Rails.env} bin/delayed_job start --exit-on-complete"
           tflash('update', :success, {:model=>@@model, :count=>1})
           
@@ -174,7 +176,7 @@ class CalmappVersionsController < ApplicationController
        #binding.pry
        return params[:calmapp_version][:calmapp_versions_translation_language_ids] == nil
      end
-     
+=begin     
      def prepare_params
        #binding.pry
        return => [:translation_language_id] if not params[:calmapp_version]
@@ -189,7 +191,22 @@ class CalmappVersionsController < ApplicationController
          params[:calmapp_version].delete(:translation_languages_available)
       end
      end
-     
+=end
+
+    def prepare_params
+       #binding.pry
+       return if not params[:calmapp_version]
+   
+       if not redis_db_update? then
+         # This puts the params in the correct format for accepts_nested_attributes_for() 
+         attr_hash = prepare_params_with_translation_language(params[:id], params[:calmapp_version][:calmapp_versions_translation_language_ids])
+         params["calmapp_version"]["calmapp_versions_translation_languages_attributes"] = attr_hash
+         # Now remove the param that is not part of the update: it only brought in the 2 languages
+         # It will bomb if this delete is not done.
+         params[:calmapp_version].delete(:calmapp_versions_translation_language_ids)
+         params[:calmapp_version].delete(:translation_languages_available)
+      end
+     end     
      def prepare_params_with_translation_language calmapp_version_id, translation_language_ids 
       #binding.pry
       translation_language_ids.delete ""
@@ -241,7 +258,7 @@ class CalmappVersionsController < ApplicationController
 
     # Use callbacks to share common setup or constraints between actions.
     def set_calmapp_version
-      @calmapp_version = RCalmappVersion.find(params[:id])
+      @calmapp_version = CalmappVersion.find(params[:id])
     end
 
     # Only allow a trusted parameter "white list" through.
@@ -253,7 +270,8 @@ class CalmappVersionsController < ApplicationController
          :cavs_translation_language_id,
          :calmapp_version, 
          #:calmapp_versions_translation_languages => [:translation_language_id], 
-         :calmapp_versions_redis_database, 
+         :calmapp_versions_redis_database_attributes,
+         :calmapp_versions_translation_languages_attributes=>[:translation_language_id, :calmapp_version_id, :_destroy, :id ], 
          :calmapp_versions_redis_database => [:redis_database_id], 
          :redis_databases=>[:redis_db_index, :redis_instance_id],
          :calmapp_versions_translation_language_ids=>[])

@@ -123,7 +123,7 @@ class PermissionsController < ApplicationController
     #  "commit"=>"Create Access permission", "action"=>"create", "controller"=>"permissions", "locale"=>"en", "user_id"=>"2"}
 
     params[:permission][:user_id] = params[:user_id]
-    @permission = Permission.new(params[:permission])
+    @permission = Permission.new(permission_params)#params[:permission])
     raise "Cannot create permissons for unrelated locations" unless current_user.current_organisation.accessible_locations.include? @permission.organisation
     respond_to do |format|
       if @permission.save
@@ -146,7 +146,7 @@ class PermissionsController < ApplicationController
     #@permission = Permission.find(params[:id])
 
     respond_to do |format|
-      if @permission.update_attributes(params[:permission])
+      if @permission.update(permission_params)#params[:permission])
         format.html { redirect_to(permissions_path(params["user_id"]), :notice => 'Permission was successfully updated.') }
         format.xml  { head :ok }
       else

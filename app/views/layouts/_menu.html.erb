@@ -60,9 +60,9 @@
         <ul class="menu"> 
           <%=link_menu(:profiles)%>
           <!--li><%= tlink_to("whiteboard_types", whiteboard_types_path, :category=>:menu) %></li -->  
-          <li><%= link_to "Users", users_select_path %></li>
+          <li><%= link_to "Users", users_path %></li>
 
-        <li><%= link_to "Change password or email", edit_user_registration_path %></li>
+        
         <!--li>< %= link_to "Locations", locations_path, :action => "index" %></li -->
          <li><%= tlink_to("translation_languages", translation_languages_path, :category=>:menu) %></li>
         <li><%= tlink_to("calmapps", calmapps_path, :category=>:menu) %></li>
@@ -82,7 +82,7 @@
 
         <%= taccordion_header("user_info") %>
         <ul class="menu">
-          
+          <li><%= link_to "Change password or email", edit_user_registration_path %></li>
         </ul>
       </div>
        <div>

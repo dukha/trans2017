@@ -16,7 +16,11 @@ gem 'nifty-generators'#, '0.4.6'
 
 # authentication
 gem 'devise'#, '~>2.0.4' 
+gem 'devise_invitable'#, '~> 1.3.4'
+# this gem is a ruby mailhandler that will work with exim or sendmail (and others). Tested on exim4. 
+gem 'mail'# rails 4 depends on 2.5.4 , '~>2.6.1'
 
+#gem 'ruby-gmail'
 #xml parser
 gem 'nokogiri'#, '1.5.0'
 
@@ -80,7 +84,7 @@ gem 'daemons'
 gem 'execjs'
 gem 'therubyracer'
 # in place editing
-gem 'best_in_place'# '~>3.0.0.rc1', :git => "git://github.com/bernat/best_in_place"
+gem 'best_in_place', '3.0.0'#, :git => "git://github.com/bernat/best_in_place"
 
 # for doing searches with criteria. Replaces meta_where for rails 3.1
 gem 'squeel'
@@ -94,7 +98,7 @@ gem 'cocoon','~>1.2.0'
 # web server used in pace of webrick or thin but also in production
 gem 'puma'
 # email notification of exceptions (if sendmail is installed)
-gem 'exception_notification_rails3', :require => 'exception_notifier'
+gem 'exception_notification' #_rails3', :require => 'exception_notifier'
 
 gem 'rails-i18n', '~>4.0.0'
 

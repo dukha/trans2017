@@ -1,13 +1,7 @@
 Translator::Application.routes.draw do
-  
-
-  
-
-  #resources :calmapp_versions_translation_languages
 
   scope "/:locale" do
    resources :profiles
-   #devise_for :users
    
    resources :translations_uploads
    # root will check permission and if ok redirect to whiteboards
@@ -21,15 +15,20 @@ Translator::Application.routes.draw do
    end
    
    get '/auth_user/set_permission_by_ajax' => 'permissions#set_current_by_ajax', :as => :set_permission_by_ajax, via: :all
-   get '/users_select' => 'users#select',      :as => :users_select, via: :all
-    
-   devise_for :users
-   match '/users/:id', :to => 'users#destroy', :as => :destroy_user, :via => :delete
    
-   get "users/:id/edit_password",   :to => "users#edit",   :as => :edit_password  
-    patch "users/:id/update_password", :to => "users#update", :as => :update_password  
-    # for unlocking another user
-    patch "users/:id/unlock_user",     :to => "users#unlock_user", :as => :unlock_user  
+    
+   devise_for :users #do
+     match '/users/:id', :to => 'users#destroy', :as => :destroy_user, :via => :delete
+     get '/users_select' => 'users#select',      :as => :users_select, via: :all
+     get "users/:id/edit_password",   :to => "users#edit",   :as => :edit_password  
+     patch "users/:id/update_password", :to => "users#update", :as => :update_password  
+      # for unlocking another user
+     patch "users/:id/unlock_user",     :to => "users#unlock_user", :as => :unlock_user
+     get "users/new", :to => "users#new", :as => "new_user" 
+     get "/users", :to => "users#select", :as => :users
+     get "users/:id/edit", :to=> "users#edit"
+     post "users/create", :to=> "users#create", :as => :user_create
+   #end
    resources :languages
 
    resources :whiteboard_types
@@ -38,9 +37,9 @@ Translator::Application.routes.draw do
    resources :locations
    #resources :areas
 
-    resources :translation_languages
+   resources :translation_languages
 
-    resources :organisations
+   resources :organisations
 
     #resources :servers
    # to create a new child we need the parent_id

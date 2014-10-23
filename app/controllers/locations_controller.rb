@@ -72,7 +72,7 @@ class LocationsController < ApplicationController
   # POST /locations
   # POST /locations.xml
   def create
-    @location = model_class.new(params[model_sym])
+    @location = model_class.new(location_params) #params[model_sym])
 
     respond_to do |format|
       if @location.save
@@ -112,7 +112,7 @@ class LocationsController < ApplicationController
     #@location = model_class.find(params[:id])
 
     respond_to do |format|
-      if @location.update_attributes(params[model_sym])
+      if @location.update_attributes(location_params)#params[model_sym])
         #debugger
         #logger.info("in updated")
         tflash('update', :success, {:model=>@@model, :count=>1})
@@ -149,6 +149,7 @@ private
   end
   
   def location_params
-    params.require(:location).permit(:name, :type, :parent_id, :translation_code, :marked_deleted, :fqdn)
+    #params.require(:location).permit(:name, :type, :parent_id, :translation_code, :marked_deleted, :fqdn)
+    params.require(model_sym).permit(:name, :type, :parent_id, :translation_code, :marked_deleted, :fqdn)
   end
 end

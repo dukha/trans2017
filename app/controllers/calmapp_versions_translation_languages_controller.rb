@@ -61,8 +61,8 @@ class CalmappVersionsTranslationLanguagesController < ApplicationController
   # POST /calmapp_versions_translation_languages
   # POST /calmapp_versions_translation_languages.json
   def create
-    @calmapp_versions_translation_language = CalmappVersionsTranslationLanguage.new(params[:calmapp_versions_translation_language])
-    binding.pry
+    @calmapp_versions_translation_language = CalmappVersionsTranslationLanguage.new(calmapp_versions_translation_language_params) #params[:calmapp_versions_translation_language])
+    #binding.pry
     respond_to do |format|
       if @calmapp_versions_translation_language.save
         tflash('create', :success, {:model=>@@model, :count=>1})
@@ -80,7 +80,7 @@ class CalmappVersionsTranslationLanguagesController < ApplicationController
   def update
     #binding.pry
     #@calmapp_versions_translation_language = CalmappVersionsTranslationLanguage.find(params[:id])
-    @calmapp_versions_translation_language.assign_attributes(params[:calmapp_versions_translation_language])
+    @calmapp_versions_translation_language.assign_attributes(calmapp_versions_translation_language_params)#params[:calmapp_versions_translation_language])
     
     respond_to do |format|
       begin
@@ -161,7 +161,17 @@ class CalmappVersionsTranslationLanguagesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def calmapp_versions_translation_language_params
-      params.require(:calmapp_versions_translation_language).permit(:translation_language_id, :calmapp_version_id,
-          :calmapp_version, :translation_language) #, :translations_uploads_attributes[], :calmapp_versions_translation_languages_attributes[]
+=begin 
+      binding.pry
+      nested_keys = params.require(:calmapp_versions_translation_language).fetch(:translations_uploads_attributes, {}).keys
+  params.require(:calmapp_versions_translation_language).permit(:translation_language_id, :calmapp_version_id,
+                       :calmapp_version, :translation_language,:translations_uploads_attributes => nested_keys)
+     
+      params.require(:calmapp_versions_translation_language).permit(
+                 :translation_language_id, :calmapp_version_id,
+                       :calmapp_version, :translation_language,
+                       :translations_uploads_attributes=>[:description, :_destroy, :yaml_upload]) #, :translations_uploads_attributes[], :calmapp_versions_translation_languages_attributes[]
+=end   
+      params.require(:calmapp_versions_translation_language).permit!
     end
 end

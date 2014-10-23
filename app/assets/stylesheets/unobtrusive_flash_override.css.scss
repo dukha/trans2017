@@ -1,0 +1,39 @@
+//These overwrite the co9lours in unobtrusive flash css
+#unobtrusive-flash-messages .unobtrusive-flash-message-wrapper.unobtrusive-flash-error{
+  background-color:hsla(0,70%,50%,0.5);
+}
+//These overwrite the co9lours in unobtrusive flash css
+#unobtrusive-flash-messages .unobtrusive-flash-message-wrapper.unobtrusive-flash-alert{
+  background-color:hsla(240,90%,50%,0.5);
+  
+}
+#unobtrusive-flash-messages .unobtrusive-flash-message-wrapper.unobtrusive-flash-warning{
+  background-color:hsla(60,90%,50%,0.5);
+  
+}
+
+
+#unobtrusive-flash-messages .unobtrusive-flash-message-wrapper{
+  background-color:hsla(120,70%,70%,1.0);
+  
+}
+
+#unobtrusive-flash-messages .unobtrusive-flash-message-wrapper.unobtrusive-flash-warning > div.unobtrusive-flash-message{
+  color: #ffff00;
+}
+#unobtrusive-flash-messages .unobtrusive-flash-message-wrapper.unobtrusive-flash-alert > div.unobtrusive-flash-message{
+  color: #ffff00;
+}
+#unobtrusive-flash-messages .unobtrusive-flash-message-wrapper.unobtrusive-flash-notice > div.unobtrusive-flash-message{
+  color: #ffff00;
+}
+#unobtrusive-flash-messages .unobtrusive-flash-message-wrapper.unobtrusive-flash-info > div.unobtrusive-flash-message{
+  color: #ffff00;
+}
+#unobtrusive-flash-messages .unobtrusive-flash-message-wrapper.unobtrusive-flash-error > div.unobtrusive-flash-message{
+  color: #ffffff;
+}
+#unobtrusive-flash-messages .unobtrusive-flash-message-wrapper.unobtrusive-flash-success > div.unobtrusive-flash-message{
+  color: #ff0000;
+}
+//.unobtrusive-flash-message{

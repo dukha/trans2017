@@ -7,7 +7,7 @@ class TranslationLanguage < ActiveRecord::Base
  validates :iso_code, :name, :presence => true,:uniqueness => true
  validates :name, :presence => true, :uniqueness => true
  
- attr_accessible :iso_code, :name, :plural_sort 
+ #attr_accessible :iso_code, :name, :plural_sort 
  
 =begin
   

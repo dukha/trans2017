@@ -6,6 +6,7 @@ class TranslationsUploadsController < ApplicationController
 
   # Comment out the next 2 lines if not using authentication and authorisation
   before_action :authenticate_user!
+  before_action :set_language, :only => [:edit, :update, :destroy, :show]
   filter_access_to :all
 
   @@model ="translations_upload"
@@ -57,30 +58,30 @@ class TranslationsUploadsController < ApplicationController
 # Any dates that you wish to search on will have to be converted 
 # Fix your model accordingly or delete all the searh stuff
 
-if searchable_attr.empty?
-  @translations_uploads = TranslationsUpload.paginate(:page => params[:page], :per_page=>15)
-else
-  search_info = init_search(criterion_list(searchable_attr), operator_list( searchable_attr, criterion_list(searchable_attr)),sort_list(sortable_attr))
-  #@translations_uploads = TranslationsUpload.search(current_user, criterion_list(searchable_attr), operator_list( searchable_attr, criterion_list(searchable_attr)),sort_list(sortable_attr)).paginate(:page => params[:page], :per_page=>15)
-  @translations_uploads = TranslationsUpload.search(current_user, search_info).paginate(:page => params[:page], :per_page=>15)
-end
-
-
-if @translations_uploads.count == 0 then
-  tflash( "no_records_found", :warning)
-end 
-
-respond_to do |format|
-  format.html # index.html.erb
-  format.json { render json: @translations_uploads }
-  format.xml  { render :xml => @translations_uploads }
-end
+    if searchable_attr.empty?
+      @translations_uploads = TranslationsUpload.paginate(:page => params[:page], :per_page=>15)
+    else
+      search_info = init_search(criterion_list(searchable_attr), operator_list( searchable_attr, criterion_list(searchable_attr)),sort_list(sortable_attr))
+      #@translations_uploads = TranslationsUpload.search(current_user, criterion_list(searchable_attr), operator_list( searchable_attr, criterion_list(searchable_attr)),sort_list(sortable_attr)).paginate(:page => params[:page], :per_page=>15)
+      @translations_uploads = TranslationsUpload.search(current_user, search_info).paginate(:page => params[:page], :per_page=>15)
+    end
+    
+    
+    if @translations_uploads.count == 0 then
+      tflash( "no_records_found", :warning)
+    end 
+    
+    respond_to do |format|
+      format.html # index.html.erb
+      format.json { render json: @translations_uploads }
+      format.xml  { render :xml => @translations_uploads }
+    end
   end
 
   # GET /translations_uploads/1
   # GET /translations_uploads/1.xml
   def show
-    @translations_upload = TranslationsUpload.find(params[:id])
+    #@translations_upload = TranslationsUpload.find(params[:id])
 
     respond_to do |format|
       format.html # show.html.erb
@@ -103,14 +104,14 @@ end
 
   # GET /translations_uploads/1/edit
   def edit
-    @translations_upload = TranslationsUpload.find(params[:id])
+    #@translations_upload = TranslationsUpload.find(params[:id])
   end
 
   # POST /translations_uploads
   # POST /translations_uploads.xml
   def create
     #binding.pry
-    @translations_upload = TranslationsUpload.new(params[:translations_upload])
+    @translations_upload = TranslationsUpload.new(language_params)
     
     respond_to do |format|
       if @translations_upload.save
@@ -129,10 +130,10 @@ end
   # PUT /translations_uploads/1
   # PUT /translations_uploads/1.xml
   def update
-    @translations_upload = TranslationsUpload.find(params[:id])
+    #@translations_upload = TranslationsUpload.find(params[:id])
 
     respond_to do |format|
-      if @translations_upload.update_attributes(params[:translations_upload])
+      if @translations_upload.update_attributes(language_params)
         tflash('update', :success, {:model=>@@model, :count=>1})
         format.html { redirect_to( :action => "index")} 
         format.xml  { head :ok }
@@ -148,7 +149,7 @@ end
   # DELETE /translations_uploads/1
   # DELETE /translations_uploads/1.xml
   def destroy
-    @translations_upload = TranslationsUpload.find(params[:id])
+    #@translations_upload = TranslationsUpload.find(params[:id])
     @translations_upload.destroy
     tflash('delete', :success, {:model=>@@model, :count=>1})
     respond_to do |format|
@@ -157,4 +158,20 @@ end
       format.json { head :ok }
     end
   end
+  
+      def set_translations_upload
+      @translations_upload = TranslationsUpload.find(params[:id])
+    end
+
+    # Only allow a trusted parameter "white list" through.
+    def translations_upload_params
+      params.require(:translations_upload).permit(:cavs_translation_language_id, 
+         :yaml_upload,  
+         :description, 
+         :translation_languages_available, 
+         :cavs_translation_language_id,
+         :written_to_db#,
+         #calmapp_versions_translation_language 
+         )
+    end
 end

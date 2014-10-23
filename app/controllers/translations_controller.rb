@@ -1,6 +1,7 @@
 class TranslationsController < ApplicationController
   
   before_action :authenticate_user!
+  before_action :set_translation, only: [ :edit, :update, :destroy, :show]
   filter_access_to :all
   # RecordInvalid is thrown when a constaint is violated (e.g. uniqueness)
   rescue_from ActiveRecord::RecordInvalid, :with => :record_invalid
@@ -23,38 +24,38 @@ class TranslationsController < ApplicationController
   end
   def update
     #binding.pry
-    @translation = Translation.find params[:id]
+    #@translation = Translation.find params[:id]
 
-  respond_to do |format|
-    #binding.pry
-    if @translation.update_attributes(params[:translation])
-      puts "successful update"
+    respond_to do |format|
       #binding.pry
-      format.html { 
-        redirect_to(@translation, :notice => 'Translation was successfully updated.') 
-      }
-        #format.js{
-          
-         # binding.pry
-          #render :json => {:result => "ok"}
-        #}
-        format.json { 
-          if params["editor"].nil? then
-            #binding.pry
-           respond_with_bip(@translation) 
-          else
-            #binding.pry
-            #render
-            render :json => {:result => "ok"}
-          end
-       }
-    else
-      puts "unsuccessful update"
-      format.html { render :action => "edit" }
-      format.json { respond_with_bip(@translation) }
-    end
-  end
-  end
+      if @translation.update(translation_params)
+        puts "successful update"
+        #binding.pry
+        format.html { 
+          redirect_to(@translation, :notice => 'Translation was successfully updated.') 
+        }
+          #format.js{
+            
+           # binding.pry
+            #render :json => {:result => "ok"}
+          #}
+          format.json { 
+            if params["editor"].nil? then
+              #binding.pry
+             respond_with_bip(@translation) 
+            else
+              #binding.pry
+              #render
+              render :json => {:result => "ok"}
+            end
+         }
+      else
+        puts "unsuccessful update"
+        format.html { render :action => "edit" }
+        format.json { respond_with_bip(@translation) }
+      end #if update else
+    end #respond
+  end #def update
 
   def index
     @translations = []
@@ -124,8 +125,11 @@ class TranslationsController < ApplicationController
   def edit
   end
 
-  
-  
+  def create
+    
+  end
+# @deprecated : Needs to be rewritten  
+=begin
   def create
      #debugger
     
@@ -196,10 +200,9 @@ class TranslationsController < ApplicationController
     render "dev_new"  
  
   end
-  
+=end  
   def show
-    debugger
-    @translation = Translation.find(params[:id])
+    #@translation = Translation.find(params[:id])
 
     respond_to do |format|
       format.html # show.html.erb
@@ -323,6 +326,15 @@ class TranslationsController < ApplicationController
       @developer_param.key_helper=params[:developer_param][:key_helper]
       @rollbacked = true
     end
-    
+  private
+    # Use callbacks to share common setup or constraints between actions.
+    def set_translation
+      @translation = Translation.find(params[:id])
+    end
+
+    # Only allow a trusted parameter "white list" through.
+    def translation_params
+      params.require(:translation).permit(:translation)
+    end  
    
 end

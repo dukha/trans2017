@@ -4,6 +4,7 @@ class TranslationLanguagesController < ApplicationController
   # GET /translation_languages
   # GET /translation_languages.xml
   before_action :authenticate_user!#, :except=> :change_application_language
+  before_filter :set_translation_language, :only => [:show, :edit, :update, :destroy]
   filter_access_to :all
   @@model ="translation_language"
   
@@ -46,7 +47,7 @@ class TranslationLanguagesController < ApplicationController
   # POST /translation_languages
   # POST /translation_languages.xml
   def create
-    @translation_language = TranslationLanguage.new(params[:translation_language])
+    @translation_language = TranslationLanguage.new(translation_language_params)
 
     respond_to do |format|
       if @translation_language.save
@@ -66,7 +67,7 @@ class TranslationLanguagesController < ApplicationController
     @translation_language = TranslationLanguage.find(params[:id])
 
     respond_to do |format|
-      if @translation_language.update_attributes(params[:translation_language])
+      if @translation_language.update(translation_language_params)
         tflash('update', :success, {:model=>@@model, :count=>1})
         format.html { redirect_to(:action=>'index')} #, :notice => t('messages.update.success', :model=>@@model)) }
         format.xml  { head :ok }
@@ -107,8 +108,17 @@ class TranslationLanguagesController < ApplicationController
         render :json => @translation_language
     end
   end
-
+=begin
   def upload_yaml_translation_file
-    
   end
+=end  
+  private
+  def set_translation_language
+    @translation_language = TranslationLanguage.find(params[:id])
+  end
+  
+  def translation_language_params
+    params.require(:translation_language).permit(:iso_code, :name, :plural_sort )
+  end
+  
 end
