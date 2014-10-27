@@ -41,7 +41,9 @@ module TranslationHelper
  @return the correct input control for best in place editing 
 =end   
    def input_control(attrs)
-     
+      #if attrs["en_translation"].length >35
+      #binding.pry
+      #end
        if (not attrs["en_translation"].nil?) && attrs["en_translation"].length  > 40 && attrs["editor"].nil? then
          return :textarea
        elsif attrs["editor"] == "date_format" then
@@ -78,7 +80,7 @@ module TranslationHelper
      
      return english_date_format_example(attributes) if editor_date_time_select?(attributes)  
      return "<i>[This plural not used in English]</i>".html_safe if attributes["en_translation"].nil?
-     return "<i>[Not used in English, so left blank]</i>".html_safe if attributes["en_translation"].blank?
+     return "<i>[Not used in English, so left blank. It may be left blank in your language too.] </i>".html_safe if attributes["en_translation"].blank?
      return attributes["en_translation"]
    end
    
@@ -238,6 +240,7 @@ module TranslationHelper
        language_hash = translated_full_abbrev_day_month(date, iso_code, version_id)
        en_hash =  translated_full_abbrev_day_month(date, 'en', version_id) 
        #binding.pry
+=begin
        return [["%-d %b", localised_date("%-d %b", date, language_hash, en_hash)],
                ["%m/%d", localised_date("%m/%d", date, language_hash, en_hash)],
                ["%d.%m.%Y", localised_date("%d.%m.%Y", date, language_hash, en_hash)],
@@ -256,6 +259,25 @@ module TranslationHelper
                ["%m-%d-%Y", localised_date("%m-%d-%Y", date, language_hash, en_hash)],
                ["%m/%d/%Y", localised_date("%m/%d/%Y", date, language_hash, en_hash)],
                ["%d. %b", localised_date("%d. %b", date, language_hash, en_hash)]]
+=end               
+       return  {"%-d %b" => localised_date("%-d %b", date, language_hash, en_hash),
+               "%m/%d" => localised_date("%m/%d", date, language_hash, en_hash),
+               "%d.%m.%Y" => localised_date("%d.%m.%Y", date, language_hash, en_hash),
+               "%b%d日" => localised_date("%b%d日", date, language_hash, en_hash),
+               "%e %b" => localised_date("%e %b", date, language_hash, en_hash),
+               "%b %e." => localised_date("%b %e.", date, language_hash, en_hash),
+               "%e.%m.%Y" => localised_date("%e.%m.%Y", date, language_hash, en_hash),
+               "%d de %b" => localised_date("%d de %b", date, language_hash, en_hash),
+               "%e. %b" => localised_date("%e. %b", date, language_hash, en_hash),
+               "%e. %B" => localised_date("%e. %B", date, language_hash, en_hash),
+               "%b %d" => localised_date("%b %d", date, language_hash, en_hash),
+               "%d %b" => localised_date("%d %b", date, language_hash, en_hash),
+               "%d de %B" => localised_date("%d de %B", date, language_hash, en_hash),
+               "%d.%m.%y" => localised_date("%d.%m.%y", date, language_hash, en_hash),
+               "%y-%m-%d" => localised_date("%y-%m-%d", date, language_hash, en_hash),
+               "%m-%d-%Y" => localised_date("%m-%d-%Y", date, language_hash, en_hash),
+               "%m/%d/%Y" => localised_date("%m/%d/%Y", date, language_hash, en_hash),
+               "%d. %b" => localised_date("%d. %b", date, language_hash, en_hash)}         
      end
 =begin
     Contains all the default data formats suitable for listing in a drop down
@@ -263,6 +285,7 @@ module TranslationHelper
      def default_date_collection date, iso_code, version_id
        language_hash = translated_full_abbrev_day_month(date, iso_code, version_id)
        en_hash =  translated_full_abbrev_day_month(date, 'en', version_id)
+=begin
        return [["%d %B %Y", localised_date("%d %B %Y", date, language_hash, en_hash)],
                ["%d. %m. %Y", localised_date("%d. %m. %Y", date, language_hash, en_hash)],
                ["%e. %Bta %Y", localised_date("%e. %Bta %Y", date, language_hash, en_hash)],
@@ -274,6 +297,18 @@ module TranslationHelper
                ["%Y-%m-%d", localised_date("%Y-%m-%d", date, language_hash, en_hash)],
                ["%d-%m-%Y", localised_date("%d-%m-%Y", date, language_hash, en_hash)],
                ["%Y/%m/%d", localised_date("%Y/%m/%d", date, language_hash, en_hash)]] 
+=end
+       return {"%d %B %Y" => localised_date("%d %B %Y", date, language_hash, en_hash),
+               "%d. %m. %Y" => localised_date("%d. %m. %Y", date, language_hash, en_hash),
+               "%e. %Bta %Y" => localised_date("%e. %Bta %Y", date, language_hash, en_hash),
+               "%d.%m.%Y" => localised_date("%d.%m.%Y", date, language_hash, en_hash),
+               "%d/%m/%Y" => localised_date("%d/%m/%Y", date, language_hash, en_hash),
+               "%d.%m.%Y." => localised_date("%d.%m.%Y.", date, language_hash, en_hash),
+               "%Y.%m.%d." => localised_date("%Y.%m.%d.", date, language_hash, en_hash),
+               
+               "%Y-%m-%d" => localised_date("%Y-%m-%d", date, language_hash, en_hash),
+               "%d-%m-%Y" => localised_date("%d-%m-%Y", date, language_hash, en_hash),
+               "%Y/%m/%d" => localised_date("%Y/%m/%d", date, language_hash, en_hash)} 
      end
 =begin
    Contains all the long date formats for a drop down 
@@ -281,6 +316,7 @@ module TranslationHelper
      def long_date_collection date, iso_code, version_id
        language_hash = translated_full_abbrev_day_month(date, iso_code, version_id)
        en_hash =  translated_full_abbrev_day_month(date, 'en', version_id)
+=begin       
        return [["%Y年%b%d日", localised_date("%Y年%b%d日", date, language_hash, en_hash)],
                ["%Y년 %m월 %d일 (%a)", localised_date("%Y년 %m월 %d일 (%a)", date, language_hash, en_hash)],
                ["%Y. %B %e.", localised_date("%Y. %B %e.", date, language_hash, en_hash)],
@@ -303,6 +339,29 @@ module TranslationHelper
                ["%a %b/%e/%Y", localised_date("%a %b/%e/%Y", date, language_hash, en_hash)],
                ["%a %e-%b-%Y", localised_date("%a %e-%b-%Y", date, language_hash, en_hash)],
                ["%d %B %Y", localised_date("%d %B %Y", date, language_hash, en_hash)]]
+=end               
+       return {"%Y年%b%d日" => localised_date("%Y年%b%d日", date, language_hash, en_hash),
+               "%Y년 %m월 %d일 (%a)" => localised_date("%Y년 %m월 %d일 (%a)", date, language_hash, en_hash),
+               "%Y. %B %e." => localised_date("%Y. %B %e.", date, language_hash, en_hash),
+               "%Y %B %d" => localised_date("%Y %B %d", date, language_hash, en_hash),
+               "%B %e, %Y" => localised_date("%B %e, %Y", date, language_hash, en_hash),
+               "%e %B %Y" => localised_date("%e %B %Y", date, language_hash, en_hash),
+               "%A %e. %Bta %Y" => localised_date("%A %e. %Bta %Y", date, language_hash, en_hash),
+               "%Y. gada %e. %B" => localised_date("%Y. gada %e. %B", date, language_hash, en_hash),
+               "%e. %B %Y" => localised_date("%e. %B %Y", date, language_hash, en_hash),
+               "%d %B, %Y" => localised_date("%d %B, %Y", date, language_hash, en_hash),
+               "%A, %d %B %Y" => localised_date("%A, %d %B %Y", date, language_hash, en_hash),
+               "%Y年%m月%d日(%a)" => localised_date("%Y年%m月%d日(%a)", date, language_hash, en_hash),
+               "%d. %B %Y" => localised_date("%d. %B %Y", date, language_hash, en_hash),
+               "%d de %B de %Y" => localised_date("%d de %B de %Y", date, language_hash, en_hash),
+               "%-d %B %Y" => localised_date("%-d %B %Y", date, language_hash, en_hash),
+               "%d. %b %Y" => localised_date("%d. %b %Y", date, language_hash, en_hash),
+               "%B %d, %Y" => localised_date("%B %d, %Y", date, language_hash, en_hash),
+               "%a %e/%b/%Y" => localised_date("%a %e/%b/%Y", date, language_hash, en_hash),
+               "%a %b-%e-%Y" => localised_date("%a %b-%e-%Y", date, language_hash, en_hash),
+               "%a %b/%e/%Y" => localised_date("%a %b/%e/%Y", date, language_hash, en_hash),
+               "%a %e-%b-%Y" => localised_date("%a %e-%b-%Y", date, language_hash, en_hash),
+               "%d %B %Y" => localised_date("%d %B %Y", date, language_hash, en_hash)}
      end 
 =begin
    Contains all the default datetime formats for a drop down 
@@ -310,14 +369,20 @@ module TranslationHelper
      def datetime_collection date, datetime, version_id
        language_hash = translated_full_abbrev_day_month(date, iso_code, version_id)
        en_hash =  translated_full_abbrev_day_month(date, 'en', version_id)
+=begin
        return [["%a %b-%e-%Y", datetime.strftime("%a %b-%e-%Y", date, language_hash, en_hash)],
                ["%a %b/%e/%Y", datetime.strftime("%a %b/%e/%Y", date, language_hash, en_hash)],
                ["%a %e-%b-%Y", datetime.strftime("%a %e-%b-%Y", date, language_hash, en_hash)]] 
+=end               
+       return {"%a %b-%e-%Y" => datetime.strftime("%a %b-%e-%Y", date, language_hash, en_hash),
+               "%a %b/%e/%Y" => datetime.strftime("%a %b/%e/%Y", date, language_hash, en_hash),
+               "%a %e-%b-%Y" => datetime.strftime("%a %e-%b-%Y", date, language_hash, en_hash)}        
      end 
 =begin
    Contains all the short datetime formats for a drop down 
 =end   
      def short_time_collection time
+=begin
          return [["%d. %m. %H:%M", time.strftime("%d. %m. %H:%M")],
              ["%e %b %H:%M", time.strftime("%e %b %H:%M")],
              ["%b %e., %H:%M", time.strftime("%b %e., %H:%M")],
@@ -338,13 +403,37 @@ module TranslationHelper
              ["%d. %B, %H:%M Uhr", time.strftime("%d. %B, %H:%M Uhr")],
              ["%y-%m-%d", time.strftime("%y-%m-%d")],
              ["%d %b %H:%M น.", time.strftime("%d %b %H:%M น.")],
-             ["%e. %B, %H:%M", time.strftime("%e. %B, %H:%M")] ]
+             ["%e. %B, %H:%M", time.strftime("%e. %B, %H:%M")] ].to_json
+=end             
+         return {"%d. %m. %H:%M" => time.strftime("%d. %m. %H:%M"),
+             "%e %b %H:%M" => time.strftime("%e %b %H:%M"),
+             "%b %e., %H:%M" => time.strftime("%b %e., %H:%M"),
+             "%d/%m, %H:%M hs" => time.strftime("%d/%m, %H:%M hs"),
+             "%d.%m.%Y., %H:%M" => time.strftime("%d.%m.%Y., %H:%M"),
+             "%b%d日 %H:%M" => time.strftime("%b%d日 %H:%M"),
+             "%d. %b ob %H:%M" => time.strftime("%d. %b ob %H:%M"),
+             "%d %b %I:%M %p" => time.strftime("%d %b %I:%M %p"),
+             "%e.%m. %H.%M" => time.strftime("%e.%m. %H.%M"),
+             "%d %b, %H:%M" => time.strftime("%d %b, %H:%M"),
+             "%d %b %H.%M" => time.strftime("%d %b %H.%M"),
+             "%y/%m/%d %H:%M" => time.strftime("%y/%m/%d %H:%M"),
+             "%d.%m. %H:%M" => time.strftime("%d.%m. %H:%M"),
+             "%d de %b %H:%M" => time.strftime("%d de %b %H:%M"),
+             "%b%d號 %H:%M" => time.strftime("%b%d號 %H:%M"),
+             "%d %b %H:%M" => time.strftime("%d %b %H:%M"),
+             "%d.%m.%y, %H:%M" => time.strftime("%d.%m.%y, %H:%M"),
+             "%d. %B, %H:%M Uhr" => time.strftime("%d. %B, %H:%M Uhr"),
+             "%y-%m-%d" => time.strftime("%y-%m-%d"),
+             "%d %b %H:%M น." => time.strftime("%d %b %H:%M น."),
+             "%e. %B, %H:%M" => time.strftime("%e. %B, %H:%M")}
+             
      end
 =begin
    Contains all the default time formats for a drop down 
 =end   
      def default_time_collection time
-       [ ["%A, %d %b %Y ob %H:%M:%S", time.strftime("%A, %d %b %Y ob %H:%M:%S")],
+=begin
+       return [["%A, %d %b %Y ob %H:%M:%S", time.strftime("%A, %d %b %Y ob %H:%M:%S")],
              ["%A %e. %Bta %Y %H:%M:%S %z", time.strftime("%A %e. %Bta %Y %H:%M:%S %z")],
              ["%Y. gada %e. %B, %H:%M", time.strftime("%Y. gada %e. %B, %H:%M")],
              ["%Y年%b%d日 %A %H:%M:%S %Z", time.strftime("%Y年%b%d日 %A %H:%M:%S %Z")],
@@ -369,11 +458,38 @@ module TranslationHelper
              ["%Y-%m-%d %H:%M", time.strftime("%Y-%m-%d %H:%M")],
              ["%Y年%b%d號 %A %H:%M:%S %Z", time.strftime("%Y年%b%d號 %A %H:%M:%S %Z")],
              ["%a %d %b %Y %H:%M:%S %Z", time.strftime("%a %d %b %Y %H:%M:%S %Z")]]
+=end             
+              return {"%A, %d %b %Y ob %H:%M:%S" => time.strftime("%A, %d %b %Y ob %H:%M:%S"),
+             "%A %e. %Bta %Y %H:%M:%S %z" => time.strftime("%A %e. %Bta %Y %H:%M:%S %z"),
+             "%Y. gada %e. %B, %H:%M" => time.strftime("%Y. gada %e. %B, %H:%M"),
+             "%Y年%b%d日 %A %H:%M:%S %Z" => time.strftime("%Y年%b%d日 %A %H:%M:%S %Z"),
+             "%d %B %Y %H:%M:%S" => time.strftime("%d %B %Y %H:%M:%S"),
+             "%a, %e %b %Y %H:%M:%S %z" => time.strftime("%a, %e %b %Y %H:%M:%S %z"),
+             "%a, %d %b %Y %I:%M:%S %p %Z" => time.strftime("%a, %d %b %Y %I:%M:%S %p %Z"),
+             "%d %B %Y %H:%M" => time.strftime("%d %B %Y %H:%M"),
+             "%a %b %d %H:%M:%S %Z %Y" => time.strftime("%a %b %d %H:%M:%S %Z %Y"),
+             "%A, %d. %B %Y, %H:%M Uhr" => time.strftime("%A, %d. %B %Y, %H:%M Uhr"),
+             "%Y. %b %e., %H:%M" => time.strftime("%Y. %b %e., %H:%M"),
+             "%a, %d %b %Y, %H:%M:%S %z" => time.strftime("%a, %d %b %Y, %H:%M:%S %z"),
+             "%d. %B %Y, %H:%M" => time.strftime("%d. %B %Y, %H:%M"),
+             "%Y/%m/%d %H:%M:%S" => time.strftime("%Y/%m/%d %H:%M:%S"),
+             "%a %d. %B %Y %H:%M %z" => time.strftime("%a %d. %B %Y %H:%M %z"),
+             "%A, %d de %B de %Y, %H:%Mh" => time.strftime("%A, %d de %B de %Y, %H:%Mh"),
+             "%a %d %b %Y, %H:%M:%S %z" => time.strftime("%a %d %b %Y, %H:%M:%S %z"),
+             "%A, %d de %B de %Y %H:%M:%S %z" => time.strftime("%A, %d de %B de %Y %H:%M:%S %z"),
+             "%a, %d %b %Y %H:%M:%S %z" => time.strftime("%a, %d %b %Y %H:%M:%S %z"),
+             "%A, %e. %B %Y, %H:%M" => time.strftime("%A, %e. %B %Y, %H:%M"),
+             "%a %d %b %Y %H:%M:%S %z" => time.strftime("%a %d %b %Y %H:%M:%S %z"),
+             "%a, %d %b %Y %H.%M.%S %z" => time.strftime("%a, %d %b %Y %H.%M.%S %z"),
+             "%Y-%m-%d %H:%M" => time.strftime("%Y-%m-%d %H:%M"),
+             "%Y年%b%d號 %A %H:%M:%S %Z" => time.strftime("%Y年%b%d號 %A %H:%M:%S %Z"),
+             "%a %d %b %Y %H:%M:%S %Z" => time.strftime("%a %d %b %Y %H:%M:%S %Z")}      
      end
 =begin
    Contains all the long time formats for a drop down 
 =end   
      def long_time_collection time
+=begin       
        return [["%d. %B, %Y ob %H:%M", time.strftime("%d. %B, %Y ob %H:%M")],
                ["%d %B, %Y %H:%M", time.strftime("%d %B, %Y %H:%M")],
                ["%d %B %Y %H:%M น.", time.strftime("%d %B %Y %H:%M น.")],
@@ -398,6 +514,32 @@ module TranslationHelper
                ["%Y년 %B월 %d일, %H시 %M분 %S초 %Z", time.strftime("%Y년 %B월 %d일, %H시 %M분 %S초 %Z")],
                ["%A, %d de %B de %Y, %H:%Mh", time.strftime("%A, %d de %B de %Y, %H:%Mh")],
                ["%A, %e. %B %Y, %H:%M", time.strftime("%A, %e. %B %Y, %H:%M")],
-               ["%A %d. %B %Y %H:%M", time.strftime("%A %d. %B %Y %H:%M")] ]
+               ["%A %d. %B %Y %H:%M", time.strftime("%A %d. %B %Y %H:%M")]]
+=end               
+       return {"%d. %B, %Y ob %H:%M" => time.strftime("%d. %B, %Y ob %H:%M"),
+               "%d %B, %Y %H:%M" => time.strftime("%d %B, %Y %H:%M"),
+               "%d %B %Y %H:%M น." => time.strftime("%d %B %Y %H:%M น."),
+               "%Y. gada %e. %B, %H:%M:%S" => time.strftime("%Y. gada %e. %B, %H:%M:%S"),
+               "%d %B %Y, %H:%M" => time.strftime("%d %B %Y, %H:%M"),
+               "%A %d %B %Y %H:%M" => time.strftime("%A %d %B %Y %H:%M"),
+               "%e %B %Y %H:%M" => time.strftime("%e %B %Y %H:%M"),
+               "%A %d %B %Y %H:%M:%S %Z" => time.strftime("%A %d %B %Y %H:%M:%S %Z"),
+               "%Y年%m月%d日(%a) %H時%M分%S秒 %z" => time.strftime("%Y年%m月%d日(%a) %H時%M分%S秒 %z"),
+               "%Y年%b%d日 %H:%M" => time.strftime("%Y年%b%d日 %H:%M"),
+               "%Y %B %d, %H:%M:%S" => time.strftime("%Y %B %d, %H:%M:%S"),
+               "%d de %B de %Y %H:%M" => time.strftime("%d de %B de %Y %H:%M"),
+               "%d %B %Y %H:%M" => time.strftime("%d %B %Y %H:%M"),
+               "%B %d, %Y %I:%M %p" => time.strftime("%B %d, %Y %I:%M %p"),
+               "%d %B %Y %H.%M" => time.strftime("%d %B %Y %H.%M"),
+               "%A, %d. %B %Y, %H:%M Uhr" => time.strftime("%A, %d. %B %Y, %H:%M Uhr"),
+               "%B %d, %Y %H:%M" => time.strftime("%B %d, %Y %H:%M"),
+               "%Y年%b%d號 %H:%M" => time.strftime("%Y年%b%d號 %H:%M"),
+               "%Y. %B %e., %A, %H:%M" => time.strftime("%Y. %B %e., %A, %H:%M"),
+               "%e. %Bta %Y %H.%M" => time.strftime("%e. %Bta %Y %H.%M"),
+               "%a, %d. %b %Y, %H:%M:%S %z" => time.strftime("%a, %d. %b %Y, %H:%M:%S %z"),
+               "%Y년 %B월 %d일, %H시 %M분 %S초 %Z" => time.strftime("%Y년 %B월 %d일, %H시 %M분 %S초 %Z"),
+               "%A, %d de %B de %Y, %H:%Mh" => time.strftime("%A, %d de %B de %Y, %H:%Mh"),
+               "%A, %e. %B %Y, %H:%M" => time.strftime("%A, %e. %B %Y, %H:%M"),
+               "%A %d. %B %Y %H:%M" => time.strftime("%A %d. %B %Y %H:%M")}            
      end
 end #module

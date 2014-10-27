@@ -1,4 +1,12 @@
 GIT
+  remote: git://github.com/bernat/best_in_place
+  revision: bfb262c5a25385143af432f8f7d98480636392c6
+  specs:
+    best_in_place (3.0.0)
+      actionpack (>= 3.2)
+      railties (>= 3.2)
+
+GIT
   remote: git://github.com/stffn/declarative_authorization.git
   revision: 45e91af20eba71b2828c5c84066bcce3ef032e8a
   specs:
@@ -44,9 +52,6 @@ GEM
       ZenTest (>= 4.4.1)
     autotest-rails-pure (4.1.2)
     bcrypt (3.1.7)
-    best_in_place (3.0.0)
-      actionpack (>= 3.2)
-      railties (>= 3.2)
     better_errors (2.0.0)
       coderay (>= 1.0.0)
       erubis (>= 2.6.6)
@@ -137,6 +142,8 @@ GEM
     jquery-rails (3.1.2)
       railties (>= 3.0, < 5.0)
       thor (>= 0.14, < 2.0)
+    jquery-ui-rails (5.0.2)
+      railties (>= 3.2.16)
     json (1.8.1)
     launchy (2.4.2)
       addressable (~> 2.3)
@@ -309,7 +316,7 @@ DEPENDENCIES
   annotate
   autotest
   autotest-rails-pure
-  best_in_place (= 3.0.0)
+  best_in_place!
   better_errors
   binding_of_caller
   capistrano
@@ -330,6 +337,7 @@ DEPENDENCIES
   guard-rspec
   guard-spork (= 1.5.0)
   jquery-rails
+  jquery-ui-rails
   json
   launchy
   libnotify (= 0.8.0)

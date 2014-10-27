@@ -1,13 +1,14 @@
 // Place your application-specific JavaScript functions and classes here
 // This file is automatically included by javascript_include_tag :defaults
-// require jquery
-//= require jquery-2.0.3
+//= require jquery
+// require jquery-2.0.3
 // require jquery-1.8.0
 // require jquery
 //= require jquery_ujs
+//= require jquery-ui
 //= require turbolinks
 //
-//= require jquery-ui-1.10.3.custom.js
+// require jquery-ui-1.10.3.custom.js
 // ujs has to be in for delete to work and for other rails ajax
 // require jquery_ujs
 //= require hoverIntent.js
@@ -24,10 +25,11 @@
 // require jquery.dataTables.js
 // require jquery.jeditable.js
 // require KeyTable.js
-
+//= require unobtrusive_flash.js
 // These below are in and required by best_in_place gem
 //= require jquery.purr
 //= require best_in_place
+//= require best_in_place.jquery-ui
 //= require popup
 // utility functions like _.escape()
 //= require underscore
@@ -37,7 +39,9 @@
 // require translations_uploads
 //= require_self
 //= require_tree .
-
+if(UnobtrusiveFlash.flashOptions == null){
+  UnobtrusiveFlash.flashOptions= {};
+}
 UnobtrusiveFlash.flashOptions['timeout'] = 10000;
 
 var HELP = namespace("help");

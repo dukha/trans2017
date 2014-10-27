@@ -142,11 +142,16 @@
       <!-- you cannot give this td below a class. It messes up bip -->
       <td id= '<%(best_in_place?(trans.attributes) ? "best_in_place" : "special-editor")%>'  style="max-width:40%;">
         <% if best_in_place?(trans.attributes) then%>
-        
-          <%= best_in_place(trans, :translation, :path => translation_path(trans.id),
-               :type=> input_control(trans.attributes), :collection=> collection?(trans.attributes), 
-               :ok_button=>"Save", :ok_button_class=> "ok", :cancel_button=>"Cancel", :cancel_button_class => "cancel",
-               :nil=>"Click to edit", :html_attrs=> html_attrs(trans.attributes) ) %>
+           <%options = {:url => translation_path(trans.id),:as=> input_control(trans.attributes),:ok_button=>"Save", 
+             :ok_button_class=> "ok", 
+             :cancel_button=>"Cancel", :cancel_button_class => "cancel",
+             :place_holder=>"Click to edit", :html_attrs=> html_attrs(trans.attributes)}%>
+            <% if input_control(trans.attributes)==:select then 
+               options[:collection]= collection?(trans.attributes)
+               #binding.pry
+               end%>   
+          <%= best_in_place(trans, :translation, options) %>
+          <!--%= best_in_place(trans, :translation)% -->
          <%elsif not trans.attributes["editor"] == nil then%>
          <!-- ARRAY ORDER EDITOR -->
           <!--a id = '<%=trans.dot_key_code%>' class = '<%="special_editor " + special_editor_name(trans.attributes)%>' 'href = '#' ><%= trans.translation%></a -->
@@ -643,35 +648,42 @@
 
 <script type="text/javascript">
 //This script  handles showing and hiding selection criteria
-  $().ready(function(){
-    //Set the initial text of the button
-    $("#showHideCriteria").html(criteriaVisibleText);
-    if( <%= @translations.count==0 %>){
-      toggleCriteria();
-    }
-    
-    $("#showHideCriteria").click(function(){
-      //alert("Test");
-      
-      toggleCriteria();
-      
-    }); //end click
-  });//end ready
   var   criteriaHiddenText = "<%=t($FA +'show_something', :something=>t($SC))%>";
   var   criteriaVisibleText = "<%=t($FA +'hide_something', :something=>t($SC))%>";
-  function toggleCriteria(){
+  $().ready(function(){
+    //Set the initial text of the button
+    //$("#showHideCriteria").html(criteriaVisibleText);
+    if( <%= @translations.count == 0 %>){
+      //if( ! $("#criteria").is(':visible')){
+       $("#showHideCriteria").html(criteriaVisibleText);
+       $("#criteria").slideDown('slow');
+      }else{
+        $("#showHideCriteria").html(criteriaHiddenText);
+        $("#criteria").slideUp('slow');
+      }
+    //}
     
+    $("#showHideCriteria").click(function(){
+      toggleCriteria();
+    }); //end click
+  });//end ready
+  //var   criteriaHiddenText = "<%=t($FA +'show_something', :something=>t($SC))%>";
+  //var   criteriaVisibleText = "<%=t($FA +'hide_something', :something=>t($SC))%>";
+  function toggleCriteria(){
+    console.log("toggling");
     if($("#criteria").is(':visible')){ 
         $("#showHideCriteria").html(criteriaHiddenText);
+        //console.log("Hiding");
     }else{
         $("#showHideCriteria").html(criteriaVisibleText);
-        console.log("show");
+        //console.log("show");
     }
     // toggle has to be after setting button text otherwise is(':visible') will not work properly
     $("#criteria").slideToggle('slow');  
   }
   
 </script>
+
 <script type="text/javascript"> 
 //This script sets up inplace editing
   $().ready(function(){

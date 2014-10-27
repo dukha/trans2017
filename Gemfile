@@ -39,7 +39,7 @@ gem 'will_paginate','~>3.0.4'
 
 # using jquery for ajax, not prototype > rails g jquery:install
 gem 'jquery-rails'#, '~>1.0.12' #, '0.2.7'
-
+gem 'jquery-ui-rails'
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
 gem 'turbolinks'
 
@@ -84,7 +84,7 @@ gem 'daemons'
 gem 'execjs'
 gem 'therubyracer'
 # in place editing
-gem 'best_in_place', '3.0.0'#, :git => "git://github.com/bernat/best_in_place"
+gem 'best_in_place',  :git => "git://github.com/bernat/best_in_place"
 
 # for doing searches with criteria. Replaces meta_where for rails 3.1
 gem 'squeel'
