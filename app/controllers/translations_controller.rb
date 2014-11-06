@@ -14,7 +14,6 @@ class TranslationsController < ApplicationController
   def new
   end
    def dev_new
-     #debugger
     @translation = Translation.new
     
     @developer_param = DeveloperParam.new
@@ -23,22 +22,13 @@ class TranslationsController < ApplicationController
     end
   end
   def update
-    #binding.pry
-    #@translation = Translation.find params[:id]
-
     respond_to do |format|
       #binding.pry
       if @translation.update(translation_params)
         puts "successful update"
-        #binding.pry
         format.html { 
           redirect_to(@translation, :notice => 'Translation was successfully updated.') 
         }
-          #format.js{
-            
-           # binding.pry
-            #render :json => {:result => "ok"}
-          #}
           format.json { 
             if params["editor"].nil? then
               #binding.pry
@@ -59,8 +49,7 @@ class TranslationsController < ApplicationController
 
   def index
     @translations = []
-    #@translation_redises = TranslationRedis.find(@redis_connection, @language_id).paginate(:page => params[:page], :per_page=>25)  #Translation.all
-    # We now do all our primary io via activerecord/postgres and only publish to redis....
+    # We do all our primary IO via activerecord/postgres and only publish to redis....
    
     # to work with best_in_place to edit in the index html table we need to work with eager loading 
     # so that we can reference @translations as an array @translations[1] etc in the erb page
@@ -68,52 +57,36 @@ class TranslationsController < ApplicationController
     # The array will still paginate provided we have will_paginate/array
     # messy but it works!! 
     require 'will_paginate/array'
-    #binding.pry
-    #if params["criterion_iso_code"].nil? or params["criterion_cav_id"].nil? then 
-      
-      #
-    #else
-    #binding.pry
-      possible_where_clauses = prepare_mode()
-      search_info = prepare_search()
-      if Translation.valid_criteria?(search_info) then
-        @translations = Translation.search(current_user, search_info, nil, possible_where_clauses)
-        #binding.pry
-      else  
-        msg = 'Criteria: '
-        flash_now= false
-        #binding.pry
-        search_info[:messages].each do |m|
-          m.keys.each{ |k,v| 
-            #binding.pry
-            flash_now = true
-            msg.concat( "#{m[k] + '. '}") 
-          }
-        end
-        flash.now[:error] = msg if flash_now
-        #flash.now[:error] = ("Search criteria for both language and application version must be given. Given version = " + (params["criterion_cav_id"].nil?? "nil":["criterion_cav_id"].to_s)  + ". Given language = " + (params["criterion_ciso_code"].nil?? "nil":["criterion_iso_code"].to_s))
-        # in this case we make an ActivRecord Relation with 0 records so that we can redisplay
-        @translations =  Translation.where{id == -1}
-      #end
-      #binding.pry
+    possible_where_clauses = prepare_mode()
+    search_info = prepare_search()
+    if Translation.valid_criteria?(search_info) then
+      @translations = Translation.search(current_user, search_info, nil, possible_where_clauses)
+    else  
+      msg = 'Criteria: '
+      flash_now= false
+      search_info[:messages].each do |m|
+        m.keys.each{ |k,v| 
+          #binding.pry
+          flash_now = true
+          msg.concat( "#{m[k] + '. '}") 
+        }
       end
-   
-    #binding.pry
+      flash.now[:error] = msg if flash_now
+      # in this case we make an ActivRecord Relation with 0 records so that we can redisplay
+      @translations =  Translation.where{id == -1}
+    end
     @translations =@translations.paginate(:page => params[:page], :per_page => 30)
-    # Fix this when we get devise
-   # current_user = UserWork.current_user_id
-    # We need current_user for auth
-    #@translations = Translation.search(current_user, criteria, operators, sorting).paginate(:page => params[:page], :per_page=>25)
-    
-    #puts "@translations: " + @translations.first.dot_key_code
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @translations }
     end
   end
-  # contains a table that is editable
-  def editable_list
-    
+=begin
+  
+  contains a table that is editable 
+  #deprecated use index
+=end  
+  def editable_list   
      @translations = Translation.paginate(:page => params[:page], :per_page=>25) 
     #puts "@translations: " + @translations.first.dot_key_code
     respond_to do |format|
@@ -125,6 +98,7 @@ class TranslationsController < ApplicationController
   def edit
   end
 
+# Will be needed for developers
   def create
     
   end
@@ -202,14 +176,12 @@ class TranslationsController < ApplicationController
   end
 =end  
   def show
-    #@translation = Translation.find(params[:id])
-
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @translation }
     end
   end
-
+# needed for developers
   def destroy
   end
   
@@ -218,18 +190,11 @@ class TranslationsController < ApplicationController
     extra_where_clauses = []
     en_newer_where = "english.updated_at > translations.updated_at"
     untranslated_where = "translations.translation is null"
-    #binding.pry
     if mode == "untranslated" then
-      #params["operator_translation"] = "is_null"
       extra_where_clauses << untranslated_where
     elsif mode == "en_newer" then
-      #params["operator_updated_at"] = 'lt' 
-      #params["criterion_updated_at"] =  "english.updated_at" 
       extra_where_clauses << en_newer_where
     elsif mode == 'both_untranslated_and_en_newer'  then
-      #params["operator_translation"] = "is_null"
-      #params["operator_updated_at"] = 'lt' 
-      #params["criterion_updated_at"] =  "english.updated_at" 
       extra_where_clauses << en_newer_where
       extra_where_clauses << untranslated_where
     else # all
@@ -240,19 +205,17 @@ class TranslationsController < ApplicationController
   
   
   def prepare_search
-    #if Translation.valid_criteria? then
     if Translation.respond_to? :searchable_attr  
       searchable_attr = Translation.searchable_attr 
     else 
       searchable_attr = [] 
     end # respond_to
-   #end # valid
+
     if Translation.respond_to? :sortable_attr  
       sortable_attr = Translation.sortable_attr     
     else   
       sortable_attr = []   
     end
-    #binding.pry
      return search_info = init_search(current_user, searchable_attr, sortable_attr)
     
   end
@@ -288,8 +251,6 @@ class TranslationsController < ApplicationController
   protected
     # This method called when the DB uniqueness constraint is violated
     def record_not_unique exception
-      #debugger 
-      
       flash.now[:error] = exception.message
       tflash("all_rolledback", :warning, {:model=>@@model, :count=>10}, true )
       #flash.now[:warning] = t($MS + "all_rolledback")
@@ -299,9 +260,7 @@ class TranslationsController < ApplicationController
     
     # This method called when the rails uniqueness validation is violated
     def record_invalid exception
-      #debugger
       flash.now[:error] =exception.message
-      #flash.now[:warning] = t($MS + "all_rolledback")
       tflash("all_rolledback", :warning, {:model=>@@model, :count=>10}, true )
       reload_dev_new_after_rollback()
       render "dev_new"
@@ -333,6 +292,7 @@ class TranslationsController < ApplicationController
     end
 
     # Only allow a trusted parameter "white list" through.
+    # modify for developers
     def translation_params
       params.require(:translation).permit(:translation)
     end  

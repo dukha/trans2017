@@ -92,40 +92,7 @@ class Translation < ActiveRecord::Base
   }
 
 
-=begin
-  scope :single_lang_translations_arr_old, ->(language, calmapp_version_id) {
-    if language.is_a? TranslationLanguage then
-      language = language.iso_code
-    elsif language.is_a? String then
-      # then we assume that it is the iso_code
-    elsif language.is_a? Integer then   
-      language = TranslationLanguage.find(language)
-    else
-      puts "language is a " + language.class.name
-      # raise error
-    end
-    join_to_cavs_tls_arr(calmapp_version_id).
-    joins_to_tl_arr.
-    outer_join_to_english_arr.
-    join_to_cavs_tls_arr(calmapp_version_id, 2, "english", " and cavtl1.calmapp_version_id = cavtl2.calmapp_version_id").
-    
-    #joins("inner join calmapp_versions_translation_languages cavtl2 on english.cavs_translation_language_id = cavtl2.id and cavtl1.calmapp_version_id = cavtl2.calmapp_version_id ").
-    # we need to make this a left (Outer) join because of the full outer join on transltions joined to english translations.
-    # this allows for plurals that are in some languages but not in english e.g "few"
-    joins_to_tl_arr(2, 2, 'left join', " and tl2.iso_code='en'").
-    #joins("inner join translation_languages tl2 on cavtl2.translation_language_id = tl2.id and tl2.iso_code='en'").
-    outer_joins_editor_arr.
-    outer_joins_special_dot_keys_arr.
-    #only_cldr_plurals.
-    basic_select_arr.
-    select("english.translation as en_translation, english.updated_at as en_updated_at, translations.translation as translation, 
-          tl1.name as language,
-          translations.updated_at as updated_at, special.cldr as cldr, cavtl1.calmapp_version_id as version_id").
-    where( "cavtl1.calmapp_version_id = ?",calmapp_version_id).
-    where("tl1.iso_code = ?", language).
-    order("translations.dot_key_code asc")
-  }
-=end  
+
 
 
 =begin
@@ -158,29 +125,11 @@ class Translation < ActiveRecord::Base
     elsif language.is_a? Integer then   
       language = TranslationLanguage.find(language)
     else
-      puts "language is a " + language.class.name
-      # raise error  scope :outer_join_to_english_arr2, ->( calmapp_version, equal=true ){
-=begin
-    if equal then
-      operator = ' = '
-    else 
-      operator = ' != ' 
-    end
-    joins("full  join translations as english on translations.dot_key_code " + operator + " english.dot_key_code
-          and english.cavs_translation_language_id = (select id from calmapp_versions_translation_languages as cavtl2 where cavtl2.calmapp_version = " + calmapp_version_id.to_s  +
-        + "  and cavtl2.translation_language_id = " + TranslationLanguage.TL_EN.id.to_s  + "))")
-=end
+      
     end
     join_to_cavs_tls_arr(calmapp_version_id).
     joins_to_tl_arr.
     outer_join_to_english_arr(calmapp_version_id).
-    #join_to_cavs_tls_arr(calmapp_version_id, 2, "english", " and cavtl1.calmapp_version_id = cavtl2.calmapp_version_id").
-    
-    #joins("inner join calmapp_versions_translation_languages cavtl2 on english.cavs_translation_language_id = cavtl2.id and cavtl1.calmapp_version_id = cavtl2.calmapp_version_id ").
-    # we need to make this a left (Outer) join because of the full outer join on transltions joined to english translations.
-    # this allows for plurals that are in some languages but not in english e.g "few"
-    # joins_to_tl_arr(2, 2, 'left join', " and tl2.iso_code='en'").
-    #joins("inner join translation_languages tl2 on cavtl2.translation_language_id = tl2.id and tl2.iso_code='en'").
     outer_joins_editor_arr.
     outer_joins_special_dot_keys_arr.
     #only_cldr_plurals.
@@ -193,128 +142,13 @@ class Translation < ActiveRecord::Base
     order("translations.dot_key_code asc")
   }
 
-  
-=begin
- @return all translations where translation is nil ie need to be translated 
-=end
-=begin @deprecated  
-  scope :new_single_lang_arr, ->(language, calmapp_version_id) {
-    single_lang_translations_arr(language, calmapp_version_id).
-    where{translations.translation == nil}scope :single_lang_translations_arr2, ->(language, calmapp_version_id) {
-    if language.is_a? TranslationLanguage then
-      language = language.iso_code
-    elsif language.is_a? String then
-      # then we assume that it is the iso_code
-    elsif language.is_a? Integer then   
-      language = TranslationLanguage.find(language)
-    else
-      puts "language is a " + language.class.name
-      # raise error
-    end
-    join_to_cavs_tls_arr(calmapp_version_id).
-    joins_to_tl_arr.
-    outer_join_to_english_arr2.
-    #join_to_cavs_tls_arr(calmapp_version_id, 2, "english", " and cavtl1.calmapp_version_id = cavtl2.calmapp_version_id").
-    
-    #joins("inner join calmapp_versions_translation_languages cavtl2 on english.cavs_translation_language_id = cavtl2.id and cavtl1.calmapp_version_id = cavtl2.calmapp_version_id ").
-    # we need to make this a left (Outer) join because of the full outer join on transltions joined to english translations.
-    # this allows for plurals that are in some languages but not in english e.g "few"
-    # joins_to_tl_arr(2, 2, 'left join', " and tl2.iso_code='en'").
-    #joins("inner join translation_languages tl2 on cavtl2.translation_language_id = tl2.id and tl2.iso_code='en'").
-    outer_joins_editor_arr.
-    outer_joins_special_dot_keys_arr.
-    only_cldr_plurals.
-    basic_select_arr.
-    select("english.translation as en_translation, english.updated_at as en_updated_at, translations.translation as translation, 
-          tl1.name as language,
-          translations.updated_at as updated_at, special.cldr as cldr").
-    where( "cavtl1.calmapp_version_id = ?",calmapp_version_id).
-    where("tl1.iso_code = ?", language).
-    order("translations.dot_key_code asc")
-  }
-
-scope :outer_join_to_english_arr2, ->( calmapp_version_id, equal=true ){
-  if equal then
-    operator = ' = '
-  else 
-    operator = ' != ' 
-  end
-  joins("full  join translations as english on translations.dot_key_code " + operator + " english.dot_key_code
-        and english.cavs_translation_language_id = (select id from calmapp_versions_translation_languages as cavtl2 where cavtl2.calmapp_version_id = " + calmapp_version_id.to_s  +
-      + "  and cavtl2.translation_language_id = " + TranslationLanguage.TL_EN.id.to_s  +"))")
-}
-  }
-=end
-  
-=begin
-  @return all new and newly updated translations for the language and version 
-=end
-=begin @deprecated  
-  scope :new_updated_single_lang_arr, ->(language, calmapp_version_id) {
-    single_lang_translations_arr(language,calmapp_version_id).
-    where{(translations.translation == nil) | (translations.updated_at > english.updated_at )}
-  }
-=end  
-=begin
- @return   AR Relation with all english translations for a version
-=end 
-=begin @deprecated 
-  scope :english_translations, ->(calmapp_version_id) {
-    join_to_cavs_tls_arr.
-    joins_to_tl_arr.
-    joins_editor.
-    basic_select_arr.
-    where( "cavtl1.calmapp_version_id = ?",calmapp_version_id).
-    where("tl1.iso_code =  'en'" )
-  }
-=end  
-=begin
- @return AR Relation with where clause precluding all dot_ley_codes that end in a CLDR plural 
-=end 
-=begin @deprecated 
-  scope :not_in_cldr_plurals_arr, ->{
-    conditions = ""
-    pl  = CldrType.CLDR_plurals.each do |p|
-      p.prepend '%.'  
-      if  conditions.length > 0 then
-        conditions.concat ' and '    
-      end 
-      conditions.concat " dot_key_code not like  '#{p}'"  
-    end
-    return where(conditions)
-  }
-=end
-=begin  
-  scope :dot_key_codes_for_language, ->(language, calmapp_version_id) {
-    
-  }   
-=end
-=begin
-  scope :english_codes_missing_in_translation_arr, ->(language, calmapp_version_id) {
-    select("dot_key_code"). 
-    join_to_cavs_tls_arr.
-    joins_to_tl_arr.
-    where("tl1.iso_code = 'en'").
-    where("cavtl1.calmapp_version_id = ?", calmapp_version_id).
-    not_in_cldr_plurals.
-    where{dot_key_code << (Translation.select("dot_key_code").
-    # we don't do a join between query and subquery because of the problems with aliases. Instead use the version data twice.
-             join_to_cavs_tls_arr.
-             joins_to_tl_arr.
-             where( "tl1.iso_code = ?", language).
-             where( "cavtl1.calmapp_version_id = ?", calmapp_version_id))
-         }
-  }
-=end
-
 =begin
  dependency scope outer_joins_special_dot_keys_arr will give cldr attr 
 =end
   scope :only_cldr_plurals_arr, -> {
     where("cldr = ?", true)
   }
-
- 
+  
 =begin
   @return ActiveRecord::Relation of English translations for the same version of this translation   
 =end  
@@ -358,50 +192,19 @@ scope :outer_join_to_english_arr2, ->( calmapp_version_id, equal=true ){
  other language (for the same version)
 =end  
   def add_other_language_records_to_version
-   #binding.pry
    calmapp_version().translation_languages.each do |tl|
-   #calmapp_versions_translation_language.each do |cavtl|
-     #binding.pry
      if not tl.iso_code == 'en' then
-       
-       cavtl=  CalmappVersionsTranslationLanguage.where{calmapp_version_id  == my{calmapp_version.id}}.where{translation_language_id == my{tl.id}}.first
-       
-       #cavtl = CalmappVersionsTranslationLanguage.new(:calmapp_version_id=>calmapp_version.id, :translation_language=> tl.id)
-       #cavtl.save!
-       
+       cavtl=  CalmappVersionsTranslationLanguage.where{calmapp_version_id  == my{calmapp_version.id}}.where{translation_language_id == my{tl.id}}.first       
        if tl.plurals_same_as_en? || (not Translation.dot_key_code_plural?(dot_key_code,calmapp_version.id))
          #binding.pry
          t = Translation.new(:dot_key_code => dot_key_code, :cavs_translation_language_id => cavtl.id)
          t.save!
        else
-         #
-         # We must sort out the plurals and insert the correct plurals, not the ones from English
-         #plurals = tl.plurals
-         binding.pry
          BulkTranslations.save_new_plurals(tl.plurals, dot_key_code, cavtl)
        end # else not same as en
      end  # not en
    end  #do each tl
   end #def
-
-
-=begin
-  def english_translation 
-    new_locale = replace_locale_in_dot_key_code('en')
-    en = Translation.where{dot_key_code == my{new_locale}}
-    puts  en.all.to_s
-    return en
-  end
-  def translation_locale 
-    dot_key_code[0..(dot_key_code.index('.')-1)]
-  end
-  def remove_locale_from_dot_key_code
-    dot_key_code[(dot_key_code.index('.')+1)..(dot_key_code.size() -1)]
-  end
-  def replace_locale_in_dot_key_code new_locale
-    new_locale + '.' +remove_locale_from_dot_key_code
-  end
-=end
 
   def self.save_multiple translation_array
     transaction do 
@@ -420,16 +223,17 @@ scope :outer_join_to_english_arr2, ->( calmapp_version_id, equal=true ){
   def self.search_dot_key_code_operators
      [ ops.starts_with, ops.ends_with,  ops.matches,  ops.does_not_match,  ops.equals ]
   end
+
   def self.search_translation_operators
     [ ops.starts_with,  ops.ends_with,  ops.matches,  ops.does_not_match,  ops.equals,  ops.is_null,  ops.not_null]
   end
   def self.valid_criteria? search_info
-    #"Search criteria for both language and application version must be given. Given version = " + (params["criterion_cav_id"].nil?? "nil":["criterion_cav_id"].to_s)  + ". Given language = " + (params["criterion_iso_code"].nil?? "nil":["criterion_iso_code"].to_s))
     if search_info[:criteria]["iso_code"].nil? then
       message = message = I18n.t($ARA + "translation.iso_code") + " " + I18n.t($EM + "blank", "iso_code" )
       search_info[:messages]=[] if search_info[:messages].nil?
       search_info[:messages] << {"iso_code" => message}
     end
+    
     if search_info[:criteria]["cav_id"].nil? then
       message = I18n.t($ARA + "translation.cav_id") + " " + I18n.t($EM + "blank", "cav_id" )
       search_info[:messages]=[] if search_info[:messages].nil?
@@ -498,28 +302,6 @@ scope :outer_join_to_english_arr2, ->( calmapp_version_id, equal=true ){
     return translations
   end
  
-=begin   
-  def self.write_new_dot_keys_for_all_languages calmapp_versions_translation_language
-    calmapp_versions_translation_language.translation_languages.each do |tl|
-      dot_key_codes  = translations_present_in_en_not_in_language(tl)
-      dot_key_codes.each do |dkc|
-        if not Translation.where{cavs_translation_language_id ==  calmapp_versions_translation_language.id}.where{dot_key_code == dkc}.exists?
-           write_new_dot_key(calmapp_versions_translation_language, dkc)
-        end
-      end
-    end
-  end
-  
-  def write_new_dot_key calmapp_versions_translation_language, dkc
-    Translation.create(:dot_key_code=> dkc, :cavs_translation_language_id => calmapp_versions_translation_language.id)
-  end
-=end
-=begin
- def publish_translation(calmapp_versions_redis_database)
-   calmapp_versions_redis_database = CalmappVersionsRedisDatabase.find(calmapp_versions_redis_database) if calmapp_versions_redis_database.is_a?(Integer)
-    
- end
-=end
 end
 
 
