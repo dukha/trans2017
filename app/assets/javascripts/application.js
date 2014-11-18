@@ -25,7 +25,7 @@
 // require jquery.dataTables.js
 // require jquery.jeditable.js
 // require KeyTable.js
-//= require unobtrusive_flash.js
+//= require unobtrusive_flash
 // These below are in and required by best_in_place gem
 //= require jquery.purr
 //= require best_in_place
@@ -39,6 +39,7 @@
 // require translations_uploads
 //= require_self
 //= require_tree .
+
 if(UnobtrusiveFlash.flashOptions == null){
   UnobtrusiveFlash.flashOptions= {};
 }

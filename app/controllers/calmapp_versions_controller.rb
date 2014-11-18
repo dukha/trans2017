@@ -116,7 +116,7 @@ class CalmappVersionsController < ApplicationController
           # @todo get the errors from the after_save parts of the transaction and put them up
           flash[:error] = "Record not saved."
           if redis_db_update? then
-            format.html { render :action => "version_alterwithredisdb" }
+            format.html { render :action => "calmapp_version_alterwithredisdb" }
           else
             format.html { render :action => "edit" } 
           end

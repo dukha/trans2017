@@ -88,8 +88,14 @@ class ApplicationController < ActionController::Base
 
   #$APPLICATION_NAME = "CALM Translator"
   #$APPLICATION_VERSION ="0.0.0 M1"
-
-
+=begin  
+  This method is activated by declarative auth to give a better user experience 
+  when the user is denided access by decl_auth 
+=end  
+  def permission_denied
+  flash[:notice] = tmessage(".declarative_authorization.unauthorised",  $W )
+  redirect_to root_url
+end
   # Is Authorization.current_user the same as current_user???
   #qq before_filter {|contr| Authorization.current_user = contr.current_user}
 =begin
@@ -136,7 +142,12 @@ This function, together with the scope in routes.rb allows the setting of urls l
     puts cmd
     system cmd 
   end
-  
+
+=begin  
+  def after_sign_out_path_for(resource)
+    redirect_to new_user_session_path
+  end
+=end
   def self.start_delayed_jobs_queue
     #binding.pry
     #system "RAILS_ENV=#{Rails.env} bin/delayed_job start --exit-on-complete 2>&1 >> #{Rails.root}/log/background.log"

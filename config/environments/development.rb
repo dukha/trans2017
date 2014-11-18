@@ -15,7 +15,7 @@ Translator::Application.configure do
   config.action_controller.perform_caching = false
 
   # Don't care if the mailer can't send
-  config.action_mailer.raise_delivery_errors = false
+  config.action_mailer.raise_delivery_errors = true
   # devise wants this
   config.action_mailer.default_url_options = { :host => 'localhost:3000' }  
   #config.middleware.use ExceptionNotifier,
@@ -23,19 +23,31 @@ Translator::Application.configure do
 #     :email_prefix => "[Exception] ",
 #     :sender_address => %{trans_app@internode.in.net},
 #     :exception_recipients => %w{mplennon@gmail.com}
- :email =>{
-      :email_prefix => "[Whatever] ",
-      :sender_address => %{"notifier" <notifier@example.com>},
+      :email =>{
+      :email_prefix => "[Exception] ",
+      :sender_address => %{"translator-notifier" <trans_app@internode.on.net>},
     :exception_recipients => %w{mplennon@gmail.com}
     }
-
-  config.action_mailer.delivery_method = :sendmail 
+  # sendmail users the sendmail_settings below
+  config.action_mailer.delivery_method = :sendmail
+  # to use google then uncomment the4 line below (It will sue the smtp_settings below)
+  #config.action_mailer.delivery_method = :smtp 
   config.action_mailer.perform_deliveries = true 
   config.action_mailer.default :charset => "utf-8" 
-  config.action_mailer.raise_delivery_errors = false 
+  config.action_mailer.raise_delivery_errors = true 
   config.action_mailer.sendmail_settings = { 
     :location => '/usr/sbin/exim', 
-    :arguments => '-i -t' 
+    # The -t switch doesn't work in the case of devise_invition
+    :arguments => '-i ' #-t' 
+  }
+  config.action_mailer.smtp_settings = {
+    address: "smtp.gmail.com",
+    port: 587,
+    domain: Rails.application.secrets.domain_name,
+    authentication: "plain",
+    enable_starttls_auto: true,
+    user_name: Rails.application.secrets.email_provider_username,
+    password: Rails.application.secrets.email_provider_password
   }
 
   # Print deprecation notices to the Rails logger

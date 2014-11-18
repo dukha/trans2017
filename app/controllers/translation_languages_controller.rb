@@ -20,7 +20,7 @@ class TranslationLanguagesController < ApplicationController
   # GET /translation_languages/1
   # GET /translation_languages/1.xml
   def show
-    @translation_language = TranslationLanguage.find(params[:id])
+    #@translation_language = TranslationLanguage.find(params[:id])
 
     respond_to do |format|
       format.html # show.html.erb
@@ -41,7 +41,7 @@ class TranslationLanguagesController < ApplicationController
 
   # GET /translation_languages/1/edit
   def edit
-    @translation_language = TranslationLanguage.find(params[:id])
+    #@translation_language = TranslationLanguage.find(params[:id])
   end
 
   # POST /translation_languages
@@ -64,7 +64,7 @@ class TranslationLanguagesController < ApplicationController
   # PUT /translation_languages/1
   # PUT /translation_languages/1.xml
   def update
-    @translation_language = TranslationLanguage.find(params[:id])
+    #@translation_language = TranslationLanguage.find(params[:id])
 
     respond_to do |format|
       if @translation_language.update(translation_language_params)
@@ -81,7 +81,7 @@ class TranslationLanguagesController < ApplicationController
   # DELETE /translation_languages/1
   # DELETE /translation_languages/1.xml
   def destroy
-    @translation_language = TranslationLanguage.find(params[:id])
+    #@translation_language = TranslationLanguage.find(params[:id])
     @translation_language.destroy
      tflash('delete', :success, {:model=>@@model, :count=>1})
     respond_to do |format|

@@ -49,7 +49,7 @@ authorization do
   standard_roles :profiles
   
   role :users_read do
-    has_permission_on [:users], :to => [:select]
+    has_permission_on [:users], :to => [:index]
   end
   role :users_write do
     has_permission_on [:users], :to => [:unlock_user]
@@ -61,31 +61,35 @@ authorization do
     has_permission_on [:redis_instances],  :to=>[:next_redis_database_index]
   end
   
-  role  :version_alterwithredisdb do
+  role  :calmapp_versions_alterwithredisdb do
     has_permission_on [:calmapp_versions], :to => [:version_alterwithredisdb]
   end
-  role :version_publish do
+  role :calmapp_versions_publish do
     has_permission_on [:redis_databases], :to => [:publish]
   end
-  standard_roles :profiles
-  #standard_roles :locations
-  standard_roles :languages
-  standard_roles :translation_languages
-  standard_roles :calmapp_versions
   
-  standard_roles :permissions
-
+  role :users_invite do
+    has_permission_on [:uses], :to => [:invite_user]
+  end
+  
+  #standard_roles :locations
+  
+  standard_roles :calmapp_versions_translation_languages
+  standard_roles :calmapp_versions
   standard_roles :calmapps
+  standard_roles :dot_key_code_translation_editors 
+  standard_roles :languages
+  standard_roles :locations
+  standard_roles :permissions
+  standard_roles :profiles
   standard_roles :redis_databases
   standard_roles :redis_instances
-  
-
-  standard_roles :locations
   standard_roles :release_statuses
+  standard_roles :special_partial_dot_keys
   standard_roles :translations
+  standard_roles :translation_languages
   standard_roles :translations_uploads
-  #standard_roles :user_works
- 
+  standard_roles :users
   standard_roles :whiteboard_types
   standard_roles :whiteboards
 

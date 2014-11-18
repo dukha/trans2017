@@ -65,6 +65,7 @@ en:
       new_redis_for_version: New Redis for Version
       back_to_redis_databases: "Back to Redis Db's"
       back_to_versions: Back to Versions
+      new_invitation: New Invitation
     labels:
       #redis_db_index: Redis Database Index
       #port: Linux Port
@@ -119,9 +120,11 @@ en:
         array_order: Drag the elements into the correct order and then Save. 
         array: Add or change each translation to match the English translations.
         array_first_element_null: Add or change each translation to match the English translations.    
-#    actions:
+      user:
+        actual_name: Your everyday Given and Family names
+        username: The name that this application will know you as. Can be used to signin.
+        
 
-      #new_translation: New English Translation
   roles:
     actions:
       read: Read
@@ -135,6 +138,12 @@ en:
       change: Change
       getunused: Get Unused
       invite: Invite
+      getunused: Get Unused
+      getnextindex: Get Next Index
+      publish: Publish
+      unlock: Unlock
+      alterwithredisdb: Alter Redis Db
+      guest: Guest
     miscellaneous: Miscellaneous
     redis_instances: Redis Instances
     redis_databases: Redis Databases
@@ -143,6 +152,16 @@ en:
     calmapp_versions: Application Versions
     translation_uploads: Translation Uploads
     release_statuses: Release Statuses
+    languages: Languages
+    dot_key_code_translation_editors: Translation Editors
+    guest: Guest
+    locations: Locations
+    permissions: Permissions
+    profiles: Profiles
+    special_partial_dot_keys: Special Keys
+    users: Users
+    whiteboard_types: Types of Whiteboard
+    whiteboards: Whiteboards
   menus:
     translations: Translations
     translator_index: Translate in Table
@@ -166,6 +185,8 @@ en:
     translations_uploads: Translation Uploads
     special_partial_dot_keys: Special Keys
     dot_key_code_translation_editors: Editors
+    users: Users
+    new_invitation: New User Invitation
   headings:
     application_subheading: Calm Translator M1
     write_to_database:
@@ -216,13 +237,13 @@ en:
         other: Translations
       translation_language:
         one: Translation Language
-        other: Translations Languages
+        other: Translation Languages
       translation_parameter:
         one: Translation Parameter
         other: Translation Parameters
-      user_preference:
-        one: User Preferences
-        other: User Preferences
+      #user_preference:
+        #one: User Preferences
+        #other: User Preferences
       profile:
         one: User Profiles
         other: User Profiles
@@ -310,6 +331,11 @@ en:
         
         yaml_upload:  Uploadable YAML Translation File
         yaml_upoad_file_path: Uploaded File 
+      user:
+        actual_name: Actual Name
+        username: (Online)User Name
+        password: Password
+        password_confirmation: Confirm Password
   messages: 
     no_delete_if_versions_exist:
       notice: Delete all versions first before you can delete the application 
@@ -369,6 +395,9 @@ en:
             All translations in this file will also be deleted (from the database).
     #yaml_upload_content_type: 
       #error: "'%{yu}' is not the correct file type (Must be 'x-yaml', having '.yml' suffix)"
+    declarative_authorization:
+      unauthorised:
+        warning: "Sorry, you are not authorised to access that page." 
     translations_upload:
       yaml_upload:
         error:

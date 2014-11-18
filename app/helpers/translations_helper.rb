@@ -94,10 +94,13 @@ module TranslationsHelper
          #options[:title] = t(options[:title])
        #end
        
-       
-     if options[:navigate].nil? or options[:navigate] then   
-         link_to tlabel, url, options
-     else #options[:navigate] == false
+     navigate  = options.delete(:navigate)
+     #options[:navigate].delete unless options[:navigate].nil?  
+     if navigate.nil? or navigate  then   
+       #if navigation is involved then we make a link
+       link_to tlabel, url, options
+     else #navigate == false
+       #if it is an action which refreshes or ajaxes on the same page (eg Delete) then we use a button
        button_to tlabel, url, options
      end  
    end
@@ -208,7 +211,6 @@ just substitute twill_paginate for will_paginate
       return ret_val
   end
   def tflash message_code,  category=:error, options ={}, now=false
-    #binding.pry
     if ! category.is_a? Symbol then
       category = category.to_s.to_sym
     end

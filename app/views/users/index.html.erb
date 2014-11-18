@@ -14,22 +14,21 @@
   </tr>
   <% cell_class = "data" %>
   <% link_cell_class="link" %>
+  
   <% @users.each do |user| %>
-    <tr class = '<%=cycle('dataeven', 'dataodd')%>' >
+    <tr class = '<%=cycle('dataeven', 'dataodd')%>' id = '<%= dom_id(user)%>' > 
       <td class = '<%=cell_class%>'><%= user.username %></td>
-      <td <class = '<%=cell_class%>'><%= user.email %></td>
+      <td class = '<%=cell_class%>'><%= user.email %></td>
       <td class = '<%=cell_class%>'><%= user.actual_name %></td>
       <td class = '<%=link_cell_class%>'><%= tlink_to 'edit_permissions', permissions_path(user) %></td>
       <td class = '<%=link_cell_class%>'><%= tlink_to 'reset_password', edit_password_path(user) %></td>
       <td class = '<%=link_cell_class%>'><%= unlock_link(user) %></td>
-      <!--td class = '< %=link_cell_class%>'>< %= button_to "Cancel my account", registration_path(user), data: { confirm: "Are you sure?" }, method: :delete %></td -->
       <td class = '<%=link_cell_class%>'><%= tlink_to("destroy", destroy_user_path(user), {:navigate=>false, :method=>'delete', :remote=>true, :data=>{:confirm=>tmessage( 'delete.are_you_sure', $W, {:model=>user.username}) }})%></td>
-      <!--%=link_destroy(user, "user") % -->
     </tr>
     <%end%>
 </table>
 <%= twill_paginate %>
-<br/>
-<!-- need invite gem here to match reg --> 
-<%= link_to t('headings.new.heading', :model=> t($ARM + 'user', :count=>1)), new_user_path %>
+<br>
+
+<%= link_to t('headings.new.heading', :model=> t($ARM + 'user', :count=>1)), new_user_path %> | <%= tlink_to "new_invitation", new_user_invitation_path%></li>
 

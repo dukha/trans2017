@@ -1,5 +1,6 @@
 class ProfilesController < ApplicationController
   before_action :authenticate_user!
+  before_action :set_profile, only: [:show, :edit, :update, :destroy]
   filter_access_to :all
 
   # GET /profiles
@@ -15,7 +16,7 @@ class ProfilesController < ApplicationController
   # GET /profiles/1
   # GET /profiles/1.xml
   def show
-    @profile = Profile.find(params[:id])
+    #@profile = Profile.find(params[:id])
 
     respond_to do |format|
       format.html # show.html.erb
@@ -36,13 +37,13 @@ class ProfilesController < ApplicationController
 
   # GET /profiles/1/edit
   def edit
-    @profile = Profile.find(params[:id])
+    #@profile = Profile.find(params[:id])
   end
 
   # POST /profiles
   # POST /profiles.xml
   def create
-    @profile = Profile.new(params[:profile])
+    @profile = Profile.new(profile_params)
  
     respond_to do |format|
       if @profile.save
@@ -58,9 +59,9 @@ class ProfilesController < ApplicationController
   # PUT /profiles/1
   # PUT /profiles/1.xml
   def update
-    @profile = Profile.find(params[:id])
+    #@profile = Profile.find(params[:id])
     respond_to do |format|
-      if @profile.update_attributes(params[:profile])
+      if @profile.update(profile_params)
         format.html { redirect_to(profiles_url, :notice => 'Profile was successfully updated.') }
         format.xml  { head :ok }
       else
@@ -73,7 +74,7 @@ class ProfilesController < ApplicationController
   # DELETE /profiles/1
   # DELETE /profiles/1.xml
   def destroy
-    @profile = Profile.find(params[:id])
+    #@profile = Profile.find(params[:id])
     @profile.destroy
 
     respond_to do |format|
@@ -81,4 +82,13 @@ class ProfilesController < ApplicationController
       format.xml  { head :ok }
     end
   end
+  
+  private
+    def  profile_params
+      params.require(:profile).permit(:roles, :name)
+    end
+    
+    def set_profile
+      @profile = Profile.find(params[:id])
+    end  
 end

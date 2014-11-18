@@ -52,8 +52,10 @@ class WhiteboardTypesController < ApplicationController
     @whiteboard_type = WhiteboardType.new(whiteboard_type_params)#params[:whiteboard_type])
     #puts "xx:" #+ @whiteboard_type.to_s
     @whiteboard_type.save
+    flash[:notice] = "successfully created " + @whiteboard_type.name_english
+    #tflash('create', :success, {:model=>@@model, :count=>1})
     redirect_to(:action=>'index')
-    puts "In WT"
+
 =begin
     respond_to do |format|
       if @whiteboard_type.save

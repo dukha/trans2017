@@ -6,7 +6,7 @@ Translator::Application.routes.draw do
    resources :translations_uploads
    # root will check permission and if ok redirect to whiteboards
    #root :to => "whiteboards#index"
-   root :to => "permissions#select" 
+   root :to => "whiteboards#index" #"permissions#select" 
 
    scope "/auth_user/:user_id" do
       resources :permissions
@@ -19,18 +19,21 @@ Translator::Application.routes.draw do
     
    devise_for :users #do
      match '/users/:id', :to => 'users#destroy', :as => :destroy_user, :via => :delete
-     get '/users_select' => 'users#select',      :as => :users_select, via: :all
+     #get '/users_select' => 'users#select',      :as => :users_select, via: :all
+     #get '/users', :to => 'users#index', :as=> :users
      get "users/:id/edit_password",   :to => "users#edit",   :as => :edit_password  
      patch "users/:id/update_password", :to => "users#update", :as => :update_password  
       # for unlocking another user
      patch "users/:id/unlock_user",     :to => "users#unlock_user", :as => :unlock_user
      get "users/new", :to => "users#new", :as => "new_user" 
-     get "/users", :to => "users#select", :as => :users
+     #get "/users", :to => "users#select", :as => :users
      get "users/:id/edit", :to=> "users#edit"
      post "users/create", :to=> "users#create", :as => :user_create
+     #get "users/new_invitation", :to => "users#new_invitation", :as=> :new_user_invitation
+     post "users/add_invitation", :to => "users#invite_user", :as => :invite_user
    #end
    resources :languages
-
+   resources :users, :only => [:index]
    resources :whiteboard_types
    resources :whiteboards
    #resources :location_tree, :only => [:index, :show]
@@ -66,15 +69,15 @@ Translator::Application.routes.draw do
    resources :special_partial_dot_keys
    #match "translation_parameters/save" => "translation_parameters#save", :as => "save_translation_params"
    #resources :uploads
-   get "translations_uploads/file_to_redis/:id" => "translations_uploads#file_to_redis", :as => "to_redis"#, via: :all
-   get "translations_uploads/select_translation_to_redis/:id" => "translations_uploads#select_translation_to_redis", :as => "select_to_redis"# via: :all
+   #get "translations_uploads/file_to_redis/:id" => "translations_uploads#file_to_redis", :as => "to_redis"#, via: :all
+   #get "translations_uploads/select_translation_to_redis/:id" => "translations_uploads#select_translation_to_redis", :as => "select_to_redis"# via: :all
 
-   get "translations_uploads/write_yaml_file_to_db/:id" => "calmapp_versions_translation_languages#write_file_to_db", :as=> "write_yaml_file_to_db"#, :via => :all
+   #get "translations_uploads/write_yaml_file_to_db/:id" => "calmapp_versions_translation_languages#write_file_to_db", :as=> "write_yaml_file_to_db"#, :via => :all
 
    get "redis_databases/redis_to_yaml/:id" => "redis_databases#redis_to_yaml", :as => "redis_to_yaml", via: :all
    
-   get "calmapp_version/version_alterwithredisdb/:id" => "calmapp_versions#version_alterwithredisdb", :as => "version_alterwithredisdb"#, via: :all
-   post "calmapp_version/version_publish/:id" => "redis_databases#publish", :as =>"version_publish" #, :via => :all
+   get "calmapp_version/version_alterwithredisdb/:id" => "calmapp_versions#version_alterwithredisdb", :as => "calmapp_version_alterwithredisdb"#, via: :all
+   post "calmapp_version/version_publish/:id" => "redis_databases#publish", :as =>"calmapp_version_publish" #, :via => :all
    resources :translation_editor_params
    resources :special_partial_dot_keys
    resources :dot_key_code_translation_editors, :only=> [:index, :edit, :show] 

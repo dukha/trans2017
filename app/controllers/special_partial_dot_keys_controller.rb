@@ -10,8 +10,8 @@ class SpecialPartialDotKeysController < ApplicationController
   #end
 =end
   # Comment out the next 2 lines if not using authentication and authorisation
-  before_filter :authenticate_user!
-  #filter_access_to :all
+  before_action :authenticate_user!
+  filter_access_to :all
 
   @@model ="special_partial_dot_key"
 

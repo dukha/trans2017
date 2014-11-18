@@ -10,7 +10,7 @@ class User < ActiveRecord::Base
   # :token_authenticatable, :confirmable, omniauthable:, Confirmable, :rememberable, :validatable, :encryptable, :recoverable
   devise  :database_authenticatable, :registerable,
          :trackable, :validatable,
-         :timeoutable, :lockable #,:timeout_in => 10.minutes use value from  config/initializers/devise.rb
+         :timeoutable, :lockable, :invitable, :invite_key => {:email=>'', :actual_name=>''} #,:timeout_in => 10.minutes use value from  config/initializers/devise.rb
 
   # Setup accessible (or protected) attributes for your model
 =begin Rails4  
@@ -20,7 +20,10 @@ class User < ActiveRecord::Base
   # username is unique by DB index :unique => true
   # username is required by DB :null => false
   validate :email, :username, :unique => true
-
+  validate :email, presence: true
+  validate :actual_name, :unique => true
+  validate :actual_name, presence: true
+  validate :username, :unique => true
   # https://github.com/plataformatec/devise/wiki/How-To:-Allow-users-to-sign_in-using-their-username-or-email-address
   # Virtual attribute for authenticating by either username or email
   # This is in addition to a real persisted field like 'username'

@@ -1,143 +1,28 @@
-=begin
-module ProfilesHelper
-  
-  def layout_check_boxes profile
-    html =''
-    rows_data= collect_roles_in_groups
-    #puts "bbbb " + collect_roles_in_groups.to_s
-    if ! rows_data.empty? then
-      html << "<table>"
-      rows_data.each { |array|
-        html << "<tr>"
-        
-        html << "<td class='profilerowheader'>"
-        if array == rows_data.last then
-          html<< t("roles.miscellaneous")  
-        else
-          arr=array.first.to_s.split("_")
-          html << t("roles." + arr[0..(arr.length)-2].join("_"))
-        end
-
-        html << "</td>"
-        array.each{ |role|
-        html << "<td class='profilecheckboxtd'>"
-        html << check_box_tag("profile[roles][]", role, profile.roles.include?( role), :class=>"profilecheckbox")
-        if array==rows_data.last then
-          html << label_tag(role, t("roles." + role.to_s)) #t("."+role.to_s))
-        else
-          label = role.to_s.split("_").last
-          html << label_tag(role, t("roles.actions." + label))
-        end
-        html << "</td>"
-          
-        }  
-      html << "</tr>\n"
-      }
-    end
-    html<< "</table>"
-    return html.html_safe
-  end
-  
-  def collect_roles_in_groups
-    #puts Profile.available_roles
-    roles=Profile.available_roles.sort{ |r,s |
-      r.to_s <=> s.to_s}
-    #puts "cccc " + roles.to_s  
-    previous_resource=nil
-    remember_resource=nil
-    all_arrays = []
-    current_array = []
-    misc_array=[]
-    roles.each{ |role|
-        split=role.to_s.split('_')
-       # puts "dddd " + split.to_s
-       # puts"\n"
-        #puts split.last
-        #puts %w(read write create destroy).include?(split.last)
-        #puts "\n"
-        role_resource= split[0..(split.length-2)].join('_')
-        # puts role_resource
-        if %w(read write create destroy).include?(split.last) then
-          #puts split.last + " included"
-          # "nil " + previous_resource.nil?.to_s
-          if role_resource == previous_resource || previous_resource.nil? then
-            
-            # puts "role rs = prev rs or previs nil " + role.to_s
-            add_role_to_array(current_array, split.last, role)
-          else
-            
-            all_arrays << current_array
-            current_array = []
-            add_role_to_array(current_array, split.last, role)
-            # puts "finish " +current_array.to_s
-            # puts "all " + all_arrays.to_s 
-            
-            # current_array << role
-            
-          end
-          previous_resource=role_resource
-          #current_array<<role
-        else
-          #puts "not " + "read write create destroy " +role.to_s
-          #puts "rem " + remember_resource.to_s
-          #puts "prev " + previous_resource.to_s
-          #if remember_resource == role_resource then
-            #puts "add extra " + role
-            #This is necessary for the case where we have 5 or more roles for 1 resource, e.g location_read, *_write, *_create, *_destroy, *_treeview
-            #current_array.insert(4,role)
-          #else
-            #puts "remember = " +remember_resource.to_s
-            #puts "previous = " + previous_resource.to_s
-            #puts "remember not = role add to misc " +role.to_s
-          role_resource=role
-          misc_array << role
-            #previous_resource = role
-            #remember_resource = role
-          #end  
-        end  
-    }  
-    all_arrays<< current_array
-    all_arrays << misc_array
-    #puts all_arrays
-    return all_arrays
-  end  
-  
-  def add_role_to_array array, suffix, role
-    if (suffix=='read') then
-      array[0] = role
-      puts "added read to " +role.to_s
-    elsif suffix=="write" then
-      array[1] = role 
-      puts "added write to " +role.to_s
-    elsif suffix=="create" then
-      array[2] = role
-      puts "added create to " +role.to_s
-    elsif suffix=='destroy' then
-      array[3] = role   
-      puts "added destroy to " +role.to_s  
-    end  
-  end
-end
-=end
 module ProfilesHelper
   STANDARD_ACTIONS = %w(read write create destroy)
   # These must all be in the translation file as roles.<action>
-  NONSTANDARD_ACTIONS = %w(lookup confirm search import change invite redis_databases_getunused redis_databases_getnextindex)
+  NONSTANDARD_ACTIONS = %w(lookup confirm search import change invite getunused getnextindex publish invite unlock alterwithredisdb)
   def layout_check_boxes profile
     html =''
-    rows_data= collect_roles_in_groups
-    #puts "bbbb " + collect_roles_in_groups.to_s
-    if ! rows_data.empty? then
+    rows_data_hashes_array= collect_roles_in_groups
+    #each hash
+    if ! rows_data_hashes_array.empty? then
       html << "<table>"
-      rows_data.each { |roles_symbols_array|
-        next if roles_symbols_array.empty?
+      #binding.pry
+      rows_data_hashes_array.each { |roles_hash|
+        next if roles_hash.empty?
         html << "<tr class = '" + cycle('dataeven', 'dataodd') + "' >"
-        
+        #binding.pry
         html << "<td class='profilerowheader'>"
-        if roles_symbols_array == rows_data.last then
+        key = roles_hash.keys[0]
+        if roles_hash == rows_data_hashes_array.last then
           html<< t("roles.miscellaneous")  
         else
-          sym = first_not_nil_element_array(roles_symbols_array) 
+          
+          translation_code = "roles." + key
+          html << t(translation_code)  
+=begin
+          sym = first_not_nil_element_array(roles_symbols_hash) 
           next if sym.nil?        
           arr=sym.to_s.split("_")
           if arr.length >2 then
@@ -148,44 +33,62 @@ module ProfilesHelper
           end  
           html << t(translation_code)
           puts translation_code
-        end
+=end
+        
+        end #if symbols arr not last
 
         html << "</td>"
         #binding.pry
-        roles_symbols_array.each{ |role|
-          if role.nil? then
-            next
-          end
+        #roles_symbols_array.each{ |role|
+        roles_hash[key].each{ |action|
+          
           html << "<td class='profilecheckboxtd'>"
-          html << check_box_tag("profile[roles][]", role, profile.roles.include?( role), :class=>"profilecheckbox")
-          #binding.pry
-          if roles_symbols_array==rows_data.last then
-            html << label_tag(role, t("roles." + role.to_s)) #t("."+role.to_s))
+          role = role_for( key, action)
+          if action.blank? then
+            html << check_box_tag("profile[roles][]", role, profile.roles.include?(role), :class=>"profilecheckbox")
+            #binding.pry
+            html << label_tag(key, t("roles." + key))
           else
-            #if role.nil?
-              #binding.pry
-            #end
-            label = role.to_s.split("_").last
-            #if label.nil?
-              #binding.pry
-            #end
-            html << label_tag(role, t("roles.actions." + label))
+            html << check_box_tag("profile[roles][]", action, profile.roles.include?(role), :class=>"profilecheckbox")
+            if role == :guest
+            binding.pry
+            end
+            html << label_tag(action, t("roles.action." + action))
           end
+          #binding.pry
+          #if roles_symbols_array==rows_data.last then
+             #t("."+role.to_s))
+          #else
+          
+            #label = role.to_s.split("_").last
+           
+            #html << label_tag(role, t("roles.actions." + label))
+          #end
           html << "</td>" 
         }  # end each
       html << "</tr>\n"
-      }
-    end
-    html<< "</table>"
-    #binding.pry
+      } # each
+      html<< "</table>"
+    end #rows not empty
+   
+   
     return html.html_safe
   end
   
-  def collect_roles_in_groups
+  def role_for resource, action
+    if action.blank? then
+      return resource.to_sym
+    end  
+      return (resource + '_' + action).to_sym
+  end
+=begin @deprecated
  
+  def collect_roles_in_groups
+    
     roles=Profile.available_roles.sort{ |r,s |
       r.to_s <=> s.to_s
     } 
+    #binding.pry
     previous_resource=nil
     all_arrays = []
     current_array = []
@@ -209,39 +112,106 @@ module ProfilesHelper
           role_resource=role
           misc_array << role
         end  
-    }  
+    } # each 
+    binding.pry
     all_arrays<< current_array
     all_arrays << misc_array
     return all_arrays
   end  
+=end
+
   
-  def add_role_to_array array, suffix, role
-    if (suffix=='read') then
-      array[0] = role
-      #puts "added read to " +role.to_s
-    elsif suffix=="write" then
-      array[1] = role 
-      #puts "added write to " +role.to_s
-    elsif suffix=="create" then
-      array[2] = role
-      #puts "added create to " +role.to_s
-    elsif suffix=='destroy' then
-      array[3] = role   
-      #puts "added destroy to " +role.to_s 
-    #elsif 'lookup confirm template addallocations search letters import change trafficlightchange'.split(' ').include?(suffix) then
-    elsif NONSTANDARD_ACTIONS.include?(suffix) then
+  def collect_roles_in_groups
+    previous_resource=nil
+    all_hashes = []
+    misc_array=[]
+    roles_hash = roles_2_hash_of_arrays() 
+    #previous_resource = arrange_roles(roles_hash, previous_resource, all_hashes,  misc_array)
+    arrange_roles(roles_hash, previous_resource, all_hashes,  misc_array)
+    #all_hashes << current_array
+    all_hashes << {"misc" => misc_array}
+    return all_hashes
+  end
+
+  def roles_2_hash_of_arrays()
+    prefixes = []
+    roles_hash ={}
+    i=0
+    Profile.available_roles.each do |r|
+      rx = r.to_s.split('_')
+      if rx.length > 1 then
+        prefix = rx[0..rx.length-2].join('_')
+        action = rx[rx.length-1]
+      else
+        prefix = rx[0]
+        action = ''
+      end # length
+      if not roles_hash.include? prefix then
+        roles_hash[prefix] = []
+      end
+      roles_hash[prefix] << action
+      i=i+1  
+    end #avail roles each
+    return roles_hash
+  end
+  
+  def arrange_roles(roles_hash, previous_resource, all_hashes,  misc_array)
+    current_action_array = []
+    keys = roles_hash.keys.sort
+    keys.each do |key|
+      # keys are resource names
+      role_resource = key
+      #if not(role_resource == previous_resource || previous_resource.nil?)  then
+        # We are changing resources, so put the old resource into the accumulation and start a new resource
+        all_hashes <<{key => []}#current_action_array}
+        #current_action_array = []
+      #end
+      actions = roles_hash[key]
+      actions.each do |act|
+        role = ((act.blank?) ? key : (key + "_" + act))
+        act = role if act.blank?
+        if (STANDARD_ACTIONS + NONSTANDARD_ACTIONS).include?(act) then
+          add_action_to_array(all_hashes.last[key], key, act)#roles_hash[key], role )
+          #previous_resource = role_resource
+        else
+          #previous_resource = role
+          #role = role_resource
+          role_resource = role #previous_resource
+          misc_array << role
+        end # standard and nonstandard
+      end #each action
+      
+    end #each key
+    #return previous_resource
+  end
+  
+  def add_action_to_array array, resource, action
+    action = '' if action.nil?
+    if (action=='read') then
+      array[0] = action
+      #puts "added read to " +resource.to_s
+    elsif action=="write" then
+      array[1] = action 
+      #puts "added write to " +resource.to_s
+    elsif action=="create" then
+      array[2] = action
+      #puts "added create to " +resource.to_s
+    elsif action=='destroy' then
+      array[3] = action   
+      #puts "added destroy to " +resource.to_s 
+    #elsif 'lookup confirm template addallocations search letters import change trafficlightchange'.split(' ').include?(action) then
+    elsif NONSTANDARD_ACTIONS.include?(action) then
       max_index= array.index(array.last)
       if !max_index.nil? && max_index > 4 then 
-        array.push(role)
+        array.push(action)
       else
-        array.insert(4, role)
+        array.insert(4, action)
       end    
     end  
   end
   
   private
     def first_not_nil_element_array array
-      #puts "in not nil "
       ret_val=nil
       array.each{ |el|
         #puts "in each " + el.to_s

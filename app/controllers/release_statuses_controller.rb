@@ -4,12 +4,13 @@ class ReleaseStatusesController < ApplicationController
   # GET /release_statuses
   # GET /release_statuses.xml
   before_action :authenticate_user!
+  before_action :set_release_status, only: [ :edit, :update, :destroy, :show]
   filter_access_to :all
   @@model = "release_status"
   
   def index
     @release_statuses = ReleaseStatus.paginate(:page => params[:page], :per_page=>15)  #ReleaseStatus.all
-
+    
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @release_statuses }
@@ -19,7 +20,7 @@ class ReleaseStatusesController < ApplicationController
   # GET /release_statuses/1
   # GET /release_statuses/1.xml
   def show
-    @vrelease_status = ReleaseStatus.find(params[:id])
+    #@vrelease_status = ReleaseStatus.find(params[:id])
 
     respond_to do |format|
       format.html # show.html.erb
@@ -40,13 +41,13 @@ class ReleaseStatusesController < ApplicationController
 
   # GET /release_statuses/1/edit
   def edit
-    @release_status = ReleaseStatus.find(params[:id])
+    #@release_status = ReleaseStatus.find(params[:id])
   end
 
   # POST /release_statuses
   # POST /release_statuses.xml
   def create
-    @release_status = ReleaseStatus.new(params[:release_status])
+    @release_status = ReleaseStatus.new(release_status_params)
 
     respond_to do |format|
       if @release_status.save
@@ -63,10 +64,10 @@ class ReleaseStatusesController < ApplicationController
   # PUT /release_statuses/1
   # PUT /release_statuses/1.xml
   def update
-    @release_status = ReleaseStatus.find(params[:id])
+    #@release_status = ReleaseStatus.find(params[:id])
 
     respond_to do |format|
-      if @release_status.update_attributes(params[:release_status])
+      if @release_status.update_attributes(release_status_params)
         tflash('update', :success, {:model=>@@model, :count=>1})
         format.html { redirect_to( :action => "index")} #(@release_status, :notice => 'version status was successfully updated.') }
         format.xml  { head :ok }
@@ -80,7 +81,7 @@ class ReleaseStatusesController < ApplicationController
   # DELETE /release_statuses/1
   # DELETE /release_statuses/1.xml
   def destroy
-    @release_status = ReleaseStatus.find(params[:id])
+    #@release_status = ReleaseStatus.find(params[:id])
     @release_status.destroy
     tflash('delete', :success, {:model=>@@model})
     respond_to do |format|
@@ -88,4 +89,16 @@ class ReleaseStatusesController < ApplicationController
       format.xml  { head :ok }
     end
   end
+  
+   private
+    # Use callbacks to share common setup or constraints between actions.
+    def set_release_status
+      @release_status = ReleaseStatus.find(params[:id])
+    end
+
+    # Only allow a trusted parameter "white list" through.
+    def release_status_params
+        params.require(:release_status).permit(:status)
+    end
+    
 end

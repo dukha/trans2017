@@ -3,7 +3,7 @@ source 'http://rubygems.org'
   #gem 'coffee-rails', '~>4.0.0'#, "~> 3.2.1"
   #gem 'uglifier','~>2.2.1'
  
-gem 'rails', '~>4.0.0'#'~>3.2.8'
+gem 'rails', '~>4.1.7'#'~>3.2.8'
 
 # postgresql connector
 gem 'pg'#, '~>0.12.2'
@@ -127,7 +127,7 @@ group :development, :test do
   #gem 'annotate-models', '1.0.4'
   gem 'annotate'
   # Pretty printed test output
-  gem 'turn', '~>0.9.6', :require => false
+  #gem 'turn'#, '~>0.9.6', :require => false
   
   #gem 'activerecord_deprecated_finders'
 =begin

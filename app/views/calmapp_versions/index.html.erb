@@ -23,7 +23,7 @@
       <td class="<%= cell_class %>"><%= version %></td>
       <%= link_edit   edit_calmapp_version_path(calmapp_version), "calmapp_version", {:edit=> "edit_and_change_languages"} %>
       <%=link_destroy calmapp_version, "calmapp_version", {:data=>{:confirm=>"delete.destroy_translation_data"}, :app=>name, :version=>version}%>
-      <td class="<%= link_cell_class %>"><%= tlink_to "version_alterwithredisdb", version_alterwithredisdb_path(calmapp_version)%></td>
+      <td class="<%= link_cell_class %>"><%= tlink_to "version_alterwithredisdb", calmapp_version_alterwithredisdb_path(calmapp_version)%></td>
       <td class="<%= link_cell_class %>"><%= tlink_to "version_redis", redis_databases_path%></td>
   </tr>
 <% end %>

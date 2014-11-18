@@ -1,0 +1,21 @@
+<!-- This is  called by a ulr from the invitaton email like this 
+  http://localhost:3000/en/users/invitation/accept?invitation_token=XpcNJe3g7XYCJZ2UdyrE 
+  accept_user_invitation_url-->
+<h2><%= t 'devise.invitations.edit.header' %></h2>
+<!--invitation_path is not directly in routes: It is devise/invitation#update -->
+<%= semantic_form_for resource, :as => resource_name, :url => invitation_path(resource_name), :html => { :method => :put } do |f| %>
+  <%= devise_error_messages! %>
+  <%= f.inputs do%>
+    <%= f.hidden_field :invitation_token %>
+    <%=f.input :actual_name, :required=> true%>
+    <%=f.input :username, :required=> true%>
+    <!-- p> < %= f.label :password %><br / -->
+    <%= f.input :password %></p>
+  
+    <!--p>< %= f.label :password_confirmation %><br  -->
+    <%= f.input :password_confirmation, :required=> true %>
+  <%end%>
+  <%=f.actions do%>
+    <%= f.action :submit, :button_html=>{:value => t("devise.invitations.edit.submit_button")} %>
+  <%end%>
+<% end %>

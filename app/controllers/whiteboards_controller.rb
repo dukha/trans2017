@@ -15,7 +15,7 @@ class WhiteboardsController < ApplicationController
   @@model = @@model 
   def index
     # most recent first
-    @whiteboards = Whiteboard.paginate(:page => params[:page], :per_page=>15, :order=>'updated_at desc')
+    @whiteboards = Whiteboard.order(:updated_at=>:desc).paginate(:page => params[:page], :per_page=>15)#, :order=>'updated_at desc')
 
     respond_to do |format|
       format.html # index.html.erb

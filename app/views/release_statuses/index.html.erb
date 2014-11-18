@@ -19,7 +19,7 @@
 <% @release_statuses.each do |release_status| %>
 
   <tr class = "<%= cycle('dataeven', 'dataodd') %>" >
-  
+      <%binding.pry%>
       <td class="<%= cell_class %>"><%= release_status.status %></td>
 
   

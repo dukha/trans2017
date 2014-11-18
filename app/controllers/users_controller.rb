@@ -4,18 +4,31 @@ class UsersController < ApplicationController #Devise::RegistrationsController
   before_action :set_user, only: [ :edit, :update, :destroy, :unlock_user]
   #before_action :test
   filter_access_to :all
-
+  #respond_to :html, :xml, :json
   @@model ="user"
   
   
+  def invite_user
+    binding.pry
+    @user = User.invite!(:email => params[:user][:email], :name => params[:user][:name])
+    render :html => @user
+  end
 
   # users_select        /:locale/users_select(.:format)                                    {:controller=>"users", :action=>"select"}
-  def select
-    @users = User.paginate :page => params[:page], :per_page => 15 
+  def index
+    #binding.pry#respond_to :html, :xml, :json
+    @users = User.paginate :page => params[:page], :per_page => 15
     respond_to do |format|
-      format.html # index.html.haml
+      format.html 
+      format.xml  { render :xml => @translation_languages }
+    end
+ 
+=begin    
+    respond_to do |format|
+      format.html  
       format.xml  { render :xml => @users }
     end
+=end
   end
   
   def new
@@ -32,7 +45,7 @@ class UsersController < ApplicationController #Devise::RegistrationsController
       #clean_up_passwords resource
       #respond_with resource
       flash[:error] = "Failed to save " + @user.username
-      render
+      render :action => :new
     end
   end
 =begin
@@ -88,12 +101,11 @@ class UsersController < ApplicationController #Devise::RegistrationsController
   end
 
   def destroy
-    #@user = User.find(params[:id])
     @user.destroy
-    tflash('delete', :success, {:model=>@@model, :count=>1})
+    tflash('delete', :success, {:model=>@@model, :count=>1, :now=> true})
     respond_to do |format|
-      format.html { redirect_to(users_path) }
-      format.xml  { head :ok }
+      format.html { redirect_to(users_url) }
+      format.js {}
     end
   end
 private
