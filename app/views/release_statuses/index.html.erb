@@ -18,13 +18,13 @@
 <% link_cell_class="link"%>  
 <% @release_statuses.each do |release_status| %>
 
-  <tr class = "<%= cycle('dataeven', 'dataodd') %>" >
-      <%binding.pry%>
+  <tr class = "<%= cycle('dataeven', 'dataodd') %>" id = '<%= dom_id(release_status)%>'>
+      
       <td class="<%= cell_class %>"><%= release_status.status %></td>
 
   
-    
-    <td class="<%= link_cell_class %>"><%= link_to  t('actions.edit'), edit_release_status_path(release_status) %></td>
+    <%=link_edit(edit_release_status_path(release_status), "release_status")%>
+    <!--td class="<%= link_cell_class %>"><%= link_to  t('actions.edit'), edit_release_status_path(release_status) %></td -->
     <!--td class="<%= link_cell_class %>"><%= link_to t('actions.destroy'),  release_status , :confirm => t('messages.delete.are_you_sure', :model => t($ARM + "release_status", :count=>1)), :method => :delete %></td -->
     <%=link_destroy(release_status, "release_status") %>
   </tr>

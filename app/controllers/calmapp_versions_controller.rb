@@ -142,13 +142,14 @@ class CalmappVersionsController < ApplicationController
   # DELETE /calmapp_versions/1
   # DELETE /calmapp_versions/1.xml
   def destroy
-    @calmapp_version = CalmappVersion.find(params[:id])
+    set_calmapp_version
+    #@calmapp_version = CalmappVersion.find(params[:id])
     @calmapp_version.destroy
 
     respond_to do |format|
       tflash('delete', :success, {:model=>@@model, :count=>1})
       format.html { redirect_to(calmapp_versions_url) }
-      format.xml  { head :ok }
+      format.js {}
     end
   end
 =begin

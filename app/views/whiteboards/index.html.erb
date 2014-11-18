@@ -7,7 +7,7 @@
 
   
 
-  <tr id="<%=  "whiteboard_row"+ whiteboard.id.to_s%>" class = "whiteboard">
+  <tr id= '<%= dom_id(user)%>' class = "whiteboard">
     
     <td class="whiteboardname"><%= t($LU+"whiteboard_type." +WhiteboardType.find(whiteboard.whiteboard_type_id).translation_code) %></td>
 		<td class="whiteboard"><%= whiteboard.info %></td>
@@ -15,8 +15,8 @@
     <td class="whiteboarddate"><%=t("commons.changed_ago", :change_date => time_ago_in_words(whiteboard.updated_at))%></td>
        
     
-    <td class="whiteboardlink"><%= tlink_to 'edit', edit_whiteboard_path(whiteboard) %></td>
-    
+    <!--td class="whiteboardlink"><%= tlink_to 'edit', edit_whiteboard_path(whiteboard) %></td-->
+    <%=link_edit(edit_whiteboard_path(whiteboard),'whiteboard')%>
   </tr>
   	
 <% end %>

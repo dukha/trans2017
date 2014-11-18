@@ -96,6 +96,7 @@ class WhiteboardTypesController < ApplicationController
     respond_to do |format|
       format.html { redirect_to(whiteboard_types_url) }
       format.xml  { head :ok }
+      format.js {}
     end
   end
   

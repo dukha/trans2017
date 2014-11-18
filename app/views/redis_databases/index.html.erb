@@ -13,14 +13,12 @@
     <th class ="dataheader"><%=tlabel('redis_instance_id', 'redis_database') %></th>
     <th class ="dataheader"><%=tlabel('redis_db_index', 'redis_database') %></th>
     <th class ="dataheader"><%=tlabel('calmapp_version', 'redis_database') %></th>
-    <!--th class ="dataheader">< %=tlabel('release_status_id', 'redis_database') %></th -->
-
     
-    <th class="linkheader"></th>
+    
     <th class="linkheader"></th> 
     <th class="linkheader"></th>
     <th class="linkheader"></th>
-    <!--th class="linkheader"></th -->
+    <th class="linkheader"></th>
     
   </tr>
 
@@ -29,42 +27,43 @@
 <% link_cell_class="link"%>  
 <% @redis_databases.each do |redis_database| %>
 
-  <tr class = "<%= cycle('dataeven', 'dataodd') %>" >
+  <tr class = "<%= cycle('dataeven', 'dataodd') %>" id = '<%= dom_id(redis_database)%>'>
       <td class="<%= cell_class %>"><%= RedisInstance.find(redis_database.redis_instance_id).description %></td>
       <td class="<%= cell_class %>"><%= redis_database.redis_db_index %></td>
-      <td class="<%= cell_class %>">
-        <%if redis_database.calmapp_version %>
-          <%= redis_database.calmapp_version.name %>
-        <%end%>
-      </td>
-      <!-- td class="< %= cell_class %>">< %= CalmappVersion.find(redis_database.calmapp_version_id).calmapp_name_with_version %></td -->
-
-  
       
-      
-       <!--td class="< %= cell_class %>">< %=ReleaseStatus.find(redis_database.release_status_id).status %></td -->
-  
-    
-    <td class="<%= link_cell_class %>">
+        <td class="<%= cell_class %>">
+          <%if redis_database.calmapp_version %>
+            <%= redis_database.calmapp_version.name %>
+          <%end%>
+        </td>
+        <!-- td class="< %= cell_class %>">< %= CalmappVersion.find(redis_database.calmapp_version_id).calmapp_name_with_version %></td -->
+        <!--td class="< %= cell_class %>">< %=ReleaseStatus.find(redis_database.release_status_id).status %></td -->
+        <!--%= tlink_to  'edit', calmapp_version_alterwithredisdb_path(redis_database.calmapp_version) % -->
+        <!--%= link_edit(redis_database, "redis_database") %-->
         <%if redis_database.calmapp_version %>
-          <%= tlink_to  'edit', calmapp_version_alterwithredisdb_path(redis_database.calmapp_version) %>
+          <%= link_edit(calmapp_version_alterwithredisdb_path(redis_database.calmapp_version), "redis_database") %>
         <%end%>
-      </td>
+      
     <td class="<%= link_cell_class %>">
+     
       <%if redis_database.calmapp_version %>
         <%= tlink_to  'new_redis_for_version', calmapp_version_alterwithredisdb_path(redis_database.calmapp_version.id) %>
       <%end%>
     </td>
     <!--td class="< %= link_cell_class %>"><%= button_to t($FA + 'sign_out', :username=>current_user.username), destroy_user_session_path, :method => :delete ,:form_class => "button_to_fake", :id => 'signout' %></td -->
-    <%=link_destroy redis_database, "redis_database"%>
+    
     <!--td class="< %= link_cell_class %>">< %= tlink_to 'destroy',  redis_database , :confirm => 'delete.are_you_sure', :model => "redis_database", :value=>('Index: '+ redis_database.redis_db_index.to_s), :method => :delete, :navigate=>false %></td -->
     <!--td class="< %= link_cell_class %>">< %= tlink_to 'redis_to_yaml',  redis_database  %></td-->
     <td class="<%= link_cell_class %>"><%= tlink_to 'version_publish',calmapp_version_publish_path(redis_database),{:data=>{:type=>"json", :disable_with=> "Publishing...."}, :method=> "post", :form=>{:id=>"publish"}, :remote=> true, :navigate=>false} %></td> <!--, :id=>"ajax-publish"-->
+    <%=link_destroy redis_database, "redis_database"%>
   </tr>
 <% end %>
 </table>
 <%= twill_paginate %>
 <%end%>
+<p>
+<%=tlink_to(  "redis_from_versions", calmapp_versions_path)%>
+</p>  
 <br />
 
 <!--%= tlink_to 'new_model', new_redis_database_path, :model=> 'redis_database' % -->

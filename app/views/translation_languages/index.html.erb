@@ -17,7 +17,7 @@
   
 <% @translation_languages.each do |tl| %>
 
-  <tr class = "<%= cycle('dataeven', 'dataodd') %>" >
+  <tr class = "<%= cycle('dataeven', 'dataodd')%>" id = '<%= dom_id(tl)%>' >
     <td class="<%= cell_class %>"><%= tl.iso_code %></td>
     <td class="<%= cell_class %>"><%= tl.name %></td>
     

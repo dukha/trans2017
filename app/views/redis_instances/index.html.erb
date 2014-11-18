@@ -23,7 +23,7 @@
 <% link_cell_class="link"%>  
 <% @redis_instances.each do |redis_instance| %>
 
-  <tr class = "<%= cycle('dataeven', 'dataodd') %>" >
+  <tr class = "<%= cycle('dataeven', 'dataodd') %>" id = '<%= dom_id(redis_instance)%>'>
   
       
 
@@ -33,9 +33,8 @@
       <td class="<%= cell_class %>"><%= redis_instance.max_databases %></td>
 
   
-    
-    <td class="<%= link_cell_class %>"><%= tlink_to  'edit', edit_redis_instance_path(redis_instance) %></td>
-    <!-- < td class="< %= link_cell_class % >">< %= tlink_to 'destroy',  redis_instance , :confirm => 'delete.are_you_sure', :model => "redis_instance", :value=>('Index: '+ redis_instance.host), :method => :delete % ></td> -->
+    <%=link_edit(edit_redis_instance_path(redis_instance), "redis_instance")%>
+    <!--td class="< %= link_cell_class %>">< %= tlink_to  'edit', edit_redis_instance_path(redis_instance) %></td -->
     <%=link_destroy redis_instance, :redis_instances %>
   </tr>
 <% end %>

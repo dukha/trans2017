@@ -79,7 +79,7 @@ class ProfilesController < ApplicationController
 
     respond_to do |format|
       format.html { redirect_to(profiles_url) }
-      format.xml  { head :ok }
+      format.js {}
     end
   end
   

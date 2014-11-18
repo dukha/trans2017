@@ -92,7 +92,7 @@ class RedisDatabasesController < ApplicationController
     tflash('delete', :success, {:model=>@@model, :count=>1})
     respond_to do |format|
       format.html { redirect_to(redis_databases_url) }
-      format.xml  { head :ok }
+      format.js {}
     end
   end
 

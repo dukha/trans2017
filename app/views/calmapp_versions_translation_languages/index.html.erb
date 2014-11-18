@@ -60,11 +60,12 @@
   
     <tbody>
       <% @calmapp_versions_translation_languages.each do |calmapp_versions_translation_language| %>
-        <tr class = "<%= cycle('dataeven', 'dataodd') %>" >
+        <tr class = "<%= cycle('dataeven', 'dataodd') %>" id = '<%= dom_id(calmapp_versions_translation_language)%>'>
           <td class="<%= cell_class %>"><%= calmapp_versions_translation_language.translation_language.name %></td>
           <td class="<%= cell_class %>"><%= calmapp_versions_translation_language.calmapp_version_tl.name %></td>
           
-          <td class="<%= link_cell_class %>"><%= tlink_to  'change_uploads', edit_calmapp_versions_translation_language_path(calmapp_versions_translation_language) %></td>
+          <!--td class="<%= link_cell_class %>"><%= tlink_to  'change_uploads', edit_calmapp_versions_translation_language_path(calmapp_versions_translation_language) %></td-->
+          <%= link_edit(edit_calmapp_versions_translation_language_path(calmapp_versions_translation_language), calmapp_versions_translation_language,:edit=>'change_uploads', :category=> :action)%>
           <td class="<%= link_cell_class %>"><%= tlink_to  'go_to_translations', translations_path + "/?criterion_iso_code=" + calmapp_versions_translation_language.translation_language.iso_code + "&criterion_cav_id=" + calmapp_versions_translation_language.calmapp_version_tl.id.to_s %></td>
           <!--td class="< %= link_cell_class %>">< %= link_destroy calmapp_versions_translation_language, "calmapp_versions_translation_language" %></td -->
         </tr>
@@ -73,13 +74,11 @@
   </table>
   <%= twill_paginate %>
  <%end%>
-<br>
 
-<!--%= tlink_to 'new_model', new_calmapp_versions_translation_language_path, :model=> 'calmapp_version' % -->
-<div class="inline-hints">
-     <%=t($MS + "calmapp_versions_translation_language." + $N)%>
-  </div>
-
+<p>
+  <span style ="font-weight:700;">Can't see your verion or language here?</span>
+  <%=tlink_to("translation_languages_calmapp_versions_to_new_upload", calmapp_versions_path)%>
+</p>
 
 <script type="text/javascript">
 //This script  handles showing and hiding selection criteria

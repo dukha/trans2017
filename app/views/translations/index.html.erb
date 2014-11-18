@@ -108,7 +108,7 @@
 <tbody class="ui-widget-content">
   <% @translations.each do |trans| %>
 
-  <tr class = "<%= cycle('dataeven', 'dataodd') %>" >
+  <tr class = "<%= cycle('dataeven', 'dataodd') %>"  id = '<%= dom_id(trans)%>'>
       <td class="<%= cell_class%>" style="word-wrap: break-word;" ><span style="max-width:20px;"><%= trans.dot_key_code %></span></td>
       <!--td class="< %= cell_class %>" style="display:< %=short_key_display%>; ">< %= dot_key_code_last_key(translation.dot_key_code) %></td -->
       <td class="<%= cell_class%>" style="max-width:40%;word-wrap: break-word;" ><%= format_english(trans.attributes) %></td>

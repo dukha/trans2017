@@ -120,7 +120,10 @@ end
   def destroy
     @translation_editor_param.destroy
     
-    redirect_to translation_editor_params_url, notice: ' translation editor param was successfully destroyed.'
+    respond_to do |format|
+      format.html {redirect_to translation_editor_params_url, notice: ' translation editor param was successfully destroyed.'}
+      format.js {}
+    end
   end
 
   private

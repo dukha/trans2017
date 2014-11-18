@@ -119,6 +119,7 @@ class CalmappVersionsTranslationLanguagesController < ApplicationController
     respond_to do |format|
       format.html { redirect_to calmapp_versions_translation_languages_url }
       format.json { head :no_content }
+      format.js {}
     end  
   end
 =begin    

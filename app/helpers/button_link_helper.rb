@@ -80,6 +80,10 @@ module ButtonLinkHelper
       #if options[:count].nil? then
       #options[:count]=1
       #end
+      # Default is to do it by ajax 
+      if options[:remote].nil?
+        options[:remote] = true
+      end
       options[:method] = :delete   
       options[:navigate] = false
       #binding.pry

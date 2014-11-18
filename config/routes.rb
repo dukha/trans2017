@@ -27,7 +27,7 @@ Translator::Application.routes.draw do
      patch "users/:id/unlock_user",     :to => "users#unlock_user", :as => :unlock_user
      get "users/new", :to => "users#new", :as => "new_user" 
      #get "/users", :to => "users#select", :as => :users
-     get "users/:id/edit", :to=> "users#edit"
+     get "users/:id/edit", :to=> "users#edit", :as => :user_edit 
      post "users/create", :to=> "users#create", :as => :user_create
      #get "users/new_invitation", :to => "users#new_invitation", :as=> :new_user_invitation
      post "users/add_invitation", :to => "users#invite_user", :as => :invite_user
@@ -54,7 +54,7 @@ Translator::Application.routes.draw do
    resources :calmapps
    resources :calmapp_versions
    resources :release_statuses
-   resources :redis_databases, :only=>[:index, :destroy]
+   resources :redis_databases, :only=>[:index, :destroy, :edit]
    resources :redis_instances
    get 'unused_redis_database_indexes' => 'redis_instances#unused_redis_database_indexes', :as => 'redis_databases_getunused', via: :all
    get 'next_unused_redis_database_index'=> 'redis_instances#next_redis_database_index'  , :as => 'redis_databases_getnextindex', :via=> :all

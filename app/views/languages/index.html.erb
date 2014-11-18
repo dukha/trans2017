@@ -17,12 +17,14 @@
   
 <% @languages.each do |language| %>
 
-  <tr class = "<%= cycle('dataeven', 'dataodd') %>" >
+  <tr class = "<%= cycle('dataeven', 'dataodd') %>" id = '<%= dom_id(language)%>'>
     <td class="<%= cell_class %>"><%= language.iso_code %></td>
     <td class="<%= cell_class %>"><%= language.name %></td>
     
-    <td class="<%= link_cell_class %>"><%= tlink_to 'edit', edit_language_path(language) %></td>
-    <td class="<%= link_cell_class %>"><%= tlink_to 'destroy', language, :confirm => 'delete.are_you_sure', :model => 'language', :value=>language.name, :count=>1, :method => :delete %></td>
+    <!--td class="< %= link_cell_class %>">< %= tlink_to 'edit', edit_language_path(language) %></td -->
+    <!--td class="< %= link_cell_class %>">< %= tlink_to 'destroy', language, :confirm => 'delete.are_you_sure', :model => 'language', :value=>language.name, :count=>1, :method => :delete %></td -->
+    <%= link_edit   edit_language_path(language), "language" %>
+      <%=link_destroy language, "language", :name => language.name%>
   </tr>
 	
 <% end %>

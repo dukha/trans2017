@@ -82,7 +82,7 @@
   <% link_cell_class="link"%>  
   <% @special_partial_dot_keys.each do |special_partial_dot_key| %>
   
-    <tr class = "<%= cycle('dataeven', 'dataodd') %>" >
+    <tr class = "<%= cycle('dataeven', 'dataodd') %>" id = '<%= dom_id(special_partial_dot_key)%>'>
             <td class="<%= cell_class %>"><%= special_partial_dot_key.partial_dot_key %></td>
   
             <td class="<%= cell_class %>"><%= special_partial_dot_key.sort %></td>

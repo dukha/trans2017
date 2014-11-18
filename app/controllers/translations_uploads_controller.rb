@@ -156,6 +156,7 @@ class TranslationsUploadsController < ApplicationController
       format.html { redirect_to(translations_uploads_url) }
       format.xml  { head :ok }
       format.json { head :ok }
+      format.js {}
     end
   end
   

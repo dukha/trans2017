@@ -112,7 +112,7 @@
   <% link_cell_class="link"%>  
   <% @dot_key_code_translation_editors.each do |translation_editor| %>
   
-    <tr class = "<%= cycle('dataeven', 'dataodd') %>" >
+    <tr class = "<%= cycle('dataeven', 'dataodd') %>" id = '<%= dom_id(translation_editor)%>'>
             <td class="<%= cell_class %>"><%= translation_editor.dot_key_code %></td>
   
             <td class="<%= cell_class %>"><%= translation_editor.editor %></td>

@@ -51,7 +51,7 @@ en:
       add_server: Add Server
       add_calmapp_version: Add Calm App Version 
       remove_version: Remove Version
-      version_alterwithredisdb: Change Publication Databases
+      version_alterwithredisdb: Add, Change, Remove Redis Databases
       version_redis: Publication to Redis
       version_publish: Publish to Redis
       remove_redis_database: Remove This Redis Database
@@ -66,6 +66,8 @@ en:
       back_to_redis_databases: "Back to Redis Db's"
       back_to_versions: Back to Versions
       new_invitation: New Invitation
+      redis_from_versions: "To add a Redis Database to Another Version, First Select the Version"
+      translation_languages_calmapp_versions_to_new_upload: To add a New Upload, First Either add the Language to a Version, Or add a new Version, then Upload
     labels:
       #redis_db_index: Redis Database Index
       #port: Linux Port
@@ -402,8 +404,8 @@ en:
       yaml_upload:
         error:
           file_language_must_match_translation_language: "The selected file language(%{chosen_file_iso_code})  must match the language of the translation version translation(%{required_iso_code})."   
-    calmapp_versions_translation_language: 
-      notice: To add a new upload first add the language to a version, then upload here. 
+    #calmapp_versions_translation_language: 
+      #notice: To add a new upload first add the language to a version, then upload here. 
     valid_version_on_queue:
       success: "Base translations are queued to be written to the database for the languages just added to the version"   
     write_yaml_file:

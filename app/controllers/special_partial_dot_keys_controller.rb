@@ -119,8 +119,10 @@ end
   # DELETE /special_partial_dot_keys/1
   def destroy
     @special_partial_dot_key.destroy
-    
-    redirect_to special_partial_dot_keys_url, notice: 'Special partial dot key was successfully destroyed.'
+    respond_to do |format|
+      format.html {redirect_to special_partial_dot_keys_url, notice: 'Special partial dot key was successfully destroyed.'}
+      format.js {}
+    end
   end
 
   private

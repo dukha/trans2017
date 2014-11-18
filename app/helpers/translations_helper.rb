@@ -15,7 +15,6 @@ module TranslationsHelper
   $FL= $F+"labels."
   $FH = $F+"hints."
   $FA = $F + "actions."
-  #$L="links."
   $LU="lookups."
   $M="menus."
   $MS="messages." #Used in the context of messages.<situation>[<.situation>].<$E | $W | $N | $S>
@@ -25,10 +24,6 @@ module TranslationsHelper
     $E = 'error'
   $MSDS = $MS + 'delete.are_you_sure.' +$W
   $EM = "errors.messages."  #Used for model specific errors errors.messages.<model><.attribute>.error_name  
-  #$MSE=$MS+"error."
-  #$MSN=$MS+"notice."
-  #$MSW=$MS+"warning."
-  #$MSS = $MS+ 'success.'
   $S="commons.search."
   $SC=$S + "criteria"
   $SO=$S + "operators."
@@ -47,13 +42,9 @@ module TranslationsHelper
   #This is not a language translation but rather to put a date into a format acceptable for use in a db query
   $DB_DF = "%Y-%b-%d" #I18n.t("date.formats.db")
 
-  #$REDIS_PW='123456'
+
   $TM="translation missing:"
-  
-  
-  #def tmodel model_name, count = 1
-    #I18n.t($ARM + model_name, :count=>count )
-  #end
+
 =begin
     Reference: http://api.rubyonrails.org/classes/ActionView/Helpers/UrlHelper.html#method-i-link_to
     link_to(*args, &block)
@@ -65,9 +56,7 @@ module TranslationsHelper
 =end
 
    def tlink_to(translation_code, url, options = {})
-     #if translation_code =='new'
-      #binding.pry
-     #end
+     #binding.pry
      options[:count] = 1 if options[:model] && options[:count].nil?
      model = options[:model]
      if !model.nil?
@@ -81,21 +70,14 @@ module TranslationsHelper
        options[:model]= tr_model
      end
      if options[:category].nil? or options[:category]== :action then
-       #if options[:method]=="delete" then
-         #link_destroy()
-      # end
        tlabel = I18n.t($FA + translation_code, options )
      elsif options[:category]== :menu then
        tlabel = tmenu( translation_code)
      else
        tlabel = t(translation_code)
      end
-       #if options[:title] then
-         #options[:title] = t(options[:title])
-       #end
        
-     navigate  = options.delete(:navigate)
-     #options[:navigate].delete unless options[:navigate].nil?  
+     navigate  = options.delete(:navigate) 
      if navigate.nil? or navigate  then   
        #if navigation is involved then we make a link
        link_to tlabel, url, options
@@ -106,11 +88,9 @@ module TranslationsHelper
    end
 
    def tconfirm_option options
-     #binding.pry
      if options[:data].nil? then
          options[:data] = {}
        end
-       #binding.pry
        if options[:data][:confirm] then
          count = options.delete(:count)
          options[:data][:confirm] = tmessage( options[:data][:confirm], $W, options)
@@ -118,8 +98,6 @@ module TranslationsHelper
        if options[:confirm] then
          # can't use :count for a translation of a message unless it is expected.
          count = options.delete(:count)
-         #binding.pry
-         
          options[:data][:confirm] =  tmessage( options[:confirm], $W, options)
        end
        options.delete(:confirm)
@@ -134,7 +112,6 @@ module TranslationsHelper
     else
       klass= "pageheading"
     end
-    #debugger
     count = options[:count]
     options[:count] = 1 if count.nil?
     model = options[:model]
@@ -144,7 +121,6 @@ module TranslationsHelper
 
       ret_val = I18n.t("headings.#{translation_code}.heading", :model => tr_model)
     else
-      #ret_val = "translation missing:" + translation_code + options.to_s
       
     end
     ret_val = "<p class='"+ klass + "'>"+ret_val + "</p>"
@@ -161,7 +137,6 @@ model_name is the name of the model e.g. "course_type"
 translation_type are either "name" or "description". Defaults to name
 =end
   def tlookup_value lookup_object =nil, translation_type = nil, model_name=nil
-    #debugger
     return "" if lookup_object.nil?
     return "" if lookup_object.id.nil?
     model_name = lookup_object.class.table_name.singularize if model_name.nil?
@@ -172,7 +147,6 @@ translation_type are either "name" or "description". Defaults to name
     elsif translation_type["description"] then
       return I18n.t($LU +model_name + '.description.'+lookup_object.translation_code)
     else
-      #binding.pry
       return $TM + " for " + lookup_object.to_s + " " + (translation_type.nil? ? "" : translation_type)
     end
   end
@@ -184,8 +158,7 @@ just substitute twill_paginate for will_paginate
       will_paginate collection, {:previous_label => I18n.t('commons.previous'), :next_label => I18n.t('commons.next')}.merge(options)
   end
   # Translates the text of labels for attributes
-  def tlabel attribute_name, model_name=nil
-    
+  def tlabel attribute_name, model_name=nil    
     if model_name.nil? then
       index=attribute_name.index('.')
       if !index.nil? && attribute_name.count('.') == 1 then
@@ -245,9 +218,6 @@ just substitute twill_paginate for will_paginate
      I18n.t($M + menu)
   end
 
-  def tinterpolation_pform translation_code, interpolations={}
-    I18n.t("pform_xml_200." + translation_code.to_s, interpolations)
-  end
  
  # format type is either Jquery_time, strftime or timepicker
  def time_format format_type=nil
@@ -256,13 +226,7 @@ just substitute twill_paginate for will_paginate
     if format_type=="jquery_time" then
       return strftime_format_2_js_format_simple(format)
     elsif format_type=="strftime" then
-      return format
-    #elsif format_type=="timepicker" then
-      #if format.include?("%l") || format.include?("%k") then 
-        #return 'tt'
-      #else
-        #return ''
-      # end    
+      return format 
     else
       return format  
     end

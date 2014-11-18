@@ -183,6 +183,15 @@ class TranslationsController < ApplicationController
   end
 # needed for developers
   def destroy
+    
+    if @translation.calmapp_versions_translation_language.translation_language.iso_code == 'en' then 
+      @translation.destroy
+       tflash('delete', :success, {:model=>@@model, :count=>1})
+      respond_to do |format|
+        format.html { redirect_to(translation_languages_path) }
+        format.js {}
+      end
+    end
   end
   
   def prepare_mode

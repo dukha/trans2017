@@ -86,7 +86,7 @@ class TranslationLanguagesController < ApplicationController
      tflash('delete', :success, {:model=>@@model, :count=>1})
     respond_to do |format|
       format.html { redirect_to(translation_languages_path) }
-      format.xml  { head :ok }
+      format.js {}
     end
   end
 =begin

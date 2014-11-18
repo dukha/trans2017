@@ -16,14 +16,15 @@
 <% link_cell_class="link"%>  
 <% @profiles.each do |profile| %>
 
-  <tr class = "<%= cycle('dataeven', 'dataodd') %>" >
+  <tr class = "<%= cycle('dataeven', 'dataodd')%>" id = '<%= dom_id(profile)%>' >
   
       <td class="<%= cell_class %>"><%= profile.name %></td>
 
   
     
-    <td class="<%= link_cell_class %>"><%= tlink_to  'edit', edit_profile_path(profile) %></td>
+    <!--td class="<%= link_cell_class %>"><%= tlink_to  'edit', edit_profile_path(profile) %></td-->
     <!--td class="< %= link_cell_class %>"><%= tlink_to('destroy',  profile ,{:confirm => 'delete.are_you_sure', :model => "profile", :count=>1, :method => :delete}) %></td -->
+    <%=link_edit(edit_profile_path(profile), "profile") %>
     <%=link_destroy(profile, "profile") %>  
   </tr>
 <% end %>

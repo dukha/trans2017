@@ -125,7 +125,7 @@
   <% link_cell_class="link"%>  
   <% @translation_editor_params.each do |translation_editor_param| %>
   
-    <tr class = "<%= cycle('dataeven', 'dataodd') %>" >
+    <tr class = "<%= cycle('dataeven', 'dataodd') id = '<%= dom_id(translation_editor_param)%>'%>" >
             <td class="<%= cell_class %>"><%= translation_editor_param.dot_key_code %></td>
   
             <td class="<%= cell_class %>"><%= translation_editor_param.param_name %></td>

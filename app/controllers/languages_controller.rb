@@ -88,7 +88,7 @@ class LanguagesController < ApplicationController
      tflash('delete', :success, {:model=>@@model, :count=>1})
     respond_to do |format|
       format.html { redirect_to(languages_url) }
-      format.xml  { head :ok }
+      format.js {}
     end
   end
 =begin
@@ -117,6 +117,6 @@ private
 
     # Only allow a trusted parameter "white list" through.
     def language_params
-      params.require(:calmapp_version).permit(:iso_code, :name)
+      params.require(:language).permit(:iso_code, :name)
     end
 end

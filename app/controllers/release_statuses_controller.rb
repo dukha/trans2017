@@ -86,7 +86,7 @@ class ReleaseStatusesController < ApplicationController
     tflash('delete', :success, {:model=>@@model})
     respond_to do |format|
       format.html { redirect_to(release_statuses_url) }
-      format.xml  { head :ok }
+      format.js {}
     end
   end
   

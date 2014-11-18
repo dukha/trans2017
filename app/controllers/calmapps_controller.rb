@@ -249,7 +249,7 @@ class CalmappsController < ApplicationController
       respond_to do |format|
         tflash('delete', :success, {:model=>@@model, :count=>1})
         format.html { redirect_to(calmapps_url) }
-        format.xml  { head :ok }
+        format.js {}
       end 
     rescue ActiveRecord::DeleteRestrictionError => e
       # We need to do this here as an calmapp cannot be deleted whilst it has dependent versions

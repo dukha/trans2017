@@ -1,17 +1,5 @@
 <%= theading('new', :model=>'user', :count=>1)%>
 <!-- this is for a sysadmin to reset another users password -->
-<%= semantic_form_for(@user, :method => "post",:url=> user_create_path) do |f| %>
-  <%= f.inputs do %>
-      <%= f.input :username%>
-      <%=f.input :actual_name %>
-      <%=f.input :email%>
-      <%= f.input :password %>
-      <%= f.input :password_confirmation %>
-  <% end %>
-
-  <%= f.actions do %>
-    <%= f.action(:submit) %>
-  <% end %>
-<% end %>
+<%= render 'form'%>
 <br /><%= tlink_to('new_model', new_user_path, :model=> 'user', :count=>1) %> |
 <%= tlink_to "back", users_path %>
