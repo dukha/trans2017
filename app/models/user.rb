@@ -32,7 +32,12 @@ class User < ActiveRecord::Base
   # these relationships model the configured access permissions
   has_many :permissions, :dependent => :destroy
   has_many :organisations, :through => :permissions
-
+  
+  #The above are being replaced by those below. Keep both for now. mfl
+  has_many :user_profiles
+  has_many :profiles, :through => :user_profiles
+  
+=begin
   # has_current_permission is a method in user which guarantees that there is a 
   # current permission. It is called on creation because of the validate
   #validate :has_current_permission
@@ -62,12 +67,13 @@ class User < ActiveRecord::Base
       perms.first
     end
   end
- 
+=end
   # Used as getter method:
   # return the current permission as it was persisted
   # if no current permission was set then do so now
   # Used as setter:
   # set the attribute
+=begin  
   def current_permission(perm=nil)
     #require 'ruby-debug'; debugger
 
@@ -94,7 +100,9 @@ class User < ActiveRecord::Base
     end
   end
   alias_method :current_permission=, :current_permission   #setter and getter
+=end
 
+=begin
   def add_permission options={}
     # the default options:
     options={location: Location.empty_organisation, profile: Profile.guest, make_current: false}.merge(options)
@@ -107,7 +115,9 @@ class User < ActiveRecord::Base
     self.save
     return perm
   end
+=end
 
+=begin
   def remove_permission perm
     if self.permissions.include? perm
       if self.current_permission == perm
@@ -119,7 +129,8 @@ class User < ActiveRecord::Base
       self.reload
     end
   end
-
+=end
+=begin
   # return a printable representation of the organisation where self is currently logged in.
   # todo: should use method current_organisation
   def greeting
@@ -131,7 +142,8 @@ class User < ActiveRecord::Base
     end
     "#{current_permission.organisation.name}"
   end
-
+=end
+=begin
   # todo: either remove def current_organisation_name or implement it using current_organisation
   def current_organisation_name
     if current_permission.nil?
@@ -142,7 +154,8 @@ class User < ActiveRecord::Base
     end
     current_permission.organisation.name
   end
-
+=end
+=begin
   def current_organisation
     if current_permission.nil?
       return "You need to select an organisation to work for!"
@@ -152,19 +165,27 @@ class User < ActiveRecord::Base
     end
     return current_permission.organisation
   end
-
+=end
 =begin
      for declarative auth
      Returns the role symbols of the given user for declarative_auth. 
 =end
   def role_symbols
-    if current_permission.nil? 
+    #if current_permission.nil?
+    if profiles.empty? then 
       # if you have no permissions then you are a guest
       # this role is not assigned anywhere else!
-      [:guest]
+      return [:guest]
     else
       #binding.pry
-      current_permission.profile.roles.collect {|role|role.to_sym}
+      # below is the code for using the permissions model
+      #current_permission.profile.roles.collect {|role|role.to_sym}
+      
+      # now using 1 user has 1 profile model (actually many but at the moment UI only allows for 1)
+      # This code here allows for more than 1 profile
+      role_array = []
+      profiles.collect { |p| role_array = role_array + p.roles}
+      return roles = role_array.flatten.uniq.collect { |r| r.to_sym}  
     end   
   end
 
@@ -188,7 +209,9 @@ class User < ActiveRecord::Base
       puts "creating user"
       u = User.create! param
       puts "creating permission"
-      u.add_permission location: Location.world, profile: Profile.sysadmin, make_current: true
+      #binding.pry
+      u.profiles << Profile.sysadmin
+      #u.add_permission location: Location.world, profile: Profile.sysadmin, make_current: true
       u.reload
 
       puts "Added user #{username} with permission "
@@ -199,6 +222,8 @@ class User < ActiveRecord::Base
    
  # https://github.com/plataformatec/devise/wiki/How-To:-Allow-users-to-sign_in-using-their-username-or-email-address
  # Overwrite Devise’s find_for_database_authentication method
+
+ 
  protected
  def self.find_for_database_authentication(warden_conditions)
    conditions = warden_conditions.dup
@@ -208,6 +233,7 @@ class User < ActiveRecord::Base
 
 
 
+=begin
 private
   # Others should use current_permission for its lazy initialisation. So making sure no one accesses current_permission_id
   # this works because active record uses 'method missing' to access the methods dynamically created by active record
@@ -216,8 +242,9 @@ private
     self[:current_permission_id]
   end
 
-end
 
+=end
+end # class
 # == Schema Information
 #
 # Table name: users

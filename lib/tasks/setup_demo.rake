@@ -21,7 +21,7 @@ namespace :trans do
 =end  
   task :start_again => [:environment, 'db:migrate:reset', 'db:seed'] do
     Demo.demo
-    FileUtils::remove_dir "public/uploads", true
+    FileUtils::remove_dir "public/system/translation_uploads/yaml_uploads", true
   end
 =begin  
   task :start_again_demo => [:environment, 'demo', 'standard_letter_templates:auto_create' ,  'pform_app:students_to_courses','pform_queue:receive']

@@ -1,3 +1,15 @@
+# to load an altered or alternate rules file use:
+#   Authorization::Engine.instance(path_to_file)
+
+=begin
+ It allows me to use this code in my Role class:
+
+def reload_authorization_rules
+    Authorization::Engine.force_reload
+end
+
+And now I can have my roles and permissions stored in the database and updated after_save roles. 
+=end
 authorization do
 
   # list all roles which are defiend here by:
@@ -93,14 +105,6 @@ authorization do
   standard_roles :whiteboard_types
   standard_roles :whiteboards
 
-#  create and send newsletters
-#  role :newsletter_editor do
-#    has_permission_on [], :to => []
-#  end
 
-#  create templates for letters and published schedules
-#  role :templates_editor do
-#    has_permission_on [], :to => []
-#  end
 
 end

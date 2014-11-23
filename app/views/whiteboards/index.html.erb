@@ -7,7 +7,7 @@
 
   
 
-  <tr id= '<%= dom_id(user)%>' class = "whiteboard">
+  <tr id= '<%= dom_id(whiteboard)%>' class = "whiteboard">
     
     <td class="whiteboardname"><%= t($LU+"whiteboard_type." +WhiteboardType.find(whiteboard.whiteboard_type_id).translation_code) %></td>
 		<td class="whiteboard"><%= whiteboard.info %></td>

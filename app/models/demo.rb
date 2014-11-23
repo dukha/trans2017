@@ -26,6 +26,7 @@ class Demo
                                    :redis_db_index => marks_redis.unused_redis_database_indexes[0]
                                    )
                )
+     Profile.demo           
 
   end
 end

@@ -33,7 +33,7 @@ en:
       select2: Select
       to_operator: Send to operator
       reset_password: Reset Password
-      edit_permissions: Edit Permissions
+      #edit_permissions: Edit Permissions
       display: "Display"
       show_original: "Original"
       #back: "Back"
@@ -68,6 +68,7 @@ en:
       new_invitation: New Invitation
       redis_from_versions: "To add a Redis Database to Another Version, First Select the Version"
       translation_languages_calmapp_versions_to_new_upload: To add a New Upload, First Either add the Language to a Version, Or add a new Version, then Upload
+      unlock: Unlock Account
     labels:
       #redis_db_index: Redis Database Index
       #port: Linux Port
@@ -125,7 +126,7 @@ en:
       user:
         actual_name: Your everyday Given and Family names
         username: The name that this application will know you as. Can be used to signin.
-        
+        unlock: Only enabled if user account is locked.
 
   roles:
     actions:
@@ -249,9 +250,9 @@ en:
       profile:
         one: User Profiles
         other: User Profiles
-      permission:
-        one:  "Access permission"
-        other: "Access permissions"
+      #permission:
+        #one:  "Access permission"
+        #other: "Access permissions"
       user:
         one: User
         other: Users  

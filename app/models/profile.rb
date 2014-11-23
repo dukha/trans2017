@@ -1,5 +1,7 @@
 class Profile < ActiveRecord::Base
 
+  has_many :user_profiles
+  has_many :users, :through => :user_profiles 
   validates :name, :presence => true, :uniqueness=>true
 
   # roles are defineds as symbols in config/authorization_rules.rb
@@ -56,12 +58,24 @@ class Profile < ActiveRecord::Base
  
   # seed makes sure the profiles named sysadmin or guest remain reserved
   def self.seed
+    #binding.pry
+    reserved_profile = 'recovery_profile'
+    roles = [:profiles_read, :profiles_write , :profiles_create, 
+      #:permissions_read, :permissions_write , :permissions_create,
+      :users_read, :users_write , :users_create
+    ]
+    Profile.create :name => reserved_profile, :roles => roles unless self.recovery_profile
+
     reserved_profile = 'sysadmin'
     Profile.create :name => reserved_profile, :roles => Profile.available_roles unless self.sysadmin
     reserved_profile = 'guest'
     Profile.create :name => reserved_profile, :roles => [reserved_profile.to_sym] unless self.guest
   end
 
+  def self.demo
+    roles= [:translations_read, :translations_write]
+    Profile.create(:name=>'french_translator', :roles => roles) #unless self.french_translator
+    end
   # all roles defined in config/authorization_rules.rb
   # as a collection of symbols
   def self.available_roles
@@ -79,6 +93,9 @@ class Profile < ActiveRecord::Base
     Profile.find_by(name: "guest")
   end
   
+  def self.recovery_profile
+    Profile.find_by(name: 'recovery_profile')
+  end
   
 end
 

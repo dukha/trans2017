@@ -16,29 +16,7 @@ class Language < ActiveRecord::Base
   
   #validates_with VenueValidator
   
-=begin 
-  def allow_organisation_child?
-    false
-  end
 
-  def allow_area_child?
-    false
-  end
-
-  def allow_translation_language_child?
-    false
-  end
-
-  # return false if self would not be under an organisation
-  def allow_to_be_translation_language?
-    has_organisation_ancestor?
-  end
-
-  
-  def self.accessible_translation_languages(current_user)
-    return current_user.current_organisation.accessible_translation_languages
-  end
-=end
   
 end
 

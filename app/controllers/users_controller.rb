@@ -73,6 +73,7 @@ class UsersController < ApplicationController #Devise::RegistrationsController
   #update_password PUT /:locale/users/:id/update_password(.:format) {:controller=>"users", :action=>"update"}
   def update
     #@user = User.find(params[:id])
+    
     @user.unlock_access! unless !@user.access_locked?
     respond_to do |format|
       if @user.update(user_params)#params[:user])
@@ -114,7 +115,15 @@ private
     @user = User.find(params[:id])
   end  
   def  user_params
-  params.require(:user).permit(:email, :password, :password_confirmation, :remember_me,
+    binding.pry
+    if params[:user][:password].blank? && params[:user][:password_confirmation].blank? then
+      #If the user does not try to update the pw, the we don't update to null (fail anyway)
+      return params.require(:user).permit(:email,  :remember_me,
                 :username, :login, :actual_name)
+    else
+      return params.require(:user).permit(:email, :password, :password_confirmation, :remember_me,
+                :username, :login, :actual_name)
+    end 
+  
   end
 end

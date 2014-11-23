@@ -1,13 +1,20 @@
-<%= semantic_form_for(@user, :method => "post",:url=> user_create_path) do |f| %>
+<!--%= semantic_form_for(@user, :method => "post",:url=> user_create_path) do |f| % -->
+<%if @user.new_record? then
+    path = user_create_path
+  else  
+    path = user_update_path
+  end%>
+<%= semantic_form_for(@user, :url => path) do |f| %>
   <%= f.inputs do %>
       <%= f.input :username%>
       <%=f.input :actual_name %>
       <%=f.input :email%>
       <%= f.input :password %>
       <%= f.input :password_confirmation %>
+      <%=f.input :profiles, :as => :select, :include_blank => true, :collection=> Profile.all.collect {|p| [p.name,p.id]}, :input_html=>{:multiple => false} %>
   <% end %>
 
   <%= f.actions do %>
     <%= f.action(:submit) %>
   <% end %>
-<% end %>
+<%end%>

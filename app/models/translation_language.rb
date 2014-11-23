@@ -75,7 +75,8 @@ class TranslationLanguage < ActiveRecord::Base
 =end
  def self.translators_language_select(current_user)
  #TranslationLanguage.order("name asc")
-   return scoped.order("name asc") if Rails.env == "development"
+   # replaced scoped as is deprecated with where(nil)
+   return where(nil).order("name asc") if Rails.env == "development"
    return where{iso_code != 'en'}.order("name asc") 
  end
  
@@ -104,30 +105,7 @@ class TranslationLanguage < ActiveRecord::Base
     pa = CldrType.CLDR_PLURAL_TYPES[plural_sort] || []#CldrType.CLDR_PLURAL_TYPES["one_other"]
     return pa
   end
-=begin 
- def allow_organisation_child?
- false
- end
 
- def allow_area_child?
- false
- end
-
- def allow_translation_language_child?
- false
- end
-
- # return false if self would not be under an organisation
- def allow_to_be_translation_language?
- has_organisation_ancestor?
- end
-
- 
- def self.accessible_translation_languages(current_user)
- return current_user.current_organisation.accessible_translation_languages
- end
-=end
- 
 end
 
 # == Schema Information

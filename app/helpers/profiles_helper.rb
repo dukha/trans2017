@@ -18,7 +18,7 @@ module ProfilesHelper
         if roles_hash == rows_data_hashes_array.last then
           html<< t("roles.miscellaneous")  
         else
-          
+          binding.pry
           translation_code = "roles." + key
           html << t(translation_code)  
 =begin
@@ -41,7 +41,7 @@ module ProfilesHelper
         #binding.pry
         #roles_symbols_array.each{ |role|
         roles_hash[key].each{ |action|
-          
+          #binding.pry
           html << "<td class='profilecheckboxtd'>"
           role = role_for( key, action)
           if action.blank? then
@@ -50,10 +50,10 @@ module ProfilesHelper
             html << label_tag(key, t("roles." + key))
           else
             html << check_box_tag("profile[roles][]", action, profile.roles.include?(role), :class=>"profilecheckbox")
-            if role == :guest
-            binding.pry
-            end
-            html << label_tag(action, t("roles.action." + action))
+            #if role == :guest
+            #binding.pry
+            #end
+            html << label_tag(action, t("roles.actions." + action))
           end
           #binding.pry
           #if roles_symbols_array==rows_data.last then

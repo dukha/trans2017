@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141108022818) do
+ActiveRecord::Schema.define(version: 20141120005154) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -198,6 +198,17 @@ ActiveRecord::Schema.define(version: 20141108022818) do
   end
 
   add_index "uploads", ["upload_file_name"], name: "iu_uploads_upload_file_name", unique: true, using: :btree
+
+  create_table "user_profiles", force: true do |t|
+    t.integer  "user_id",    null: false
+    t.integer  "profile_id", null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "user_profiles", ["profile_id"], name: "index_user_profiles_on_profile_id", using: :btree
+  add_index "user_profiles", ["user_id", "profile_id"], name: "index_user_profiles_on_user_id_and_profile_id", unique: true, using: :btree
+  add_index "user_profiles", ["user_id"], name: "index_user_profiles_on_user_id", using: :btree
 
   create_table "user_works", force: true do |t|
     t.integer  "user_id"

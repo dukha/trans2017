@@ -29,6 +29,7 @@ Translator::Application.routes.draw do
      #get "/users", :to => "users#select", :as => :users
      get "users/:id/edit", :to=> "users#edit", :as => :user_edit 
      post "users/create", :to=> "users#create", :as => :user_create
+     patch "users/:id/update", :to=> "users#update", :as => :user_update
      #get "users/new_invitation", :to => "users#new_invitation", :as=> :new_user_invitation
      post "users/add_invitation", :to => "users#invite_user", :as => :invite_user
    #end
