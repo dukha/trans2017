@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141120005154) do
+ActiveRecord::Schema.define(version: 20141123045450) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -90,14 +90,6 @@ ActiveRecord::Schema.define(version: 20141120005154) do
     t.string   "translation_code"
     t.string   "fqdn"
     t.boolean  "marked_deleted",   default: false, null: false
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "permissions", force: true do |t|
-    t.integer  "user_id"
-    t.integer  "organisation_id", null: false
-    t.integer  "profile_id",      null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -240,7 +232,6 @@ ActiveRecord::Schema.define(version: 20141120005154) do
     t.datetime "updated_at"
     t.string   "username"
     t.string   "actual_name",                         null: false
-    t.integer  "current_permission_id"
     t.string   "invitation_token"
     t.datetime "invitation_created_at"
     t.datetime "invitation_sent_at"

@@ -159,7 +159,7 @@ en:
     dot_key_code_translation_editors: Translation Editors
     guest: Guest
     locations: Locations
-    permissions: Permissions
+    #permissions: Permissions
     profiles: Profiles
     special_partial_dot_keys: Special Keys
     users: Users

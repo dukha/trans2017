@@ -7,7 +7,7 @@ Translator::Application.routes.draw do
    # root will check permission and if ok redirect to whiteboards
    #root :to => "whiteboards#index"
    root :to => "whiteboards#index" #"permissions#select" 
-
+=begin
    scope "/auth_user/:user_id" do
       resources :permissions
       get '/permissions_select' => 'permissions#select',      :as => :permissions_select, via: :all
@@ -15,7 +15,7 @@ Translator::Application.routes.draw do
    end
    
    get '/auth_user/set_permission_by_ajax' => 'permissions#set_current_by_ajax', :as => :set_permission_by_ajax, via: :all
-   
+=end   
     
    devise_for :users #do
      match '/users/:id', :to => 'users#destroy', :as => :destroy_user, :via => :delete

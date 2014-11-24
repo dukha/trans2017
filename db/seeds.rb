@@ -16,7 +16,7 @@ ReleaseStatus.delete_all
 WhiteboardType.delete_all
 Location.delete_all
 Profile.delete_all    
-Permission.delete_all
+#Permission.delete_all
 SpecialPartialDotKey.delete_all
 DotKeyCodeTranslationEditor.delete_all
 TranslationEditorParam.delete_all

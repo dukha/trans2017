@@ -92,7 +92,7 @@ authorization do
   standard_roles :dot_key_code_translation_editors 
   standard_roles :languages
   standard_roles :locations
-  standard_roles :permissions
+  #standard_roles :permissions
   standard_roles :profiles
   standard_roles :redis_databases
   standard_roles :redis_instances
