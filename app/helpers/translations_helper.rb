@@ -1,3 +1,7 @@
+=begin
+ This Module is a help for the application to access translations that already exist.
+ TranslationHelper is the helper for  views/translations/* 
+=end
 module TranslationsHelper
   include WillPaginate::ViewHelpers
   include I18n

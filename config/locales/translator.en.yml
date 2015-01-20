@@ -106,6 +106,7 @@ en:
         calmapp_version_id: "Choose the corect application and version carefully"
         release_status_id: "The status of the the translation database that you are adding: 'development' will only be used by developers for English. 'test' will be used by most translators. 'production will be a copy of test to be used by users."
         redis_instance_id: "Choose computer ip address on which the redis server is running that you want to use."
+        #version_publish: "Publish <span class='coloured-em-hint'>%{version_name}</span><br> to <span class= 'coloured-em-hint'>%{db_name}</span>"
       redis_instance:  
         max_databases: Each instance has a maximum number of databases. It is set in redis/redis.conf(or redis/<port>.config). Don't put anything here that is not already.in redis.conf. Default(for Redis new installation) is 16.
         host: Enter the technical name(ip address or hostname) of the computer where the Redis database server is running.
@@ -127,7 +128,18 @@ en:
         actual_name: Your everyday Given and Family names
         username: The name that this application will know you as. Can be used to signin.
         unlock: Only enabled if user account is locked.
-
+      translation_hints:
+        heading: Title for Hint (may contain HTML)
+        example: Example of Hint (may contain HTML)
+        description: Description of Translation (may contain HTML) 
+        dot_key_code: Must be a code like this [<context>..].[<specific>..] e.g. activerecord.attributes.user.name. No spaces, no caps unless very sure they are needed.
+      #translation:
+        #dot_key_codes: 
+          #activemodel_errors_messages_accepted: Tells the user that they must accept, for example, the usage conditions for the soeftware. 
+          #activemodel_errors_format: "Example %{attribute} %{message}  tells the application to place the attribute name before. If attribute is 'description'  and message is 'cannot be blank.', then the user will see 'Description cannot be blank.' Use this to state the order and place of the attribute and message (leave %{attribute} out if you want)."
+          #activemodel_errors_messages_blank: Tells the user that the attribute data cannot be left blank.
+          
+          
   roles:
     actions:
       read: Read
@@ -181,7 +193,7 @@ en:
     translation_languages: Translation Languages
     release_statuses: Release Statuses
     translations: Translations
-    translation_parameters: Translation Parameters
+    translation_hints: Translation Hints
     developers: Developers
     developers_new_translations: Developers Translation
     #redis_admins: Redis Administration
@@ -268,6 +280,9 @@ en:
       special_partial_dot_key:
         one: Special Key
         other: Special Keys
+      translation_hint:
+        one: Translation Hint
+        other: Translation Hints  
     attributes:
       calmapp:
         new_redis_dev_db: Add Redis Developers Database
@@ -339,6 +354,11 @@ en:
         username: (Online)User Name
         password: Password
         password_confirmation: Confirm Password
+      translation_hint:
+        heading: Title
+        example: Example
+        description: Description
+        dot_key_code: Dot Key Code  
   messages: 
     no_delete_if_versions_exist:
       notice: Delete all versions first before you can delete the application 

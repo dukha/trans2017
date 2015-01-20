@@ -54,7 +54,13 @@
     
     <!--td class="< %= link_cell_class %>">< %= tlink_to 'destroy',  redis_database , :confirm => 'delete.are_you_sure', :model => "redis_database", :value=>('Index: '+ redis_database.redis_db_index.to_s), :method => :delete, :navigate=>false %></td -->
     <!--td class="< %= link_cell_class %>">< %= tlink_to 'redis_to_yaml',  redis_database  %></td-->
-    <td class="<%= link_cell_class %>"><%= tlink_to 'version_publish',calmapp_version_publish_path(redis_database),{:data=>{:type=>"json", :disable_with=> "Publishing...."}, :method=> "post", :form=>{:id=>"publish"}, :remote=> true, :navigate=>false} %></td> <!--, :id=>"ajax-publish"-->
+    <td class="<%= link_cell_class %>"  ><%= tlink_to 'version_publish',calmapp_version_publish_path(redis_database),{
+                      :data=>{:type=>"json", :disable_with=> "Publishing...."},
+                      :"data-tooltip" => t($FH + 'redis_database.version_publish', :version_name=>redis_database.calmapp_version.name , :db_name=> redis_database.short_name),
+                      :method=> "post", 
+                      :form=>{:id=>"publish"}, 
+                      :remote=> true, 
+                      :navigate=>false} %></td> <!--, :id=>"ajax-publish"-->
     <%=link_destroy redis_database, "redis_database"%>
   </tr>
 <% end %>
@@ -82,4 +88,38 @@
     //alert(message);
     //UnobtrusiveFlash.showFlashMessage('Error', {type: 'error', timeout: 0})
   });
+</script>
+<script>
+  //this script does jquery ui tooltips
+  $("[data-tooltip]").each(function(i, e) {
+    var tag = $(e);
+    if (tag.is("[title]") === false) {
+        tag.attr("title", "");
+    }
+});
+
+
+
+/*  
+  $(function() {
+    $( document ).tooltip({
+      position: {
+        my: "center bottom-20",
+        at: "center top",
+        using: function( position, feedback ) {
+          $( this ).css( position );
+          $( "<div>" )
+            .addClass( "arrow" )
+            .addClass( feedback.vertical )
+            .addClass( feedback.horizontal )
+            .appendTo( this );
+        }
+      }
+    });
+  });
+*/
+$(document).ready(function(){
+  $("#has-tt").tooltip({content:function(){return "Some <b>great</b> HTML tooltip text!";}});  
+});
+
 </script>

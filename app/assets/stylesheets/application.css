@@ -9,7 +9,7 @@
 * =require popup 
 *=require trans
 *= require scaffold
-
+*= require tooltips
 *= require unobtrusive_flash_ui
 *= require unobtrusive_flash_override 
 *= require_self

@@ -2,6 +2,7 @@
 // This file is automatically included by javascript_include_tag :defaults
 //= require jquery
 // require jquery-2.0.3
+// require jquery-2.1.3
 // require jquery-1.8.0
 // require jquery
 //= require jquery_ujs
@@ -31,6 +32,7 @@
 //= require best_in_place
 //= require best_in_place.jquery-ui
 //= require popup
+//= require tooltips_enable
 // utility functions like _.escape()
 //= require underscore
 // not working

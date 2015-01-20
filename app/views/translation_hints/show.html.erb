@@ -1,0 +1,21 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b><%= tlabel('heading', '') %>:</b>
+  <%= @translation_hint.heading %>
+</p>
+
+<p>
+  <b><%= tlabel('example', '') %>:</b>
+  <%= @translation_hint.example %>
+</p>
+
+<p>
+  <b><%= tlabel('description', '') %>:</b>
+  <%= @translation_hint.description %>
+</p>
+
+
+<%=link_edit('edit', edit_translation_hint_path(@translation_hint)) %> |
+<%= link_back(translation_hints_path) %>
+

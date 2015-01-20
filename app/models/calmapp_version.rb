@@ -53,7 +53,7 @@ class CalmappVersion < ActiveRecord::Base
   
   # return a concatenation of name and version suitable for display
   def calmapp_name_with_version
-    return calmapp_name + " version " + version.to_s
+    return calmapp_name.humanize + " version " + version.to_s
   end
   def name
     return calmapp_name_with_version

@@ -65,10 +65,13 @@ class RedisDatabase < ActiveRecord::Base
   
   def name
     #binding.pry
-    db_name = calmapp_version.name + " / Redis Instance: " + redis_instance.description + #RedisInstance.find(redis_instance_id).description + 
-    "(Database Index: " + redis_db_index.to_s + ")"
+    db_name = calmapp_version.name + " / Redis Instance: " + short_name
     #binding.pry
     #connect.setname db_name
+  end
+  def short_name
+    db_name = redis_instance.description + 
+    "(Database Index: " + redis_db_index.to_s + ")"
   end
   #def name
     ##end

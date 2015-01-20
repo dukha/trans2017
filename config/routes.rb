@@ -1,8 +1,10 @@
 Translator::Application.routes.draw do
 
+  
+
   scope "/:locale" do
    resources :profiles
-   
+   resources :translation_hints
    resources :translations_uploads
    # root will check permission and if ok redirect to whiteboards
    #root :to => "whiteboards#index"

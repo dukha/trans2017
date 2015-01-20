@@ -1,33 +1,3 @@
-<script type="text/javascript">
-//This script  handles showing and hiding selection criteria
-  var criteriaDiv ="#criteria";
-  var criteriaButton = "#showHideCriteria";
-  $().ready(function(){
-    //Initialise the criteria to be hidden on first display
-    $(criteriaDiv).hide(); 
-    $(criteriaButton).html(criteriaHiddenText);
-    
-    if( <%= @dot_key_code_translation_editors.count==0 %>){
-      toggleCriteria();
-    }
-    
-    $(criteriaButton).click(function(){
-      toggleCriteria();
-    }); //end click
-  });//end ready
-  var   criteriaHiddenText = "<%=t($FA +'show_something', :something=>t($SC))%>";
-  var   criteriaVisibleText = "<%=t($FA +'hide_something', :something=>t($SC))%>";
-  function toggleCriteria(){
-    if($(criteriaDiv).is(':visible')){ 
-        $(criteriaButton).html(criteriaHiddenText);
-    }else{
-        $(criteriaButton).html(criteriaVisibleText);
-    }
-    // toggle has to be after setting button text otherwise is(':visible') will not work properly
-    $(criteriaDiv).slideToggle('slow');  
-  }
-  
-</script>
 <%=theading("listing", :model=>'dot_key_code_translation_editor', :count=>11) %>
 <%if TranslationEditor.respond_to?( :searchable_attr ) and TranslationEditor.searchable_attr.any? then %>
 <button id="showHideCriteria" type='button'>x</button>
@@ -103,7 +73,7 @@
     
       <!--th class ="dataheader">< %=sortable("lambda","dot_key_code_translation_editor", sortable_cols.include?("lambda"))%></th --> 
   
-        <%= link_header 2 %>
+        <!--%= link_header 2 % -->
       
     </tr>
   
@@ -116,7 +86,7 @@
             <td class="<%= cell_class %>"><%= translation_editor.dot_key_code %></td>
   
             <td class="<%= cell_class %>"><%= translation_editor.editor %></td>
-             <td class="<%= cell_class %>"><%= link_show(translation_editor, "dot_key_code_translator_editor") %> </td>
+             <!--td class="< %= cell_class %>">< %= link_show(translation_editor, "dot_key_code_translator_editor") %> </td -->
             <!--td class="<%= cell_class %>">< %= translation_editor.lambda %></td -->
   
           <!--%= link_edit( edit_dot_key_code_translation_editor_path(translation_editor), :translation_editors  ) %-->
@@ -130,3 +100,34 @@
 <br />
 <%end # if else count %>
 <!--%=link_new( new_dot_key_code_translation_editor_path, :dot_key_code_translation_editor)  % -->
+
+<script type="text/javascript">
+//This script  handles showing and hiding selection criteria
+  var criteriaDiv ="#criteria";
+  var criteriaButton = "#showHideCriteria";
+  $().ready(function(){
+    //Initialise the criteria to be hidden on first display
+    $(criteriaDiv).hide(); 
+    $(criteriaButton).html(criteriaHiddenText);
+    
+    if( <%= @dot_key_code_translation_editors.count==0 %>){
+      toggleCriteria();
+    }
+    
+    $(criteriaButton).click(function(){
+      toggleCriteria();
+    }); //end click
+  });//end ready
+  var   criteriaHiddenText = "<%=t($FA +'show_something', :something=>t($SC))%>";
+  var   criteriaVisibleText = "<%=t($FA +'hide_something', :something=>t($SC))%>";
+  function toggleCriteria(){
+    if($(criteriaDiv).is(':visible')){ 
+        $(criteriaButton).html(criteriaHiddenText);
+    }else{
+        $(criteriaButton).html(criteriaVisibleText);
+    }
+    // toggle has to be after setting button text otherwise is(':visible') will not work properly
+    $(criteriaDiv).slideToggle('slow');  
+  }
+  
+</script>

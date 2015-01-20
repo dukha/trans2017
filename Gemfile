@@ -38,7 +38,7 @@ gem 'will_paginate','~>3.0.4'
 #gem 'protected_attributes'
 
 # using jquery for ajax, not prototype > rails g jquery:install
-gem 'jquery-rails'#, '~>1.0.12' #, '0.2.7'
+gem 'jquery-rails'#, '~>4.0.1' 
 gem 'jquery-ui-rails'
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
 gem 'turbolinks'

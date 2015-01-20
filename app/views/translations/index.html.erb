@@ -111,7 +111,7 @@
   <tr class = "<%= cycle('dataeven', 'dataodd') %>"  id = '<%= dom_id(trans)%>'>
       <td class="<%= cell_class%>" style="word-wrap: break-word;" ><span style="max-width:20px;"><%= trans.dot_key_code %></span></td>
       <!--td class="< %= cell_class %>" style="display:< %=short_key_display%>; ">< %= dot_key_code_last_key(translation.dot_key_code) %></td -->
-      <td class="<%= cell_class%>" style="max-width:40%;word-wrap: break-word;" ><%= format_english(trans.attributes) %></td>
+      <td class="<%= cell_class%>" style="max-width:40%;word-wrap: break-word;" data-tooltip = "<%=translation_tooltip(trans.attributes)%>"> <%= format_english(trans.attributes) %></td>
       <!-- you cannot give this td below a class. It messes up bip -->
       <td id= '<%(best_in_place?(trans.attributes) ? "best_in_place" : "special-editor")%>'  style="max-width:40%;">
         <% if best_in_place?(trans.attributes) then%>

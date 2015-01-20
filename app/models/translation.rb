@@ -97,8 +97,7 @@ class Translation < ActiveRecord::Base
 
 =begin
   @return all translations, joined to english translations and editor and plurals 
-
-  @param language expects translation_language.iso_code but  can also give id or object
+  @param language expects translation_language.iso_code but  can also give id or TranslationLangauge object
   @param calmapp_version_id identifies the relevant version
   All attributes, including those from other objects that are selected appear in translation.attributes, presumably not updatable. 
   use result[n].attributes to get the data you need
@@ -116,17 +115,8 @@ class Translation < ActiveRecord::Base
 
  NB cldr = nil means that the dot_key_code does not have plurals to translate 
 =end 
-
   scope :single_lang_translations_arr, ->(language, calmapp_version_id) {
-    if language.is_a? TranslationLanguage then
-      language = language.iso_code
-    elsif language.is_a? String then
-      # then we assume that it is the iso_code
-    elsif language.is_a? Integer then   
-      language = TranslationLanguage.find(language)
-    else
-      
-    end
+    language  = translation_language_from_param(language)
     join_to_cavs_tls_arr(calmapp_version_id).
     joins_to_tl_arr.
     outer_join_to_english_arr(calmapp_version_id).
@@ -302,6 +292,32 @@ class Translation < ActiveRecord::Base
     return translations
   end
  
+ 
+  def self.translation_language_from_param language
+    if language.is_a? TranslationLanguage then
+      return language = language.iso_code
+    elsif language.is_a? String then
+      # then we assume that it is the iso_code
+      return language
+    elsif language.is_a? Integer then   
+      return language = TranslationLanguage.find(language).iso_code
+    else
+      
+    begin
+      raise StandardError.new
+    rescue Exception => e
+      Rails.logger.error "Programming Error. Invalid param given to Translation.translation_language_from_param. Param should be TranslationLanguage instance or String for iso_code or Integer for id. Param is: " + language.class.name
+      #bc = BacktraceCleaner.new
+      #bc.add_filter   { |line| line.gsub(Rails.root.to_s, '') } # strip the Rails.root prefix
+      #bc.add_silencer { |line| line =~ /mongrel|rubygems/ } # skip any lines from mongrel or rubygems
+      
+      #bc.clean(e.backtrace) # perform the cleanup
+      caller.map{ |line| 
+        #puts line
+        Rails.logger.error line}
+    end  
+    end
+  end
 end
 
 

@@ -67,7 +67,7 @@ class <%= controller_class_name %>Controller < ApplicationController
 # Any dates that you wish to search on will have to be converted 
 # Fix your model accordingly or delete all the searh stuff
 
-if searchable_attr.empty?
+if searchable_attr.nil? || searchable_attr.empty?  
   @<%= plural_table_name %> = <%=class_name%>.paginate(:page => params[:page], :per_page=>15)
 else
   search_info = init_search(criterion_list(searchable_attr), operator_list( searchable_attr, criterion_list(searchable_attr)),sort_list(sortable_attr))
