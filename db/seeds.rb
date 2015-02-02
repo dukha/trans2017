@@ -11,6 +11,7 @@ Calmapp.delete_all
 
 Language.delete_all
 TranslationLanguage.delete_all
+TranslationHint.delete_all
 Whiteboard.delete_all
 ReleaseStatus.delete_all
 WhiteboardType.delete_all
@@ -50,7 +51,7 @@ log.info("Whiteboards data inserted successfully.")
 # delete or change below usernameonce login is added
 en = TranslationLanguage.seed#.create!(:iso_code=> "en", :name=>"English")
 
-
+TranslationHint.seed
 
 #red_reg4_loc_dev = RedisDatabase.create!(:calmapp_version_id => reg4.id, :redis_instance_id => ri_local.id, :redis_db_index => 1, :release_status_id => vs_dev.id)
 #red_reg4_loc_test = RedisDatabase.create!(:calmapp_version_id => reg4.id, :redis_instance_id => ri_local.id, :redis_db_index => 2, :release_status_id => vs_test.id)
