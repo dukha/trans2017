@@ -9,7 +9,7 @@ class UsersController < ApplicationController #Devise::RegistrationsController
   
   
   def invite_user
-    binding.pry
+    #binding.pry
     @user = User.invite!(:email => params[:user][:email], :name => params[:user][:name])
     render :html => @user
   end
@@ -38,6 +38,7 @@ class UsersController < ApplicationController #Devise::RegistrationsController
     #build_resource(sign_up_params)
     #binding.pry
     @user = User.new(user_params)
+    #@user.profile_ids = []
     if @user.save
       #redirect_to admin_editors_path
       redirect_to users_path
@@ -48,32 +49,17 @@ class UsersController < ApplicationController #Devise::RegistrationsController
       render :action => :new
     end
   end
-=begin
-  def create
-    @user = User.new(user_params)
-    binding.pry
-    respond_to do |format|
-      if @user.save
-        binding.pry
-        format.html{redirect_to(users_select_path, :notice => "Creating user: #{@user.username} was successful.") }
-        format.xml{head :ok }
-      else
-        binding.pry
-        format.html { render :action => "new" }
-        format.xml  { render :xml => @calmapp_version.errors, :status => :unprocessable_entity }
-     end #save 2   
-    end #do    
-  end
-=end  
+
   #edit_password GET   /:locale/users/:id/edit_password(.:format)   {:controller=>"users", :action=>"edit"}
   def edit
     #@user = User.find(params[:id])
+    #@user.profile_ids = @user.profiles.collect { |p| p.id }
   end
 
   #update_password PUT /:locale/users/:id/update_password(.:format) {:controller=>"users", :action=>"update"}
   def update
     #@user = User.find(params[:id])
-    
+    binding.pry
     @user.unlock_access! unless !@user.access_locked?
     respond_to do |format|
       if @user.update(user_params)#params[:user])
@@ -115,15 +101,24 @@ private
     @user = User.find(params[:id])
   end  
   def  user_params
-    binding.pry
+    #binding.pry
+    
+    standard_attr = [:email,  :remember_me,
+                :username, :login, :actual_name, {:profile_ids => []} ]
     if params[:user][:password].blank? && params[:user][:password_confirmation].blank? then
       #If the user does not try to update the pw, the we don't update to null (fail anyway)
-      return params.require(:user).permit(:email,  :remember_me,
-                :username, :login, :actual_name)
+      return params.require(:user).permit(standard_attr)
     else
-      return params.require(:user).permit(:email, :password, :password_confirmation, :remember_me,
-                :username, :login, :actual_name)
+      return params.require(:user).permit(standard_attr << [:password, :password_confirmation])
     end 
   
   end
 end
+=begin
+ <%= f.collection_check_boxes :venue_ids, Venue.all, :id, :name, checked: Venue.all.map(&:id) do |b| %>
+  <span>
+    <%= b.check_box %>
+    <%= b.label %>
+  </span>
+<% end %> 
+=end

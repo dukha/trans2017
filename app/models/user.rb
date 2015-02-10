@@ -3,7 +3,7 @@ class User < ActiveRecord::Base
 #  # :token_authenticatable, :encryptable, :confirmable, :lockable, :timeoutable and :omniauthable
 #  devise :invitable, :database_authenticatable, :registerable,
 #         :recoverable, :rememberable, :trackable, :validatable
-
+   #attr_accessor :profile_ids
   # Setup accessible (or protected) attributes for your model
   #attr_accessible :email, :password, :password_confirmation, :remember_me
   # Include default devise modules. Others available are:
@@ -30,142 +30,14 @@ class User < ActiveRecord::Base
   attr_accessor :login
 
   # these relationships model the configured access permissions
-  has_many :permissions, :dependent => :destroy
-  has_many :organisations, :through => :permissions
+  #has_many :permissions, :dependent => :destroy
+  #has_many :organisations, :through => :permissions
   
   #The above are being replaced by those below. Keep both for now. mfl
   has_many :user_profiles
+  #accepts_nested_attributes_for :user_profiles, :reject_if => :all_blank, :allow_destroy => true
   has_many :profiles, :through => :user_profiles
   
-=begin
-  # has_current_permission is a method in user which guarantees that there is a 
-  # current permission. It is called on creation because of the validate
-  #validate :has_current_permission
-  # after_save :has_current_permission
-
-  # Long story cut short: It does not work to store current_permission in a non-persistent attribute
-  # (e.g. virtual attribute: attr_accessor :current_permission)
-  # because each controller may recreate current_user from persistent storage and 
-  # then current_permission is lost! 
-  # declarative_auth wants method role_symbols to return roles. The users roles depend on the current permission
-  # Therefore the current permission cannot be stored in the session but must be remembered by the user. The current permission
-  # persists over consecutive sessions. Models cannot access the session!
-
-  # return nil or a Permission for self
-  def permission_at_organisation_named (name)
-    org = Organisation.find_by(name: name)
-    if org.nil?
-      return nil
-    end
-    perms = permissions.select {|p| p.organisation  == org}
-    if perms.size >1
-      raise Error "User #{username} has more than one Permission for organisation #{name}"
-    end
-    if perms.empty? 
-      nil
-    else
-      perms.first
-    end
-  end
-=end
-  # Used as getter method:
-  # return the current permission as it was persisted
-  # if no current permission was set then do so now
-  # Used as setter:
-  # set the attribute
-=begin  
-  def current_permission(perm=nil)
-    #require 'ruby-debug'; debugger
-
-    if perm.nil? #getter method
-      if current_permission_id
-        begin
-          Permission.find current_permission_id
-        rescue ActiveRecord::RecordNotFound
-          return nil
-        end
-      else
-        # current is not set
-        if self.permissions.empty?
-          # no permission exists for this user
-          return self.add_permission  make_current: true
-        end
-        # the last added one is taken as default
-        self.current_permission = self.permissions.last
-        self.save
-        return self.current_permission  # recursive, will end this time
-      end
-    else  # setter method
-      write_attribute :current_permission_id, perm.id
-    end
-  end
-  alias_method :current_permission=, :current_permission   #setter and getter
-=end
-
-=begin
-  def add_permission options={}
-    # the default options:
-    options={location: Location.empty_organisation, profile: Profile.guest, make_current: false}.merge(options)
-    # each permission belongs to only one user! so we have to get a new one. It will be save with the user
-    perm = Permission.new  :organisation => options[:location], :profile =>  options[:profile]
-    self.permissions << perm
-    if options[:make_current]
-      self.current_permission = perm
-    end
-    self.save
-    return perm
-  end
-=end
-
-=begin
-  def remove_permission perm
-    if self.permissions.include? perm
-      if self.current_permission == perm
-        self.current_permission = nil
-      end
-      self.permissions.delete(perm)
-      perm.destroy
-      self.save
-      self.reload
-    end
-  end
-=end
-=begin
-  # return a printable representation of the organisation where self is currently logged in.
-  # todo: should use method current_organisation
-  def greeting
-    if current_permission.nil?
-      return "You need to select an organisation to work for!"
-    end
-    if current_permission.organisation.nil?
-       return "Error: My current permission has no organisation"
-    end
-    "#{current_permission.organisation.name}"
-  end
-=end
-=begin
-  # todo: either remove def current_organisation_name or implement it using current_organisation
-  def current_organisation_name
-    if current_permission.nil?
-      return "You need to select an organisation to work for!"
-    end
-    if current_permission.organisation.nil?
-       return "Error: My current permission has no organisation"
-    end
-    current_permission.organisation.name
-  end
-=end
-=begin
-  def current_organisation
-    if current_permission.nil?
-      return "You need to select an organisation to work for!"
-    end
-    if current_permission.organisation.nil?
-       return "Error: My current permission has no organisation"
-    end
-    return current_permission.organisation
-  end
-=end
 =begin
      for declarative auth
      Returns the role symbols of the given user for declarative_auth. 
@@ -211,7 +83,7 @@ class User < ActiveRecord::Base
       puts "creating permission"
       #binding.pry
       u.profiles << Profile.sysadmin
-      #u.add_permission location: Location.world, profile: Profile.sysadmin, make_current: true
+      
       u.reload
 
       puts "Added user #{username} with permission "

@@ -1,3 +1,0 @@
-class OrganisationsController < LocationsController
-  
-end

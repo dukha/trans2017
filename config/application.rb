@@ -25,7 +25,7 @@ end
 =end
 Bundler.require(:default, Rails.env)
     
-module Translator
+module Translate
   #attr_accessor :max_redis_databases
   class Application < Rails::Application
     # Settings in config/environments/* take precedence over those specified here.

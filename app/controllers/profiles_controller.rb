@@ -60,6 +60,7 @@ class ProfilesController < ApplicationController
   # PUT /profiles/1.xml
   def update
     #@profile = Profile.find(params[:id])
+    binding.pry
     respond_to do |format|
       if @profile.update(profile_params)
         format.html { redirect_to(profiles_url, :notice => 'Profile was successfully updated.') }
@@ -85,10 +86,20 @@ class ProfilesController < ApplicationController
   
   private
     def  profile_params
-      params.require(:profile).permit(:roles, :name)
+      roles_array_2_sym
+      params.require(:profile).permit(:name, :rools=>[])
     end
     
     def set_profile
       @profile = Profile.find(params[:id])
     end  
+    
+    def roles_array_2_sym
+      #binding.pry
+      if not params["profile"]["rools"].nil? then
+        if params["profile"]["rools"].is_a? Array
+          params["profile"]["rools"].collect! { |role| role.to_sym  if role.is_a? String}
+        end
+      end
+    end
 end

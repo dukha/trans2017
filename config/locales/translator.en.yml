@@ -27,7 +27,7 @@ en:
       show_something: Show %{something}
       hide_something: Hide %{something}
       mark_deleted: Mark Deleted
-      add_child: Add Child %{location_type}
+      #add_child: Add Child %{location_type}
       search: Search
       select: Select %{model}
       select2: Select
@@ -46,9 +46,9 @@ en:
       redis_to_yaml: Save Database as YAML
       add_translation_language: Add Translation Language
       remove_translation_language: Remove Translation Language
-      add_organisation: Add Organisation
-      add_area: Add Area
-      add_server: Add Server
+      #add_organisation: Add Organisation
+      #add_area: Add Area
+      #add_server: Add Server
       add_calmapp_version: Add Calm App Version 
       remove_version: Remove Version
       version_alterwithredisdb: Add, Change, Remove Redis Databases
@@ -170,7 +170,7 @@ en:
     languages: Languages
     dot_key_code_translation_editors: Translation Editors
     guest: Guest
-    locations: Locations
+      
     #permissions: Permissions
     profiles: Profiles
     special_partial_dot_keys: Special Keys
@@ -223,9 +223,7 @@ en:
       translations_upload:
         one: Translations Upload
         other: Translations Uploads
-      location:
-        one: Location
-        other: Locations  
+      
       release_status:
         one: Release Status
         other: Release Statuses

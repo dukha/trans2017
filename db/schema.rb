@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150113000629) do
+ActiveRecord::Schema.define(version: 20150207030856) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -49,6 +49,13 @@ ActiveRecord::Schema.define(version: 20150113000629) do
   end
 
   add_index "calmapps", ["name"], name: "iu_calmapps_name", unique: true, using: :btree
+
+  create_table "cavs_tl_translators", force: true do |t|
+    t.integer  "cavs_translation_language_id", null: false
+    t.integer  "translator_id",                null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "delayed_jobs", force: true do |t|
     t.integer  "priority",   default: 0, null: false
@@ -95,7 +102,7 @@ ActiveRecord::Schema.define(version: 20150113000629) do
   end
 
   create_table "profiles", force: true do |t|
-    t.text     "roles"
+    t.text     "rools"
     t.string   "name",       null: false
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -145,7 +152,6 @@ ActiveRecord::Schema.define(version: 20150113000629) do
 
   create_table "translation_hints", force: true do |t|
     t.string   "dot_key_code", null: false
-    t.string   "string",       null: false
     t.string   "heading"
     t.string   "example"
     t.string   "description"
@@ -221,7 +227,7 @@ ActiveRecord::Schema.define(version: 20150113000629) do
   end
 
   create_table "users", force: true do |t|
-    t.string   "email",                  default: "", null: false
+    t.string   "email",                  default: "",     null: false
     t.string   "encrypted_password",     default: ""
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
@@ -241,7 +247,7 @@ ActiveRecord::Schema.define(version: 20150113000629) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "username"
-    t.string   "actual_name",                         null: false
+    t.string   "actual_name",                             null: false
     t.string   "invitation_token"
     t.datetime "invitation_created_at"
     t.datetime "invitation_sent_at"
@@ -249,6 +255,7 @@ ActiveRecord::Schema.define(version: 20150113000629) do
     t.integer  "invitation_limit"
     t.integer  "invited_by_id"
     t.string   "invited_by_type"
+    t.string   "type",                   default: "User", null: false
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree

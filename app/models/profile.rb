@@ -15,20 +15,20 @@ class Profile < ActiveRecord::Base
   # http://www.postgresql.org/docs/8.3/interactive/datatype-character.html says: text has variable unlimited length
   # It is unlikely the yaml will be too long and be truncated.
   # see also methods roles and add_role
-  serialize :roles, Array
+  serialize :rools, Array
 
   # return the roles for this profile. If not yet initialized then initialize with empty
   # set and return it.
   # this also shows how to implement setter and getter in ruby
   def roles(selectedRoles=nil)
     if selectedRoles.nil?
-      read_attribute(:roles) || write_attribute(:roles, [])
+      read_attribute(:rools) || write_attribute(:rools, [])
     else
       # all should be symbols
       sel_roles = selectedRoles.collect {|each| each.to_sym} 
       #remove duplicates
       sel_roles = sel_roles.to_set.to_a
-      write_attribute(:roles, sel_roles)
+      write_attribute(:rools, sel_roles)
     end
   end
   alias_method :roles=, :roles   #setter and getter
@@ -74,7 +74,7 @@ class Profile < ActiveRecord::Base
 
   def self.demo
     roles= [:translations_read, :translations_write]
-    Profile.create(:name=>'french_translator', :roles => roles) #unless self.french_translator
+    Profile.create(:name=>'translator', :roles => roles) #unless self.french_translator
     end
   # all roles defined in config/authorization_rules.rb
   # as a collection of symbols

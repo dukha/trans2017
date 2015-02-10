@@ -1,7 +1,7 @@
 module ProfilesHelper
   STANDARD_ACTIONS = %w(read write create destroy)
   # These must all be in the translation file as roles.<action>
-  NONSTANDARD_ACTIONS = %w(lookup confirm search import change invite getunused getnextindex publish invite unlock alterwithredisdb)
+  NONSTANDARD_ACTIONS = %w(lookup confirm search import change invite getunused getnextindex publish invite unlock alterwithredisdb translate)
   def layout_check_boxes profile
     html =''
     rows_data_hashes_array= collect_roles_in_groups
@@ -18,7 +18,7 @@ module ProfilesHelper
         if roles_hash == rows_data_hashes_array.last then
           html<< t("roles.miscellaneous")  
         else
-          binding.pry
+          #binding.pry
           translation_code = "roles." + key
           html << t(translation_code)  
 =begin
@@ -44,17 +44,20 @@ module ProfilesHelper
           #binding.pry
           html << "<td class='profilecheckboxtd'>"
           role = role_for( key, action)
-          if action.blank? then
-            html << check_box_tag("profile[roles][]", role, profile.roles.include?(role), :class=>"profilecheckbox")
+          if key == 'misc'#action.blank? then
+            #html << check_box_tag("profile[rools][]", action, profile.roles.include?(role), :class=>"profilecheckbox")
             #binding.pry
-            html << label_tag(key, t("roles." + key))
+            html << one_check_box_html(action, role, profile)
+            #t("roles." + key))
           else
-            html << check_box_tag("profile[roles][]", action, profile.roles.include?(role), :class=>"profilecheckbox")
+            #html << check_box_tag("profile[rools][]", role, profile.roles.include?(role), :class=>"profilecheckbox")
+            html << one_check_box_html(role, role, profile)
             #if role == :guest
             #binding.pry
             #end
-            html << label_tag(action, t("roles.actions." + action))
+           # html << label_tag(action, t("roles.actions." + action))
           end
+          html << label_tag(key, t("roles.actions." + (action.nil??role:action)))
           #binding.pry
           #if roles_symbols_array==rows_data.last then
              #t("."+role.to_s))
@@ -71,8 +74,12 @@ module ProfilesHelper
       html<< "</table>"
     end #rows not empty
    
-   
+   #binding.pry
     return html.html_safe
+  end
+  
+  def one_check_box_html value, role, profile
+    check_box_tag("profile[rools][]", value, profile.roles.include?(role), :class=>"profilecheckbox")
   end
   
   def role_for resource, action
@@ -81,44 +88,7 @@ module ProfilesHelper
     end  
       return (resource + '_' + action).to_sym
   end
-=begin @deprecated
- 
-  def collect_roles_in_groups
-    
-    roles=Profile.available_roles.sort{ |r,s |
-      r.to_s <=> s.to_s
-    } 
-    #binding.pry
-    previous_resource=nil
-    all_arrays = []
-    current_array = []
-    misc_array=[]
-    roles.each{ |role|
-        tokens=role.to_s.split('_')
-    
-        role_resource= tokens[0..(tokens.length-2)].join('_')
-        #if %w(read write create destroy lookup confirm template addallocations search letters ).include?(tokens.last) then
-        if (STANDARD_ACTIONS + NONSTANDARD_ACTIONS).include?(tokens.last) then
-          if role_resource == previous_resource || previous_resource.nil? then
-            add_role_to_array(current_array, tokens.last, role)
-          else 
-            all_arrays << current_array
-            current_array = []
-            add_role_to_array(current_array, tokens.last, role)            
-          end
-          previous_resource=role_resource
-          #current_array<<role
-        else
-          role_resource=role
-          misc_array << role
-        end  
-    } # each 
-    binding.pry
-    all_arrays<< current_array
-    all_arrays << misc_array
-    return all_arrays
-  end  
-=end
+
 
   
   def collect_roles_in_groups

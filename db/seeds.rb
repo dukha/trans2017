@@ -15,7 +15,7 @@ TranslationHint.delete_all
 Whiteboard.delete_all
 ReleaseStatus.delete_all
 WhiteboardType.delete_all
-Location.delete_all
+#Location.delete_all
 Profile.delete_all    
 #Permission.delete_all
 SpecialPartialDotKey.delete_all
@@ -62,23 +62,12 @@ TranslationHint.seed
 
 Profile.seed
 log.info("profiles seeded")
-Location.seed
-log.info("Locations seeded")
+
 User.create_root_user
-#global = Area.create :name => "Global" , :parent_id => Location.localhost.id
-vipassana =  Area.create :name => "Vipassana" , :parent_id => Location.find_by_name(Location.localhost_name).id
-translation_organisation = Organisation.create :name=>"translation_organisation", :parent_id => vipassana.id
- #, :parent_id=>translation_organisation.id)
+
 SpecialPartialDotKey.seed  
 DotKeyCodeTranslationEditor.seed
-#TranslationLanguage.create!(:iso_code=> "en_US", :name=>"American English")
-#TranslationLanguage.create!(:iso_code=> "zh", :name=>"Mandarin")
-#TranslationLanguage.create!(:iso_code=> "zh_MY", :name=>"Malaysia Mandarin")
-#TranslationLanguage.create!(:iso_code=> "el", :name=>"Greek")  
-#TranslationLanguage.create!(:iso_code=> "hi", :name=>"Hindi") 
-#TranslationLanguage.create!(:iso_code=> "id", :name=>"Indonesian")
-#TranslationLanguage.create!(:iso_code=> "it", :name=>"Italian")
-#TranslationLanguage.create!(:iso_code=> "es", :name=>"Spanish")     
+   
 
 
 
@@ -87,17 +76,7 @@ DotKeyCodeTranslationEditor.seed
 # These are languages for this application
 Language.create!(:iso_code=> "en", :name=>"English") #, :parent_id=>translation_organisation.id)
 
-#log.info("Global area and vipassana org inserted")
-#current_perm = Permission.create!  :organisation => Location.world, :profile => Profile.root
-#log.info(" Loc world =" + Location.world.to_s)
-    #log.info(" Profile root=" + Profile.root.to_s)
-     #log.info("current permission create id = " +current_perm.id.to_s)
-# ceate users which can log-in
-    #this block is not needed as root user is not created
-    #User.all.each do |each|
-      #if each.username == 'root'; next; end
-      #each.destroy
-    #end
+
 
     pw = '123456'
     
@@ -127,13 +106,7 @@ Language.create!(:iso_code=> "en", :name=>"English") #, :parent_id=>translation_
     #perm = Permission.create!  :organisation => vipassana,  :profile => prof_guest
     #admin.add_permission perm
     #param[:organisation]=translationLanguages
-    param[:username]='translator'
-    param[:email]= 'translator@calm.org'
-    param[:actual_name] = 'trannie'
-    translator=User.create! param
-    translator.profiles << Profile.guest
-    #translator.add_permission location: Location.world, profile: Profile.guest, make_current: true
-    log.info("trannie created")
+    
     param[:username]='developer'
     param[:actual_name] = 'devvie'
     param[:email]= 'developer@calm.org'

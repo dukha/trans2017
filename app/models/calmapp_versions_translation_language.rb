@@ -1,13 +1,3 @@
-# == Schema Information
-# Schema version: 20110918232413
-#
-# Table name: calmapp_versions_languages
-#
-#  id                 :integer         not null, primary key
-#  calmapp_version_id :integer         not null
-#  language_id        :integer         not null
-#
-
 class CalmappVersionsTranslationLanguage < ActiveRecord::Base
   include Validations
   extend SearchModel
@@ -33,6 +23,9 @@ class CalmappVersionsTranslationLanguage < ActiveRecord::Base
   #attr_accessor :write
   has_many :translations_uploads, :foreign_key=> "cavs_translation_language_id"
   accepts_nested_attributes_for :translations_uploads, :reject_if => :all_blank, :allow_destroy => true
+  
+  #has_many :cavs_tl_translators, :foreign_key=> "cavs_translation_language_id"
+  #has_many :translators, :through => :cavs_tl_translators, :class_name => 'Translator'
   # once we have saved a new language then we upload the base file for that translation 
   after_create :base_locale_translations_for_new_translation_languages
   after_update :do_after_update

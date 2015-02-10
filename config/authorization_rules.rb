@@ -49,6 +49,7 @@ authorization do
   # users who have no permission are guest see user.rb >> role_symbols
   role :guest do
     has_permission_on :languages, :to => [:change_application_language, :index, :show]
+    has_permission_on :whiteboards, :to => [:read]
     #has_permission_on :CalmSessions, :to => [:new, :create, :destroy]
   end
 =begin
@@ -81,30 +82,34 @@ authorization do
   end
   
   role :users_invite do
-    has_permission_on [:uses], :to => [:invite_user]
+    has_permission_on [:users], :to => [:invite_user]
   end
   
-  #standard_roles :locations
+  role :translations_translate do
+    has_permission_on [:translations], :to => [:update, :index] #do
+      #if_attribute "calmapp_versions_translation_language.translation_language"=> is {current_user.translation}
+      #if_attribute :cavs_translation_language_id => is_in {user.calmapp_versions_translation_languages.collect { |cavtl| cavtl.id}}
+   # end
+  end
   
   standard_roles :calmapp_versions_translation_languages
   standard_roles :calmapp_versions
   standard_roles :calmapps
   standard_roles :dot_key_code_translation_editors 
   standard_roles :languages
-  standard_roles :locations
-  #standard_roles :permissions
   standard_roles :profiles
   standard_roles :redis_databases
   standard_roles :redis_instances
   standard_roles :release_statuses
   standard_roles :special_partial_dot_keys
   standard_roles :translations
+  standard_roles :translation_hints
   standard_roles :translation_languages
   standard_roles :translations_uploads
   standard_roles :users
   standard_roles :whiteboard_types
   standard_roles :whiteboards
 
-
+  
 
 end

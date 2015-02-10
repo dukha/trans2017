@@ -27,6 +27,6 @@ class Demo
                                    )
                )
      Profile.demo           
-
+     #Translator.demo
   end
 end

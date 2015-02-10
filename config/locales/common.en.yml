@@ -127,7 +127,7 @@ en:
       error: There were no records found in the database that match the given criteria.
       warning: There were no records found in the database that match the given criteria.
     no_records_found_with_permissions:
-      warning: There were no records found in the database for which you have permission in the current organisation.
+      warning: There were no records found in the database for which you have permission.
     application_language_change:
       success: The application language will be changed to %{language} on next refresh or new page.
     capslock_on:
@@ -155,9 +155,7 @@ en:
       warning: "This code is an invalid AT code." 
     more_than_1_match_at_code:
       warning: This code matches with more than 1 AT. Use the ... button to select the AT  
-    location:
-      no_name_edit: 
-        notice: Cannot edit name of this location     
+    
   links:
     no_unlock_instructions: Didn't receive unlocking instructions?
     no_confirmation_instructions: Didn't receive confirmation instructions?
@@ -210,20 +208,5 @@ en:
 
     
          
-# Nested attributes are no longer supported as of rails 3.1
-#    attributes:
-#      location:
-#        name:
-#          world: Calm World
-#          au-server: "Calm server australia"
-#          eu-server: "Calm server europe"
-#          australia: Australia
-#          belgië: Belgium
-#          españa: Spain 
-#        type:
-#          World: World
-#          Server: Computer
-#          Area: Area
-#          Organisation: Organisation
-#          Venue: Venue 
+
  
