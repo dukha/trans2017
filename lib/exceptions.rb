@@ -18,33 +18,40 @@ config.autoload_paths += %W(#{config.root}/lib
   translation_code
 =end
   class InternationalStandardError < StandardError
-    attr_accessor :translation_interpolations, :translation_code
-    # Use the message slot to hold the translation_code instead of message
-#<<<<<<< HEAD
-    def initialize  translation_code, translation_interpolations = nil
-#=======
-    #def initialize  translation_code
-      # no whitespace
-      # options={}
-      # super translation_code, options  ?
-#>>>>>>> 20f0f4d2ffb721f7e08426940623d391440860bd
+    attr_accessor :translation_interpolations, :translation_code, :level
+
+    def initialize translation_code, translation_interpolations = {}, level= "error"
       @translation_code = translation_code
       @translation_interpolations = translation_interpolations
+      @level = level
+      log
     end
-    def message
-        return I18n.t($EM + translation_code, @translation_interpolations)  
+    def message locale = nil
+        locale = (locale.nil?? I18n.locale : locale)
+        
+        return I18n.t($MS + translation_code + "." + level, translation_interpolations.merge({:locale=> locale}))  
     end
-    
+    def log
+      if level == "warning"
+      Rails.logger.warn(message)
+     elsif level == 'error' 
+       Rails.logger.error(message)
+     elsif level == 'info'
+       Rails.logger.info(message)
+     elsif level == 'debug'
+       Rails.logger.debug(message)
+     end    
+    end  
     #def translation_code
       #return super.message
     #end
     
     def message_in_english
-      hash = @translation_interpolations.clone
-      hash[:locale] = :en
-      puts @translation_interpolations
-      puts hash
-      return I18n.t( $EM + translation_code, hash) 
+      #hash = @translation_interpolations.clone
+      #hash[:locale] = :en
+      #puts @translation_interpolations
+      #puts hash
+      return message 'en' 
     end
       
   end
@@ -57,7 +64,7 @@ config.autoload_paths += %W(#{config.root}/lib
     #include TranslationsHelper
     #extend TranslationsHelper
     # TranslationHelper apparently couldn't help here!!
-    @@Translation_code =  I18n.t($MS + "existence" +".error")# TranslationsHelper.tmessage("existence", "error" )#
+    @@Translation_code = "existence." +"error" #I18n.t($MS + "existence" +".error")# TranslationsHelper.tmessage("existence", "error" )#
     def initialize record, attribute, value, target
       super @@Translation_code
       @record = record
@@ -89,5 +96,35 @@ config.autoload_paths += %W(#{config.root}/lib
     
   end
   
-
+  class NoAuthorisation < InternationalStandardError
+    
+  end
+  
+  class NoLanguageDeleteAuthorisation < NoAuthorisation
+    
+    @@Translation_code = "calmapp_versions_translation_language.delete.no_language_authorisation"
+=begin
+ @param interpolations must have :version as version name and :language as in translation_langauge name
+=end
+    def initialize interpolations = {}, level = 'warning' 
+       super(@@Translation_code,  interpolations)
+       
+         
+    end
+  end
+  
+  
+  
+   class NoRedisDatabasesLeft < InternationalStandardError
+    
+    @@Translation_code = "redis_instance.all_redis_db_indexes_taken"
+=begin
+ @param interpolations must have :description as description of Redis Instance
+=end
+    def initialize interpolations = {}, level = 'warning' 
+      binding.pry
+       super(@@Translation_code,  interpolations, level )
+      
+    end
+  end
 end

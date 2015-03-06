@@ -49,9 +49,9 @@ en:
       #add_organisation: Add Organisation
       #add_area: Add Area
       #add_server: Add Server
-      add_calmapp_version: Add Calm App Version 
+      add_calmapp_version: Add App Version 
       remove_version: Remove Version
-      version_alterwithredisdb: Add, Change, Remove Redis Databases
+      redisdbalter: Change Redis Databases
       version_redis: Publication to Redis
       version_publish: Publish to Redis
       remove_redis_database: Remove This Redis Database
@@ -70,19 +70,6 @@ en:
       translation_languages_calmapp_versions_to_new_upload: To add a New Upload, First Either add the Language to a Version, Or add a new Version, then Upload
       unlock: Unlock Account
     labels:
-      #redis_db_index: Redis Database Index
-      #port: Linux Port
-      #host: Computer with Redis Database
-      #name: Name
-      #calmapp: Calm Application
-      #line_sequence: &fl_ls Line Number
-      #yaml_partial_key: &fl_ypk Partial Key
-      #yaml_code: &fl_yc Yaml Code
-      #dot_key: &fl_dk Dot Separated Key
-      #value: &fl_t Translation
-      #marked_deleted: &fl_md Marked Deleted
-      #description: &fl_d Description
-      #english_translation_file_name: &fl_px File Name
       status: Status
       translation: Translation
       translation_file_id_eq: Translation File equals
@@ -100,13 +87,14 @@ en:
         name: Enter the application name.
         new_version: If this checkbox is not checked then no version will be written to the database
         new_redis_dev_db: If this checkbox is not checked then no redis database will be written to the database. You will still need to add test and production redis databases later.
+        developers: "This list shows developers known to Translator. Tick a box if you want a developer to work on this application(ie edit the base: English translation). Only users already no minated as developers will be shown here. If you want to make someone a developer then go to the Users edit(or add new)"
       redis_database:
-        #redis_db_index_new: "This is the integer that represents the database where the translations will be eventually published. Do not enter data if not sure about the database index."
         redis_db_index: "This is the integer that represents the database where the translations will be eventually published. It is automatically filled when the instance is chosen. Once saved, neither the instance, nor the redis database index, are editable. You'll have to delete and add a new redis database,starting again"
         calmapp_version_id: "Choose the corect application and version carefully"
         release_status_id: "The status of the the translation database that you are adding: 'development' will only be used by developers for English. 'test' will be used by most translators. 'production will be a copy of test to be used by users."
         redis_instance_id: "Choose computer ip address on which the redis server is running that you want to use."
         #version_publish: "Publish <span class='coloured-em-hint'>%{version_name}</span><br> to <span class= 'coloured-em-hint'>%{db_name}</span>"
+        version_publish: "Publish <span class='coloured-em-hint'>%{version_name}</span><br> to <span class= 'coloured-em-hint'>%{db_name}</span>"
       redis_instance:  
         max_databases: Each instance has a maximum number of databases. It is set in redis/redis.conf(or redis/<port>.config). Don't put anything here that is not already.in redis.conf. Default(for Redis new installation) is 16.
         host: Enter the technical name(ip address or hostname) of the computer where the Redis database server is running.
@@ -128,6 +116,9 @@ en:
         actual_name: Your everyday Given and Family names
         username: The name that this application will know you as. Can be used to signin.
         unlock: Only enabled if user account is locked.
+        translator_jobs: "This translator(user) can work on translating these ticked version-language combinations."
+        developer_jobs: "This developer(user) can work on doing the English translations for the following ticked applications."
+        profiles: Choose the profile(s) of permissions that you want the user to have. The profile will determine which pages a user can view and which action a user can take.
       translation_hints:
         heading: Title for Hint (may contain HTML)
         example: Example of Hint (may contain HTML)
@@ -157,12 +148,18 @@ en:
       getnextindex: Get Next Index
       publish: Publish
       unlock: Unlock
-      alterwithredisdb: Alter Redis Db
-      guest: Guest
+      redisdbalter: "Change Redis Db's"
+      visit: Visit
+      translate: Translate
+      deepcopy: Deep Copy
+      deepcopyparams: Parameters for Deep Copy
+      deepdestroy: Deep Destroy
     miscellaneous: Miscellaneous
     redis_instances: Redis Instances
     redis_databases: Redis Databases
     translation_languages: Translation Languages
+    calmapp_versions_translation_languages: Version Translation Languages
+    
     calmapps: Applications
     calmapp_versions: Application Versions
     translation_uploads: Translation Uploads
@@ -183,9 +180,9 @@ en:
     profiles: Profiles
     #translation_uploads: Translation Uploads
     #translation_file_lines: English Translation
-    calmapps: Calm Applications
+    calmapps: Applications
     calmapp_all_in_one_new: "New App, Version, Database"
-    calmapp_versions: Calm Application Versions
+    calmapp_versions: Application Versions
     translation_uploads: Translation Uploads
     redis_databases: Redis Databases
     redis_instances: Redis Instances
@@ -203,23 +200,22 @@ en:
     users: Users
     new_invitation: New User Invitation
   headings:
-    application_subheading: Calm Translator M1
+    application_subheading: Translator
     write_to_database:
       heading: Write File Contents to %{model}
     translation_parameters:
       heading: Translation Parameters
     redis_database:
-      publishing: Publish to  
+      publishing: Allow Publication To  
     upload: "Upload:"
     edit_with_redis_databases:
-      heading: Change Publication(Redis) Databases for Version
+      heading: "Change Redis Publication Databases for Version: %{model}"
     #redis_admin: Redis Admin
   activerecord:
     models:
       calmapp:
-        #zero: Calm Applications
-        one: Calm Application
-        other: Calm Applications
+        one: Application
+        other: Applications
       translations_upload:
         one: Translations Upload
         other: Translations Uploads
@@ -228,8 +224,11 @@ en:
         one: Release Status
         other: Release Statuses
       calmapp_version:
-        one: Calm Application Version
-        other: Calm Application Versions
+        one: Application Version
+        other: Application Versions
+#      calmapp_versions_redis_database:
+#        one: Application Version with Redis Databases
+#        other: Application Version with Redis Databases
       calmapp_versions_translation_language:
         one: Version Translation Language
         other: Version Translation Languages
@@ -286,6 +285,7 @@ en:
         new_redis_dev_db: Add Redis Developers Database
         new_version: Add First Version
         name: Application Name
+        developers: Developers
       translation_parameter:
         language_id: Language
         redis_database_id: Redis Database
@@ -294,7 +294,7 @@ en:
         dot_key_code: Code
 
       calmapp_version:
-        calmapp_id: Calm App
+        calmapp_id: Application
         version: Version
         
         translation_languages: Languages Selected
@@ -307,7 +307,7 @@ en:
         name: Language
       redis_database:
         redis_db_index: Redis Database Index
-        calmapp_version_id: Calm App Version
+        calmapp_version_id: App Version
         redis_instance_id: Redis Instance
         redis_database: Redis Database
         release_status_id: Release Status
@@ -352,6 +352,12 @@ en:
         username: (Online)User Name
         password: Password
         password_confirmation: Confirm Password
+        email: Email
+        profiles: Profiles
+        translator: Translator
+        developer: Developer
+        translator_jobs: Permitted Translation Jobs
+        developer_jobs: Permitted Developer Jobs
       translation_hint:
         heading: Title
         example: Example
@@ -397,6 +403,9 @@ en:
       error: Could not record save file that was written to Redis database.
     file_already_written_to_redis:
       error: "File '%{file_name}' is already written to redis database for %{redis_name}."
+    #redis_instance: 
+      #warning:
+        #all_redis_db_indexes_taken: 
     translation_parameters_not_set:
       warning: Before doing this you must set the translation parameters
     file_to_redis:
@@ -432,4 +441,11 @@ en:
       error: "File could not be written: %{cause}" 
     write_file_to_db:
       cancel: "operation cancelled because a translation is already in database: language = %{language}, code = %{dot_key_code} "
-      object_persisted_but_not_returned: "Translation has apparently been persisted but not returned correctly by code: language = %{language}, code = %{dot_key_code}"  
+      object_persisted_but_not_returned: "Translation has apparently been persisted but not returned correctly by code: language = %{language}, code = %{dot_key_code}"
+    redis_instance:
+      all_redis_db_indexes_taken:
+        warning:  There are no more redis databases on %{description}. See your database administrator to fix this problem.
+    calmapp_versions_translation_language:
+      delete:
+        no_language_authorisation: 
+          warning: You have no authorisation to delete %{language} from %{version}   

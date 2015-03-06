@@ -24,12 +24,12 @@ class CalmappVersionsTranslationLanguage < ActiveRecord::Base
   has_many :translations_uploads, :foreign_key=> "cavs_translation_language_id"
   accepts_nested_attributes_for :translations_uploads, :reject_if => :all_blank, :allow_destroy => true
   
-  #has_many :cavs_tl_translators, :foreign_key=> "cavs_translation_language_id"
-  #has_many :translators, :through => :cavs_tl_translators, :class_name => 'Translator'
+  has_many :cavs_tl_translators, :foreign_key=> "cavs_translation_language_id"
+  has_many :translators, :through => :cavs_tl_translators, :class_name => 'User', :source=> 'user'
   # once we have saved a new language then we upload the base file for that translation 
   after_create :base_locale_translations_for_new_translation_languages
   after_update :do_after_update
-  
+  before_destroy :deep_destroy
   def create
     binding.pry
     super
@@ -39,9 +39,15 @@ class CalmappVersionsTranslationLanguage < ActiveRecord::Base
     #binding.pry
     puts "after translation upload"
   end 
-
+  
+  def self.permitted_for_translators
+     #all.load - [TranslationLanguage.TL_EN ]
+     en_id = TranslationLanguage.TL_EN.id
+     where{translation_language_id != my{en_id} }.load 
+  end
+  
   def name
-    return CalmappVersion.find(calmapp_version_id).name + " " + TranslationLanguage.find(translation_language_id).name
+    return (CalmappVersion.find(calmapp_version_id).name + " " + TranslationLanguage.find(translation_language_id).name).titlecase
   end
 =begin
  Uploads the base translation for a new language after added (ie created)
@@ -97,4 +103,17 @@ class CalmappVersionsTranslationLanguage < ActiveRecord::Base
   def self.find_languages_not_in_version  language_ids_array, version_id
     where{calmapp_version_id == version_id}.where{translation_language_id << language_ids_array}
   end
-end
+  
+  def deep_destroy()
+    #if current_user.role_symbols.include?(:calmapp_versions_translation_languages_deepdestroy)
+      transaction do
+         translations.find_each {|t| t.delete}
+         translations_uploads.find_each{|tl| tl.delete}
+         translators.find_each { |tor| tor.delete}
+         destroy 
+      end # transaction
+    #else
+      #raise Exceptions::NoLanguageDeleteAuthorisation.new({version: calmapp_version_tl.name, language: translation_language.full_name})
+    #end # if user  
+  end # def
+end #class

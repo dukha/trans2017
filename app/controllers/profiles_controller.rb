@@ -16,8 +16,6 @@ class ProfilesController < ApplicationController
   # GET /profiles/1
   # GET /profiles/1.xml
   def show
-    #@profile = Profile.find(params[:id])
-
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @profile }
@@ -28,7 +26,6 @@ class ProfilesController < ApplicationController
   # GET /profiles/new.xml
   def new
     @profile = Profile.new
-
     respond_to do |format|
       format.html # new.html.erb
       format.xml  { render :xml => @profile }
@@ -37,7 +34,7 @@ class ProfilesController < ApplicationController
 
   # GET /profiles/1/edit
   def edit
-    #@profile = Profile.find(params[:id])
+    
   end
 
   # POST /profiles
@@ -59,8 +56,7 @@ class ProfilesController < ApplicationController
   # PUT /profiles/1
   # PUT /profiles/1.xml
   def update
-    #@profile = Profile.find(params[:id])
-    binding.pry
+
     respond_to do |format|
       if @profile.update(profile_params)
         format.html { redirect_to(profiles_url, :notice => 'Profile was successfully updated.') }
@@ -75,7 +71,6 @@ class ProfilesController < ApplicationController
   # DELETE /profiles/1
   # DELETE /profiles/1.xml
   def destroy
-    #@profile = Profile.find(params[:id])
     @profile.destroy
 
     respond_to do |format|
@@ -93,9 +88,10 @@ class ProfilesController < ApplicationController
     def set_profile
       @profile = Profile.find(params[:id])
     end  
-    
+=begin
+ The form returns strings for roles: we must convert them to symbols for Dec Auth 
+=end    
     def roles_array_2_sym
-      #binding.pry
       if not params["profile"]["rools"].nil? then
         if params["profile"]["rools"].is_a? Array
           params["profile"]["rools"].collect! { |role| role.to_sym  if role.is_a? String}

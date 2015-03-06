@@ -1,12 +1,4 @@
 GIT
-  remote: git://github.com/bernat/best_in_place
-  revision: bfb262c5a25385143af432f8f7d98480636392c6
-  specs:
-    best_in_place (3.0.0)
-      actionpack (>= 3.2)
-      railties (>= 3.2)
-
-GIT
   remote: git://github.com/stffn/declarative_authorization.git
   revision: 45e91af20eba71b2828c5c84066bcce3ef032e8a
   specs:
@@ -53,6 +45,9 @@ GEM
       ZenTest (>= 4.4.1)
     autotest-rails-pure (4.1.2)
     bcrypt (3.1.7)
+    best_in_place (3.0.3)
+      actionpack (>= 3.2)
+      railties (>= 3.2)
     better_errors (2.0.0)
       coderay (>= 1.0.0)
       erubis (>= 2.6.6)
@@ -124,6 +119,9 @@ GEM
     formatador (0.2.5)
     formtastic (3.0.0)
       actionpack (>= 3.2.13)
+    foundation-rails (5.5.0.0)
+      railties (>= 3.1.0)
+      sass (>= 3.2.0, < 3.4)
     guard (2.6.1)
       formatador (>= 0.2.4)
       listen (~> 2.7)
@@ -317,7 +315,7 @@ DEPENDENCIES
   annotate
   autotest
   autotest-rails-pure
-  best_in_place!
+  best_in_place (~> 3.0.1)
   better_errors
   binding_of_caller
   capistrano
@@ -335,6 +333,7 @@ DEPENDENCIES
   execjs
   factory_girl_rails (~> 4.4.0)
   formtastic
+  foundation-rails
   guard-rspec
   guard-spork (= 1.5.0)
   jquery-rails

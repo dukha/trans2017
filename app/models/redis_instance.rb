@@ -60,6 +60,28 @@ class RedisInstance < ActiveRecord::Base
     return ar
   end
   
+  def next_index last_index = -1
+    indexes = unused_redis_database_indexes()
+    #binding.pry
+    #message = I18n.t($MS + "redis_instance.warning.all_redis_db_indexes_taken", description: description )
+    #binding.pry
+    if not indexes.empty? then
+      if last_index == -1 then
+        ret_val = indexes[0] 
+      elsif indexes.last == last_index then
+        # This is an error condition: Not enough redis database
+        #binding.pry
+        raise Exceptions::NoRedisDatabasesLeft.new({description: description})
+      else   
+        indexes.delete_if {|el| el <= last_index}
+        ret_val = indexes[0]
+      end  
+    else
+      # This is an error condition: Not enough redis database
+      #binding.pry
+      raise Exceptions::NoRedisDatabasesLeft.new({description: description})
+    end #not empty
+  end
   private
     def default_values
       return unless new_record?

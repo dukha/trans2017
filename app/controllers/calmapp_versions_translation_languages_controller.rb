@@ -1,4 +1,6 @@
 class CalmappVersionsTranslationLanguagesController < ApplicationController
+  before_action :authenticate_user!
+  filter_access_to :all
   before_action :set_calmapp_versions_translation_language, only: [:show, :edit, :update, :destroy]
   require 'translations_helper'
   include TranslationsHelper
@@ -116,6 +118,15 @@ class CalmappVersionsTranslationLanguagesController < ApplicationController
   # DELETE /calmapp_versions_translation_languages/1.json
   def destroy
     @calmapp_versions_translation_language.destroy
+    respond_to do |format|
+      format.html { redirect_to calmapp_versions_translation_languages_url }
+      format.json { head :no_content }
+      format.js {}
+    end  
+  end
+  
+  def deep_destroy
+    @calmapp_versions_translation_language.deep_destroy(current_user)
     respond_to do |format|
       format.html { redirect_to calmapp_versions_translation_languages_url }
       format.json { head :no_content }

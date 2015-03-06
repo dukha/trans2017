@@ -84,7 +84,7 @@ gem 'daemons'
 gem 'execjs'
 gem 'therubyracer'
 # in place editing
-gem 'best_in_place',  :git => "git://github.com/bernat/best_in_place"
+gem 'best_in_place', '~> 3.0.1' #:git => "git://github.com/bernat/best_in_place"
 
 # for doing searches with criteria. Replaces meta_where for rails 3.1
 gem 'squeel'
@@ -101,6 +101,8 @@ gem 'puma'
 gem 'exception_notification' #_rails3', :require => 'exception_notifier'
 
 gem 'rails-i18n', '~>4.0.0'
+# zurb is a css bundle similar to bootstrap
+gem 'foundation-rails'
 
 #gem 'log4r', :git => "git://github.com/colbygk/log4r"
 gem 'logging'

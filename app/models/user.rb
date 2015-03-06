@@ -38,6 +38,17 @@ class User < ActiveRecord::Base
   #accepts_nested_attributes_for :user_profiles, :reject_if => :all_blank, :allow_destroy => true
   has_many :profiles, :through => :user_profiles
   
+  
+  #has_many :cavs_tl_translators, :foreign_key => "translator_id" #, :class_name=> "" 
+  #accepts_nested_attributes_for :cavs_tl_translators, :reject_if => :all_blank, :allow_destroy => true
+  #has_many :calmapp_versions_translation_languages, :through => :cavs_tl_translators
+  has_many :translator_jobs, :foreign_key => "translator_id" , :class_name=> "CavsTlTranslator"
+  #accepts_nested_attributes_for :translator_jobs, :reject_if => :all_blank, :allow_destroy => true
+  has_many :calmapp_versions_translation_languages, :through => :translator_jobs
+  
+  has_many :developer_jobs, :foreign_key => "user_id" , :class_name=> "CalmappUser"
+  #accepts_nested_attributes_for :developer_jobs, :reject_if => :all_blank, :allow_destroy => true
+  has_many :calmapps, :through => :developer_jobs, :source => :calmapp
 =begin
      for declarative auth
      Returns the role symbols of the given user for declarative_auth. 
@@ -103,7 +114,9 @@ class User < ActiveRecord::Base
    where(conditions).where(["username = :value OR email = :value", { :value => login }]).first
  end
 
-
+  def self.developers
+    return where{developer == 't'}
+  end
 
 =begin
 private
@@ -128,7 +141,7 @@ end # class
 #  reset_password_sent_at :datetime
 #  remember_created_at    :datetime
 #  sign_in_count          :integer         default(0)
-#  current_sign_in_at     :datetime
+#  current_sign_in_at     :datetimecollection_check_boxes
 #  last_sign_in_at        :datetime
 #  current_sign_in_ip     :string(255)
 #  last_sign_in_ip        :string(255)

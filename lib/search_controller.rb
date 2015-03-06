@@ -56,10 +56,8 @@ module SearchController
   # Note that dates will only be processed properly if attr ends with '_date' or _at
   # @param searchable_attr are a hash of attribtes of the primary model which are searchable. usually accessed from the model like accessible_attr
   # @param formats is a hash of formats(primarily dates strftime )  , keyed by criterion where a date is in a format other than default  
-  def criterion_list searchable_attr = {}, formats ={}, 
-    
+  def criterion_list searchable_attr = {}, formats ={}, criteria = {}
     #binding.pry
-    criteria = {}
     searchable_attr.each{|attr|
       criterion_key = attr_2_criterion_sym(attr)
       #operator_key = attr_2_operator(attr)

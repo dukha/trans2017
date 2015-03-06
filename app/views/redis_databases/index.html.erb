@@ -41,13 +41,13 @@
         <!--%= tlink_to  'edit', calmapp_version_alterwithredisdb_path(redis_database.calmapp_version) % -->
         <!--%= link_edit(redis_database, "redis_database") %-->
         <%if redis_database.calmapp_version %>
-          <%= link_edit(calmapp_version_alterwithredisdb_path(redis_database.calmapp_version), "redis_database") %>
+          <%= link_edit( version_alterredisdb_path(redis_database.calmapp_version), "redis_database") %>
         <%end%>
       
     <td class="<%= link_cell_class %>">
      
       <%if redis_database.calmapp_version %>
-        <%= tlink_to  'new_redis_for_version', calmapp_version_alterwithredisdb_path(redis_database.calmapp_version.id) %>
+        <%= tlink_to  'new_redis_for_version', version_alterredisdb_path(redis_database.calmapp_version.id) %>
       <%end%>
     </td>
     <!--td class="< %= link_cell_class %>"><%= button_to t($FA + 'sign_out', :username=>current_user.username), destroy_user_session_path, :method => :delete ,:form_class => "button_to_fake", :id => 'signout' %></td -->

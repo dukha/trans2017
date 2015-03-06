@@ -65,7 +65,7 @@ class TranslationEditorParamsController < ApplicationController
 if searchable_attr.empty?
   @translation_editor_params = TranslationEditorParam.paginate(:page => params[:page], :per_page=>15)
 else
-  search_info = init_search(criterion_list(searchable_attr), operator_list( searchable_attr, criterion_list(searchable_attr)),sort_list(sortable_attr))
+  search_info = init_search(current_user, searchable_attr, sortable_attr)#init_search(criterion_list(searchable_attr), operator_list( searchable_attr, criterion_list(searchable_attr)),sort_list(sortable_attr))
   #@translation_editor_params = TranslationEditorParam.search(current_user, criterion_list(searchable_attr), operator_list( searchable_attr, criterion_list(searchable_attr)),sort_list(sortable_attr)).paginate(:page => params[:page], :per_page=>15)
   @translation_editor_params = TranslationEditorParam.search(current_user, search_info).paginate(:page => params[:page], :per_page=>15)
 end

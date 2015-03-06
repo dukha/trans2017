@@ -1,20 +1,27 @@
 module ProfilesHelper
   STANDARD_ACTIONS = %w(read write create destroy)
   # These must all be in the translation file as roles.<action>
-  NONSTANDARD_ACTIONS = %w(lookup confirm search import change invite getunused getnextindex publish invite unlock alterwithredisdb translate)
+  NONSTANDARD_ACTIONS = %w(lookup confirm search import change invite getunused getnextindex publish invite unlock redisdbalter translate deepcopy deepdestroy visit deepcopyparams)
   def layout_check_boxes profile
     html =''
     rows_data_hashes_array= collect_roles_in_groups
     #each hash
     if ! rows_data_hashes_array.empty? then
-      html << "<table>"
+      html << "<table class='profiles-form'>"
       #binding.pry
       rows_data_hashes_array.each { |roles_hash|
         next if roles_hash.empty?
+        #if ! roles_hash['guest'].nil?
+          #binding.pry
+        #end
         html << "<tr class = '" + cycle('dataeven', 'dataodd') + "' >"
+        
         #binding.pry
         html << "<td class='profilerowheader'>"
         key = roles_hash.keys[0]
+        #if key == 'guest'
+          #binding.pry
+        #end
         if roles_hash == rows_data_hashes_array.last then
           html<< t("roles.miscellaneous")  
         else
@@ -42,31 +49,35 @@ module ProfilesHelper
         #roles_symbols_array.each{ |role|
         roles_hash[key].each{ |action|
           #binding.pry
+          
           html << "<td class='profilecheckboxtd'>"
           role = role_for( key, action)
-          if key == 'misc'#action.blank? then
-            #html << check_box_tag("profile[rools][]", action, profile.roles.include?(role), :class=>"profilecheckbox")
+          if not action.nil? then
+            if key == 'misc'#action.blank? then
+              #html << check_box_tag("profile[rools][]", action, profile.roles.include?(role), :class=>"profilecheckbox")
+              #binding.pry
+              html << one_check_box_html(action, role, profile)
+              #t("roles." + key))
+            else
+              #html << check_box_tag("profile[rools][]", role, profile.roles.include?(role), :class=>"profilecheckbox")
+              html << one_check_box_html(role, role, profile)
+              #if role == :guest
+              #binding.pry
+              #end
+             # html << label_tag(action, t("roles.actions." + action))
+            end
+            translation_key = ((action.nil?)?(role.to_s):(action.to_s))
+            html << label_tag(key, t("roles.actions." + translation_key))
             #binding.pry
-            html << one_check_box_html(action, role, profile)
-            #t("roles." + key))
-          else
-            #html << check_box_tag("profile[rools][]", role, profile.roles.include?(role), :class=>"profilecheckbox")
-            html << one_check_box_html(role, role, profile)
-            #if role == :guest
-            #binding.pry
+            #if roles_symbols_array==rows_data.last then
+               #t("."+role.to_s))
+            #else
+            
+              #label = role.to_s.split("_").last
+             
+              #html << label_tag(role, t("roles.actions." + label))
             #end
-           # html << label_tag(action, t("roles.actions." + action))
           end
-          html << label_tag(key, t("roles.actions." + (action.nil??role:action)))
-          #binding.pry
-          #if roles_symbols_array==rows_data.last then
-             #t("."+role.to_s))
-          #else
-          
-            #label = role.to_s.split("_").last
-           
-            #html << label_tag(role, t("roles.actions." + label))
-          #end
           html << "</td>" 
         }  # end each
       html << "</tr>\n"

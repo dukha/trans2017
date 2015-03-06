@@ -122,7 +122,7 @@ module TranslationsHelper
 
     if !model.nil?
       tr_model = tmodel(model, options) 
-
+      tr_model = model if tr_model.include?("translation missing")
       ret_val = I18n.t("headings.#{translation_code}.heading", :model => tr_model)
     else
       

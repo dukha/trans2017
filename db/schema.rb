@@ -11,27 +11,25 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150207030856) do
+ActiveRecord::Schema.define(version: 20150304233158) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
+  create_table "calmapp_users", force: true do |t|
+    t.integer "calmapp_id"
+    t.integer "user_id"
+  end
+
   create_table "calmapp_versions", force: true do |t|
-    t.integer  "calmapp_id", null: false
+    t.integer  "calmapp_id",          null: false
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "version"
+    t.string   "copied_from_version"
   end
 
   add_index "calmapp_versions", ["calmapp_id"], name: "i_calmapp_versions_appliction_id", using: :btree
-
-  create_table "calmapp_versions_redis_databases", force: true do |t|
-    t.integer "calmapp_version_id"
-    t.integer "redis_database_id"
-    t.integer "release_status_id"
-  end
-
-  add_index "calmapp_versions_redis_databases", ["calmapp_version_id", "redis_database_id"], name: "uix_cav_rdb_on_calmapp_version_id_and_redis_database_id", unique: true, using: :btree
 
   create_table "calmapp_versions_translation_languages", force: true do |t|
     t.integer  "calmapp_version_id",      null: false
@@ -110,10 +108,15 @@ ActiveRecord::Schema.define(version: 20150207030856) do
 
   create_table "redis_databases", force: true do |t|
     t.integer  "redis_instance_id"
-    t.integer  "redis_db_index",    null: false
+    t.integer  "redis_db_index",     null: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "release_status_id"
+    t.integer  "calmapp_version_id"
   end
+
+  add_index "redis_databases", ["calmapp_version_id"], name: "index_redis_databases_on_calmapp_version_id", using: :btree
+  add_index "redis_databases", ["release_status_id"], name: "index_redis_databases_on_release_status_id", using: :btree
 
   create_table "redis_instances", force: true do |t|
     t.string  "host",          null: false
@@ -227,7 +230,7 @@ ActiveRecord::Schema.define(version: 20150207030856) do
   end
 
   create_table "users", force: true do |t|
-    t.string   "email",                  default: "",     null: false
+    t.string   "email",                  default: "",    null: false
     t.string   "encrypted_password",     default: ""
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
@@ -247,7 +250,7 @@ ActiveRecord::Schema.define(version: 20150207030856) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "username"
-    t.string   "actual_name",                             null: false
+    t.string   "actual_name",                            null: false
     t.string   "invitation_token"
     t.datetime "invitation_created_at"
     t.datetime "invitation_sent_at"
@@ -255,7 +258,8 @@ ActiveRecord::Schema.define(version: 20150207030856) do
     t.integer  "invitation_limit"
     t.integer  "invited_by_id"
     t.string   "invited_by_type"
-    t.string   "type",                   default: "User", null: false
+    t.boolean  "translator",             default: false
+    t.boolean  "developer",              default: false
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree

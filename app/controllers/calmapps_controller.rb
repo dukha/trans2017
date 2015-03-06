@@ -4,22 +4,9 @@ class CalmappsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_calmapp, only: [ :edit, :update, :destroy, :show]
   filter_access_to :all
-  #after_create do |record|
-   # @calmapp_version.id = record.id
-  #end
-  # GET /applications
-  # GET /calmapps.xml
-  
-  #before_filter :find_model,  :only => [:show, :edit, :update, :destroy]
-  #before_filter :authenticate_user!
-  # almost replaced with global handler
-  # Can't rescue record not found here
-  # as this will happen if there are no records when the first line of index executes
-  #rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
-  #include Exceptions
-  
+ 
   @@model ="calmapp"
-  #@@model = "calmapp"
+  
   def index
     #@applications = Calmapp.all
     @calmapps =  Calmapp.paginate(:page => params[:page], :per_page=>15)
@@ -214,7 +201,7 @@ class CalmappsController < ApplicationController
   # PUT /calmapps/1.xml
   def update
     #@calmapp = Calmapp.find(calmapp_params)#params[:id])
-    #binding.pry
+    binding.pry
     #binding.pry
 =begin
     if params[:calmapp][:language_ids]==nil then
@@ -261,7 +248,7 @@ class CalmappsController < ApplicationController
 
   # rails 4 Strong Params needs this: Not tested yet
   def calmapp_params
-    params.require(:calmapp).permit(:name,  calmapp_versions_attributes: [:id, :version, :_destroy])
+    params.require(:calmapp).permit(:name,  {calmapp_versions_attributes: [:id, :version, :_destroy], :developer_ids => []})
   end
   
   def set_calmapp

@@ -61,7 +61,7 @@ class TranslationsUploadsController < ApplicationController
     if searchable_attr.empty?
       @translations_uploads = TranslationsUpload.paginate(:page => params[:page], :per_page=>15)
     else
-      search_info = init_search(criterion_list(searchable_attr), operator_list( searchable_attr, criterion_list(searchable_attr)),sort_list(sortable_attr))
+      search_info = init_search(current_user, searchable_attr, sortable_attr)#init_search(criterion_list(searchable_attr), operator_list( searchable_attr, criterion_list(searchable_attr)),sort_list(sortable_attr))
       #@translations_uploads = TranslationsUpload.search(current_user, criterion_list(searchable_attr), operator_list( searchable_attr, criterion_list(searchable_attr)),sort_list(sortable_attr)).paginate(:page => params[:page], :per_page=>15)
       @translations_uploads = TranslationsUpload.search(current_user, search_info).paginate(:page => params[:page], :per_page=>15)
     end

@@ -56,9 +56,14 @@ Translate::Application.routes.draw do
     
    resources :calmapps
    resources :calmapp_versions
+   get "calmapp_versions/deep_copy"=> "calmapp_versions#deep_copy", :as=>"version_deep_copy"
+   get "calmapp_versions/deep_copy_params"=> "calmapp_versions#deep_copy_params", :as=>"version_deep_copy_params"
+   get "calmapp_versions_translation_languages/deep_copy"=> "calmapp_versions_translation_languages#deep_copy", :as=>"version_translation_language_deep_copy"
+   
    resources :release_statuses
    resources :redis_databases, :only=>[:index, :destroy, :edit]
    resources :redis_instances
+   #resources :calmapp_versions_redis_databases, :only=> [:index, :new, :create, :update]
    get 'unused_redis_database_indexes' => 'redis_instances#unused_redis_database_indexes', :as => 'redis_databases_getunused', via: :all
    get 'next_unused_redis_database_index'=> 'redis_instances#next_redis_database_index'  , :as => 'redis_databases_getnextindex', :via=> :all
    resources :user_works#, :only=>[:edit, :show]
@@ -78,9 +83,9 @@ Translate::Application.routes.draw do
    #get "translations_uploads/write_yaml_file_to_db/:id" => "calmapp_versions_translation_languages#write_file_to_db", :as=> "write_yaml_file_to_db"#, :via => :all
 
    get "redis_databases/redis_to_yaml/:id" => "redis_databases#redis_to_yaml", :as => "redis_to_yaml", via: :all
-   
-   get "calmapp_version/version_alterwithredisdb/:id" => "calmapp_versions#version_alterwithredisdb", :as => "calmapp_version_alterwithredisdb"#, via: :all
-   post "calmapp_version/version_publish/:id" => "redis_databases#publish", :as =>"calmapp_version_publish" #, :via => :all
+   get "calmapp_versions/version_alterredisdb/:id" => "calmapp_versions#redisdbalter", :as => "version_alterredisdb"#, via: :all
+   #get "calmapp_versions_redis_database/version_alterwithredisdb/:calmapp_versions_redis_database_id" => "calmapp_versions_redis_databases#version_alterwithredisdb", :as => "version_alterredisdb"#, via: :all
+   get "calmapp_version/version_publish/:id" => "redis_databases#publish", :as =>"calmapp_version_publish" #, :via => :all
    resources :translation_editor_params
    resources :special_partial_dot_keys
    resources :dot_key_code_translation_editors, :only=> [:index, :edit, :show] 

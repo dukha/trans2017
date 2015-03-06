@@ -92,9 +92,9 @@ en:
     my_settings: Edit My Settings, including Password
     user_info: User Preferences
     home: Home
-    contact: Contact CALM
+    contact: Contact Translator
     help: Help
-    about: "About CALM" 
+    about: "About Translator" 
     #%{app_name}"
     whiteboards: Whiteboards
     whiteboard_types: Whiteboard Types

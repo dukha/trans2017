@@ -1,14 +1,17 @@
 class RedisDatabase < ActiveRecord::Base
   include Validations
+  extend SearchModel
+  include SearchModel
   #validates :with => RedisDbValidator2
   #belongs_to :calmapp_version
   belongs_to :redis_instance
+  belongs_to :calmapp_version, inverse_of: :redis_databases
   #belongs_to :calmapp_versions_redis_database
-  has_one :calmapp_versions_redis_database
+  #has_one :calmapp_versions_redis_database
   # has_one through does not permit multiple association instances in this direction. 
   # The association is not an array, even though the reverse association is a has_many through
-  has_one :calmapp_version, :through => :calmapp_versions_redis_database
-  #belongs_to :release_status
+  #has_one :calmapp_version, :through => :calmapp_versions_redis_database
+  belongs_to :release_status
   #has_many :uploads_redis_databases
   #has_many :uploads, :through => :uploads_redis_databases
   #validates :calmapp_version_id, :presence=>true
@@ -16,12 +19,12 @@ class RedisDatabase < ActiveRecord::Base
   validates :redis_db_index, :presence=>true
   validates :redis_db_index, :uniqueness => {:scope=>[:redis_instance]}
   validates :redis_instance_id, :presence=>true
-  #validates :release_status, :presence=>true, :existence=>true
+  validates :release_status, :presence=>true, :existence=>true
   #validates :release_status, :uniqueness=>{:scope=>[:calmapp_version]}
   #validate :redis_db_index_exists
   
   #validates :release_status_id, :existence=>true
-  #validates :calmapp_version_id,:presence=>true
+  validates :calmapp_version_id,:presence=>true
   #validates :host,:presence=>true
   #validates :port, :presence => true
   
@@ -33,8 +36,15 @@ class RedisDatabase < ActiveRecord::Base
   #validates_with Validations::TranslationValidator
   #after_save :name_database
   #before_delete -> (model) {model.calmapp_versions_redis_database.destroy}, :unless => model.calmapp_versions_redis_database.nil?}#:delete_calmapp_versions_redis_database
-  before_destroy :delete_calmapp_versions_redis_database
+  #before_destroy :delete_calmapp_versions_redis_database
   @connection=nil
+  def self.searchable_attr 
+     %w(id  calmapp_version_id  )
+  end
+  def self.sortable_attr
+      []
+  end
+  
 =begin
   def save!
     if new_record?
@@ -59,10 +69,11 @@ class RedisDatabase < ActiveRecord::Base
     end
   end
 =end
+=begin @deprecated  
   def delete_calmapp_versions_redis_database
       calmapp_versions_redis_database.destroy
   end
-  
+=end  
   def name
     #binding.pry
     db_name = calmapp_version.name + " / Redis Instance: " + short_name

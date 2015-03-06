@@ -104,7 +104,8 @@ private
     #binding.pry
     
     standard_attr = [:email,  :remember_me,
-                :username, :login, :actual_name, {:profile_ids => []} ]
+                :username, :login, :actual_name, :translator, :developer, {:profile_ids => []}, 
+                {:calmapp_versions_translation_language_ids=>[]}, {:calmapp_ids=>[]} ]
     if params[:user][:password].blank? && params[:user][:password_confirmation].blank? then
       #If the user does not try to update the pw, the we don't update to null (fail anyway)
       return params.require(:user).permit(standard_attr)

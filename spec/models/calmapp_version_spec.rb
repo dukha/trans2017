@@ -5,10 +5,10 @@ describe CalmappVersion do
     end
   end
   it {should belong_to(:calmapp)}
-  it {should have_many(:calmapp_versions_redis_database) }
-  it { should accept_nested_attributes_for(:calmapp_versions_redis_database) }
+  it {should have_many(:redis_database) }
+  it { should accept_nested_attributes_for(:redis_database) }
   
-  it {should have_many(:redis_databases).through(:calmapp_versions_redis_database) }
+  #it {should have_many(:redis_databases).through(:calmapp_versions_redis_database) }
   describe "validations" do
     before(:all) do
        CalmappVersion.delete_all

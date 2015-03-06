@@ -302,20 +302,20 @@ class Translation < ActiveRecord::Base
     elsif language.is_a? Integer then   
       return language = TranslationLanguage.find(language).iso_code
     else
-      
-    begin
-      raise StandardError.new
-    rescue Exception => e
-      Rails.logger.error "Programming Error. Invalid param given to Translation.translation_language_from_param. Param should be TranslationLanguage instance or String for iso_code or Integer for id. Param is: " + language.class.name
-      #bc = BacktraceCleaner.new
-      #bc.add_filter   { |line| line.gsub(Rails.root.to_s, '') } # strip the Rails.root prefix
-      #bc.add_silencer { |line| line =~ /mongrel|rubygems/ } # skip any lines from mongrel or rubygems
-      
-      #bc.clean(e.backtrace) # perform the cleanup
-      caller.map{ |line| 
-        #puts line
-        Rails.logger.error line}
-    end  
+      # Throw and exception to log it
+      begin
+        raise StandardError.new
+      rescue Exception => e
+        Rails.logger.error "Programming Error. Invalid param given to Translation.translation_language_from_param. Param should be TranslationLanguage instance or String for iso_code or Integer for id. Param is: " + language.class.name
+        #bc = BacktraceCleaner.new
+        #bc.add_filter   { |line| line.gsub(Rails.root.to_s, '') } # strip the Rails.root prefix
+        #bc.add_silencer { |line| line =~ /mongrel|rubygems/ } # skip any lines from mongrel or rubygems
+        
+        #bc.clean(e.backtrace) # perform the cleanup
+        caller.map{ |line| 
+          #puts line
+          Rails.logger.error line}
+      end
     end
   end
 end

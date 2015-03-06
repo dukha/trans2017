@@ -384,3 +384,9 @@ form.formtastic fieldset.inputs > legend > span, form.formtastic fieldset.inputs
   color: $mid-heading-colour;
   font-weight : bold;
 }
+td.profilecheckboxtd{
+  width:45px;
+}
+table.profiles-form  tr.dataodd{
+  background-color: $profile-form-color;
+}

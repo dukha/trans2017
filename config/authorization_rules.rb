@@ -47,7 +47,7 @@ authorization do
 # might do same for :write, :add, :remove
 
   # users who have no permission are guest see user.rb >> role_symbols
-  role :guest do
+  role :guest_visit do
     has_permission_on :languages, :to => [:change_application_language, :index, :show]
     has_permission_on :whiteboards, :to => [:read]
     #has_permission_on :CalmSessions, :to => [:new, :create, :destroy]
@@ -74,8 +74,20 @@ authorization do
     has_permission_on [:redis_instances],  :to=>[:next_redis_database_index]
   end
   
-  role  :calmapp_versions_alterwithredisdb do
-    has_permission_on [:calmapp_versions], :to => [:version_alterwithredisdb]
+  role  :calmapp_versions_redisdbalter do
+    has_permission_on [:calmapp_versions], :to => [:redisdbalter]
+  end
+  role :calmapp_versions_translation_languages_deepdestroy do
+    has_permission_on [:calmapp_versions_translation_language], :to=> [:deep_destroy]
+  end
+  role :calmapp_versions_deepdestroy do
+    has_permission_on [:calmapp_versions], :to=> [:deep_destroy]
+  end
+  role :calmapp_versions_deepcopy do
+    has_permission_on [:calmapp_versions], :to=> [:deep_copy]
+  end
+  role :calmapp_versions_deepcopyparams do
+    has_permission_on [:calmapp_versions], :to=> [:deep_copy_params]
   end
   role :calmapp_versions_publish do
     has_permission_on [:redis_databases], :to => [:publish]
@@ -85,6 +97,8 @@ authorization do
     has_permission_on [:users], :to => [:invite_user]
   end
   
+   
+  
   role :translations_translate do
     has_permission_on [:translations], :to => [:update, :index] #do
       #if_attribute "calmapp_versions_translation_language.translation_language"=> is {current_user.translation}
@@ -93,6 +107,7 @@ authorization do
   end
   
   standard_roles :calmapp_versions_translation_languages
+  #standard_roles :calmapp_versions_redis_databases
   standard_roles :calmapp_versions
   standard_roles :calmapps
   standard_roles :dot_key_code_translation_editors 

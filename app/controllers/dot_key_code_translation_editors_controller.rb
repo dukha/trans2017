@@ -11,7 +11,7 @@ class DotKeyCodeTranslationEditorsController < ApplicationController
 =end
   # Comment out the next 2 lines if not using authentication and authorisation
   before_filter :authenticate_user!
-  #filter_access_to :all
+  filter_access_to :all
 
   @@model ="dot_key_code_translation_editor"
 
@@ -65,7 +65,7 @@ class DotKeyCodeTranslationEditorsController < ApplicationController
 if searchable_attr.empty?
   @dot_key_code_translation_editors = DotKeyCodeTranslationEditor.paginate(:page => params[:page], :per_page=>15)
 else
-  search_info = init_search(criterion_list(searchable_attr), operator_list( searchable_attr, criterion_list(searchable_attr)),sort_list(sortable_attr))
+  search_info =init_search(current_user, searchable_attr, sortable_attr)#init_search(criterion_list(searchable_attr), operator_list( searchable_attr, criterion_list(searchable_attr)),sort_list(sortable_attr))
   #@dot_key_code_translation_editors = DotKeyCodeTranslationEditor.search(current_user, criterion_list(searchable_attr), operator_list( searchable_attr, criterion_list(searchable_attr)),sort_list(sortable_attr)).paginate(:page => params[:page], :per_page=>15)
   @dot_key_code_translation_editors = DotKeyCodeTranslationEditor.search(current_user, search_info).paginate(:page => params[:page], :per_page=>15)
 end

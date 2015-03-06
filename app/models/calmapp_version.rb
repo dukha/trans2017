@@ -14,28 +14,35 @@ class CalmappVersion < ActiveRecord::Base
 =end  
   belongs_to :calmapp #, :class_name => "Application", :foreign_key => "calmapp_id"
   
-  has_many :calmapp_versions_redis_database#, :inverse_of=>:calmapp_version_rd, 
+  #has_many :calmapp_versions_redis_database#, :inverse_of=>:calmapp_version_rd, 
            #:class_name => "CalmappVersionsRedisDatabase",
              #:foreign_key=>"calmapp_version_id"
-  accepts_nested_attributes_for :calmapp_versions_redis_database, :reject_if => :all_blank, :allow_destroy => true
+  #accepts_nested_attributes_for :calmapp_versions_redis_database, :reject_if => :all_blank, :allow_destroy => true
   
-  has_many :redis_databases, :through =>:calmapp_versions_redis_database#, :source=>:calmapp_version_rd
-  #accepts_nested_attributes_for :redis_databases, :reject_if => :all_blank, :allow_destroy => true
+  has_many :redis_databases, inverse_of: :calmapp_version#, :through =>:calmapp_versions_redis_database#, :source=>:calmapp_version_rd
+  accepts_nested_attributes_for :redis_databases, :reject_if => :all_blank, :allow_destroy => true
  
   validates  :version,  :presence=>true, :uniqueness=>{:scope =>:calmapp_id}
   #validates :version, :numericality=>true#=> {:only_integer=>false, :allow_nil =>false}
   
   #validates :calmapp, :presence=>true
 
-  has_many :calmapp_versions_translation_languages, :dependent => :destroy, :inverse_of => :calmapp_version_tl,
+  has_many :calmapp_versions_translation_languages, :dependent => :restrict_with_exception, 
+            :inverse_of => :calmapp_version_tl,
             :foreign_key=> "calmapp_version_id"
   accepts_nested_attributes_for :calmapp_versions_translation_languages, :reject_if => :all_blank, :allow_destroy => true
   has_many :translation_languages , :through => :calmapp_versions_translation_languages
+=begin
+ def offices_count_valid?
+      offices.reject(&:marked_for_destruction?).count >= OFFICES_COUNT_MIN
+    end 
+=end
+  
   #validates :calmapp_id, :existence=>true
   
   # should be after_save, however we can't do this
   #after_update :add_english
-  after_create :add_english
+  after_create :add_english, :if => Proc.new { |cav| cav.copied_from_version.blank? }
 =begin
 @return a collection of all calmapp names with versions
 =end
@@ -53,14 +60,14 @@ class CalmappVersion < ActiveRecord::Base
   
   # return a concatenation of name and version suitable for display
   def calmapp_name_with_version
-    return calmapp_name.humanize + " version " + version.to_s
+    return calmapp_name.humanize + " Version:" + version.to_s
   end
   def name
     return calmapp_name_with_version
   end
   def calmapp_name
     #puts "xxxx" + Application.where(:id => application_id).name
-    return Calmapp.where(:id => calmapp_id).first.name
+    return Calmapp.where(:id => calmapp_id).first.name.titlecase
   end
   # moved to validations lib
   #def self.validate_version version
@@ -100,7 +107,47 @@ class CalmappVersion < ActiveRecord::Base
       "DONT ADD EN"
     end
   end
-end
+=begin
+ deep copy copies all translation languages and translations for that version. It does not copy redis databases or uploads. 
+ @param old_version is a version such as 4, '4', '1.2.3', 'longhorn'
+ @param new_version is a version such as 4, '4', '1.2.3', 'longhorn'
+ @param copy_translation_languages boolean indicator of what to do
+ @param copy_translations  boolean indicator of what to do
+=end  
+  def deep_copy old_version, new_version, copy_translation_languages=true, copy_translations =true
+    version = CalmappVersion.create!(:version => new_version.to_s ,:calmapp_id => calmapp_id, :copied_from_version => old_version.to_s)
+    if copy_translation_languages && ! copy_translations then
+      version.translation_languages.concat(translation_languages)
+    end
+    if copy_translations then
+      calmapp_versions_translation_languages.find_each do |cavtl|
+        CalmappVersionsTranslationLanguage.create!(:calmapp_version_id => version.id, :translation_language_id => cavtl.translation_language_id )
+        Translation.where{cavs_translation_language_id == my{cavtl.id}}.find_each do |t|
+          Translation.new(:translation => t.translation, :dot_key_code => t.dot_key_code, :cavs_translation_language_id => cavtl.id) 
+        end  
+      end
+    end
+  end
+  
+  def deep_destroy(user)
+    #if user.role_symbols.include?(:calmapp_versions_deepdestroy)
+     begin
+       transaction do
+         redis_databases.find_each { |db| db.destroy }
+         calmapp_versions_translation_languages.find_each { |cavtl|
+           cavtl.deep_destroy
+           }
+          
+         destroy  
+       end #transaction
+     rescue StandardError => e
+       puts e.message
+     end #beginrescue
+   # else
+      
+   # end #if else   
+  end #def
+end #class
 
 
 

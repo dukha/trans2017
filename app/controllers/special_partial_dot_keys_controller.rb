@@ -65,7 +65,7 @@ class SpecialPartialDotKeysController < ApplicationController
 if searchable_attr.empty?
   @special_partial_dot_keys = SpecialPartialDotKey.paginate(:page => params[:page], :per_page=>15)
 else
-  search_info = init_search(criterion_list(searchable_attr), operator_list( searchable_attr, criterion_list(searchable_attr)),sort_list(sortable_attr))
+  search_info = init_search(current_user, searchable_attr, sortable_attr)#init_search(criterion_list(searchable_attr), operator_list( searchable_attr, criterion_list(searchable_attr)),sort_list(sortable_attr))
   #@special_partial_dot_keys = SpecialPartialDotKey.search(current_user, criterion_list(searchable_attr), operator_list( searchable_attr, criterion_list(searchable_attr)),sort_list(sortable_attr)).paginate(:page => params[:page], :per_page=>15)
   @special_partial_dot_keys = SpecialPartialDotKey.search(current_user, search_info).paginate(:page => params[:page], :per_page=>15)
 end

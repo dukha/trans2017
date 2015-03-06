@@ -69,7 +69,7 @@ class Profile < ActiveRecord::Base
     reserved_profile = 'sysadmin'
     Profile.create :name => reserved_profile, :roles => Profile.available_roles unless self.sysadmin
     reserved_profile = 'guest'
-    Profile.create :name => reserved_profile, :roles => [reserved_profile.to_sym] unless self.guest
+    Profile.create :name => reserved_profile, :roles => [:guest_visit] unless self.guest
   end
 
   def self.demo

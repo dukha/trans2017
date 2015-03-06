@@ -14,15 +14,17 @@
       <!--%=f.input :profiles, :as => :select, :include_blank => true, :collection=> Profile.all.collect {|p| [p.name,p.id]}, :input_html=>{:multiple => false} % -->
       <!-- This is tricky stuff. We are working with the users has_many :through relation for profiles. Hence we need profile_ids
            We don't have to declare profile_ids anywhere. Nor do we need to use accepts_nested_attr_for method for the join object-->
-      <li><%=f.label "Profiles:", {:style=>"width:25%;"}%>
-        <%cb_count = 0%>
-        <%cbs_per_row = 4%>
+      
+      
+      <li><%=f.label $ARA + "profiles", {:style=>"width:25%;"}%>
+        <%profile_cb_count = 0%>
+        <%profile_cbs_per_row = 4%>
         <table>  
         <%=f.collection_check_boxes( :profile_ids, Profile.all, :id, :name) do |b| %>
-           <%if cb_count%cbs_per_row == 0 && cb_count != 0%>
+           <%if profile_cb_count%profile_cbs_per_row == 0 && profile_cb_count != 0%>
              </tr>
            <%end%>
-           <%if cb_count%cbs_per_row == 0%>
+           <%if profile_cb_count%profile_cbs_per_row == 0%>
              <tr class = 'multi-checkboxes'>
            <%end%>
             <td class = 'multi-checkbox'>
@@ -30,17 +32,104 @@
                     b.check_box + b.text
                   }
                %>
-              <%cb_count += 1%>
+              <%profile_cb_count += 1%>
             </td>    
          <%end%>
-         <%if cb_count%cbs_per_row != 0%>
+         <%if profile_cb_count%profile_cbs_per_row != 0%>
              </tr>
          <%end%>
         </table>
+        <p class="inline-hints"><%= t($FH + "user.profiles") %></p>
       </li> 
+      
+      <li><%=f.label t($ARA + "user.translator_jobs"), {:style=>"width:25%;"}%>
+        
+        <label for="translator"><%= f.check_box "translator", :id=> 'translator1'%>
+          <%=t($ARA + "user.translator")%>
+          </label>
+       </li>
+
+       <li id='translation-jobs-list'>   
+          <%version_language_cb_count = 0%>
+        <%version_language_cbs_per_row = 4%>
+        <table style = 'margin-left:25%;'>  
+        <%=f.collection_check_boxes( :calmapp_versions_translation_language_ids, CalmappVersionsTranslationLanguage.permitted_for_translators, :id, :name) do |b| %>
+           <%if version_language_cb_count%version_language_cbs_per_row == 0 && version_language_cb_count != 0%>
+             </tr>
+           <%end%>
+           <%if version_language_cb_count%version_language_cbs_per_row == 0%>
+             <tr class = 'multi-checkboxes'>
+           <%end%>
+            <td class = 'multi-checkbox'>
+              <%=  b.label(:"data-value" => b.value, :style=>"width:auto; padding-right:5px" ) { 
+                    b.check_box + b.text
+                  }
+               %>
+              <%version_language_cb_count += 1%>
+            </td>    
+         <%end%>
+         <%if version_language_cb_count%version_language_cbs_per_row != 0%>
+             </tr>
+         <%end%>
+        </table>
+        <p class="inline-hints"><%= t($FH + "user.translator_jobs") %></p>
+      </li>  
+       
+       
+       
+       <li><%=f.label t($ARA + "user.developer_jobs"), {:style=>"width:25%;"}%>
+        
+        <label for="developer"><%= f.check_box "developer", :id=> 'developer1'%>
+          <%=t($ARA + "user.developer")%>
+          </label>
+       </li>
+       <li id='development-jobs-list'>   
+          <%calmapp_user_cb_count = 0%>
+        <%calmapp_users_cbs_per_row = 4%>
+        <table style = 'margin-left:25%;'>  
+        <%=f.collection_check_boxes( :calmapp_ids, Calmapp.all, :id, :name) do |b| %>
+           <%if calmapp_user_cb_count%calmapp_users_cbs_per_row == 0 && calmapp_user_cb_count != 0%>
+             </tr>
+           <%end%>
+           <%if calmapp_user_cb_count%calmapp_users_cbs_per_row == 0%>
+             <tr class = 'multi-checkboxes'>
+           <%end%>
+            <td class = 'multi-checkbox'>
+              <%=  b.label(:"data-value" => b.value, :style=>"width:auto; padding-right:5px" ) { 
+                    b.check_box + b.text
+                  }
+               %>
+              <%calmapp_user_cb_count += 1%>
+            </td>    
+         <%end%>
+         <%if calmapp_user_cb_count%calmapp_users_cbs_per_row != 0%>
+             </tr>
+         <%end%>
+        </table>
+        <p class="inline-hints"><%= t($FH + "user.developer_jobs") %></p>
+      </li>  
   <% end %>
 
   <%= f.actions do %>
     <%= f.action(:submit) %>
   <% end %>
 <%end%>
+<script>
+$(document).ready(function(){
+  toggleTranslationJobs();
+  toggleDevelopmentJobs();
+  $('input#translator1').click(
+    
+    toggleTranslationJobs
+    );
+    
+  
+  $('input#developer1').click(
+    
+    toggleDevelopmentJobs
+    );  
+});
+
+
+
+</script>

@@ -44,7 +44,8 @@ class CalmappVersionsController < ApplicationController
 
   # GET /calmapp_versions/1/edit
   def edit
-    @calmapp_version = CalmappVersion.find(params[:id])
+    #@calmapp_version = CalmappVersion.find(params[:id])
+    set_calmapp_version
   end
 
   # POST /calmapp_versions
@@ -93,16 +94,9 @@ class CalmappVersionsController < ApplicationController
   # PUT /calmapp_versions/1
   # PUT /calmapp_versions/1.xml
   def update
-    #binding.pry
-    #@calmapp_version = CalmappVersion.find(params[:id])
-    #binding.pry
     set_calmapp_version
     prepare_params
-    #new_calmapp_versions_translations_languages = new_languages() 
-    #binding.pry
     respond_to do |format|
-      #begin
-        #binding.pry
         if @calmapp_version.update(calmapp_version_params)#params[:calmapp_version])
           #system "RAILS_ENV=#{Rails.env} bin/delayed_job start --exit-on-complete"
           tflash('update', :success, {:model=>@@model, :count=>1})
@@ -116,26 +110,14 @@ class CalmappVersionsController < ApplicationController
           # @todo get the errors from the after_save parts of the transaction and put them up
           flash[:error] = "Record not saved."
           if redis_db_update? then
-            format.html { render :action => "calmapp_version_alterwithredisdb" }
+            format.html { render :action => "redisdbalter" }
           else
             format.html { render :action => "edit" } 
           end
           
           format.xml  { render :xml => @calmapp_version.errors, :status => :unprocessable_entity }
         end
-      #rescue Exception => e #ActiveRecord::RecordNotSaved => e
-         # @todo This branch doesn't actually execute. Needs removing
-         
-         #tflash('update', :error,{:model=>@@model, :count=>1}  )
-         #binding.pry
-         #errors = []
-         # @calmapp_version.calmapp_versions_translation_languages.each do |tl|
-         #          errors << tl.errors.full_messages
-         #end
-         #binding.pry
-         #flash[:error] = e.to_s
-         #format.html { render :action => "edit" }
-      #end
+      
     end
   end
 
@@ -143,7 +125,6 @@ class CalmappVersionsController < ApplicationController
   # DELETE /calmapp_versions/1.xml
   def destroy
     set_calmapp_version
-    #@calmapp_version = CalmappVersion.find(params[:id])
     @calmapp_version.destroy
 
     respond_to do |format|
@@ -152,6 +133,13 @@ class CalmappVersionsController < ApplicationController
       format.js {}
     end
   end
+
+  def redisdbalter
+    #binding.pry
+    set_calmapp_version
+  end
+
+
 =begin
  We are not going to use it. Too hard to call rake from within giving it params as json
  We'll fudge and use delayed_job instead 
@@ -163,15 +151,23 @@ class CalmappVersionsController < ApplicationController
     return call_rake("version:create")
   end
   
-  
+=begin  
   def version_alterwithredisdb
-    @calmapp_version = CalmappVersion.find(params[:id])
+    #@calmapp_version = CalmappVersion.find(params[:id])
+    set_calmapp_version
   end
   
   def publish_to_redis
     
   end
-
+=end
+  def deep_copy_params_form
+    set_calmapp_version
+  end
+  def deep_copy
+    set_calmapp_version
+    @calmapp_version.deep_copy
+  end
    private
      def redis_db_update? 
        #binding.pry
@@ -195,7 +191,6 @@ class CalmappVersionsController < ApplicationController
 =end
 
     def prepare_params
-       #binding.pry
        return if not params[:calmapp_version]
    
        if not redis_db_update? then
@@ -209,10 +204,8 @@ class CalmappVersionsController < ApplicationController
       end
      end     
      def prepare_params_with_translation_language calmapp_version_id, translation_language_ids 
-      #binding.pry
+
       translation_language_ids.delete ""
-      #translation_language_ids.uniq!
-      #binding.pry
       #These lines should be in the model
       en_id = TranslationLanguage.where{iso_code=='en'}.first.id
 =begin
@@ -236,8 +229,7 @@ class CalmappVersionsController < ApplicationController
       end # calmapp_version not nil  
       # now the inserts and updates
       puts "in prepare_params_with_translation_language"
-      #index = 0
-      #binding.pry
+
       translation_language_ids.each do |tlid|
         tl_id = tlid.to_i
         cvtl = CalmappVersionsTranslationLanguage.find_by_language_and_version(tl_id,calmapp_version_id )#.first
@@ -253,7 +245,6 @@ class CalmappVersionsController < ApplicationController
         end # empty
         puts "end prepare_params_with_translation_language"
       end #each
-      #binding.pry
     return attr_hash
    end
 
@@ -266,15 +257,18 @@ class CalmappVersionsController < ApplicationController
     def calmapp_version_params
       params.require(:calmapp_version).permit(:calmapp_id, 
          :version,  
-         :redis_databases, :translation_languages, 
+         :redis_databases, 
+         :translation_languages, 
          :translation_languages_available, 
          :cavs_translation_language_id,
          :calmapp_version, 
          #:calmapp_versions_translation_languages => [:translation_language_id], 
-         :calmapp_versions_redis_database_attributes,
+         #:calmapp_versions_redis_database_attributes=>[:redis_database_id, :calmapp_version_id, :release_status_id, :_destroy, :id, :redis_database_attributes=>[:redis_instance_id, :redis_db_index]],
          :calmapp_versions_translation_languages_attributes=>[:translation_language_id, :calmapp_version_id, :_destroy, :id ], 
-         :calmapp_versions_redis_database => [:redis_database_id], 
-         :redis_databases=>[:redis_db_index, :redis_instance_id],
-         :calmapp_versions_translation_language_ids=>[])
+         #:calmapp_versions_redis_database => [:redis_database_id], 
+         :redis_databases_attributes=>[:redis_db_index, :release_status_id, :redis_instance_id, :_destroy, :id],
+         :calmapp_versions_translation_language_ids=>[]#,
+         #:calmapp_versions_redis_database_ids=>[]
+         )
     end
 end

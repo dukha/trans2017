@@ -9,8 +9,32 @@ class RedisDatabasesController < ApplicationController
   
   @@model ="redis_database"
   def index
-    @redis_databases = RedisDatabase.paginate(:page => params[:page], :per_page=>15)
+    if RedisDatabase.respond_to? :searchable_attr  
+      searchable_attr = RedisDatabase.searchable_attr 
+    else 
+      searchable_attr = [] 
+    end
+    #criteria=criterion_list(searchable_attr)
+    #operators=operator_list( searchable_attr, criteria)
 
+    if RedisDatabase.respond_to? :sortable_attr  
+      sortable_attr = RedisDatabase.sortable_attr     
+    else   
+      sortable_attr = []   
+    end
+    #sorting=sort_list(sortable_attr)
+    
+    #@redis_databases = RedisDatabase.paginate(:page => params[:page], :per_page=>15)
+    if searchable_attr.empty?
+      @redis_databases = RedisDatabase.paginate(:page => params[:page], :per_page=>15)
+    else
+      crit_list = criterion_list(searchable_attr)
+      search_info = init_search(current_user, searchable_attr, sortable_attr)
+      @redis_databases = RedisDatabase.search(current_user, search_info).paginate(:page => params[:page], :per_page=>15)
+    end
+    if @redis_databases.count == 0 then
+      tflash( "no_records_found", :warning)
+    end  
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @redis_databases }
@@ -116,7 +140,7 @@ class RedisDatabasesController < ApplicationController
     begin
       redis_db = RedisDatabase.find(params[:id])
       count = redis_db.publish_version
-
+      
       if request.xhr? then
 
         payload = {"result" => count, "status" =>200}

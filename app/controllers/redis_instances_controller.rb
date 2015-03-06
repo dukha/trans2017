@@ -105,20 +105,20 @@ class RedisInstancesController < ApplicationController
   
   def next_redis_database_index
     #binding.pry
-    ri = RedisInstance.find(params[:redis_instance_id])
-    indexes = ri.unused_redis_database_indexes()
-    if not indexes.empty? then
-      ret_val = indexes[0]
-    else
-      ret_val = {}
-      ret_val["error"] = t($MS + "redis_instance.all_redis_db_indexes_taken", description )
-    end #not empty
-    #binding.pry
-    if request.xhr?
-        render :json => ret_val#["error"]? ret_val["error"] : ret_val
+    begin
+      last_index = params[:last_index].to_i unless params[:last_index].nil?
+      last_index ||= -1 
+      ri = RedisInstance.find(params[:redis_instance_id])
+      ret_val = ri.next_index last_index
+      if request.xhr?
+          render :json => ret_val#["error"]? ret_val["error"] : ret_val
       else
         return ret_val
       end #xhr 
+    rescue Exceptions::NoRedisDatabasesLeft => e
+        #binding.pry
+        render :json => {:error => e.message}, :status=>403
+    end 
   end #def
   
   private
