@@ -1,0 +1,37 @@
+<%=theading("calmapp_version.deep_copy_params", :model=>"calmapp_version", :count=>1) %>
+
+<%= semantic_form_for(@calmapp_version, :url => version_deep_copy_path()) do |f| %>
+   <%= f.inputs do %>
+          <li>
+           <label><%=t($ARA + "previous_calmapp_version.calmapp")%></label>   
+            <%= Calmapp.find(@calmapp_version.calmapp_id).name %> 
+            <%= f.input :calmapp_id, :as=> :hidden%>   
+           </li>
+           <li>
+           <label><%=t($ARA + "previous_calmapp_version.current_version")%></label>   
+            <%= @previous_calmapp_version.version.to_s %>  
+                <%=f.input :copied_from_version, :as => :hidden%>   
+                <%=f.input :previous_id, :as=> :hidden%>
+           </li>
+           <%= f.input :version, :label => t($ARA + "calmapp_version.new_version")  %>
+           
+           
+           <li><label><%=t($ARA + "previous_calmapp_version.languages")%></label>
+             
+           <% languages = '' 
+             @previous_calmapp_version.translation_languages.each do |tl|
+                  languages += (tl.name + '<br>')
+                  
+                end 
+              languages = languages[0..(languages.length-5)] if languages.length >= 5     
+           %>
+           <%=languages.html_safe%>
+           
+           </li>
+          
+  <%end%>
+ 
+  <%= f.actions do %>
+      <%= f.action(:submit, :label => t($FA + "version.deepcopy"), :button_html=> {:id=>"submit-deep-copy-params-form"})  %>    
+  <% end %>
+<% end %> 

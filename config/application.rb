@@ -84,7 +84,10 @@ module Translate
     # config.logger = ActiveSupport::Logger.new('your_app.log')
     config.logger = ActiveSupport::TaggedLogging.new(Logger.new("log/#{Rails.env}.log"))
     #config.log_tags = [ lambda { |req| user = req.env['warden'].user; user && user.name || 'Unknown'; }]
-
+    
+    #rails 4.2 and higher allow rescue of after commit problems
+    config.active_record.raise_in_transactional_callbacks = true
+    config.active_job.queue_adapter = :delayed_job
 =begin    
       # assign log4r's logger as rails' logger.
     log4r_config= YAML.load_file(File.join(File.dirname(__FILE__),"log4r.yml"))

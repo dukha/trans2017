@@ -2,7 +2,7 @@ require "spec_helper"
 
 describe TranslationsUploadsController do
   describe "routing" do
-
+=begin
     it "routes to #index" do
       get("/en/translations_uploads").should route_to("translations_uploads#index", :locale=>'en')
     end
@@ -30,6 +30,6 @@ describe TranslationsUploadsController do
     it "routes to #destroy" do
       delete("/en/translations_uploads/1").should route_to("translations_uploads#destroy", :id => "1", :locale=>'en')
     end
-
+=end
   end
 end

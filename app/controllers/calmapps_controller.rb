@@ -51,7 +51,7 @@ class CalmappsController < ApplicationController
       #al.write = false
       #@app_langs<<al
     #  al.language_id = l.id
-    #  @application.languages << al
+    #  @application.languages << albinding.pry
     #}
     #@application.languages=@languages
 
@@ -201,7 +201,6 @@ class CalmappsController < ApplicationController
   # PUT /calmapps/1.xml
   def update
     #@calmapp = Calmapp.find(calmapp_params)#params[:id])
-    binding.pry
     #binding.pry
 =begin
     if params[:calmapp][:language_ids]==nil then

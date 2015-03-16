@@ -3,8 +3,9 @@ class CalmappVersion < ActiveRecord::Base
   include Validations
   #languages available is a virtual attribute to allow languages_available to be used in the new form
   # :add_languages, :new_redis_db are virtual attributes for the user to indicate that a languages and redis database are to be added at the same time as a new version
-  attr_accessor :translation_languages_available, :add_languages, :new_redis_dev_db, :translation_languages_assigned, 
-         :warnings
+  attr_accessor :translation_languages_available, :add_languages, :new_redis_dev_db, 
+           :translation_languages_assigned, 
+         :warnings, :previous_id
 =begin
   attr_accessible   :calmapp_id, :version,  
          :redis_databases, :translation_languages, :translation_languages_available, 
@@ -114,21 +115,43 @@ class CalmappVersion < ActiveRecord::Base
  @param copy_translation_languages boolean indicator of what to do
  @param copy_translations  boolean indicator of what to do
 =end  
-  def deep_copy old_version, new_version, copy_translation_languages=true, copy_translations =true
-    version = CalmappVersion.create!(:version => new_version.to_s ,:calmapp_id => calmapp_id, :copied_from_version => old_version.to_s)
-    if copy_translation_languages && ! copy_translations then
-      version.translation_languages.concat(translation_languages)
-    end
-    if copy_translations then
-      calmapp_versions_translation_languages.find_each do |cavtl|
-        CalmappVersionsTranslationLanguage.create!(:calmapp_version_id => version.id, :translation_language_id => cavtl.translation_language_id )
-        Translation.where{cavs_translation_language_id == my{cavtl.id}}.find_each do |t|
-          Translation.new(:translation => t.translation, :dot_key_code => t.dot_key_code, :cavs_translation_language_id => cavtl.id) 
-        end  
-      end
-    end
+  def deep_copy old_version_id, user, copy_translation_languages=true, copy_translations =true
+    old_version = CalmappVersion.find(old_version_id)
+    if save
+      #new_version = new_calmapp_version_unsaved
+      self.complete_deep_copy(old_version, new_version, user, copy_translation_languages, copy_translations )
+      return true
+    else
+      return false  
+    end 
+    #version = CalmappVersion.new(:version => new_version.to_s ,:calmapp_id => old_version.calmapp_id, :copied_from_version => old_version.version)
+    #raise StandardError.new version.errors.messages if version.invalid? 
+    #if version.save then  
+      
+    #end# if save
   end
   
+  def self.complete_deep_copy(old_version, new_version, user, copy_translation_languages, copy_translations)
+    begin
+      if copy_translation_languages then #&& ! copy_translations then
+        version.translation_languages.concat(old_version.translation_languages)
+        if copy_translations then
+          old_version.calmapp_versions_translation_languages.find_each do |cavtl|
+            CalmappVersionsTranslationLanguage.create!(:calmapp_version_id => version.id, :translation_language_id => cavtl.translation_language_id )
+            Translation.where{cavs_translation_language_id == my{cavtl.id}}.find_each do |t|
+              Translation.new(:translation => t.translation, :dot_key_code => t.dot_key_code, :cavs_translation_language_id => cavtl.id) 
+            end # each translation  
+          end # each cavtl
+        end #copy trans
+      end #copy tl
+      UserMailer.background_process_success(user, "Version_deep_copy", old_version.name + " to " +new_version.name)
+    rescue StandardError => e
+       Rails.logger.error "The deep copy of " + old_version.name + " has failed"
+       Rails.logger.error "Deep copy exception: " +e.message
+       Rails.logger.error e.backtrace.join("\n")
+       UserMailer.background_process_fail(user, "Version_deep_copy", old_version.name + " to " +new_version.name, e.message)  
+    end   #begin resuce 
+  end
   def deep_destroy(user)
     #if user.role_symbols.include?(:calmapp_versions_deepdestroy)
      begin

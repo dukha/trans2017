@@ -6,12 +6,14 @@
 // require jquery-1.8.0
 // require jquery
 //= require jquery_ujs
+
 //= require jquery-ui
 //= require turbolinks
 //
 // require jquery-ui-1.10.3.custom.js
 // ujs has to be in for delete to work and for other rails ajax
 // require jquery_ujs
+// require foundation
 //= require hoverIntent.js
 //= require jquery.cookie.js
 //= require jquery.cookies.2.2.0_1.js
@@ -144,7 +146,7 @@ showHideRowsViaUserCriterion = function(searchFieldSelector, tableToSearchSelect
   negativeDom = $(sel0).not( $(selector).parent());
   //console.log( negativeDom);
   negativeDom.hide(); 
-}
+};
 //Generalised defaults for jquery ui timepicker
 
 //calmLocale = "< %=I18n.locale.to_s%>";
@@ -160,7 +162,7 @@ var timepickerOnSelect = function(time, instance){
       hrs= instance.hours;
       mins=instance.minutes;
       mins= mins<10?"0"+mins:mins; 
-      formattingSeparator = instance.settings.localTimeSeparator
+      formattingSeparator = instance.settings.localTimeSeparator;
       ampm = instance.settings.amPmText;
       if(instance.settings.localShowPeriod){
         if(hrs==0){
@@ -244,3 +246,5 @@ var timepickerOnSelect = function(time, instance){
   hasTableHeader= function(tableSelector){
     return $(tableSelector).find("th").length != 0;
   }  ; 
+   
+

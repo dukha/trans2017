@@ -177,12 +177,14 @@ en:
       heading: Process %{model}
     home:
       heading: Home - Whiteboard
+    
   lookups:
     whiteboard_type:
       system: System
       localadmin: Local Admin
       regionaladmin: Regional Admin
       user: User
+       
   activerecord:
     models:
       whiteboard_type:

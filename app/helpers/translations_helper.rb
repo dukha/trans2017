@@ -80,7 +80,12 @@ module TranslationsHelper
      else
        tlabel = t(translation_code)
      end
-       
+     if options[:title] then
+       ttitle = t($FH + options[:title])
+       ttitle = nil if ttitle.include? 'translation missing'
+       options[:title] = ttitle 
+     end
+      
      navigate  = options.delete(:navigate) 
      if navigate.nil? or navigate  then   
        #if navigation is involved then we make a link

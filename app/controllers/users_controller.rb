@@ -59,7 +59,7 @@ class UsersController < ApplicationController #Devise::RegistrationsController
   #update_password PUT /:locale/users/:id/update_password(.:format) {:controller=>"users", :action=>"update"}
   def update
     #@user = User.find(params[:id])
-    binding.pry
+   
     @user.unlock_access! unless !@user.access_locked?
     respond_to do |format|
       if @user.update(user_params)#params[:user])

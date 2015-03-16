@@ -178,11 +178,12 @@ class TranslationsUpload < ActiveRecord::Base
   def upload_matches_translation_language_validation
     #binding.pry
     #identifier_array  = yaml_upload.identifier.split(".")
-    errors.add(:yaml_upload, I18n.t($MS + "translations_upload.yaml_upload." + "error.file_language_must_match_translation_language",:required_iso_code=>iso_code(), :chosen_file_iso_code=>iso_code_from_yaml_file_name())) unless iso_code_from_yaml_file_name() ==  iso_code()
+    errors.add(:yaml_upload, I18n.t($MS + "translations_upload.yaml_upload." + "error.file_language_must_match_translation_language",:required_iso_code=>iso_code())) unless iso_code_from_yaml_file_name() ==  iso_code()
     
   end
   
   def iso_code_from_yaml_file_name
+    #binding.pry
     identifier_array  = yaml_upload_identifier.split(".")
     return identifier_array[identifier_array.length-2]
   end 
@@ -194,6 +195,7 @@ class TranslationsUpload < ActiveRecord::Base
   #  documentation says the should get this with yaml_upload.indentifier. It quite often returns nil
   # So we work around
   def yaml_upload_identifier
+    #return '*.yml' if yaml_upload.url == default_url
     return yaml_upload.url.split('/').last
   end
 =begin

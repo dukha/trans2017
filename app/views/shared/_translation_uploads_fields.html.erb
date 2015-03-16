@@ -1,30 +1,33 @@
-<li class= "nested-fields" >
-   <%=f.inputs :name=> t("headings.upload") do%> 
-          <%= f.input :description  %>   
-           <!--%bottom_border = "border-bottom:thin solid black; padding-bottom:3px"% -->
-          <!--%binding.pry% -->
-          <%if f.object.new_record? %>
-             <%= f.input :yaml_upload, :as =>:file%> 
-          <%else%>
-          <li style="">
-            <label><%=t($ARA + "translations_upload.yaml_upoad_file_path")%></label>
-            <span style= "border-style:solid;border-color:lightgray;border-radius:4px;"><%= f.object.yaml_upload.url %></span>
-            </li>
-          <%end%>
-          <%if f.object.new_record?%>
-            <li>
-              
-               <%=f.input :duplicates_behavior, :as=> :radio, :collection => {t($FL + "overwrite")=> "overwrite", 
-                                                                              t($FL + "skip")=>"skip", 
-                                                                              t($FL + "cancel_operation")=>"cancel"
-                                                                              },
-                          :hint=> t($FH + "translations_upload.duplicates_behavior")%>
-               <!--a href ="< %= write_yaml_file_to_db_path(f.object.id)%>">< %=t($FA + "write_yaml_to_db") %></a -->
-            </li>
-          <%end%>
-           <li>
-            <%=link_to_remove_association( t($FA + 'remove_upload'), f, { wrapper_class: 'nested-fields' })%>
-           </li> 
+      <div class= "<%= 'nested-fields ' + cycle('dataeven', 'dataodd') + (f.object.new_record? ? (' new'):('')) %>" id="table-row" style = "display:table-row">
+        <div style = "display:table-cell" > 
+          <%= f.text_field :description  %> 
+          <%=f.semantic_errors :description%>
+        </div>
+        <div style = "display:table-cell" > 
+           <%if f.object.new_record? %>
+             <%=f.file_field :yaml_upload%>
+           <%else%>
+             <%= f.object.yaml_upload.url %>
+           <%end%>
+           <%=f.semantic_errors :yaml_upload%>
+        </div>
            
-    <%end%>
- </li>          
+        <div style = "display:table-cell" >               
+            <%if f.object.new_record?%>
+            <ul>
+               <%=f.collection_radio_buttons(:duplicates_behavior, UploadChoice.all,  :id, :name) do |b| %>
+                 <li> 
+                 <%=  b.label(:"data-value" => b.value, :style=>"width:auto; padding-right:5px" ) { 
+                        b.radio_button  + b.text 
+                   }
+                %>
+              </li>
+             <%end%>
+            </ul>   
+           <%end%>            
+        </div> 
+        <div style = "display:table-cell" > 
+            <%=link_to_remove_association( t($FA + 'remove_redis_database'), f, { wrapper_class: 'nested-fields' })%>
+        </div>
+           
+  </div>

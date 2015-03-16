@@ -2,7 +2,8 @@
 	<%= f.inputs do %>
     <%= f.input :name %> 
             <li id='development-jobs-list'>   
-              <%=f.label t($ARA + "calmapp.developer"), {:style=>"width:25%;"}%>
+              
+              <%=f.label t($ARA + "calmapp.developers"), {:style=>"width:25%;"}%>
                <%calmapp_user_cb_count = 0%>
                <% calmapp_user_cbs_per_row = 4%>
                <table style = 'margin-left:25%;'> 

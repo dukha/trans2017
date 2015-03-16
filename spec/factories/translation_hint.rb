@@ -5,5 +5,6 @@ FactoryGirl.define do
     heading "MyString"
     example "MyString"
     description "MyString"
+    dot_key_code "MyString"
   end
 end

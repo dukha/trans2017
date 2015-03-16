@@ -2,44 +2,28 @@
 <%= semantic_form_for(@calmapp_version) do |f| %>
   
 	<%= f.inputs do %>
-				   <!-- %= f.input :calmapp_id, :as=>:select,:collection=> Calmapp.all.collect {|p| [ p.name, p.id ]}, :input_html => {:disabled=>'disabled'}      %>
-				   < %= f.input :version  , :input_html => {:disabled=>'disabled'} % -->
 				   <li style="color:red;font-size:150%"><%=@calmapp_version.name.titlecase%> </li>
-     <%end%>   
-        <%= f.inputs :name=>t( "headings.redis_database.publishing"), :id=>"redis_database" do %>
-        <!--div id="cavtd" -->
+        <li>
+        <div id = "table" style="display:table">
+           <div id= "header-row" style="display:table-row"> 
+             <div style="display:table-cell">Release Status</div>
+             <div style="display:table-cell">Redis Instance</div>
+             <div style="display:table-cell">Redis db index</div>
+             <div style="display:table-cell"></div>
+           </div>
           <%=f.semantic_fields_for :redis_databases do |rd| %> 
-           <!--%binding.pry% -->
-                 <div id = "table" style="display:table">
-                   <div id= "header-row" style="display:table-row"> <div style="display:table-cell">Release Status</div><div style="display:table-cell">Redis Instance</div><div style="display:table-cell">Redis db index</div></div>
-                 <%=render :partial => 'shared/calmapp_versions_redis_database_form2', :locals=>{:f=>rd}%>
-                 </div>
-                 <!--%= render :partial=>'calmapp_versions/calmapp_version_simple_details', :locals=>{:f=> cav}  % -->            
+                 <%=render :partial => 'shared/calmapp_versions_redis_database_form2', :locals=>{:f=>rd}%>          
           <%end%> 
-          
-           <li class='nesting-add-fields'>
-             <!--%binding.pry% -->
+          </div>
+          <p class="inline-hints"><%=t($FH + "calmapp_versions_redis_databases") %></p>
                  
                 <%= link_to_add_association t($FA + 'add_redis_database'), f, :redis_databases,
-                
                 {:partial =>  'shared/calmapp_versions_redis_database_form2',
-                  'data-association-insertion-method' => "before"#,
-                  #:wrap_object => Proc.new {|calmapp_version| calmapp_version.build_redis_database; calmapp_versions_redis_database 
-                  }
-                  %>  
-                  
-<!--,         
-              'data-association-insertion-node' => "div#calmapp_versions_redis_database", 
-                'data-association-insertion-method' => "append", 
-                :wrap_object => Proc.new {|calmapp_versions_redis_database| calmapp_versions_redis_database.build_redis_database; calmapp_versions_redis_database }
-            --> 
+                  data: {'association-insertion-method' => "append", "association-insertion-node" => 'div#table'}
+                 }
+                %>       
            </li>
-            
-            <!--%=f.semantic_errors "calmapp_versions_redis_database.calmapp_version_id"% -->
-            <%=f.semantic_errors :calmapp_id%>
-            <%=f.semantic_errors :calmapp%>
 
-          <!--/div -->
        <%end%> <!-- redis dbs -->
 
 	<%= f.actions do %>
@@ -152,9 +136,6 @@
          console.log("in Doc ready " + $('div#table').toString());    
          $('form.formtastic').on('cocoon:after-insert',function(e, insertedItem) {
             console.log(insertedItem.find('select#redis_instance_id'));
-            //var redisDbIndexInput = $(this).parent("li").siblings("li").find("#redis_db_index");//redisDbIndexSelector(this);
-            //console.log(redisDbIndexInput);
-            //console.log($(redisDbIndexInput));
             $(insertedItem.find('select#redis_instance_id')).change(function(e){
               var listItemSiblingsObjects = $(this).parent("div").siblings("div")
               var redisInstanceSelect = $(this);//$(listItemSiblingsObjects).find("#redis_instance_id");
@@ -163,11 +144,9 @@
               
               console.log($(this).children( "option:selected"));
               if( $(this).children( "option:selected").text() == ''){
-                //redisDbIndexInput.val(''); 
                 console.log("text empty");
                 setRedisDbIndex(redisDbIndexInput, '');
               }else{
-                //setRedisDbIndex(redisDbIndexInput, 100);
                 getNextRedisDbIndex(redisDbIndexInput, $(redisInstanceSelect).val());
                 
               }

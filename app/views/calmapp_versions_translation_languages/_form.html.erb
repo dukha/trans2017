@@ -4,28 +4,30 @@
   <%= f.inputs do %>
     <%= f.input :translation_language_id, :as=> :select, :collection=> TranslationLanguage.all.each{|l| [l.name, l.id]}, :input_html=> {:disabled=>"disabled"} %>
     <%= f.input :calmapp_version_id, :as=> :select, :collection=>CalmappVersion.all.each{|v| [v.name, v.id]}, :input_html=> {:disabled=>"disabled"} %>
-    
-  
-  <%=f.semantic_fields_for :translations_uploads do |u|%>  
-  
+  <li> 
+  <p class = 'nesting-heading' >Uploads</p>    
+  <div id = 'table' style = "display:table">
+             <div id= "header-row" style="display:table-row">
+                <div style="display:table-cell">Description</div>
+                <div style="display:table-cell">YAML Translation Upload File</div>
+                <div style="display:table-cell">Overwrite?(New Only)</div>
+                <div style="display:table-cell"></div>
+             </div>
+     <%=f.semantic_fields_for :translations_uploads do |u|%>         
+      <%=render :partial=>  "shared/translation_uploads_fields", :locals=> {:f=>u}%>
+    <% end %>
    
-   
-     <%=render :partial=>  "shared/translation_uploads_fields", :locals=> {:f=>u}%>
-   <% end %>
-    <li class='nesting-add-fields'>
+   </div>
+   <!--/li>
+    <li class='nesting-add-fields'-->
              <!--%binding.pry% -->
-                <%= link_to_add_association t($FA + 'add_translation_upload'), f, :translations_uploads,
-                
-                {:partial =>  'shared/translation_uploads_fields'} ,
-                  'data-association-insertion-method' => "after"#,
-                  #:wrap_object => Proc.new {|translations_uploads| calmapp_versions_translation_language.build_translations_upload; calmapp_versions_translation_language }}
-                  %>  
-<!--,
-              'data-association-insertion-node' => "div#calmapp_versions_redis_database", 
-                'data-association-insertion-method' => "append", 
-                :wrap_object => Proc.new {|calmapp_versions_redis_database| calmapp_versions_redis_database.build_redis_database; calmapp_versions_redis_database }
-            --> 
-           </li>
+    <p class="inline-hints"><%=t($FH + "calmapp_versions_translation_language.uploads") %></p>         
+    <%= link_to_add_association t($FA + 'add_translation_upload'), f, :translations_uploads,
+    
+      :partial =>  'shared/translation_uploads_fields' ,
+       data: {'association-insertion-method' => "append", "association-insertion-node" => 'div#table'}
+    %>  
+    </li>
 <%end%>
   <%= f.actions do %>
     <%= f.action :submit, :as => :input %>

@@ -3,7 +3,14 @@
 	<%= f.inputs do %>
 				   <%= f.input :calmapp_versions_translation_language_id, :as=>:select,:collection=> CalmappVersionsTranslationLanguage.all.collect {|p| [ p.name, p.id ]}  %> 
 				   <!--%= f.input :calmapp_version_id, :as=>:select,:collection=> CalmappVersion.all.collect {|p| [ p.name, p.id ]}  % -->     
-				   <%=render :partial => "shared/translation_uploads_fields", :locals=> {:f=>f}%>
+				   <div style = "display:table">
+				     <div id= "header-row" style="display:table-row">
+				        <div style="display:table-cell">Description</div>
+				        <div style="display:table-cell">YAML Translation Upload File</div>
+				        <div style="display:table-cell">Overwrite?(New Only)</div>
+				     </div>
+				      <%=render :partial => "shared/translation_uploads_fields", :locals=> {:f=>f}%>
+				   </div>
 		       <!--%= f.input :remote_yaml2_upload_url, :as => :url% -->  
 		       <!--li>
              <label>  < % =t($ARA + "translations_upload.yaml_upload_file_name")%></label> 

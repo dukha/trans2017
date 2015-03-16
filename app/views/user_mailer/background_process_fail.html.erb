@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <h1>Hi <%= @user.username %></h1>
+    <p>
+     The translation background process <b><%=process_name%></b> with <b></b><%=object_name%></b> has failed at <%=Time.now%>.
+     </p>
+     <p>
+     The error message was as follows:
+     <div>
+       <%error_message%>
+      </div>
+     </p>   
+     <p>Contact your system admin for further help</p>
+  </body>
+</html>

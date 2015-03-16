@@ -51,14 +51,14 @@ RSpec.describe TranslationHintsController, :type => :controller do
       expect(assigns(:translation_hint)).to eq(translation_hint)
     end
   end
-
+=begin
   describe "GET new" do
     it "assigns a new translation_hint as @translation_hint" do
       get :new, {}, valid_session
       expect(assigns(:translation_hint)).to be_a_new(TranslationHint)
     end
   end
-
+=end
   describe "GET edit" do
     it "assigns the requested translation_hint as @translation_hint" do
       translation_hint = TranslationHint.create! valid_attributes

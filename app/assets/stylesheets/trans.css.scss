@@ -122,6 +122,12 @@ table.data{
   /*border-collapse:collapse;*/
   
 }
+div#table{
+  border:solid;
+  border-color:$nested-border-colour;
+  margin: 0px;
+  padding:0px;
+}
 /**
  *   file and web-browser are classes in jquery.treeview take out
  */
@@ -129,18 +135,26 @@ tr.dataodd, tr.dataeven, span.file, span.web-browser{ //}, div.addChildrenLocati
   font-size: $indexfont-size;
   font-weight: $indexfont-weight;
 }
-tr.dataeven{
+tr.dataeven, div.dataeven{
   background-color: $data-even-colour; /* #CAEAFF;*/
 }
-tr.dataodd{
+tr.dataodd, div.dataodd{
   
 }
-tr.dataheader{
+div.new{
+  background-color: $data-new-color
+}
+tr.dataheader, div#table div#header-row{
   background-color:$table-header-background-colour;
-  
+  font-weight:700;
+  #font-size: 120%;
 }
 td.data, td.dataheader, td.linkheader, td.link{
   padding:5px;
+}
+div#header-row > div{
+  padding:3px;
+  
 }
 
 ul.menu{
@@ -366,10 +380,10 @@ form.formtastic fieldset > ol > li.nested-fields li{
   color:  $mid-heading-colour;
 }
 
-.nested-heading {
+/*.nested-heading {
   
   
-}
+}*/
 form.formtastic li.nesting-add-fields, li.nesting-add-fields {
   //margin-left:10px;
 }

@@ -67,8 +67,13 @@ en:
       back_to_versions: Back to Versions
       new_invitation: New Invitation
       redis_from_versions: "To add a Redis Database to Another Version, First Select the Version"
-      translation_languages_calmapp_versions_to_new_upload: To add a New Upload, First Either add the Language to a Version, Or add a new Version, then Upload
+      
+      translation_languages_calmapp_versions_to_new_upload: Versions
       unlock: Unlock Account
+      version:
+        deepcopy: Deep Copy to New Version
+      deepcopyparams: Start Deep Copy
+      deepdelete: Deep Delete
     labels:
       status: Status
       translation: Translation
@@ -80,7 +85,7 @@ en:
       cancel_operation: Cancel the upload. Rollback all new uploads.    
     hints:
       calmapp_version:
-        version: "Enter the version here. Format is <major_version>.<minor_version> e.g. 12.23 (There is no distinct translation for maintenance versions, such as 1.20.3, so don't enter them here.)"
+        version: "Enter the version here. Format can be numbers, decimals or words."
         add_languages: If this checkbox is not checked then no language will be written to the database
         translation_languages: English is required in all versions.
       calmapp:
@@ -124,6 +129,10 @@ en:
         example: Example of Hint (may contain HTML)
         description: Description of Translation (may contain HTML) 
         dot_key_code: Must be a code like this [<context>..].[<specific>..] e.g. activerecord.attributes.user.name. No spaces, no caps unless very sure they are needed.
+      calmapp_versions_translation_language:
+        to_new_upload: To add a New Upload, First Either add the Language to a Version, Or add a new Version, then Upload
+        uploads: When a YAML file with translations is uploaded, its translations are immediately written to the database.
+      calmapp_versions_redis_databases: Redis databases are where the translations are actually read by the application.
       #translation:
         #dot_key_codes: 
           #activemodel_errors_messages_accepted: Tells the user that they must accept, for example, the usage conditions for the soeftware. 
@@ -152,7 +161,7 @@ en:
       visit: Visit
       translate: Translate
       deepcopy: Deep Copy
-      deepcopyparams: Parameters for Deep Copy
+      deepcopyparams: Start Deep Copy
       deepdestroy: Deep Destroy
     miscellaneous: Miscellaneous
     redis_instances: Redis Instances
@@ -210,6 +219,13 @@ en:
     upload: "Upload:"
     edit_with_redis_databases:
       heading: "Change Redis Publication Databases for Version: %{model}"
+    calmapp_versions_translation_languages:
+      edit:
+        heading: Change Uploads
+    calmapp_version:     
+      deep_copy_params:
+        heading: Version Deep Copy Information 
+        
     #redis_admin: Redis Admin
   activerecord:
     models:
@@ -297,11 +313,17 @@ en:
         calmapp_id: Application
         version: Version
         
+        new_version: New Version
         translation_languages: Languages Selected
         translation_languages_available: Languages Available
         translation_languages_assigned: Languages Assigned
+      previous_calmapp_version:
+        calmapp: Application Name
+        current_version: Copying From Version
+        languages: Languages Automatically Copied 
       calmapp_versions_translation_language:
         calmapp_version_id: Version
+        
         translation_language: Language
       language:
         name: Language
@@ -431,7 +453,7 @@ en:
     translations_upload:
       yaml_upload:
         error:
-          file_language_must_match_translation_language: "The selected file language(%{chosen_file_iso_code})  must match the language of the translation version translation(%{required_iso_code})."   
+          file_language_must_match_translation_language: "The selected file language must match the language of the translation version translation(%{required_iso_code})."   
     #calmapp_versions_translation_language: 
       #notice: To add a new upload first add the language to a version, then upload here. 
     valid_version_on_queue:

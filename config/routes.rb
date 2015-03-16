@@ -56,8 +56,8 @@ Translate::Application.routes.draw do
     
    resources :calmapps
    resources :calmapp_versions
-   get "calmapp_versions/deep_copy"=> "calmapp_versions#deep_copy", :as=>"version_deep_copy"
-   get "calmapp_versions/deep_copy_params"=> "calmapp_versions#deep_copy_params", :as=>"version_deep_copy_params"
+   post "calmapp_versions/deep_copy"=> "calmapp_versions#deep_copy", :as=>"version_deep_copy"
+   get "calmapp_versions/deep_copy_params/:id"=> "calmapp_versions#deep_copy_params", :as=>"version_deep_copy_params"
    get "calmapp_versions_translation_languages/deep_copy"=> "calmapp_versions_translation_languages#deep_copy", :as=>"version_translation_language_deep_copy"
    
    resources :release_statuses

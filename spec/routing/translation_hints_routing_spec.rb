@@ -2,7 +2,7 @@ require "rails_helper"
 
 RSpec.describe TranslationHintsController, :type => :routing do
   describe "routing" do
-
+=begin
     it "routes to #index" do
       expect(:get => "/translation_hints").to route_to("translation_hints#index")
     end
@@ -30,6 +30,6 @@ RSpec.describe TranslationHintsController, :type => :routing do
     it "routes to #destroy" do
       expect(:delete => "/translation_hints/1").to route_to("translation_hints#destroy", :id => "1")
     end
-
+=end
   end
 end

@@ -3,8 +3,10 @@ class CalmappVersionsController < ApplicationController
   include TranslationsHelper
   # GET /application_versions
   # GET /application_versions.xml
+  
   before_action :authenticate_user!
-  before_action :set_calmapp_version, only: [ :edit, :update, :destroy, :show]
+  before_action :set_calmapp_version, only: [ :edit, :update, :destroy, :show, :redisdbalter, 
+      :deep_copy_params ]
   filter_access_to :all
   @@model="calmapp_version"
   
@@ -21,7 +23,7 @@ class CalmappVersionsController < ApplicationController
   # GET /calmapp_versions/1
   # GET /calmapp_versions/1.xml
   def show
-    @calmapp_version = CalmappVersion.find(params[:id])
+    #@calmapp_version = CalmappVersion.find(params[:id])
 
     respond_to do |format|
       format.html # show.html.erb
@@ -45,7 +47,7 @@ class CalmappVersionsController < ApplicationController
   # GET /calmapp_versions/1/edit
   def edit
     #@calmapp_version = CalmappVersion.find(params[:id])
-    set_calmapp_version
+    #set_calmapp_version
   end
 
   # POST /calmapp_versions
@@ -94,7 +96,7 @@ class CalmappVersionsController < ApplicationController
   # PUT /calmapp_versions/1
   # PUT /calmapp_versions/1.xml
   def update
-    set_calmapp_version
+    #set_calmapp_version
     prepare_params
     respond_to do |format|
         if @calmapp_version.update(calmapp_version_params)#params[:calmapp_version])
@@ -124,7 +126,7 @@ class CalmappVersionsController < ApplicationController
   # DELETE /calmapp_versions/1
   # DELETE /calmapp_versions/1.xml
   def destroy
-    set_calmapp_version
+    #set_calmapp_version
     @calmapp_version.destroy
 
     respond_to do |format|
@@ -136,7 +138,7 @@ class CalmappVersionsController < ApplicationController
 
   def redisdbalter
     #binding.pry
-    set_calmapp_version
+    #set_calmapp_version
   end
 
 
@@ -161,12 +163,47 @@ class CalmappVersionsController < ApplicationController
     
   end
 =end
-  def deep_copy_params_form
+  def deep_copy_params
+    #binding.pry
     set_calmapp_version
+    @previous_calmapp_version = @calmapp_version
+    @calmapp_version = CalmappVersion.new(:calmapp_id => @previous_calmapp_version.calmapp_id, :previous_id =>@previous_calmapp_version.id, :copied_from_version => @previous_calmapp_version.version)
+    
   end
+  
   def deep_copy
-    set_calmapp_version
-    @calmapp_version.deep_copy
+    #set_calmapp_version
+    @calmapp_version = CalmappVersion.new(:calmapp_id=> params["calmapp_version"]["calmapp_id"], :copied_from_version => params["calmapp_version"]["copied_from_version"], 
+            :version => params["calmapp_version"][:version], :previous_id => params[:calmapp_version][:previous_id] )
+      
+    #end
+    #begin
+      #CalmappVersion.deep_copy(params[:calmapp_version][:previous_id], params[:calmapp_version][:version] )
+      if @calmapp_version.deep_copy(params[:calmapp_version][:previous_id], current_user )
+        flash[:success] = "Application Version copied. All the languages and translations are in a background process. You will get a mail to let you know the result"
+        redirect_to action: "index"
+      else
+         binding.pry
+         flash[:error] = @calmapp_version.errors.messages[:version]
+         @previous_calmapp_version =CalmappVersion.find(@calmapp_version.previous_id)
+         #params["id"] = params["calmapp_version"]["previous_id"]
+         #set_calmapp_version
+         #@previous_calmapp_version = @calmapp_version
+         #@calmapp_version = CalmappVersion.new(:calmapp_id => @previous_calmapp_version.calmapp_id, :previous_id =>@previous_calmapp_version.id)
+         render action: "deep_copy_params"
+      end    
+        
+        
+    #rescue StandardError => e
+      #binding.pry
+      #params["id"] = params["calmapp_version"]["previous_id"]
+      #set_calmapp_version
+      #@previous_calmapp_version = @calmapp_version
+      #@calmapp_version = CalmappVersion.new(:calmapp_id => @previous_calmapp_version.calmapp_id, :previous_id =>@previous_calmapp_version.id)
+      #deep_copy_params()
+      #@calmapp_version.version =  params[:calmapp_version][:version]
+      #render action: "deep_copy_params"
+    #end  
   end
    private
      def redis_db_update? 

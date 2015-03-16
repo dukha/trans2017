@@ -19,11 +19,11 @@ class User < ActiveRecord::Base
 =end 
   # username is unique by DB index :unique => true
   # username is required by DB :null => false
-  validate :email, :username, :unique => true
-  validate :email, presence: true
-  validate :actual_name, :unique => true
-  validate :actual_name, presence: true
-  validate :username, :unique => true
+  validates :email, :username, :uniqueness => true
+  validates :email, presence: true
+  validates :actual_name, :uniqueness => true
+  validates :actual_name, presence: true
+  validates :username, :uniqueness => true
   # https://github.com/plataformatec/devise/wiki/How-To:-Allow-users-to-sign_in-using-their-username-or-email-address
   # Virtual attribute for authenticating by either username or email
   # This is in addition to a real persisted field like 'username'
