@@ -127,6 +127,8 @@ group :test do
   gem 'childprocess', '0.3.6'
 end
 group :development do
-  gem 'capistrano'
-
+  gem 'capistrano', '3.2.1', require: false
+  gem 'capistrano-rails', '~> 1.1', require: false
+  gem 'capistrano-bundler', '~> 1.1', require: false
+  gem 'rvm1-capistrano3', require: false
 end

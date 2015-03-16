@@ -1,60 +1,126 @@
-require 'bundler/capistrano'
-set :rake, "#{rake} --trace"
-set :application, "translator"
-# this is the integration repo
-set :repository,  "ssh://gitrepo@tools.calm.dhamma-eu.org/home/gitrepo/repositories/translator"
+# config valid only for Capistrano 3.1
+lock '3.2.1'
 
-set :scm, :git
-# Or: `accurev`, `bzr`, `cvs`, `darcs`, `git`, `mercurial`, `perforce`, `subversion` or `none`
+set :application, 'translator'
+set :repo_url, "ssh://gitrepo@git.dhamma.org.au:8022/home/gitrepo/repositories/#{fetch(:application)}"
+set :rvm1_ruby_version, "rbx-2.2.10"
 
-# the we server, db and app are all on the same server
-role :web, "calm4test.dhamma.org.au"                          # Your HTTP server, Apache/etc
-role :app, "calm4test.dhamma.org.au"                          # This may be the same as your `Web` server
-role :db,  "calm4test.dhamma.org.au", :primary => true # This is where Rails migrations will run
-#role :db,  "your slave db-server here"
+# Default branch is :master
+# ask :branch, proc { `git rev-parse --abbrev-ref HEAD`.chomp }.call
 
-set :deploy_to,       "/home/calm/wwwshare/translator"
-set :user,            "calm"
-set :use_sudo,        false
-set :ssh_options,     { :forward_agent => true }
+# Default deploy_to directory is /var/www/my_app
+set :deploy_to, "/home/calm/apps/#{fetch(:application)}"
 
-# if you want to clean up old releases on each deploy uncomment this:
-# after "deploy:restart", "deploy:cleanup"
-set :deploy_via, :remote_cache
-# if you're still using the script/reaper helper you will need
-# these http://github.com/rails/irs_process_scripts
+# for all stages
+set :rails_env, "production"
+set :whenever_environment, 'production'
+
+#set :rvm_type, :system    # :user is the default
+set :rake, "#{fetch(:rake)} --trace" # debug when rake errors
+#support/dependencies.rb:317:in `rescue in depend_on': No such file to load -- iconv (LoadError)
+set :rvm_autolibs_flag, "read-only"
+
+# Default value for :scm is :git
+# set :scm, :git
+
+# Default value for :format is :pretty
+# set :format, :pretty
+
+# Default value for :log_level is :debug
+# set :log_level, :debug
+
+# Default value for :pty is false
+# set :pty, true
+
+# Default value for :linked_files is []
+# set :linked_files, %w{config/database.yml}
+set :linked_files, %w{config/database.yml config/puma.rb}
+
+# Default value for linked_dirs is []
+# set :linked_dirs, %w{bin log tmp/pids tmp/cache tmp/sockets vendor/bundle public/system}
+set :linked_dirs, %w{bin log tmp/pids tmp/cache tmp/sockets vendor/bundle public/system}
+
+# Default value for default_env is {}
+# set :default_env, { path: "/opt/ruby/bin:$PATH" }
+
+# Default value for keep_releases is 5
+# set :keep_releases, 5
+
+namespace :deploy do
+
+  desc 'Restart application'
+  task :restart do
+    on roles(:app), in: :sequence, wait: 5 do
+      # Your restart mechanism here, for example:
+      # execute :touch, release_path.join('tmp/restart.txt')
+
+      # todo
+      # kill safely the running cron jobs so they get replaced with the newly deployed ones.
+
+      invoke 'deploy:stop'
+      invoke 'deploy:start'
+    end
+  end
+
+  # after :publishing, :restart
+
+  after :restart, :clear_cache do
+    on roles(:web), in: :groups, limit: 3, wait: 10 do
+      # Here we can do anything such as:
+      # within release_path do
+      #   execute :rake, 'cache:clear'
+      # end
+    end
+  end
+
+  desc 'Stop application'
+  task :stop do
+    on roles :app, in: :sequence, wait: 1 do
+      execute "rm -f #{current_path}/public/maintenance.html"
+      execute "ln -s #{current_path}/public/maintenance.html.template #{current_path}/public/maintenance.html"
+      begin
+        execute :sudo, "stop puma app=#{current_path}"
+      rescue
+        # it may already be stopped!
+      end
+    end
+
+  end
+
+  # This can be done manually on server with
+  # cd ~/apps/atlist/current
+  # bundle exec puma -C config/puma.rb -e production
+  desc 'Start application'
+  task :start do
+    on roles :app, in: :sequence, wait: 5 do
+      execute :sudo, "start puma app=#{current_path}"
+      sleep 10 # seconds. Show maintenance page while puma is starting up
+      execute "rm -f #{current_path}/public/maintenance.html"
+    end
+  end
+
+  desc 'Get run status of application'
+  task :status do
+    on roles :app, in: :sequence, wait: 1 do
+      begin
+        execute :sudo, "status puma app=#{current_path}"
+      rescue
+        puts "Puma is not running, so it seems."
+      end
+    end
+  end
+
+  desc 'Trust MPAPIS so we can install rvm in the next step - see https://github.com/wayneeseguin/rvm/issues/3110'
+  before 'deploy', :trust_rvm_install do
+    on roles :app, in: :sequence, wait: 1 do
+      execute "gpg --keyserver hkp://keys.gnupg.net --recv-keys D39DC0E3"
+    end
+  end
+
+  before 'deploy', 'rvm1:install:rvm' # install/update RVM
+  after :publishing, 'rvm1:install:gems' # install/update gems from Gemfile into gemset
+
+  after :publishing, :restart
 
 
-set :default_environment, {
-  #'PATH' => "/usr/local/rvm/gems/ruby-1.9.2-p290/bin:   /path/to/.rvm/bin  : /path/to/.rvm/ree-1.8.7-2009.10/bin :$PATH",
-  'PATH' => "/usr/local/rvm/gems/ruby-1.9.2-p290/bin:/usr/local/rvm/bin:/usr/local/rvm/rubies/ruby-1.9.2-p290/bin:$PATH",
-  'RUBY_VERSION' => 'ruby-1.9.2-p290',
-  'GEM_HOME'     => '/usr/local/rvm/gems/ruby-1.9.2-p290',
-  'GEM_PATH'     => '/usr/local/rvm/gems/ruby-1.9.2-p290',
-  'BUNDLE_PATH'  => '/usr/local/rvm/gems/ruby-1.9.2-p290'  # If you are using bundler.
-}
-
-after 'deploy:setup', :create_configs
-desc 'Create the shared/config dir for various config files'
-# database.yml does not come from repo so make it now
-task :create_configs do
-  run "mkdir -p #{shared_path}/config"
-  run "touch #{shared_path}/config/database.yml"
 end
-
-after 'deploy:finalize_update', :update_configs
-desc 'Copy the shared config files to the release config dir'
-task :update_configs do
-  run "cp -Rf #{shared_path}/config/* #{release_path}/config"
-end
-
-# If you are using Passenger mod_rails uncomment this:
- namespace :deploy do
-   # start and stop. Nothing to do
-   task :start do ; end
-   task :stop do ; end
-   # Use restart
-   task :restart, :roles => :app, :except => { :no_release => true } do
-     run "#{try_sudo} touch #{File.join(current_path,'tmp','restart.txt')}"
-   end
- end
