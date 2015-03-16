@@ -17,6 +17,7 @@
 /*.sublime*
 /*.kate*
 config/database.yml
+config/puma.rb
 public/system/*
 public/uploads/*
 .idea/*
