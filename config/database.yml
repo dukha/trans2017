@@ -14,7 +14,6 @@ development:
   database: t_dev
   pool: 5
   username: mark
-  password: Igaturi0
 
   # Connect on a TCP socket. Omitted by default since the client uses a
   # domain socket that doesn't need configuration. Windows does not have
@@ -40,12 +39,18 @@ test:
   database: t_test
   pool: 5
   username: mark
-  password: Igatpuri0
+
+integration:
+  adapter: postgresql
+  encoding: utf8
+  database: t_integ
+  pool: 10
+  username: mark
 
 production:
   adapter: postgresql
   encoding: utf8
   database: t_prod
-  pool: 5
-  username: Mark
-  password: Igatpuri0
+  pool: 10
+  username: mark
+
