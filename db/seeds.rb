@@ -4,9 +4,7 @@ CavsTlTranslator.delete_all
 CalmappDeveloper.delete_all
 User.delete_all
 Profile.delete_all
-UserWork.delete_all
 
-#UploadsRedisDatabase.delete_all 
 RedisDatabase.delete_all
 RedisInstance.delete_all
 CalmappVersionsTranslationLanguage.delete_all
@@ -19,9 +17,9 @@ TranslationHint.delete_all
 Whiteboard.delete_all
 ReleaseStatus.delete_all
 WhiteboardType.delete_all
-#Location.delete_all
+
 Profile.delete_all    
-#Permission.delete_all
+
 SpecialPartialDotKey.delete_all
 DotKeyCodeTranslationEditor.delete_all
 TranslationEditorParam.delete_all
@@ -89,11 +87,3 @@ Language.create!(:iso_code=> "en", :name=>"English") #, :parent_id=>translation_
 #User.create!( :username=>'admin', :email=> 'admin@calm.org', :password=>'123456', :confirm_password=>'123456')
 #User.create!( :username=>'developer', :email=> 'developer@calm.org', :password=>'123456', :confirm_password=>'123456')
 log.info("Users inserted")
-#binding.pry
-#user_id = User.find_by_username('translator').id
-#nl_id = nl.id
-#c_rd_db_id = red_reg4_loc_test.id 
-#UserWork.create!(:user_id=> User.find_by(username: 'translator').id, :translation_language_id => nl.id, :current_redis_database_id=> red_reg4_loc_test.id )
-#UserWork.create!(:user_id=> User.find_by(username: 'developer').id, :translation_language_id => en.id, :current_redis_database_id=> red_trans1_int_dev.id)
-#log.info("User works inserted")
-#=end

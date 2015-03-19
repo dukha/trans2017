@@ -5,7 +5,6 @@ class User < ActiveRecord::Base
 #         :recoverable, :rememberable, :trackable, :validatable
    #attr_accessor :profile_ids
   # Setup accessible (or protected) attributes for your model
-  #attr_accessible :email, :password, :password_confirmation, :remember_me
   # Include default devise modules. Others available are:
   # :token_authenticatable, :confirmable, omniauthable:, Confirmable, :rememberable, :validatable, :encryptable, :recoverable
   devise  :database_authenticatable, :registerable,
@@ -13,10 +12,7 @@ class User < ActiveRecord::Base
          :timeoutable, :lockable, :invitable, :invite_key => {:email=>'', :actual_name=>''} #,:timeout_in => 10.minutes use value from  config/initializers/devise.rb
 
   # Setup accessible (or protected) attributes for your model
-=begin Rails4  
-  attr_accessible :email, :password, :password_confirmation, :remember_me,
-                  :username, :login, :actual_name
-=end 
+
   # username is unique by DB index :unique => true
   # username is required by DB :null => false
   validates :email, :username, :uniqueness => true

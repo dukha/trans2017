@@ -66,7 +66,7 @@ Translate::Application.routes.draw do
    #resources :calmapp_versions_redis_databases, :only=> [:index, :new, :create, :update]
    get 'unused_redis_database_indexes' => 'redis_instances#unused_redis_database_indexes', :as => 'redis_databases_getunused', via: :all
    get 'next_unused_redis_database_index'=> 'redis_instances#next_redis_database_index'  , :as => 'redis_databases_getnextindex', :via=> :all
-   resources :user_works#, :only=>[:edit, :show]
+   
    resources :calmapp_versions_translation_languages
    resources :translations #, :except=>:show#, :only=> [:new, :index]
    get "translations/dev_new" => "translations#dev_new", :as => "dev_new_translation", via: :all
@@ -76,7 +76,7 @@ Translate::Application.routes.draw do
    resources :translation_parameters, :only=> [ :new, :index]
    resources :special_partial_dot_keys
    #match "translation_parameters/save" => "translation_parameters#save", :as => "save_translation_params"
-   #resources :uploads
+   
    #get "translations_uploads/file_to_redis/:id" => "translations_uploads#file_to_redis", :as => "to_redis"#, via: :all
    #get "translations_uploads/select_translation_to_redis/:id" => "translations_uploads#select_translation_to_redis", :as => "select_to_redis"# via: :all
 
@@ -91,7 +91,7 @@ Translate::Application.routes.draw do
    resources :dot_key_code_translation_editors, :only=> [:index, :edit, :show] 
    #get "calmapps/all_in_one_new/" => "calmapps#all_in_one_new", :as => "all_in_one_new"
    #get "calmapps/all_in_one_create" => "calmapps#all_in_one_create"
-   #match "upload"
+   
 
    get '/contact', :to => 'static_pages#contact'
    get '/about',   :to => 'static_pages#about'

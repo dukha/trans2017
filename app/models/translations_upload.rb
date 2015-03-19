@@ -1,10 +1,7 @@
 class TranslationsUpload < ActiveRecord::Base
   include Validations
   mount_uploader :yaml_upload, YamlTranslationFileUploader
-=begin
-  attr_accessible :description,  :cavs_translation_language_id, :yaml_upload, 
-                  :calmapp_versions_translation_language, :duplicates_behavior, :written_to_db
-=end
+
   attr_accessor :duplicates_behavior
   belongs_to :calmapp_versions_translation_language, :foreign_key=>"cavs_translation_language_id"
   

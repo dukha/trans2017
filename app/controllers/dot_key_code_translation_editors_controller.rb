@@ -1,5 +1,5 @@
 class DotKeyCodeTranslationEditorsController < ApplicationController
-  # The line below only when fixed attr_accessible
+  
    before_action :set_dot_key_code_translation_editor, only: [:show, :edit, :update, :destroy]
 =begin
  from latest version 

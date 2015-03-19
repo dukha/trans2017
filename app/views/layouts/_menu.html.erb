@@ -30,10 +30,7 @@
           <li><%= tlink_to("translations", translations_path, :category=>:menu) %></li>
            <!-- This should url should become edit_user_preference_path(current_user.id) when we get the login working -- >
            < % if current_user != nil then % >
-             <!--if current_user.id != nil then --  >
-               <li>< %= tlink_to("translation_parameters", edit_user_work_path(current_user.id), :category=>:menu) %></li>
              
-           < %end%>  -->
            <!-- ><li>< %= tlink_to("translator_index", translators_index_path, :category=>:menu) %></li> -->
         </ul>
       </div>

@@ -27,12 +27,7 @@ class CalmappsController < ApplicationController
       format.xml  { render :xml => @calmapp }
     end
   end
-=begin  
-  class AppLang
-      attr_accessor :language_id, :iso_code, :write
-      #attr_accessible
-  end
-=end
+
   # GET /calmapps/new
   # GET /applications/new.xml
   #def all_in_one_new

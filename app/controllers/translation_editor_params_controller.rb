@@ -1,6 +1,6 @@
 class TranslationEditorParamsController < ApplicationController
-  # The line below only when fixed attr_accessible
-  # before_action :set_translation_editor_param, only: [:show, :edit, :update, :destroy]
+ 
+  before_action :set_translation_editor_param, only: [:show, :edit, :update, :destroy]
 =begin
  from latest version 
 

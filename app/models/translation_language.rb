@@ -7,11 +7,6 @@ class TranslationLanguage < ActiveRecord::Base
  validates :iso_code, :name, :presence => true,:uniqueness => true
  validates :name, :presence => true, :uniqueness => true
  
- #attr_accessible :iso_code, :name, :plural_sort 
- 
-=begin
-  
-=end
   scope :english_arr, ->{TranslationLanguage.where{iso_code == 'en'}}
 =begin
  @ return is the TranslationLanguage with 'en' as iso_code

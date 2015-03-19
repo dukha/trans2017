@@ -12,7 +12,7 @@ class Language < ActiveRecord::Base
   validates :iso_code, :name, :presence => true,:uniqueness => true
   validates :name, :presence => true, :uniqueness => true
 
-  #attr_accessible :iso_code, :name #,  :calm_reg_language, :course_l
+ 
   
   #validates_with VenueValidator
   

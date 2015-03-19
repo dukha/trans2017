@@ -2,11 +2,7 @@ class CalmappVersionsTranslationLanguage < ActiveRecord::Base
   include Validations
   extend SearchModel
   include SearchModel
-=begin  
-  attr_accessible :calmapp_version_id, :calmapp_version, :translation_language_id, 
-  :translation_language, :translations_uploads_attributes, :calmapp_versions_translation_languages_attributes
-=end  
-  #attr_accessor :warnings
+
   def self.searchable_attr 
      %w(calmapp_version_id translation_language_id )
   end

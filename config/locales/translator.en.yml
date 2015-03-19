@@ -281,9 +281,7 @@ en:
       user:
         one: User
         other: Users  
-      user_work:
-        one: User Work
-        other: User Works  
+       
       translations_upload:
         one: Translation Upload
         other: Translation Uploads

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150315233158) do
+ActiveRecord::Schema.define(version: 20150320245450) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -87,17 +87,6 @@ ActiveRecord::Schema.define(version: 20150315233158) do
 
   add_index "languages", ["iso_code"], name: "iu_languages_iso_code", unique: true, using: :btree
   add_index "languages", ["name"], name: "iu_languages_name", unique: true, using: :btree
-
-  create_table "locations", force: :cascade do |t|
-    t.string   "name",                             null: false
-    t.string   "type",                             null: false
-    t.integer  "parent_id"
-    t.string   "translation_code"
-    t.string   "fqdn"
-    t.boolean  "marked_deleted",   default: false, null: false
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
 
   create_table "profiles", force: :cascade do |t|
     t.text     "rools"
@@ -197,19 +186,6 @@ ActiveRecord::Schema.define(version: 20150315233158) do
 
   add_index "translations_uploads", ["cavs_translation_language_id"], name: "index_translations_uploads_on_cavs_translation_language_id", using: :btree
 
-  create_table "uploads", force: :cascade do |t|
-    t.integer  "language_id",              null: false
-    t.string   "upload_file_name",         null: false
-    t.string   "upload_file_content_type"
-    t.integer  "upload_file_size"
-    t.datetime "upload_file_updated_at"
-    t.string   "description"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "uploads", ["upload_file_name"], name: "iu_uploads_upload_file_name", unique: true, using: :btree
-
   create_table "user_profiles", force: :cascade do |t|
     t.integer  "user_id",    null: false
     t.integer  "profile_id", null: false
@@ -220,14 +196,6 @@ ActiveRecord::Schema.define(version: 20150315233158) do
   add_index "user_profiles", ["profile_id"], name: "index_user_profiles_on_profile_id", using: :btree
   add_index "user_profiles", ["user_id", "profile_id"], name: "index_user_profiles_on_user_id_and_profile_id", unique: true, using: :btree
   add_index "user_profiles", ["user_id"], name: "index_user_profiles_on_user_id", using: :btree
-
-  create_table "user_works", force: :cascade do |t|
-    t.integer  "user_id"
-    t.integer  "translation_language_id",   null: false
-    t.integer  "current_redis_database_id", null: false
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
 
   create_table "users", force: :cascade do |t|
     t.string   "email",                  default: "",    null: false
