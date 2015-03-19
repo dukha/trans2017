@@ -11,12 +11,12 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150304233158) do
+ActiveRecord::Schema.define(version: 20150315233158) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "calmapp_users", force: :cascade do |t|
+  create_table "calmapp_developers", force: :cascade do |t|
     t.integer "calmapp_id"
     t.integer "user_id"
   end

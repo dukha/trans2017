@@ -21,7 +21,7 @@ class Calmapp < ActiveRecord::Base
   has_many :calmapp_versions, :dependent => :restrict_with_exception
   accepts_nested_attributes_for :calmapp_versions, :reject_if => :all_blank, :allow_destroy => true
   
-  has_many :developer_jobs, :foreign_key => "calmapp_id" , :class_name=> "CalmappUser"
+  has_many :developer_jobs, :foreign_key => "calmapp_id" , :class_name=> "CalmappDeveloper"
   #accepts_nested_attributes_for :developer_jobs, :reject_if => :all_blank, :allow_destroy => true
   has_many :developers, :through => :developer_jobs, :source => :user,  :class_name => "User"#, :foreign_key => :user_id 
 =begin
@@ -65,7 +65,10 @@ class Calmapp < ActiveRecord::Base
     return self
   end #save_app_version_database
 =end
-  
+  def self.demo
+    reg = Calmapp.create!( :name=>"calm_registrar")
+    trans = Calmapp.create!(:name=>"translator")
+  end  
   
   def can_destroy?
     return false

@@ -46,7 +46,7 @@ class User < ActiveRecord::Base
   #accepts_nested_attributes_for :translator_jobs, :reject_if => :all_blank, :allow_destroy => true
   has_many :calmapp_versions_translation_languages, :through => :translator_jobs
   
-  has_many :developer_jobs, :foreign_key => "user_id" , :class_name=> "CalmappUser"
+  has_many :developer_jobs, :foreign_key => "user_id" , :class_name=> "CalmappDeveloper"
   #accepts_nested_attributes_for :developer_jobs, :reject_if => :all_blank, :allow_destroy => true
   has_many :calmapps, :through => :developer_jobs, :source => :calmapp
 =begin
@@ -108,17 +108,84 @@ class User < ActiveRecord::Base
 
  
  protected
- def self.find_for_database_authentication(warden_conditions)
-   conditions = warden_conditions.dup
-   login = conditions.delete(:login)
-   where(conditions).where(["username = :value OR email = :value", { :value => login }]).first
- end
+   def self.find_for_database_authentication(warden_conditions)
+     conditions = warden_conditions.dup
+     login = conditions.delete(:login)
+     where(conditions).where(["username = :value OR email = :value", { :value => login }]).first
+   end
+  
+    def self.developers
+      return where{developer == 't'}
+    end
+  
+  
+   def self.seed
+     User.create_root_user
+     pw = '123456'
+     param = {:password => pw,:password_confirmation => pw,:username => 'sysadmin',:email => 'admin@calm.org', 
+                :actual_name=> 'admin'}
+     admin = User.create! param
+     admin.profiles << Profile.sysadmin
+   end
+   
+   def self.demo
+    pw = '123456'
+    param = {:password => pw,:password_confirmation => pw,:username => 'albert',:email => 'albert@calm.org', 
+              :actual_name=> 'albert'}
+    albert = User.create! param
+    albert.profiles << Profile.sysadmin
+    
+    param = {:password => pw,:password_confirmation => pw,:username => 'a',:email => 'a@calm.org', 
+              :actual_name=> 'a'}
+    a = User.create! param
+    a.profiles << Profile.sysadmin
+    
+    param[:username]='devvie'
+    param[:actual_name] = 'developer'
+    param[:email]= 'developer@calm.org'
+    param[:developer] = true
+    developer=User.create! param
+    developer.profiles << Profile.where {name == "developer"}.first
+    log.info("devvie created")
+    
+    param[:username]= 'trannie'
+    param[:actual_name] = 'translator'
+    param[:email]= 'translator@calm.org'
+    param[:translator] = true
+    translator=User.create! param
+    translator.profiles << Profile.where {name == "translator"}.first
+    
+    cav_4_cs = CalmappVersionsTranslationLanguage.joins{calmapp_version_tl.calmapp}.joins{translation_language}.
+            where {calmapp_version_tl.version == '4' }.
+            where {calmapp_version_tl.calmapp.name == 'calm_registrar' }.
+            where{translation_language.iso_code == 'cs'}.first
+   cav_4_fr = CalmappVersionsTranslationLanguage.joins{calmapp_version_tl.calmapp}.joins{translation_language}.
+            where {calmapp_version_tl.version == '4' }.
+            where {calmapp_version_tl.calmapp.name == 'calm_registrar' }.
+            where{translation_language.iso_code == 'fr'}.first  
+            
+    translator.calmapp_versions_translation_languages << cav_4_cs
+    translator.calmapp_versions_translation_languages << cav_4_fr 
+    translator.calmapp_versions_translation_languages << 
+       CalmappVersionsTranslationLanguage.new(:translation_language_id =>TranslationLanguage.where{iso_code == 'ja'}.first.id,
+      :calmapp_version_id => CalmappVersion.where {calmapp_id == Calmapp.where {name == 'calm_registrar'}.first.id}.first.id)
+=begin      
+  
+CalmappVersionsTranslationLanguage.new(:translation_language_id =>TranslationLanguage.where{name == 'Czech'}.first.id,
+      :calmapp_version_id => CalmappVersion.where {calmapp_id == Calmapp.where {name == 'calm_registrar'}.first.id}.first.id)
+    translator.calmapp_versions_translation_languages << 
+       CalmappVersionsTranslationLanguage.new(:translation_language_id =>TranslationLanguage.where{iso_code == 'fr'}.first.id,
+      :calmapp_version_id => CalmappVersion.where {calmapp_id == Calmapp.where {name == 'calm_registrar'}.first.id}.first.id)
+    
+    #TranslationLanguage.where{name == 'French'}.first
+    log.info("trannie created")
 
-  def self.developers
-    return where{developer == 't'}
-  end
+          
 
-=begin
+   CalmappVersionsTranslationLanguages.joins{calmapp_version}.joins{translation_language}.
+=end
+   end
+=begin 
 private
   # Others should use current_permission for its lazy initialisation. So making sure no one accesses current_permission_id
   # this works because active record uses 'method missing' to access the methods dynamically created by active record

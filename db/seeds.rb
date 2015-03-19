@@ -1,11 +1,15 @@
 log=Logger.new(STDOUT)
+UserProfile.delete_all
+CavsTlTranslator.delete_all
+CalmappDeveloper.delete_all
 User.delete_all
-
+Profile.delete_all
 UserWork.delete_all
 
 #UploadsRedisDatabase.delete_all 
 RedisDatabase.delete_all
 RedisInstance.delete_all
+CalmappVersionsTranslationLanguage.delete_all
 CalmappVersion.delete_all
 Calmapp.delete_all
 
@@ -63,7 +67,8 @@ TranslationHint.seed
 Profile.seed
 log.info("profiles seeded")
 
-User.create_root_user
+User.seed
+
 
 SpecialPartialDotKey.seed  
 DotKeyCodeTranslationEditor.seed
@@ -78,42 +83,7 @@ Language.create!(:iso_code=> "en", :name=>"English") #, :parent_id=>translation_
 
 
 
-    pw = '123456'
-    
-    
    
-    param = {:password => pw,:password_confirmation => pw,:username => 'sysadmin',:email => 'admin@calm.org', 
-              :actual_name=> 'admin'}
-    #puts "current permission i d= " +current_perm.id.to_s
-    admin = User.create! param
-    admin.profiles << Profile.sysadmin
-    #admin.add_permission location: Location.world, profile: Profile.sysadmin, make_current: true
-    param = {:password => pw,:password_confirmation => pw,:username => 'albert',:email => 'albert@calm.org', 
-              :actual_name=> 'albert'}
-    #puts "current permission i d= " +current_perm.id.to_s
-    albert = User.create! param
-    albert.profiles << Profile.sysadmin
-    #albert.add_permission location: Location.world, profile: Profile.sysadmin, make_current: true
-    param = {:password => pw,:password_confirmation => pw,:username => 'a',:email => 'a@calm.org', 
-              :actual_name=> 'a'}
-    #puts "current permission i d= " +current_perm.id.to_s
-    a = User.create! param
-    a.profiles << Profile.sysadmin
-    #a.add_permission location: Location.world, profile: Profile.sysadmin, make_current: true
-    #admin.add_permission current_perm
-
-    #prof_guest = Profile.create! :name => 'guest', :roles => ['guest']
-    #perm = Permission.create!  :organisation => vipassana,  :profile => prof_guest
-    #admin.add_permission perm
-    #param[:organisation]=translationLanguages
-    
-    param[:username]='developer'
-    param[:actual_name] = 'devvie'
-    param[:email]= 'developer@calm.org'
-    developer=User.create! param
-    developer.profiles << Profile.guest
-    #developer.add_permission location: Location.world, profile: Profile.guest, make_current: true
-    log.info("devvie created")
 
 #User.create!( :username=>'translator', :email=> 'translator@calm.org', :password=>'123456', :confirm_password=>'123456')
 #User.create!( :username=>'admin', :email=> 'admin@calm.org', :password=>'123456', :confirm_password=>'123456')

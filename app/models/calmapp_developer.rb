@@ -1,4 +1,4 @@
-class CalmappUser < ActiveRecord::Base
+class CalmappDeveloper < ActiveRecord::Base
   belongs_to :calmapp
   belongs_to :user
   

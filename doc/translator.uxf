@@ -27,8 +27,8 @@
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>100</x>
-      <y>600</y>
+      <x>10</x>
+      <y>540</y>
       <w>360</w>
       <h>100</h>
     </coordinates>
@@ -43,25 +43,8 @@ bg=orange</panel_attributes>
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>610</x>
-      <y>860</y>
-      <w>300</w>
-      <h>130</h>
-    </coordinates>
-    <panel_attributes>*Versions*
-In translation we will only refer
-to the major  of the application
-(Patches and minor versions don't change 
-translation database but translation 
-can be corrected  in a fix.).
-bg=blue</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <type>com.umlet.element.Class</type>
-    <coordinates>
       <x>230</x>
-      <y>20</y>
+      <y>100</y>
       <w>190</w>
       <h>90</h>
     </coordinates>
@@ -76,11 +59,11 @@ bg=orange</panel_attributes>
     <type>com.umlet.element.Class</type>
     <coordinates>
       <x>280</x>
-      <y>430</y>
+      <y>450</y>
       <w>300</w>
-      <h>70</h>
+      <h>80</h>
     </coordinates>
-    <panel_attributes>*CalmappVersionTranslationLanguage*
+    <panel_attributes>*CalmappVersionsTranslationLanguage*
 id:integer
 calmapp_version_id:integer
 translations_language_id:integer
@@ -91,7 +74,7 @@ bg=yellow</panel_attributes>
     <type>com.umlet.element.Class</type>
     <coordinates>
       <x>450</x>
-      <y>150</y>
+      <y>170</y>
       <w>200</w>
       <h>80</h>
     </coordinates>
@@ -106,7 +89,7 @@ bg=orange</panel_attributes>
     <type>com.umlet.element.Class</type>
     <coordinates>
       <x>560</x>
-      <y>20</y>
+      <y>40</y>
       <w>230</w>
       <h>80</h>
     </coordinates>
@@ -121,7 +104,7 @@ bg=orange</panel_attributes>
     <type>com.umlet.element.Class</type>
     <coordinates>
       <x>770</x>
-      <y>130</y>
+      <y>150</y>
       <w>180</w>
       <h>120</h>
     </coordinates>
@@ -138,9 +121,9 @@ bg=orange</panel_attributes>
     <type>com.umlet.element.Class</type>
     <coordinates>
       <x>710</x>
-      <y>400</y>
+      <y>420</y>
       <w>240</w>
-      <h>90</h>
+      <h>110</h>
     </coordinates>
     <panel_attributes>*RedisDatabase*
 //This models a redis database 
@@ -157,7 +140,7 @@ bg=orange</panel_attributes>
     <type>com.umlet.element.Relation</type>
     <coordinates>
       <x>490</x>
-      <y>80</y>
+      <y>100</y>
       <w>100</w>
       <h>90</h>
     </coordinates>
@@ -168,7 +151,7 @@ bg=orange</panel_attributes>
     <type>com.umlet.element.Relation</type>
     <coordinates>
       <x>690</x>
-      <y>70</y>
+      <y>90</y>
       <w>100</w>
       <h>350</h>
     </coordinates>
@@ -179,7 +162,7 @@ bg=orange</panel_attributes>
     <type>com.umlet.element.Relation</type>
     <coordinates>
       <x>460</x>
-      <y>200</y>
+      <y>220</y>
       <w>130</w>
       <h>250</h>
     </coordinates>
@@ -190,7 +173,7 @@ bg=orange</panel_attributes>
     <type>com.umlet.element.Class</type>
     <coordinates>
       <x>580</x>
-      <y>570</y>
+      <y>590</y>
       <w>350</w>
       <h>110</h>
     </coordinates>
@@ -217,31 +200,31 @@ bg=orange
     <type>com.umlet.element.Relation</type>
     <coordinates>
       <x>500</x>
-      <y>470</y>
+      <y>500</y>
       <w>190</w>
-      <h>120</h>
+      <h>110</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>30;30;170;100</additional_attributes>
+    <additional_attributes>30;30;170;90</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>430</x>
-      <y>580</y>
-      <w>170</w>
+      <x>340</x>
+      <y>560</y>
+      <w>260</w>
       <h>90</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>30;70;150;30</additional_attributes>
+    <additional_attributes>30;30;240;70</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Note</type>
     <coordinates>
-      <x>60</x>
-      <y>850</y>
+      <x>450</x>
+      <y>720</y>
       <w>540</w>
-      <h>150</h>
+      <h>250</h>
     </coordinates>
     <panel_attributes>*Admins*
 * Setup Redis instances
@@ -289,7 +272,7 @@ fg=white</panel_attributes>
     <type>com.umlet.element.Relation</type>
     <coordinates>
       <x>790</x>
-      <y>220</y>
+      <y>240</y>
       <w>100</w>
       <h>200</h>
     </coordinates>
@@ -299,19 +282,19 @@ fg=white</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>300</x>
-      <y>80</y>
-      <w>160</w>
-      <h>370</h>
+      <x>370</x>
+      <y>130</y>
+      <w>90</w>
+      <h>340</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>30;30;140;60;140;260;100;350</additional_attributes>
+    <additional_attributes>50;30;70;50;70;230;30;320</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
       <x>440</x>
-      <y>20</y>
+      <y>40</y>
       <w>100</w>
       <h>90</h>
     </coordinates>
@@ -322,53 +305,23 @@ bg=orange</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
-    <type>com.umlet.element.Class</type>
-    <coordinates>
-      <x>640</x>
-      <y>710</y>
-      <w>260</w>
-      <h>100</h>
-    </coordinates>
-    <panel_attributes>&lt;&lt;deprecated&gt;&gt;
-*CalmappVersionsRedisDatabase*
-id:integer
-calmapp_version_id:integer
-redis_database_id:integer
-release_status_id:integer
-bg=yellow</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>230</x>
-      <y>470</y>
-      <w>190</w>
-      <h>150</h>
+      <x>140</x>
+      <y>460</y>
+      <w>160</w>
+      <h>100</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>170;30;30;130</additional_attributes>
-  </element>
-  <element>
-    <type>com.umlet.element.Note</type>
-    <coordinates>
-      <x>740</x>
-      <y>800</y>
-      <w>160</w>
-      <h>70</h>
-    </coordinates>
-    <panel_attributes>For users this join will be made by adding a 
-"publication database"
-bg=blue</panel_attributes>
-    <additional_attributes/>
+    <additional_attributes>140;30;30;80</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
       <x>50</x>
-      <y>0</y>
-      <w>150</w>
-      <h>140</h>
+      <y>20</y>
+      <w>160</w>
+      <h>150</h>
     </coordinates>
     <panel_attributes>User
 id:integer
@@ -377,6 +330,7 @@ actual_name:string
 email:string
 password:string
 translator:boolean
+developer: boolean
 &lt;&lt;devise attributes&gt;&gt;
 bg=orange</panel_attributes>
     <additional_attributes/>
@@ -385,7 +339,7 @@ bg=orange</panel_attributes>
     <type>com.umlet.element.Class</type>
     <coordinates>
       <x>150</x>
-      <y>170</y>
+      <y>210</y>
       <w>280</w>
       <h>70</h>
     </coordinates>
@@ -398,14 +352,14 @@ bg=yellow</panel_attributes>
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>10</x>
-      <y>160</y>
-      <w>130</w>
+      <x>260</x>
+      <y>30</y>
+      <w>150</w>
       <h>60</h>
     </coordinates>
-    <panel_attributes>UserProfile
+    <panel_attributes>CalmappDeveloper
 user_id:integer
-profile_id:integer
+calmapp_id:integer
 bg=yellow
 </panel_attributes>
     <additional_attributes/>
@@ -414,9 +368,9 @@ bg=yellow
     <type>com.umlet.element.Class</type>
     <coordinates>
       <x>0</x>
-      <y>310</y>
+      <y>330</y>
       <w>280</w>
-      <h>120</h>
+      <h>130</h>
     </coordinates>
     <panel_attributes>Profile
 id:integer
@@ -431,30 +385,30 @@ bg=orange</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>60</x>
-      <y>190</y>
-      <w>100</w>
-      <h>140</h>
+      <x>380</x>
+      <y>30</y>
+      <w>80</w>
+      <h>60</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>80;120;30;30</additional_attributes>
+    <additional_attributes>60;40;30;30</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>30</x>
-      <y>110</y>
-      <w>130</w>
+      <x>180</x>
+      <y>0</y>
+      <w>100</w>
       <h>70</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>110;30;30;50</additional_attributes>
+    <additional_attributes>30;30;80;50</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
       <x>500</x>
-      <y>200</y>
+      <y>220</y>
       <w>246</w>
       <h>260</h>
     </coordinates>
@@ -470,22 +424,89 @@ lt=&lt;&lt;-</panel_attributes>
     <type>com.umlet.element.Relation</type>
     <coordinates>
       <x>140</x>
-      <y>110</y>
+      <y>140</y>
       <w>100</w>
-      <h>80</h>
+      <h>90</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>30;30;80;60</additional_attributes>
+    <additional_attributes>30;30;80;70</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
       <x>230</x>
-      <y>210</y>
+      <y>250</y>
       <w>170</w>
-      <h>240</h>
+      <h>220</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>150;220;30;30</additional_attributes>
+    <additional_attributes>150;200;30;30</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Note</type>
+    <coordinates>
+      <x>30</x>
+      <y>640</y>
+      <w>350</w>
+      <h>310</h>
+    </coordinates>
+    <panel_attributes>*Deletes*
+user deleted: 
+  Delete user_profiles.all for user
+  Delete cavsTlTranslator.all for user
+  Delete calmappUser
+profile_deleted
+  Delete user_profiles.all for profile 
+  Delete cavsTlTranslator.all for profile 
+calmappVersionTranslationLanguage deleted
+  Delete cavsTlTranslator.all
+  Delete translations.all, setting translation_upload_id to null
+  Delete translationsUpload.all
+calmappVersion deleted
+  Delete redisDatabases.all
+  Delete calmappVersionTranslationLanguage.all
+redisInstance deleted
+  Delete redisDatabases.all 
+calmapp delete:  
+bg=blue
+fg=white</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>10</x>
+      <y>220</y>
+      <w>130</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes>UserProfile
+user_id:integer
+profile_id:integer
+bg=yellow
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>10</x>
+      <y>140</y>
+      <w>70</w>
+      <h>100</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>50;30;30;80</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>60</x>
+      <y>250</y>
+      <w>60</w>
+      <h>100</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>40;80;30;30</additional_attributes>
   </element>
 </diagram>

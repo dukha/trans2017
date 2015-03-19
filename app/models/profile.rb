@@ -70,11 +70,16 @@ class Profile < ActiveRecord::Base
     Profile.create :name => reserved_profile, :roles => Profile.available_roles unless self.sysadmin
     reserved_profile = 'guest'
     Profile.create :name => reserved_profile, :roles => [:guest_visit] unless self.guest
+    
+    roles= [:translations_read, :translations_write]
+    Profile.create(:name=>'translator', :roles => roles)
+    
+    roles= [:translations_read, :translations_write]
+    Profile.create(:name=>'developer', :roles => roles)
   end
 
   def self.demo
-    roles= [:translations_read, :translations_write]
-    Profile.create(:name=>'translator', :roles => roles) #unless self.french_translator
+     
     end
   # all roles defined in config/authorization_rules.rb
   # as a collection of symbols

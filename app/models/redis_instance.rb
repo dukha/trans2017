@@ -62,9 +62,6 @@ class RedisInstance < ActiveRecord::Base
   
   def next_index last_index = -1
     indexes = unused_redis_database_indexes()
-    #binding.pry
-    #message = I18n.t($MS + "redis_instance.warning.all_redis_db_indexes_taken", description: description )
-    #binding.pry
     if not indexes.empty? then
       if last_index == -1 then
         ret_val = indexes[0] 
@@ -82,6 +79,12 @@ class RedisInstance < ActiveRecord::Base
       raise Exceptions::NoRedisDatabasesLeft.new({description: description})
     end #not empty
   end
+  
+  def self.demo
+    marks_redis = RedisInstance.create!(:host=>"45-highfield.internode.on.net", :password => '123456', :port => '6379', :max_databases=>16, :description=> "Mark's Desktop Computer")
+    ri_integration = RedisInstance.create!(:host=>"31.222.138.180", :password => '123456', :port => '6379', :max_databases=>32, :description=>'Integration Server')
+  end
+  
   private
     def default_values
       return unless new_record?

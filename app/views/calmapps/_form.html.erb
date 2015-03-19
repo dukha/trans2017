@@ -4,15 +4,15 @@
             <li id='development-jobs-list'>   
               
               <%=f.label t($ARA + "calmapp.developers"), {:style=>"width:25%;"}%>
-               <%calmapp_user_cb_count = 0%>
-               <% calmapp_user_cbs_per_row = 4%>
+               <%calmapp_developer_cb_count = 0%>
+               <% calmapp_developer_cbs_per_row = 4%>
                <table style = 'margin-left:25%;'> 
                  <!--%binding.pry% --> 
                <%=f.collection_check_boxes( :developer_ids, User.developers, :id, :actual_name ) do |b| %>
-           <%if calmapp_user_cb_count%calmapp_user_cbs_per_row == 0 && calmapp_user_cb_count != 0%>
+           <%if calmapp_developer_cb_count%calmapp_developer_cbs_per_row == 0 && calmapp_developer_cb_count != 0%>
              </tr>
            <%end%>
-           <%if calmapp_user_cb_count%calmapp_user_cbs_per_row == 0%>
+           <%if calmapp_developer_cb_count%calmapp_developer_cbs_per_row == 0%>
              <tr class = 'multi-checkboxes'>
            <%end%>
             <td class = 'multi-checkbox'>
@@ -20,10 +20,10 @@
                     b.check_box + b.text
                   }
                %>
-              <%calmapp_user_cb_count += 1%>
+              <%calmapp_developer_cb_count += 1%>
             </td>    
          <%end%>
-         <%if calmapp_user_cb_count%calmapp_user_cbs_per_row != 0%>
+         <%if calmapp_developer_cb_count%calmapp_developer_cbs_per_row != 0%>
              </tr>
          <%end%>
         </table>

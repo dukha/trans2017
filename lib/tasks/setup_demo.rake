@@ -19,9 +19,12 @@ namespace :trans do
   #task :start_again => [:environment, 'db:drop', 'db:create', :complete_demo]
   task :start_again => [:environment, 'db:drop', 'db:create', 'db:migrate', 'db:seed', 'demo', 'standard_letter_templates:auto_create' , 'pform_app:students_to_courses','pform_queue:receive']
 =end  
-  task :start_again => [:environment, 'db:migrate:reset', 'db:seed'] do
-    Demo.demo
+  task :start_again => [:environment, 'db:migrate:reset', 'db:seed', "trans:demo"] do
+    
     FileUtils::remove_dir "public/system/translation_uploads/yaml_uploads", true
+  end
+  task :demo => [:environment] do
+    Demo.demo
   end
 =begin  
   task :start_again_demo => [:environment, 'demo', 'standard_letter_templates:auto_create' ,  'pform_app:students_to_courses','pform_queue:receive']

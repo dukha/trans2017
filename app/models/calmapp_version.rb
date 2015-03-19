@@ -170,6 +170,11 @@ class CalmappVersion < ActiveRecord::Base
       
    # end #if else   
   end #def
+  
+  def self.demo
+    reg4 = CalmappVersion.create!(:calmapp_id => Calmapp.where {name == 'calm_registrar'}.first.id, :version => 4)
+    trans1=CalmappVersion.create!(:calmapp_id => Calmapp.where {name == 'translator'}.first.id, :version => 1)
+  end
 end #class
 
 

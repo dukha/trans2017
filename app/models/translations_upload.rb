@@ -355,7 +355,11 @@ class TranslationsUpload < ActiveRecord::Base
   def self.demo
       version = CalmappVersion.joins{calmapp}.where{calmapp.name =~ 'calm%'}.first     
       cs = TranslationLanguage.where{iso_code == 'cs'}.first
+      #this will also upload cs.yml
       version.translation_languages << cs
+      fr = TranslationLanguage.where{iso_code == 'fr'}.first
+      #This will also upload fr.yml
+      version.translation_languages << fr
   end
 =begin
   formats an integer to have at least 3 digits 
