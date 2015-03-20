@@ -220,11 +220,13 @@ class RedisDatabase < ActiveRecord::Base
     marks_redis = RedisInstance.where { description =="Mark's Desktop Computer"}.first
     ri_integration = RedisInstance.where { description == 'Integration Server' }.first
     calm = Calmapp.where(:name=>"calm_registrar").first
-    RedisDatabase.new(:redis_instance_id => marks_redis.id, release_status_id: ReleaseStatus.where{status == 'Development' }.first.id, calmapp_version_id: CalmappVersion.where(:calmapp_id => calm.id, :version=>4).first.id, 
-    :redis_db_index =>  marks_redis.next_index)
-    RedisDatabase.new(:redis_instance_id => marks_redis.id, release_status_id: ReleaseStatus.where{status == 'Development' }.first.id, calmapp_version_id: CalmappVersion.where(:calmapp_id => Calmapp.where(:name=>"translator").first.id, :version=>1).first.id, 
-    :redis_db_index =>  marks_redis.next_index)
-    RedisDatabase.new(:redis_instance_id => ri_integration.id, release_status_id: ReleaseStatus.where{status == 'Integration' }.first.id, calmapp_version_id: CalmappVersion.where(:calmapp_id => calm.id, :version=>4).first.id, 
+    index = marks_redis.next_index
+    RedisDatabase.create!(:redis_instance_id => marks_redis.id, release_status_id: ReleaseStatus.where{status == 'Development' }.first.id, calmapp_version_id: CalmappVersion.where(:calmapp_id => calm.id, :version=>4).first.id, 
+    :redis_db_index =>  index)
+    index = marks_redis.next_index(index)
+    RedisDatabase.create!(:redis_instance_id => marks_redis.id, release_status_id: ReleaseStatus.where{status == 'Development' }.first.id, calmapp_version_id: CalmappVersion.where(:calmapp_id => Calmapp.where(:name=>"translator").first.id, :version=>1).first.id, 
+    :redis_db_index =>  index)
+    RedisDatabase.create!(:redis_instance_id => ri_integration.id, release_status_id: ReleaseStatus.where{status == 'Integration' }.first.id, calmapp_version_id: CalmappVersion.where(:calmapp_id => calm.id, :version=>4).first.id, 
     :redis_db_index =>  ri_integration.next_index)
   end
 =begin

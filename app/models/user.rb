@@ -137,7 +137,7 @@ class User < ActiveRecord::Base
     a.profiles << Profile.sysadmin
     
     param[:username]='devvie'
-    param[:actual_name] = 'developer'
+    param[:actual_name] = 'Developer User'
     param[:email]= 'developer@calm.org'
     param[:developer] = true
     developer=User.create! param
@@ -145,7 +145,7 @@ class User < ActiveRecord::Base
     log.info("devvie created")
     
     param[:username]= 'trannie'
-    param[:actual_name] = 'translator'
+    param[:actual_name] = 'Translator User'
     param[:email]= 'translator@calm.org'
     param[:translator] = true
     translator=User.create! param
