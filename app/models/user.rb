@@ -102,29 +102,8 @@ class User < ActiveRecord::Base
  # https://github.com/plataformatec/devise/wiki/How-To:-Allow-users-to-sign_in-using-their-username-or-email-address
  # Overwrite Devise’s find_for_database_authentication method
 
- 
- protected
-   def self.find_for_database_authentication(warden_conditions)
-     conditions = warden_conditions.dup
-     login = conditions.delete(:login)
-     where(conditions).where(["username = :value OR email = :value", { :value => login }]).first
-   end
-  
-    def self.developers
-      return where{developer == 't'}
-    end
-  
-  
-   def self.seed
-     User.create_root_user
-     pw = '123456'
-     param = {:password => pw,:password_confirmation => pw,:username => 'sysadmin',:email => 'admin@calm.org', 
-                :actual_name=> 'admin'}
-     admin = User.create! param
-     admin.profiles << Profile.sysadmin
-   end
-   
-   def self.demo
+
+  def self.demo
     pw = '123456'
     param = {:password => pw,:password_confirmation => pw,:username => 'albert',:email => 'albert@calm.org', 
               :actual_name=> 'albert'}
@@ -142,6 +121,7 @@ class User < ActiveRecord::Base
     param[:developer] = true
     developer=User.create! param
     developer.profiles << Profile.where {name == "developer"}.first
+    developer.calmapps << Calmapp.where{name == "calm_registrar" }.first
     log.info("devvie created")
     
     param[:username]= 'trannie'
@@ -150,7 +130,7 @@ class User < ActiveRecord::Base
     param[:translator] = true
     translator=User.create! param
     translator.profiles << Profile.where {name == "translator"}.first
-    
+     
     cav_4_cs = CalmappVersionsTranslationLanguage.joins{calmapp_version_tl.calmapp}.joins{translation_language}.
             where {calmapp_version_tl.version == '4' }.
             where {calmapp_version_tl.calmapp.name == 'calm_registrar' }.
@@ -181,6 +161,29 @@ CalmappVersionsTranslationLanguage.new(:translation_language_id =>TranslationLan
    CalmappVersionsTranslationLanguages.joins{calmapp_version}.joins{translation_language}.
 =end
    end
+ 
+ protected
+   def self.find_for_database_authentication(warden_conditions)
+     conditions = warden_conditions.dup
+     login = conditions.delete(:login)
+     where(conditions).where(["username = :value OR email = :value", { :value => login }]).first
+   end
+  
+    def self.developers
+      return where{developer == 't'}
+    end
+  
+  
+   def self.seed
+     User.create_root_user
+     pw = '123456'
+     param = {:password => pw,:password_confirmation => pw,:username => 'sysadmin',:email => 'admin@calm.org', 
+                :actual_name=> 'admin'}
+     admin = User.create! param
+     admin.profiles << Profile.sysadmin
+   end
+   
+   
 =begin 
 private
   # Others should use current_permission for its lazy initialisation. So making sure no one accesses current_permission_id
