@@ -64,18 +64,60 @@ class Profile < ActiveRecord::Base
       #:permissions_read, :permissions_write , :permissions_create,
       :users_read, :users_write , :users_create
     ]
-    Profile.create :name => reserved_profile, :roles => roles unless self.recovery_profile
+    Profile.create :name => reserved_profile, :roles => roles, :protected_profile => true unless self.recovery_profile
 
     reserved_profile = 'sysadmin'
-    Profile.create :name => reserved_profile, :roles => Profile.available_roles unless self.sysadmin
+    Profile.create :name => reserved_profile, :roles => Profile.available_roles, :protected_profile => true  unless self.sysadmin
     reserved_profile = 'guest'
-    Profile.create :name => reserved_profile, :roles => [:guest_visit] unless self.guest
+    Profile.create :name => reserved_profile, :roles => [:guest_visit], :protected_profile => true unless self.guest
     
     roles= [:translations_read, :translations_write]
-    Profile.create(:name=>'translator', :roles => roles)
+    Profile.create(:name=>'translator', :roles => roles, :protected_profile => true) 
     
     roles= [:translations_read, :translations_write]
-    Profile.create(:name=>'developer', :roles => roles)
+    Profile.create(:name=>'developer', :roles => roles, :protected_profile => true)
+    
+  roles= [  :users_read,
+   :users_write,
+   :users_create,
+   :users_destroy,
+   :profiles_read,
+   :redis_databases_getunused,
+   :redis_databases_getnextindex,
+   :calmapp_versions_redisdbalter,
+   :calmapp_versions_translation_languages_deepdestroy,
+   :calmapp_versions_deepdestroy,
+   :calmapp_versions_deepcopy,
+   :calmapp_versions_deepcopyparams,
+   :calmapp_versions_publish,
+   :calmapp_versions_translation_languages_read,
+   :calmapp_versions_translation_languages_write,
+   :calmapp_versions_translation_languages_create,
+   :calmapp_versions_translation_languages_destroy,
+   :calmapp_versions_read,
+   :calmapp_versions_write,
+   :calmapp_versions_create,
+   :calmapp_versions_destroy,
+   :calmapps_read,
+   :calmapps_write,
+   :calmapps_create,
+   :calmapps_destroy,
+   :redis_databases_read,
+   :redis_databases_write,
+   :redis_databases_create,
+   :redis_databases_destroy,
+   :redis_instances_read,
+   :translations_read,
+   :translations_write,
+   :translations_create,:translation_languages_read,
+ :translation_languages_write,
+ :translation_languages_create,
+ :translation_languages_destroy,
+ :translations_uploads_read,
+ :translations_uploads_write,
+ :translations_uploads_create,
+ :translations_uploads_destroy]
+   Profile.create(:name=>'application_administrator', :roles => roles, :protected_profile => true)
   end
 
   def self.demo

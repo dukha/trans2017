@@ -183,7 +183,7 @@ class CalmappVersionsController < ApplicationController
         flash[:success] = "Application Version copied. All the languages and translations are in a background process. You will get a mail to let you know the result"
         redirect_to action: "index"
       else
-         binding.pry
+         #binding.pry
          flash[:error] = @calmapp_version.errors.messages[:version]
          @previous_calmapp_version =CalmappVersion.find(@calmapp_version.previous_id)
          #params["id"] = params["calmapp_version"]["previous_id"]

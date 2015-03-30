@@ -124,6 +124,7 @@ en:
         translator_jobs: "This translator(user) can work on translating these ticked version-language combinations."
         developer_jobs: "This developer(user) can work on doing the English translations for the following ticked applications."
         profiles: Choose the profile(s) of permissions that you want the user to have. The profile will determine which pages a user can view and which action a user can take.
+        admin_jobs: This user is limited to administering the ticked applications.
       translation_hints:
         heading: Title for Hint (may contain HTML)
         example: Example of Hint (may contain HTML)
@@ -163,6 +164,9 @@ en:
       deepcopy: Deep Copy
       deepcopyparams: Start Deep Copy
       deepdestroy: Deep Destroy
+      translate: Translate
+      develop: Develop
+      administor: Administor
     miscellaneous: Miscellaneous
     redis_instances: Redis Instances
     redis_databases: Redis Databases
@@ -376,8 +380,12 @@ en:
         profiles: Profiles
         translator: Translator
         developer: Developer
-        translator_jobs: Permitted Translation Jobs
-        developer_jobs: Permitted Developer Jobs
+        application_administrator: App Administrator
+        can_translate: Can Translate
+        can_develop: Is a Developer
+        can_app_administer: Can Administer an App
+        translation_jobs: Permitted Translations
+        development_jobs: Permitted Developments
       translation_hint:
         heading: Title
         example: Example

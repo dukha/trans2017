@@ -26,11 +26,12 @@ class CalmappVersionsTranslationLanguage < ActiveRecord::Base
   after_create :base_locale_translations_for_new_translation_languages
   after_update :do_after_update
   before_destroy :deep_destroy
-  def create
+=begin  
+  def create attributes=nil, options ={}, &block
     binding.pry
-    super
+    super attributes, options, block
   end 
-    
+=end    
   def do_after_update
     #binding.pry
     puts "after translation upload"
@@ -55,6 +56,7 @@ class CalmappVersionsTranslationLanguage < ActiveRecord::Base
     
     uploads =  TranslationsUpload.where{cavs_translation_language_id == my{id}}.load
     found=false
+    # Check to see that this is not a reupload
     if not uploads.empty? then
       # the file is already uploaded
       uploads.each do |u|
@@ -106,7 +108,8 @@ class CalmappVersionsTranslationLanguage < ActiveRecord::Base
          translations.find_each {|t| t.delete}
          translations_uploads.find_each{|tl| tl.delete}
          translators.find_each { |tor| tor.delete}
-         destroy 
+         #destroy 
+         delete
       end # transaction
     #else
       #raise Exceptions::NoLanguageDeleteAuthorisation.new({version: calmapp_version_tl.name, language: translation_language.full_name})

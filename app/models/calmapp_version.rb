@@ -113,7 +113,7 @@ class CalmappVersion < ActiveRecord::Base
     old_version = CalmappVersion.find(old_version_id)
     if save
       #new_version = new_calmapp_version_unsaved
-      self.complete_deep_copy(old_version, new_version, user, copy_translation_languages, copy_translations )
+      CalmappVersion.finish_deep_copy(old_version, self, user, copy_translation_languages, copy_translations )
       return true
     else
       return false  
@@ -125,10 +125,11 @@ class CalmappVersion < ActiveRecord::Base
     #end# if save
   end
   
-  def self.complete_deep_copy(old_version, new_version, user, copy_translation_languages, copy_translations)
+  def self.finish_deep_copy(old_version, new_version, user, copy_translation_languages, copy_translations)
     begin
       if copy_translation_languages then #&& ! copy_translations then
-        version.translation_languages.concat(old_version.translation_languages)
+        binding.pry
+        new_version.translation_languages.concat(old_version.translation_languages)
         if copy_translations then
           old_version.calmapp_versions_translation_languages.find_each do |cavtl|
             CalmappVersionsTranslationLanguage.create!(:calmapp_version_id => version.id, :translation_language_id => cavtl.translation_language_id )

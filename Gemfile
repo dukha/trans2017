@@ -16,7 +16,7 @@ gem 'nokogiri'#, '1.5.0'
 
 # json parser
 gem 'json'
-
+gem 'gon'
 # authorisation No authorization solution compatible with rails 4: CanCan looks closest
 gem 'declarative_authorization', :git => "git://github.com/stffn/declarative_authorization.git" #, '0.5.3'
 
@@ -32,6 +32,7 @@ gem 'jquery-rails'#, '~>4.0.1'
 gem 'jquery-ui-rails'
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
 gem 'turbolinks'
+gem 'jquery-turbolinks'
 
 #helps with I18n not used at present. We need to use it to get pagination in the urls, I think
 gem 'routing-filter'#, '0.4.0.pre'

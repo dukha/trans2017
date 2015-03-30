@@ -76,7 +76,12 @@ class TranslationsController < ApplicationController
       @translations =  Translation.where{id == -1}
     end
     @translations =@translations.paginate(:page => params[:page], :per_page => 30)
+    # pass data directly to js
+    #gon.criteriaHiddenText = t($FA +'show_something', :something=>t($SC))
+    #gon.criteriaVisibleText = t($FA +'hide_something', :something=>t($SC))
+    #gon.translation_count = @translations.size
     respond_to do |format|
+      
       format.html # index.html.erb
       format.xml  { render :xml => @translations }
     end

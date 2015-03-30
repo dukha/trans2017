@@ -1,0 +1,349 @@
+$().ready(function(){
+  $("button.ok").click(function(){
+    tr = $(this).parents('tr.dataodd', 'tr.dataeven');
+  });
+});
+
+/*
+ * This script  handles showing and hiding selection criteria
+ */
+  
+  var   criteriaHiddenText = "<%=I18n.t($FA +'show_something', :something=>I18n.t($SC))%>";
+  var   criteriaVisibleText = "<%=I18n.t($FA +'hide_something', :something=>I18n.t($SC))%>";
+  $().ready(function(){
+    //criteriaHiddenText =  gon.criteriaHiddenText; //"< %=t($FA +'show_something', :something=>t($SC))%>";
+    //criteriaVisibleText = gon.criteriaVisibleText; 
+    if( $("div#translations-empty").html() =="true"){//< %= @translations.count == 0 %>){
+       $("#showHideCriteria").html(criteriaVisibleText); // gon.criteriaVisibleText);
+       $("#criteria").slideDown('slow');
+     }else{
+        $("#showHideCriteria").html(criteriaHiddenText);
+        $("#criteria").slideUp('slow');
+     }
+    $("#showHideCriteria").click(function(){
+      toggleCriteria();
+    }); //end click
+  });//end ready
+  function toggleCriteria(){
+    console.log("toggling");
+    //Here the text is changed first, assuming the toggle will work in the next commando
+    //Otherwise time errors occur!! In a slow toggle the text is not vis or hidden until the slide finishes
+    if($("#criteria").is(':visible')){ 
+        $("#showHideCriteria").html(criteriaHiddenText);
+    }else{
+        $("#showHideCriteria").html(criteriaVisibleText);
+    }
+    // toggle has to be after setting button text otherwise is(':visible') will not work properly
+    $("#criteria").slideToggle('slow');  
+    
+  }
+/*
+ * This script sets up inplace editing
+ */
+
+  $().ready(function(){
+    $('.best_in_place').best_in_place();
+  });
+   //This script is for overrides of the best in place functionality
+  $().ready(function(){
+    $(".ok").click(function(){
+      return false;
+    });
+    
+  });
+/*
+ * This script sets up the selection mode radio buttons
+ */
+  $(function(){
+    $( "div#selection_mode" ).buttonset();
+  });
+  
+/*
+ * Script enlarges and restores editing index for translations
+ */
+
+  var maximiseSelector = 'img#maximise';
+  var minimiseSelector = 'img#minimise'; 
+  var headerDiv ='div#appheader';
+  var appMenuSelector = 'td#appmenutd';
+  var appMainSelector ='#appmaintd';
+  var appMainContainerDivSelector = '#container';
+  $().ready(function(){
+    $(maximiseSelector).show();
+    $(minimiseSelector).hide();
+    
+    $(maximiseSelector).click(function(){
+      toggleHeaderMenu();
+      toggleMaxMinImages();
+    });
+    
+    $(minimiseSelector).click(function(){
+      toggleHeaderMenu();
+      toggleMaxMinImages();
+    });
+  });//ready 
+  function toggleHeaderMenu(){
+    $(headerDiv).toggle();
+    $(appMenuSelector).toggle();
+  };
+  function toggleMaxMinImages(){
+    $(maximiseSelector).toggle();
+    $(minimiseSelector).toggle();
+  };
+  function toggleContainerPadding(){
+    padding = $(appMainContainerDivSelector).css("padding");
+    if(padding == '0'){
+      $(appMainContainerDivSelector).css("padding", "20px 40px");
+    } else{
+      padding = '0';
+    }
+  };
+  
+
+ /* 
+   *This script enables jquery ui sortable functionality for ul with id sortable
+   */
+  $(function() {
+    $( sortableUlSelector ).sortable();
+    $( sortableUlSelector ).disableSelection();
+  });
+  
+  /*
+   * returns an li for a ul. Used for the sortable array.order dot_key_code
+   */
+  var itemList = function(val, html){
+      console.log("itemList");
+      return $('<li/>', {class: "ui-state-default",
+                         html: html, style: "margin: 3px; padding-left:3px;"}) ;
+  };
+  var anchorSelector = "span.special_editor";  
+  var saveButtonSelector =   "input#ok-special-editor";
+  var cancelButtonSelector = 'button#cancel-special-editor';
+  var originalTranslationSelector = 'input#original_translation';
+  var idInputSelector = 'input#id';
+  var dotKeyCodeInputSelector = 'input#dot_key_code';
+  var sortableUlSelector = 'ul#sortable';
+  
+  var translationSelector = 'input#translation_translation'; 
+  var allSortableUlsSelector = 'ul#sortable';
+  var hintDivSelector ="div#special-editor-hints";
+  var formSelector = "#edit_translation";
+  var editorNameSelector = "input#editor";
+  
+  var englishTranslationSelector = 'input#english';
+  var arrayEditingTableSelector = 'table#array-special-editor';
+ 
+/*
+ * Sets each piece of data into a li inside the targetContainer after removing existing
+ */    
+  var setOrderData = function(targetContainer, array){
+    if($(targetContainer).children().length != 0){
+      targetContainer.empty();
+    } 
+    $.each(array,function(index ,text){
+        console.log("setOrderData each");
+        //$("ul#sortable").append(itemList('', value));
+        $(targetContainer).append(itemList('', text));
+    });
+  };
+  
+  var setArrayData = function(targetContainer, array, englishTranslationArray, first_element_null){
+    first_element_null = (englishTranslationArray[0] == null);
+    if($(targetContainer).children().length != 0){
+      targetContainer.empty();
+    }
+    //if(typeof englishTranslation !== "undefined"){ 
+    html = '';
+    row_style_for_null = "style='display:none;'";
+    $.each(englishTranslationArray,function(index ,en_text){
+      
+      html = html + '<tr'+ ((first_element_null &&index == 0   )?(" " + row_style_for_null) : "")  + '><td>' + en_text +'</td><td>' + "<input class = 'array-element' type='text' value ='" + array[index] + "'/>" + '</td></tr>' ;
+      
+    });  
+    //html = html + ""
+    $(targetContainer).prepend(html);//.html();
+    //}
+  };  
+ 
+  var closeOthers = function(event){
+    result = $("button.ok, input#ok-special-editor").filter(":visible");
+    $.each(result, function(index, value){
+      td = $(value).parents('td');
+      cancel($(td[0]));
+    });
+    return true;
+  };
+
+  $().ready(function(){
+    $('span.best_in_place').on('mousedown',closeOthers);
+    $('span.special_editor').on('mousedown',closeOthers); 
+    $(allSortableUlsSelector).css('display','none'); 
+    $(anchorSelector).click(function(event){
+       anchor = $(this);//$(event.target);"ul#sortable"
+       containerTd = anchor.parent('td');
+       children = getTdChildren(containerTd);
+       if(typeof children['editorName'] == 'undefined'){
+         // do nothing
+       }else if(children['editorName'] == 'array_order'){
+         setOrderData(children['ul'], $.parseJSON(decodeURI(encodeURI(anchor.text()))));  
+         children['ul'].css("display", "block");
+       }else if(children['editorName'] == 'array' || children['editorName'] == 'array_first_element_null'){
+         setArrayData(children['table'],$.parseJSON(decodeURI(encodeURI(anchor.text()))), children['englishTranslation'] );
+         children['table'].css("display", 'table');    
+       }else{
+       }
+       anchor.css("display", "none");
+       children['form'].css("display", 'block');
+       children['saveButton'].css("display", 'inline');
+       children['cancelButton'].css("display", 'inline'); 
+       children['hint'].css("display", 'inline'); 
+    });
+    
+    $(saveButtonSelector).on('ajax:success', function(event, data, status, xhr) {
+      
+    });
+    $(formSelector).on("ajax:success", function(e, data, status, xhr){
+    }
+    ).on("ajax:error", function(e, xhr, status, error){
+      alert("ajax error from on form");
+    });
+    $(saveButtonSelector).click(function(event){
+      console.log("in save click");
+      return save(event);
+    });
+    
+    $(cancelButtonSelector).click(function(event){
+
+      return cancel($(this).parents('td')[0]);
+    });  
+
+  }); //end ready
+  
+  
+  var save = function(event){
+    containerTd = parentTd(event);
+      children = getTdChildren(containerTd);
+      array = [];
+      if(typeof children['editorName'] == 'undefined'){
+         // do nothing
+      }else if(children['editorName'] == 'array_order'){ 
+         lis = children['ul'].children('li') ;
+         $.each(lis,function(index ,value){
+           array.push(value.textContent);
+         });
+      }else if(children['editorName'] == 'array' || children['editorName'] == 'array_first_element_null'){
+         inputs = children.table.find('input.array-element');
+         $.each(inputs, function(index, input){
+           array.push($(input).val());
+         });            
+      }else{
+         
+      }
+
+      update = JSON.stringify(array);
+      children["translation"].val(update);
+      children['anchor'].text(update) ;
+      restoreTd(containerTd);
+      return true;
+  };
+  var cancel = function(containerTd){
+    console.log("in cancel ");
+    children = getTdChildren(containerTd);
+    restoreTd(containerTd);
+    if(typeof children['editorName'] == 'undefined'){
+       // do nothing
+    }else if(children['editorName'] == 'array_order'){
+      setOrderData(children['ul'], $.parseJSON(decodeURI(encodeURI(children['originalTranslation'][0].value))));
+    }else if(children['editorName'] == 'array' || children['editorName'] == 'array_first_element_null'){
+       console.log(children['originalTranslation']);
+       if($(children["table"]).children().length != 0){
+         $(children["table"]).empty();
+       }
+    }else{
+      
+    }
+    return true;
+  };
+  
+  var parentTd = function(event){
+    return $(event.target).parents('td')[0];
+  };
+  
+  var restoreTd = function(td){
+    console.log("in restor td");
+    children = getTdChildren(td);
+    children['anchor'].css("display", "inline");
+    children['form'].css("display", 'none');
+    children['saveButton'].css("display", 'none');
+    children['cancelButton'].css("display", 'none');
+    children['hint'].css("display", 'none');
+    console.log(typeof children['ul']);
+    console.log(typeof children['div']); 
+    console.log(typeof children['table']);    
+    if(typeof children['ul'] != 'undefined'){
+      children['ul'].css("display", 'none');
+    }else if(typeof children['table'] != 'undefined'){
+      children['table'].css("display", 'none');
+    }else{
+      
+    }   
+  };
+  /*
+   * @param td the cell in which the objects for a translation update are contained
+   * @return a hash of the objects in the td, except for the editorName which is the string from the editorName object.
+   * We need to return a string in the case of editorName because the value only appears as a defaultValue. 
+   * Only the text of the editorName object is required. 
+   */
+  var getTdChildren = function(td){
+    td = $(td);
+    anchor = td.find(anchorSelector);
+    form = td.find('form');
+    //div = td.find(specialEditorDivSelector);
+    
+    saveButton = td.find(saveButtonSelector);
+    cancelButton = td.find(cancelButtonSelector);
+    originalTranslation = td.find(originalTranslationSelector);
+    id = td.find(idInputSelector);
+    dotKeyCode = td.find(dotKeyCodeInputSelector);
+    translation = td.find(translationSelector);
+    hint = td.find(hintDivSelector);
+    editorName = td.find(editorNameSelector)[0].defaultValue;
+    
+    englishJson = td.find(englishTranslationSelector)[0].value;
+    english = $.parseJSON(decodeURI(encodeURI(englishJson)));
+    ul = undefined;
+    div = undefined;
+    table = undefined;
+    if(editorName == 'array_order' ){
+      ul = td.find(sortableUlSelector);
+    }else if(editorName == 'array'){
+
+      table = td.find(arrayEditingTableSelector);
+    }else if(editorName == 'array_first_element_null'){
+      table = td.find(arrayEditingTableSelector);
+    }else if(children['editorName'] == 'decimal_format'){
+         
+    }else if(children['editorName'] == 'time_format'){
+                 
+    }else if(children['editorName'] == 'date_format'){ 
+         
+    }else if(children['editorName'] == 'datetime_format'){
+      
+    }else{
+      
+    }    
+    return {saveButton: saveButton, 
+            cancelButton: cancelButton, 
+            form: form, 
+            ul: ul,
+            div: div, 
+            table: table,
+            anchor: anchor, 
+            id: id, 
+            dotKeyCode: dotKeyCode, 
+            originalTranslation: originalTranslation, 
+            translation: translation,
+            hint: hint,
+            editorName: editorName,
+            englishTranslation: english };
+  };

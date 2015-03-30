@@ -61,7 +61,9 @@ class UsersController < ApplicationController #Devise::RegistrationsController
     #@user = User.find(params[:id])
    
     @user.unlock_access! unless !@user.access_locked?
+   
     respond_to do |format|
+      binding.pry
       if @user.update(user_params)#params[:user])
         format.html { redirect_to(users_path, :notice => "User #{@user.username} was successfully updated.") }
         format.xml  { head :ok }
@@ -104,8 +106,8 @@ private
     #binding.pry
     
     standard_attr = [:email,  :remember_me,
-                :username, :login, :actual_name, :translator, :developer, {:profile_ids => []}, 
-                {:calmapp_versions_translation_language_ids=>[]}, {:calmapp_ids=>[]} ]
+                :username, :login, :actual_name, :translator, :developer, :application_administrator, {:profile_ids => []}, 
+                {:translator_cavs_tl_ids=>[]}, {:developer_calmapp_ids=>[]}, {:administrator_calmapp_ids=>[]} ]
     if params[:user][:password].blank? && params[:user][:password_confirmation].blank? then
       #If the user does not try to update the pw, the we don't update to null (fail anyway)
       return params.require(:user).permit(standard_attr)

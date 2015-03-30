@@ -17,16 +17,17 @@
            
            
            <li><label><%=t($ARA + "previous_calmapp_version.languages")%></label>
-             
-           <% languages = '' 
-             @previous_calmapp_version.translation_languages.each do |tl|
-                  languages += (tl.name + '<br>')
-                  
-                end 
-              languages = languages[0..(languages.length-5)] if languages.length >= 5     
+           <div style = "margin-left:25%">  
+           <% languages = ''  
+              extra = ', <br>'            
+             @previous_calmapp_version.translation_languages.each do |tl| 
+                  languages += (tl.name + extra )                  
+                end
+              last = extra.length+1  
+              languages = languages[0..(languages.length-last)] if languages.length >= last     
            %>
            <%=languages.html_safe%>
-           
+           </div>
            </li>
           
   <%end%>

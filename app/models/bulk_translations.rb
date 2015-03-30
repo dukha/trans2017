@@ -24,36 +24,39 @@ class BulkTranslations
  @return array with saved plurals
 =end  
   def self.save_new_plurals(plurals, dot_key_code, cavtl, translation = nil)
-   binding.pry
    # this array will have its last element overridden in each iteration of plurals.each
    dot_key_code_array = dot_key_code.split('.')
    # We now have to check if the dot_key_code without the plural is in the 'en' translation
    ret_val = []
+   
    plurals.each do |p|
-     binding.pry
-     pl = save_one_new_plural(p, dot_key_code_array, cavtl, translation)
+     if plurals.length == 1 && plurals[0] == 'other' then
+       pl = save_one_new_plural('', dot_key_code_array, cavtl, translation)
+     else
+       pl = save_one_new_plural(p, dot_key_code_array, cavtl, translation)
+     end
      pl.written = true
      ret_val << pl
    end # do each plural
    return ret_val 
   end #def
-  
+
+
 =begin
+ if plural is '' then this will indicate the the plurals is "other" and so we don't use one,...other but just the normal odt keyy code with the single translation.   
  @param plural the plural form (string) to be saved 
  @param dot_key_code_split_array the dot_key_code that was found (in array form) to be modified by a new plural form in this method
  @param cavtl The relevant calmapp_version_translation_language object for this dot key
 =end  
   def self.save_one_new_plural(plural, dot_key_code_split_array, cavtl, translation = nil)
     ret_val = nil
-    
-    if dot_key_code_split_array.length > 3 and dot_key_code_split_array[dot_key_code_split_array.length - 3] == 'almost_x_years'
-    binding.pry
-    end
-
-    # replace the dot_key_code of the first found plural with the one that we want to save
-    if not dot_key_code_split_array[dot_key_code_split_array.length - 1] == plural then
-      dot_key_code_split_array[dot_key_code_split_array.length - 1] = plural
-      translation = nil
+    if plural != '' then
+      if not dot_key_code_split_array[dot_key_code_split_array.length - 1] == plural then
+        dot_key_code_split_array[dot_key_code_split_array.length - 1] = plural
+        translation = nil
+      end
+    else  
+      
     end
     new_dot_key_code = dot_key_code_split_array.join('.')
     
@@ -86,9 +89,6 @@ class BulkTranslations
       end 
       ret_val = array.first
     end # not exists? 
-    #if ret_val.nil?
-      #binding.pry
-    #end
     return ret_val 
   end
   
@@ -102,29 +102,20 @@ class BulkTranslations
 =end  
   def self.translations_to_db_from_file hash, translation_upload_id, calmapp_versions_translation_language, overwrite
     keys =  hash.keys
-    #binding.pry
-    #keys.each{ |k| puts k + ": " + hash[k]}
     puts "Number of keys in hash to be written " + keys.count.to_s
     count=0
     translation = nil
     language = calmapp_versions_translation_language.translation_language.iso_code
-   
     plural_same_as_en = calmapp_versions_translation_language.translation_language.plurals_same_as_en?()
     
     keys.each do |k|
-      #puts k
-      
       translation = translation_to_db_from_file(k, hash[k], translation_upload_id, calmapp_versions_translation_language, plural_same_as_en, overwrite)    
-      #if translation.nil? or translation.errors.nil?
-      #
-      #end
+      
       if  translation.errors.count > 0 then
         return translation
       end
       
       count += 1 if translation.written
-      
-      #
     end # do
     msg = "keys written to db >= " + count.to_s
     puts msg
@@ -138,6 +129,13 @@ class BulkTranslations
  returns and loggable line for what data is being processed 
 =end  
   def self.trans_msg_data(translation, language_iso_code, dkc)
+    begin
+      if translation.nil? || language_iso_code.nil? || dkc.nil?
+        raise "Nil instead of value " + translation.to_s +  language_iso_code.to_s + dkc.toS
+      end
+    rescue StandardError => se
+      puts se.backtrace.join("\n")
+    end
     "Translation: '" + translation + "' for '" + TranslationLanguage.find_by(:iso_code => language_iso_code).name + "' key: " + dkc
   end
   
@@ -156,17 +154,17 @@ class BulkTranslations
     split_hash= split_full_dot_key_code key
     language = calmapp_versions_translation_language.translation_language.iso_code
     dkc = split_hash[:dot_key_code]
-    #if  dkc.includes('.few') then
-        #puts translation
-        #binding.pry
-    #end
-    #binding.pry
+    
     msg_data = trans_msg_data(translation, language, dkc)
     
     en_translation_exists = nil
     if language != 'en' then 
       en_translation_exists = english_translation_exists(calmapp_versions_translation_language, dkc)
-      msg = "English translation exists for " + msg_data
+      if en_translation_exists
+        msg = "English translation exists for " + msg_data
+      else
+        msg = "English translation DOES NOT exists for " + msg_data
+      end  
       Rails.logger.info msg
     end
 
@@ -175,86 +173,112 @@ class BulkTranslations
     else
       plurals = []
     end
+    # We are interested in finding out if it is already a plural like .xxx.one or .xxx.other
     end_of_dkc = dkc.split('.').last
     if language == 'en' || 
         en_translation_exists || 
         (CldrType.CLDR_plurals.include?(end_of_dkc) && end_of_dkc != 'one' && end_of_dkc != 'other') then
       exists = Translation.where{(dot_key_code == dkc) & (cavs_translation_language_id == calmapp_versions_translation_language.id)}#(language== split_hash[:language])} 
-      #
+      
       if exists.count > 0
         object = exists.first
         puts "Dot_key_code already exists for " + msg_data
       end
       
       if not object.nil? then
-      #f plurals.empty? then
          return do_overwrite_condition(dkc, translation, calmapp_versions_translation_language, translations_upload_id, overwrite, object, plurals, msg_data)
-        
-      
       else # object does not exist in db
-        #if plurals.empty 
-        #object is nil (not fouund in db)
         # if not overwrite or match language and keys count=0 then this code executes
         return do_new_condition(dkc, translation, calmapp_versions_translation_language, translations_upload_id, msg_data)
          
       end # object is nil
-    #else # plurals not empty
-        
-      #end    
-    else
-      #english translation does not exist and language is not english
-      #if dkc == 'datetime.distance_in_words.about_x_hours.one' then
-          #binding.pry
-        #end
-      puts "catch all " + dkc
-      #binding.pry 
-      if dkc.match '.few'
-        #binding.pry
-      end 
+     
+    else #language not en
+      ret_val = non_english_plural_translations_to_db_from_file(dkc, translation, translations_upload_id, calmapp_versions_translation_language, plurals, msg_data)
+      return ret_val
+    end #language 
+    msg = "Unknown error in plurals(2)" 
+    ret_val =  unsaved_record(dkc, calmapp_versions_translation_language,translation, translations_upload_id, msg_data, msg)
+  end  #def
+
+
+def self.non_english_plural_translations_to_db_from_file(dkc, translation, translations_upload_id, calmapp_versions_translation_language, plurals, msg_data)
+      #binding.pry
+      puts "catch all non- English plurals " + dkc
       if plurals.count > 0 then
+        dkc_search_pl_min = nil
+        if plurals.count == 1 && plurals[0] == 'other' then
+          # In this case it is not necessary to use the ".other suffix" The key will suffice as a plural
+          dkc_search_pl_min = dkc
+        end
         dkc_split = dkc.split('.')
         dkc_search_pl = dkc_split[0..dkc_split.length-2].join('.') + ".other"
         cavtl = calmapp_versions_translation_language
         # we find the english translation of the same version
-        #binding.pry
         en_version_tl_search_pl = CalmappVersionsTranslationLanguage.
            where{ calmapp_version_id == cavtl.calmapp_version_id }.
            where{ translation_language_id == TranslationLanguage.TL_EN.id}.first
-        if en_version_tl_search_pl then
-          #binding.pry    
+        if en_version_tl_search_pl then    
           cavtl_en_id = en_version_tl_search_pl.id
           # We can now check if this is a plural   
           if ( Translation.outer_joins_special_dot_keys_arr.
                        only_cldr_plurals_arr.
                        where{cavs_translation_language_id == cavtl_en_id }.
                        where{dot_key_code =~ (dkc_search_pl + '%')}.exists?) then
-            # If this is a plural situation then we still need to write it
-            t_array = save_new_plurals(plurals, dkc, calmapp_versions_translation_language, translation )
-            ret_val= t_array.last
+             # If this is a plural situation then we still need to write it
+             t_array = save_new_plurals(plurals, dkc, calmapp_versions_translation_language, translation )
+             if t_array.is_a?(Array) && !t_array.empty? then
+              ret_val= t_array.last  
+             else
+               msg "en translation exists but save_new plurals prduces only " + t_array.to_s
+               ret_val = unsaved_record(dkc, calmapp_versions_translation_language,translation, translations_upload_id, msg_data, msg)
+             end
+           elsif dkc_search_pl_min then
+               if ( Translation.outer_joins_special_dot_keys_arr.
+                         only_cldr_plurals_arr.
+                         where{cavs_translation_language_id == cavtl_en_id }.
+                         where{dot_key_code =~ (dkc_search_pl_min + '%')}.exists?) then
+              # If this is a plural situation then we still need to write it
+                  t_array = save_new_plurals(plurals, dkc, calmapp_versions_translation_language, translation )
+                  if t_array.is_a?(Array) && !t_array.empty? then
+                    ret_val= t_array.last
+                  else
+                    msg = "No partial Plural dot_key_code in english, even for other(1)."
+                    ret_val = unsaved_record(dkc, calmapp_versions_translation_language,translation, translations_upload_id, msg_data, msg)
+                  end
+               else # no t_array  for min dkc
+                  msg = "No partial Plural dot_key_code in english, even for other(2)."
+                  ret_val = unsaved_record(dkc, calmapp_versions_translation_language,translation, translations_upload_id, msg_data, msg)       
+               end #search for minimal key existing for en   
+                
           else
             # not a plural
             #is the english a plural?
-            msg = "No partial Plural dot_key_code in english."
-            return unsaved_record(dkc, calmapp_versions_translation_language,translation, translations_upload_id, msg_data, msg)
-          end  # partial plural dot key in en?
+              msg = "No partial Plural dot_key_code in english."
+              ret_val =  unsaved_record(dkc, calmapp_versions_translation_language,translation, translations_upload_id, msg_data, msg)
+          end # t_array stuff 
+                
+          #end  # partial plural dot key in en?
         else
           msg = "There was no version translation language found."
-          return unsaved_record(dkc, calmapp_versions_translation_language,translation, translations_upload_id, msg_data, msg)
+          ret_val =  unsaved_record(dkc, calmapp_versions_translation_language,translation, translations_upload_id, msg_data, msg)
         end # was there a version translation language  found  
       else
         # we return a new record to indicate that we have not saved
         msg = "There are no plurals to be saved."
-        return unsaved_record(dkc, calmapp_versions_translation_language,translation, translations_upload_id, msg_data, msg)
+        ret_val =  unsaved_record(dkc, calmapp_versions_translation_language,translation, translations_upload_id, msg_data, msg)
       end # are there plurals?
-        
+      if ret_val.nil? 
+        msg = "Unknown error in plurals(2)" 
+        ret_val =  unsaved_record(dkc, calmapp_versions_translation_language,translation, translations_upload_id, msg_data, msg)
+      end  
       return ret_val
-    end    
-  end  
-
+end
 =begin
   A record must be returned. Returning an unsaved record is the best way of allowing the return of the saved record
 =end   
   def self.unsaved_record(dkc, calmapp_versions_translation_language,translation, translations_upload_id, msg_data, message)
+    
     msg = "English translation does not exist so not saving " + message + " " + msg_data
     puts msg
     Rails.logger.info msg
@@ -361,7 +385,7 @@ class BulkTranslations
     puts msg
     Rails.logger.info msg
     ret_val = Translation.new(:cavs_translation_language_id => calmapp_versions_translation_language.id, :dot_key_code=> dkc, :translation=>translation, :translations_upload_id => translations_upload_id)
-    #binding.pry
+
     ret_val.save!       
     ret_val.written = true
     return ret_val

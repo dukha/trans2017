@@ -5,6 +5,8 @@
 // require jquery-2.1.3
 // require jquery-1.8.0
 // require jquery
+// This script enables stuff in $(document).ready() to fire as normal with turbolinks
+//=require jquery.turbolinks
 //= require jquery_ujs
 
 //= require jquery-ui
@@ -43,6 +45,9 @@
 // require translations_uploads
 //= require_self
 //= require_tree .
+
+//Turbolinks.ProgressBar.enable();
+
 
 if(UnobtrusiveFlash.flashOptions == null){
   UnobtrusiveFlash.flashOptions= {};

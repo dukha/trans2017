@@ -42,7 +42,7 @@ class TranslationsUpload < ActiveRecord::Base
       error =  PsychSyntaxErrorWrapper.new(pse, yaml_upload_identifier)
       puts error
       logger.error(error)
-      binding.pry
+      #binding.pry
       raise error
     end  
     #binding.pry
@@ -107,9 +107,9 @@ class TranslationsUpload < ActiveRecord::Base
     #if node.to_s == "%n %u" or node.to_s == "%n%u" then
      # binding.pry
     #end
-    if node.to_s == "4"  then
-      binding.pry
-    end
+    #if node.to_s == "4"  then
+      #binding.pry
+    #end
     if node.is_a? Hash then
       #puts "Hash"
       node.keys.each do |k|
@@ -119,6 +119,7 @@ class TranslationsUpload < ActiveRecord::Base
       dot_key_stack.pop 
       #puts dot_key_values_map
       #return
+      
     elsif node.is_a? Array then
       # there should be no possibility of having hashes in arrays or arrays in arrays as there could not be a dot key system to manage this
       # so we assume that each element of an array is a scalar
@@ -135,6 +136,9 @@ class TranslationsUpload < ActiveRecord::Base
       #return    
     elsif node.is_a? String then
       #puts "String"
+      if node.include? 'too_long'
+        binding.pry
+      end
       store_dot_key_value(dot_key_stack, node, dot_key_values_map)
       #return
     elsif (node.is_a? TrueClass ) || (node.is_a? FalseClass) then

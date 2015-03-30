@@ -63,8 +63,8 @@ class CalmappVersionsTranslationLanguagesController < ApplicationController
   # POST /calmapp_versions_translation_languages
   # POST /calmapp_versions_translation_languages.json
   def create
-    @calmapp_versions_translation_language = CalmappVersionsTranslationLanguage.new(calmapp_versions_translation_language_params) #params[:calmapp_versions_translation_language])
-    #binding.pry
+    @calmapp_versions_translation_language = CalmappVersionsTranslationLanguage.new(calmapp_versions_translation_language_params) 
+    binding.pry
     respond_to do |format|
       if @calmapp_versions_translation_language.save
         tflash('create', :success, {:model=>@@model, :count=>1})

@@ -40,11 +40,15 @@ class User < ActiveRecord::Base
   #has_many :calmapp_versions_translation_languages, :through => :cavs_tl_translators
   has_many :translator_jobs, :foreign_key => "translator_id" , :class_name=> "CavsTlTranslator"
   #accepts_nested_attributes_for :translator_jobs, :reject_if => :all_blank, :allow_destroy => true
-  has_many :calmapp_versions_translation_languages, :through => :translator_jobs
+  has_many :translator_cavs_tls, :through => :translator_jobs, :source => :calmapp_versions_translation_language
   
   has_many :developer_jobs, :foreign_key => "user_id" , :class_name=> "CalmappDeveloper"
   #accepts_nested_attributes_for :developer_jobs, :reject_if => :all_blank, :allow_destroy => true
-  has_many :calmapps, :through => :developer_jobs, :source => :calmapp
+  has_many :developer_calmapps, :through => :developer_jobs, :source => :calmapp, :class_name=>"Calmapp"
+  
+  has_many :admin_jobs, :foreign_key => "user_id" , :class_name=> "CalmappAdministrator"
+  #accepts_nested_attributes_for :developer_jobs, :reject_if => :all_blank, :allow_destroy => true
+  has_many :administrator_calmapps, :through => :admin_jobs, :source => :calmapp, :class_name=>"Calmapp"
 =begin
      for declarative auth
      Returns the role symbols of the given user for declarative_auth. 
@@ -102,7 +106,15 @@ class User < ActiveRecord::Base
  # https://github.com/plataformatec/devise/wiki/How-To:-Allow-users-to-sign_in-using-their-username-or-email-address
  # Overwrite Devise’s find_for_database_authentication method
 
-
+  def self.seed
+     User.create_root_user
+     pw = '123456'
+     param = {:password => pw,:password_confirmation => pw,:username => 'sysadmin',:email => 'admin@calm.org', 
+                :actual_name=> 'admin'}
+     admin = User.create! param
+     admin.profiles << Profile.sysadmin
+  end
+  
   def self.demo
     pw = '123456'
     param = {:password => pw,:password_confirmation => pw,:username => 'albert',:email => 'albert@calm.org', 
@@ -121,8 +133,19 @@ class User < ActiveRecord::Base
     param[:developer] = true
     developer=User.create! param
     developer.profiles << Profile.where {name == "developer"}.first
-    developer.calmapps << Calmapp.where{name == "calm_registrar" }.first
+    #binding.pry
+    developer.developer_calmapps << Calmapp.where{name == "calm_registrar" }.first
     log.info("devvie created")
+    
+    param[:username]='addy'
+    param[:actual_name] = 'Application Admin'
+    param[:email]= 'addy@calm.org'
+    param[:application_administrator] = true
+    admin=User.create! param
+    admin.profiles << Profile.where {name == "application_administrator"}.first
+    #binding.pry
+    admin.administrator_calmapps << Calmapp.where{name == "calm_registrar" }.first
+    log.info("addy created")
     
     param[:username]= 'trannie'
     param[:actual_name] = 'Translator User'
@@ -140,9 +163,9 @@ class User < ActiveRecord::Base
             where {calmapp_version_tl.calmapp.name == 'calm_registrar' }.
             where{translation_language.iso_code == 'fr'}.first  
             
-    translator.calmapp_versions_translation_languages << cav_4_cs
-    translator.calmapp_versions_translation_languages << cav_4_fr 
-    translator.calmapp_versions_translation_languages << 
+    translator.translator_cavs_tls << cav_4_cs
+    translator.translator_cavs_tls << cav_4_fr 
+    translator.translator_cavs_tls << 
        CalmappVersionsTranslationLanguage.new(:translation_language_id =>TranslationLanguage.where{iso_code == 'ja'}.first.id,
       :calmapp_version_id => CalmappVersion.where {calmapp_id == Calmapp.where {name == 'calm_registrar'}.first.id}.first.id)
 =begin      
@@ -174,14 +197,7 @@ CalmappVersionsTranslationLanguage.new(:translation_language_id =>TranslationLan
     end
   
   
-   def self.seed
-     User.create_root_user
-     pw = '123456'
-     param = {:password => pw,:password_confirmation => pw,:username => 'sysadmin',:email => 'admin@calm.org', 
-                :actual_name=> 'admin'}
-     admin = User.create! param
-     admin.profiles << Profile.sysadmin
-   end
+   
    
    
 =begin 
