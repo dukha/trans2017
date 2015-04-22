@@ -1,0 +1,4 @@
+
+<% flash.each do |name, msg| %>
+  $('div#flash').html("<div id = 'flash_<%=name%>'><%= msg.html_safe %></div>")
+<%end%>

@@ -1,0 +1,41 @@
+var publishButtonSelector = "button#publish";
+var publishingGetDbDivSelector = "div#publishing-get-database";
+var publishLanguageSelector = 'input#publish-language';
+var getDbDisappearImgSelector = 'img#disappear';
+$(document).ready(function(){
+  
+  $(publishButtonSelector).click(function(){
+    div = getSiblingPublishingDiv(this);
+    $(div).toggle('slow'); 
+    $(this).toggle('slow');
+  });
+  
+  $(publishLanguageSelector).click(function(){
+    closePublishLanguageDiv(this);
+    return true;
+  });
+  $(getDbDisappearImgSelector).click(function(){
+    closePublishLanguageDiv(this);
+  });  
+  
+  $(publishButtonSelector).show();
+  $(publishingGetDbDivSelector).hide();
+});
+
+function getTDParent(child){
+  return $(child).parents('td')[0]; //(child).parent('td')
+}
+
+function getSiblingPublishingDiv(sibling){
+  parent = getTDParent(sibling);
+  div = $(parent).find(publishingGetDbDivSelector);
+  return div;
+}
+
+function closePublishLanguageDiv(child){
+    td = getTDParent(child);
+    div = $(td).children(publishingGetDbDivSelector)[0];
+    button = $(td).children(publishButtonSelector)[0];
+    $(div).toggle('slow');
+    $(button).toggle('slow');
+}
