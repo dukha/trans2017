@@ -55,11 +55,17 @@ class CalmappVersion < ActiveRecord::Base
   
   # return a concatenation of name and version suitable for display
   def calmapp_name_with_version
-    return calmapp_name.humanize + " Version:" + version.to_s
+    return calmapp.name.humanize + " Version:" + version.to_s
   end
+=begin  
   def name
     return calmapp_name_with_version
   end
+=end  
+  def description
+    return calmapp_name_with_version
+  end
+  
   def calmapp_name
     #puts "xxxx" + Application.where(:id => application_id).name
     return Calmapp.where(:id => calmapp_id).first.name.titlecase
@@ -84,7 +90,7 @@ class CalmappVersion < ActiveRecord::Base
   end
    
   def to_s
-    name
+    description
   end
   
   def self.version_select
@@ -139,12 +145,12 @@ class CalmappVersion < ActiveRecord::Base
           end # each cavtl
         end #copy trans
       end #copy tl
-      UserMailer.background_process_success(user, "Version_deep_copy", old_version.name + " to " +new_version.name)
+      UserMailer.background_process_success(user, "Version_deep_copy", old_version.description + " to " +new_version.description)
     rescue StandardError => e
-       Rails.logger.error "The deep copy of " + old_version.name + " has failed"
+       Rails.logger.error "The deep copy of " + old_version.description + " has failed"
        Rails.logger.error "Deep copy exception: " +e.message
        Rails.logger.error e.backtrace.join("\n")
-       UserMailer.background_process_fail(user, "Version_deep_copy", old_version.name + " to " +new_version.name, e.message)  
+       UserMailer.background_process_fail(user, "Version_deep_copy", old_version.description + " to " +new_version.description, e.message)  
     end   #begin resuce 
   end
   def deep_destroy(user)

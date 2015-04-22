@@ -43,8 +43,16 @@ class CalmappVersionsTranslationLanguage < ActiveRecord::Base
      where{translation_language_id != my{en_id} }.load 
   end
   
-  def name
-    return (CalmappVersion.find(calmapp_version_id).name + " " + TranslationLanguage.find(translation_language_id).name).titlecase
+  def redis_databases
+    return calmapp_version_tl.redis_databases
+  end
+  
+  def redis_databases_count
+    return redis_databases.count
+  end
+  def description
+    #return (CalmappVersion.find(calmapp_version_id).description + " " + TranslationLanguage.find(translation_language_id).name).titlecase
+    return (calmapp_version_tl.description + " " + translation_language.name).titlecase
   end
 =begin
  Uploads the base translation for a new language after added (ie created)

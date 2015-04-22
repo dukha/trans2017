@@ -40,7 +40,7 @@
           <!--li>< %= tlink_to("developers_new_translations", dev_new_translation_path, :category=>:menu) %></li-->
            <!-- This should url should become edit_user_preference_path(current_user.id) when we get the login working -->
            <!--li>< %= tlink_to("translation_parameters", edit_user_work_path(1), :category=>:menu) %></li -->
-           <!--li>< %= tlink_to("translation_hints", translation_hints_path, :category=>:menu) %></li -->
+           <li><%= tlink_to("translation_hints", translation_hints_path, :category=>:menu) %></li>
         </ul>
       </div>
       <div>
@@ -69,6 +69,7 @@
         <li><%= tlink_to("redis_instances", redis_instances_path, :category=>:menu) %></li>
         <li><%= tlink_to("redis_databases", redis_databases_path, :category=>:menu) %></li>
         <li><%= tlink_to("translations_uploads", calmapp_versions_translation_languages_path, :category=>:menu) %></li>
+        <li><%= tlink_to("versions_languages", calmapp_versions_translation_languages_path, :category=>:menu) %></li>
         <li><%= tlink_to("special_partial_dot_keys", special_partial_dot_keys_path, :category=>:menu) %></li>
         <li><%= tlink_to("dot_key_code_translation_editors", dot_key_code_translation_editors_path, :category=>:menu) %></li>
         <% if false then %>

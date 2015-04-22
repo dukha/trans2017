@@ -92,7 +92,9 @@ authorization do
   role :calmapp_versions_publish do
     has_permission_on [:redis_databases], :to => [:publish]
   end
-  
+  role :calmapp_versions_translation_languages_publish do
+    has_permission_on [:calmapp_versions_translation_languages], :to => [:publish_language]
+  end
   
   role :users_invite do
     has_permission_on [:users], :to => [:invite_user]

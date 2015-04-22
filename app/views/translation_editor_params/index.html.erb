@@ -30,6 +30,7 @@
 </script>
 <%=theading("listing", :model=>'translation_editor_param', :count=>11) %>
 <%if TranslationEditorParam.respond_to?( :searchable_attr ) and TranslationEditorParam.searchable_attr.any? then %>
+<div id = 'data-empty' style = 'display:none'><%= @translation_editor_params.empty?.to_s %></div>
 <button id="showHideCriteria" type='button'>x</button>
 <div id='criteria' class="criteria" >
   <!-- Use form_tag here because we are not going to work with a new AR model. form_tag doesn't work with formtastic either -->

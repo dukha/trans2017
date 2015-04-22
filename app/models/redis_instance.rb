@@ -40,11 +40,11 @@ class RedisInstance < ActiveRecord::Base
   validate :not_localhost
   
   after_initialize :default_values
-
+=begin
   def name
     return CalmappVersion.find(calmapp_version_id).name + " / Redis Database Index: " + redis_db_index.to_s
   end
-
+=end
 
   def database_supports_language? language
     if language.is_a(TranslationLanguage) then

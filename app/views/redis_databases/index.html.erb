@@ -33,7 +33,7 @@
       
         <td class="<%= cell_class %>">
           <%if redis_database.calmapp_version %>
-            <%= redis_database.calmapp_version.name %>
+            <%= redis_database.calmapp_version.description %>
           <%end%>
         </td>
         <!-- td class="< %= cell_class %>">< %= CalmappVersion.find(redis_database.calmapp_version_id).calmapp_name_with_version %></td -->
@@ -56,7 +56,7 @@
     <!--td class="< %= link_cell_class %>">< %= tlink_to 'redis_to_yaml',  redis_database  %></td-->
     <td class="<%= link_cell_class %>"  ><%= tlink_to 'version_publish',calmapp_version_publish_path(redis_database),{
                       :data=>{:type=>"json", :disable_with=> "Publishing...."},
-                      :"data-tooltip" => t($FH + 'redis_database.version_publish', :version_name=>redis_database.calmapp_version.name , :db_name=> redis_database.short_name),
+                      :"data-tooltip" => t($FH + 'redis_database.version_publish', :version_name=>redis_database.calmapp_version.description , :db_name=> redis_database.short_name),
                       :method=> "post", 
                       :form=>{:id=>"publish"}, 
                       :remote=> true, 
@@ -119,7 +119,10 @@
   });
 */
 $(document).ready(function(){
-  $("#has-tt").tooltip({content:function(){return "Some <b>great</b> HTML tooltip text!";}});  
+//  $("#has-tt").tooltip({content:function(){return "Some <b>great</b> HTML tooltip text!";}});  
+  $('form#publish').on("click", "div.tt" , function(){
+    $(this).remove();
+  });
 });
 
 </script>

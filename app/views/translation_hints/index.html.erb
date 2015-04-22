@@ -2,6 +2,7 @@
 <%require 'will_paginate/array' %>
 <%=theading("listing", :model=>'translation_hint', :count=>11) %>
 <%if TranslationHint.respond_to?( :searchable_attr ) and TranslationHint.searchable_attr.any? then %>
+<div id = 'data-empty' style = 'display:none'><%= @translation_hints.empty?.to_s %></div>
 <button id="showHideCriteria" type='button'>x</button>
 <div id='criteria' class="criteria" >
   <!-- Use form_tag here because we are not going to work with a new AR model. form_tag doesn't work with formtastic either -->
@@ -108,33 +109,3 @@
 <br />
 <%end # if else count %>
 <%=link_new( new_translation_hint_path, :translation_hint)  %>
-<script type="text/javascript">
-//This script  handles showing and hiding selection criteria
-  var criteriaDiv ="#criteria";
-  var criteriaButton = "#showHideCriteria";
-  $().ready(function(){
-    //Initialise the criteria to be hidden on first display
-    $(criteriaDiv).hide(); 
-    $(criteriaButton).html(criteriaHiddenText);
-    
-    if( <%= @translation_hints.count==0 %>){
-      toggleCriteria();
-    }
-    
-    $(criteriaButton).click(function(){
-      toggleCriteria();
-    }); //end click
-  });//end ready
-  var   criteriaHiddenText = "<%=t($FA +'show_something', :something=>t($SC))%>";
-  var   criteriaVisibleText = "<%=t($FA +'hide_something', :something=>t($SC))%>";
-  function toggleCriteria(){
-    if($(criteriaDiv).is(':visible')){ 
-        $(criteriaButton).html(criteriaHiddenText);
-    }else{
-        $(criteriaButton).html(criteriaVisibleText);
-    }
-    // toggle has to be after setting button text otherwise is(':visible') will not work properly
-    $(criteriaDiv).slideToggle('slow');  
-  }
-  
-</script>

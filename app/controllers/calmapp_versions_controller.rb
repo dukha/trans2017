@@ -205,11 +205,16 @@ class CalmappVersionsController < ApplicationController
       #render action: "deep_copy_params"
     #end  
   end
+  
+  
+  
    private
      def redis_db_update? 
        #binding.pry
        return params[:calmapp_version][:calmapp_versions_translation_language_ids] == nil
      end
+     
+   
 =begin     
      def prepare_params
        #binding.pry

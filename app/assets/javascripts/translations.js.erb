@@ -7,20 +7,23 @@ $().ready(function(){
 /*
  * This script  handles showing and hiding selection criteria
  */
-  
+  var CRITERIA_DIV_SELECTOR = "#criteria";
+  var CRITERIA_BUTTON_SELECTOR = "#showHideCriteria";
+  var NOT_VISISBLE_RECORDS_EMPTY_DIV_SELECTOR = "div#data-empty"
+  //var SHOW_HIDE_CRITERIA_SELECTOR = "#showHideCriteria";
+  //var CRITERIA_SELECTOR = "#criteria"
   var   criteriaHiddenText = "<%=I18n.t($FA +'show_something', :something=>I18n.t($SC))%>";
   var   criteriaVisibleText = "<%=I18n.t($FA +'hide_something', :something=>I18n.t($SC))%>";
   $().ready(function(){
-    //criteriaHiddenText =  gon.criteriaHiddenText; //"< %=t($FA +'show_something', :something=>t($SC))%>";
-    //criteriaVisibleText = gon.criteriaVisibleText; 
-    if( $("div#translations-empty").html() =="true"){//< %= @translations.count == 0 %>){
-       $("#showHideCriteria").html(criteriaVisibleText); // gon.criteriaVisibleText);
-       $("#criteria").slideDown('slow');
+    
+    if( $(NOT_VISISBLE_RECORDS_EMPTY_DIV_SELECTOR).html() =="true"){
+       $(CRITERIA_BUTTON_SELECTOR).html(criteriaVisibleText);
+       $(CRITERIA_DIV_SELECTOR).slideDown('slow');
      }else{
-        $("#showHideCriteria").html(criteriaHiddenText);
-        $("#criteria").slideUp('slow');
+        $(CRITERIA_BUTTON_SELECTOR).html(criteriaHiddenText);
+        $(CRITERIA_DIV_SELECTOR).slideUp('slow');
      }
-    $("#showHideCriteria").click(function(){
+    $(CRITERIA_BUTTON_SELECTOR).click(function(){
       toggleCriteria();
     }); //end click
   });//end ready
@@ -28,13 +31,13 @@ $().ready(function(){
     console.log("toggling");
     //Here the text is changed first, assuming the toggle will work in the next commando
     //Otherwise time errors occur!! In a slow toggle the text is not vis or hidden until the slide finishes
-    if($("#criteria").is(':visible')){ 
-        $("#showHideCriteria").html(criteriaHiddenText);
+    if($(CRITERIA_DIV_SELECTOR).is(':visible')){ 
+        $(CRITERIA_BUTTON_SELECTOR).html(criteriaHiddenText);
     }else{
-        $("#showHideCriteria").html(criteriaVisibleText);
+        $(CRITERIA_BUTTON_SELECTOR).html(criteriaVisibleText);
     }
     // toggle has to be after setting button text otherwise is(':visible') will not work properly
-    $("#criteria").slideToggle('slow');  
+    $(CRITERIA_DIV_SELECTOR).slideToggle('slow');  
     
   }
 /*

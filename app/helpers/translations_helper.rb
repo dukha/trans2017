@@ -14,12 +14,25 @@ module TranslationsHelper
   $AR="activerecord."
   $ARA=$AR + "attributes."
   $ARM= $AR + "models."
+  
   $C ="commons."
+  
+  $D="date."
+  $DF=$D + "formats."
+  $DT ="datetime."
+  $DTP= $DT +"prompts."
+  $DTF= $DT + "formats."
+  $DB_DF = "%Y-%b-%d" #I18n.t("date.formats.db")
+  $EM = "errors.messages."  #Used for model specific errors errors.messages.<model><.attribute>.error_name
+  
   $F="formtastic."
   $FL= $F+"labels."
   $FH = $F+"hints."
   $FA = $F + "actions."
+  
+  $H = "headings."
   $LU="lookups."
+  
   $M="menus."
   $MS="messages." #Used in the context of messages.<situation>[<.situation>].<$E | $W | $N | $S>
     $W ="warning"
@@ -27,26 +40,15 @@ module TranslationsHelper
     $S = 'success'
     $E = 'error'
   $MSDS = $MS + 'delete.are_you_sure.' +$W
-  $EM = "errors.messages."  #Used for model specific errors errors.messages.<model><.attribute>.error_name  
+  $P="placeholders."
+    
   $S="commons.search."
   $SC=$S + "criteria"
   $SO=$S + "operators."
-  
-  $D="date."
-  $DF=$D + "formats."
-  
-  $DT ="datetime."
-  $DTP= $DT +"prompts."
+
   $T='time.'
-  #$TP="commons.timepicker."
-  $TF = "time.formats."
-  $DTF= $DT + "formats."
   $TB="tabs."
-  $P="placeholders."
-  #This is not a language translation but rather to put a date into a format acceptable for use in a db query
-  $DB_DF = "%Y-%b-%d" #I18n.t("date.formats.db")
-
-
+  $TF = "time.formats."
   $TM="translation missing:"
 
 =begin
@@ -60,7 +62,9 @@ module TranslationsHelper
 =end
 
    def tlink_to(translation_code, url, options = {})
+     if translation_code == 'publish_language'
      #binding.pry
+     end
      options[:count] = 1 if options[:model] && options[:count].nil?
      model = options[:model]
      if !model.nil?
@@ -73,12 +77,13 @@ module TranslationsHelper
        end
        options[:model]= tr_model
      end
+     #binding.pry
      if options[:category].nil? or options[:category]== :action then
        tlabel = I18n.t($FA + translation_code, options )
      elsif options[:category]== :menu then
-       tlabel = tmenu( translation_code)
+       tlabel = tmenu( translation_code, options)
      else
-       tlabel = t(translation_code)
+       tlabel = t(translation_code, options)
      end
      if options[:title] then
        ttitle = t($FH + options[:title])
@@ -132,7 +137,7 @@ module TranslationsHelper
     else
       
     end
-    ret_val = "<p class='"+ klass + "'>"+ret_val + "</p>"
+    ret_val = "<p class='"+ klass + "'>" + ret_val + "</p>"
     return ret_val.html_safe
   end
 
@@ -223,8 +228,8 @@ just substitute twill_paginate for will_paginate
   end
   
 
-  def tmenu( menu)
-     I18n.t($M + menu)
+  def tmenu( menu, options={})
+     I18n.t($M + menu, options)
   end
 
  

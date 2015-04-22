@@ -133,36 +133,35 @@ class CalmappVersionsTranslationLanguagesController < ApplicationController
       format.js {}
     end  
   end
-=begin    
-  def write_file_to_db
-    #binding.pry
-    @translations_upload = TranslationsUpload.find(params[:id])
-    @calmapp_versions_translation_language = CalmappVersionsTranslationLanguage.find(@translations_upload.cavs_translation_language_id)
-    if @translations_upload then
-      #file = @translations_upload.yaml_upload2
-     # binding.pry
-      if @translations_upload.write_file_to_db2(Translation.Overwrite[:all]) then
+
+=begin
+ publish_language publishes a single language translations of a particular version to the chosen redis_database  
+=end
+  def publish_language
+    @calmapp_versions_translation_language_id = params[:id]
+    calmapp_versions_translation_language = CalmappVersionsTranslationLanguage.find(params[:id])
+    calmapp_versions_translation_language.translation_language
+    begin
+      RedisDatabase.validate_redis_db_params(params[:redis_database_id])
+      redis_db = RedisDatabase.find(params[:redis_database_id])
+      count = redis_db.publish_version_language(calmapp_versions_translation_language.translation_language)   
+      if request.xhr? then
+        payload = {"result" => count, "status" =>200}
+        flash[:notice] = "Published to #{redis_db.description} : Total Translations Published = #{count}"
         respond_to do |format|
-          #binding.pry
-          tflash("write_yaml_file", :success, :file=>@translations_upload.yaml_upload_identifier)
-          format.html {render :action => 'edit'}
-        end
-      else
-        cause = ''
-        binding.pry
-        @calmapp_versions_translation_language.errors.each{|m| cause = cause + m + "; " }
-         
-        respond_to do |format|
-          tflash("write_yaml_file", :error, :cause=> cause) 
-          format.html {render :action => 'edit'}
+          format.js
         end
       end
-    else
-      #error  
-    end
-  end  
-=end  
-  
+    rescue StandardError=> e
+      payload = {"result" => (e.message + ((params[:redis_database_id].blank?) ? '' : (" on #{redis_db.description}." + " Try again later or contact yor system administrator."))), "status" => 400}
+      flash[:error] = payload["result"] 
+      Rails.logger.error(payload["result"])
+      respond_to do |format|
+          format.js
+      end
+    end  
+  end
+
   
   
   private

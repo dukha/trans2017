@@ -1,5 +1,6 @@
 <%=theading("listing", :model=>'dot_key_code_translation_editor', :count=>11) %>
 <%if TranslationEditor.respond_to?( :searchable_attr ) and TranslationEditor.searchable_attr.any? then %>
+<div id = 'data-empty' style = 'display:none'><%= @dot_key_code_translation_editors.empty?.to_s %></div>
 <button id="showHideCriteria" type='button'>x</button>
 <div id='criteria' class="criteria" >
   <!-- Use form_tag here because we are not going to work with a new AR model. form_tag doesn't work with formtastic either -->
@@ -100,7 +101,7 @@
 <br />
 <%end # if else count %>
 <!--%=link_new( new_dot_key_code_translation_editor_path, :dot_key_code_translation_editor)  % -->
-
+<!--
 <script type="text/javascript">
 //This script  handles showing and hiding selection criteria
   var criteriaDiv ="#criteria";
@@ -131,3 +132,4 @@
   }
   
 </script>
+-->

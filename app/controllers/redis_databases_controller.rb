@@ -130,32 +130,29 @@ class RedisDatabasesController < ApplicationController
     @redis_database.redis_to_yaml @file
   end
   
+=begin
+ This method publishes the whole application version to the chosen redis database  
+=end
   def publish
-    #puts "7777777"
-    #puts redis_databases_path
-    #session[:return_to] = request.referer
-    #puts session[:return_to]
-    #puts params
-    
     begin
       redis_db = RedisDatabase.find(params[:id])
-      count = redis_db.publish_version
-      
+      count = redis_db.publish_version 
       if request.xhr? then
-
         payload = {"result" => count, "status" =>200}
-        flash.now[:notice] = "Published to Redis on #{redis_db.name} : #{count} translations"
-        render :js => {}# => payload, "status" =>:success #.to_json #("Total translations written = " + count.to_s)
+        flash[:notice] = "Published to #{redis_db.description} : Total Translations Published = #{count}"
+        respond_to do |format|
+          format.js
+        end
       end
-    rescue => e
-      #binding.pry
-      payload = {"result" => (e.message + " on #{redis_db.name}."), "status" => 400}
+    rescue StandardError => e
+      payload = {"result" => (e.message + " on #{redis_db.description}."), "status" => 400}
       flash[:error] = payload["result"] + " Try again later or contact yor system administrator."
       Rails.logger.error(e.message)
-      render :js =>{}#=> payload, :status => :bad_request
-      #raise
+      respond_to do |format|
+          format.js
+      end 
     end  
-  end
+  end  
   
 private
     # Use callbacks to share common setup or constraints between actions.

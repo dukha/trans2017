@@ -74,15 +74,16 @@ class RedisDatabase < ActiveRecord::Base
       calmapp_versions_redis_database.destroy
   end
 =end  
-  def name
+  def description
     #binding.pry
-    db_name = calmapp_version.name + " / Redis Instance: " + short_name
+    #db_name = calmapp_version.description + " / Redis Instance: " + short_name
+    return short_name
     #binding.pry
     #connect.setname db_name
   end
   def short_name
     db_name = redis_instance.description + 
-    "(Database Index: " + redis_db_index.to_s + ")"
+    ": DB Index: " + redis_db_index.to_s
   end
   #def name
     ##end
@@ -148,10 +149,14 @@ class RedisDatabase < ActiveRecord::Base
  does not disconnect 
 =end  
   def publish_one_translation(translation, connection)
+    
     #binding.pry
     translation = Translation.find(translation) if translation.is_a? Integer
     #binding.pry
     dot_key= translation.full_dot_key_code
+    #if dot_key == "ja.date.abbr_day_names"
+      #binding.pry
+    #end
     #connect.auth(password)
     connection.set(dot_key, translation.translation.to_json)
     puts "Published " + dot_key + " = " + connect.get(dot_key)
@@ -167,53 +172,59 @@ class RedisDatabase < ActiveRecord::Base
      connect.del(dot_key)
   end
   
-=begin
-  
-=end
-  def publish_version_language(calmapp_versions_translation_language)
-    #raise "Languages don't match" if 
-    
-  end
+
 
 =begin
+  First removes all existing translations in the redis database 
  publishes all translations(for all languages) for the calmapp_version of this redis_database 
 =end  
   def publish_version 
-    #calmapp_version.translation_languages.each{ |tl|
-      #translations  = Translation.join_to_cavs_tls_arr(calmapp_version.id).joins_to_tl_arr.where{tl1.iso_code == tl}
-      #translations.each{ |t|
-        #t.publish_translation(id)         
-      #}
-      
-    #}
-    
-    translations  = Translation.join_to_cavs_tls_arr(calmapp_version.id)
-    #binding.pry
-    con = new_connection
-    # This removes all key value pairs from the db
-    #binding.pry
-    con.flushdb 
+    con = nil
     count = 0
-    translations.each{ |t|
-        #t.publish_translation(id)   
-        publish_one_translation(t, con)
-        count +=1      
-      }
-    con.bgsave
-    con.quit  
+    begin
+      translations  = Translation.join_to_cavs_tls_arr(calmapp_version.id)
+      con = new_connection
+      # This removes all key value pairs from the db
+      con.flushdb     
+      translations.each{ |t|   
+          publish_one_translation(t, con)
+          count +=1      
+        }
+      con.bgsave
+    rescue StandardError => se
+      raise se
+    ensure
+      con.quit
+    end     
     return count
   end  
-
-=begin
+  
+  def self.validate_redis_db_params redis_db_id
+    if redis_db_id.blank? then
+      raise StandardError.new("Redis Database cannot be blank" )
+    end
+  end
+=begin   First removes all existing translations in the redis database
  Publishes all translations for the given translation language
  @param TranslationLanguage instance 
 =end  
   def publish_version_language translation_language
-      translations  = Translation.join_to_cavs_tls_arr(calmapp_version.id).joins_to_tl_arr.where{tl1.iso_code == transaltion_language.iso_code}
+    con = nil 
+    count = 0
+    begin
+      con = new_connection
+      translations  = Translation.join_to_cavs_tls_arr(calmapp_version.id).joins_to_tl_arr.where{tl1.iso_code == translation_language.iso_code}
       translations.each{ |t|
-        #t.publish_translation(id) 
-        publish_one_translation(t)        
+        publish_one_translation(t, con)
+        count += 1        
       }
+      con.bgsave
+    rescue  StandardError => se
+      raise se    
+    ensure
+      con.quit
+    end  
+    return count  
   end  
 
   def self.demo
@@ -289,7 +300,13 @@ class RedisDatabase < ActiveRecord::Base
 end
 
 
-
+    #calmapp_version.translation_languages.each{ |tl|
+      #translations  = Translation.join_to_cavs_tls_arr(calmapp_version.id).joins_to_tl_arr.where{tl1.iso_code == tl}
+      #translations.each{ |t|
+        #t.publish_translation(id)         
+      #}
+      
+    #}
 
 
 # == Schema Information

@@ -1,8 +1,8 @@
-<%=theading("edit_with_redis_databases", :model=>@calmapp_version.name, :count=>1) %>
+<%=theading("edit_with_redis_databases", :model=>@calmapp_version.description, :count=>1) %>
 <%= semantic_form_for(@calmapp_version) do |f| %>
   
 	<%= f.inputs do %>
-				   <li style="color:red;font-size:150%"><%=@calmapp_version.name.titlecase%> </li>
+				   <li style="color:red;font-size:150%"><%=@calmapp_version.description.titlecase%> </li>
         <li>
         <div id = "table" style="display:table">
            <div id= "header-row" style="display:table-row"> 

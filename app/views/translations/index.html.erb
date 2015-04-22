@@ -6,7 +6,7 @@
 <%wrapped_key_display='table_cell'%>
 <%short_key_display='table-cell'%>
 
- <div id = 'translations-empty' style = 'display:none'><%= @translations.empty?.to_s %></div>
+ <div id = 'data-empty' style = 'display:none'><%= @translations.empty?.to_s %></div>
  
 <button id="showHideCriteria" type='button'>x</button>
 <div id='criteria' class="criteria" >
@@ -46,7 +46,7 @@
          <label for="criterion_cav_id", class="criteria-label" ><%=tlabel("calmapp_version", "translation")%></label>
          <%=select_tag(  :operator_cav_id, options_for_select(operators_2_options(equal_operator), 
              params[:operator_cav_id]),{:include_blank=> false,:class=>'criteria-operators-select', :readonly=>true} )%> 
-         <%=select_tag( :criterion_cav_id, options_from_collection_for_select(CalmappVersion.all, "id","name", 
+         <%=select_tag( :criterion_cav_id, options_from_collection_for_select(CalmappVersion.all, "id","description", 
                params[:criterion_cav_id]), {:include_blank=> true})%>
       </li>
       

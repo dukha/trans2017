@@ -4,8 +4,9 @@
   $(function() {
     $( document ).tooltip({
       position: {
-        my: "center bottom-20",
-        at: "center top",
+        //my: "center bottom-20",
+        my: "center bottom+ 5",
+        at: "left+ 5 top",
         using: function( position, feedback ) {
           $( this ).css( position );
           $( "<div>" )
@@ -19,7 +20,7 @@
       // Not sure whether markup in data-* attrib's is the same xxs vulnerability though...' 
       items: "[data-tooltip]",
       content: function () {
-        return $(this).attr("data-tooltip");
+        return "<div class='tt'>" + $(this).attr("data-tooltip") + "</div>";
     }
     });
   });

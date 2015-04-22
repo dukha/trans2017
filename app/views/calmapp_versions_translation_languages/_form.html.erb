@@ -3,7 +3,7 @@
 <%= semantic_form_for @calmapp_versions_translation_language do |f| %>
   <%= f.inputs do %>
     <%= f.input :translation_language_id, :as=> :select, :collection=> TranslationLanguage.all.each{|l| [l.name, l.id]}, :input_html=> {:disabled=>"disabled"} %>
-    <%= f.input :calmapp_version_id, :as=> :select, :collection=>CalmappVersion.all.each{|v| [v.name, v.id]}, :input_html=> {:disabled=>"disabled"} %>
+    <%= f.input :calmapp_version_id, :as=> :select, :collection=>CalmappVersion.all.each{|v| [v.description, v.id]}, :input_html=> {:disabled=>"disabled"} %>
   <li> 
   <p class = 'nesting-heading' >Uploads</p>    
   <div id = 'table' style = "display:table">

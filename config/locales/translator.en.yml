@@ -38,7 +38,8 @@ en:
       show_original: "Original"
       #back: "Back"
       remove: Remove
-      publish: Publish 
+      publish: Publish
+      publish_language: Publish %{language} 
       no_delete: Undeletable
       #
       create_and_upload: Create and Upload
@@ -56,7 +57,7 @@ en:
       version_publish: Publish to Redis
       remove_redis_database: Remove This Redis Database
       change_uploads: Change Uploads
-      remove_upload: Remove Upload
+      remove_upload: Remove This Upload
       add_translation_upload: Add Upload
       write_yaml_to_db: Write to Database
       edit_and_change_languages: Edit (Including Languages)
@@ -212,6 +213,7 @@ en:
     dot_key_code_translation_editors: Editors
     users: Users
     new_invitation: New User Invitation
+    versions_languages: Versions and Languages
   headings:
     application_subheading: Translator
     write_to_database:
@@ -226,6 +228,8 @@ en:
     calmapp_versions_translation_languages:
       edit:
         heading: Change Uploads
+      index:
+        heading: Version Translation Languages, Upload Access and Publishing   
     calmapp_version:     
       deep_copy_params:
         heading: Version Deep Copy Information 

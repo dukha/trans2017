@@ -23,7 +23,7 @@ class TranslationsUpload < ActiveRecord::Base
   def write_yaml_file_to_db #overwrite  
     #binding.pry
     puts "db2"
-    puts CalmappVersion.find(calmapp_versions_translation_language.calmapp_version_id).name
+    puts CalmappVersion.find(calmapp_versions_translation_language.calmapp_version_id).description
     if duplicates_behavior == "overwrite"
         duplicates_behavior2 =   Translation.Overwrite[:all]
     elsif duplicates_behavior ==  "skip" 
