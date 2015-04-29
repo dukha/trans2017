@@ -34,7 +34,7 @@ function getSiblingPublishingDiv(sibling){
 
 function closePublishLanguageDiv(child){
     td = getTDParent(child);
-    div = $(td).children(publishingGetDbDivSelector)[0];
+div = $(td).children(publishingGetDbDivSelector)[0];
     button = $(td).children(publishButtonSelector)[0];
     $(div).toggle('slow');
     $(button).toggle('slow');

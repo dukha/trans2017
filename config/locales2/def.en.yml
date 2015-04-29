@@ -83,7 +83,7 @@ en:
         other: "%{count} days"
       about_x_months:
         one: "about 1 month"
-        other: "about %{count} months"
+        other: "about %{count} monthsvvv"
       x_months:
         one: "1 month"
         other: "%{count} months"

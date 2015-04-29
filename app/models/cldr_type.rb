@@ -8,7 +8,13 @@ class CldrType
                 "other" =>%w(other),
                 "romanian" =>%w(one few other),
                 "west_slavic" =>%w(one few other)
-              }
+            } 
+   @@PLURALS = %w(one two few many other)
+   
+   def self.PLURALS
+     @@PLURALS
+   end
+   
    def self.CLDR_PLURAL_TYPES
      return @@CLDR_PLURAL_TYPES
    end
@@ -25,4 +31,16 @@ class CldrType
   def self.CLDR_plurals
     return %w(zero one two few many other)
   end
+  
+  @@CLDR_PLURAL_RANGES = {
+    
+    "east_slavic" => { zero: 'many', one: (1..1),  few: (2..4), many: (5..9),  other: (10..10000000) }, 
+   "one_other" => { zero: 'other',one: (1..1), other: ( 2..10000000)},
+   "one_upto_two_other" => { zero: 'other', one: (1..2), other: ( 3..100000000)}, 
+    "one_two_other" => {zero: 'other', one: (1..1), two: (2..2), other: (3..10000000000)},
+    "onewithzero_other" =>{zero: 'other',one: (0..1), other: (2.10000000000 )},
+    "other" =>{zero: 'other', other: (1..100000000000)},
+    "romanian" =>{zero: 'other',one: (1..1), few: (2..19), other: (5..10000000000)},
+    "west_slavic" =>{zero: 'other', one: (1..1), few: (2..4), other: (5..10000000000)}
+  }
 end

@@ -22,3 +22,4 @@ config/puma.rb
 public/system/*
 public/uploads/*
 .idea/*
+config/secrets.yml

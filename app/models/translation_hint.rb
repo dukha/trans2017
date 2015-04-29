@@ -17,9 +17,9 @@ class TranslationHint < ActiveRecord::Base
   def self.seed
     TranslationHint.delete_all
 
-# 3333333333333333333
+
     TranslationHint.create!(:dot_key_code => "activemodel.errors.format",:heading => "Message Format", :example => "'%{attribute} %{message}' says that the attribute name will be added before the message:<br> e.g. if attribute is 'name' and message is 'can not be blank' the the user sees 'Name cannot be blank'", :description => "Tells the program the order of the attribute and message. Attribute can be left out") # %{attribute} %{message}
-    TranslationHint.create!(:dot_key_code => "activemodel.errors.messages.accepted",:heading => "User Error Message", :example => "attribute: 'licence_agreement' message: 'must be accepted gives 'Licence Agreement must be accepted'", :description => "Tells the user that he must accept the conditions.") # must be accepted
+    TranslationHint.create!(:dot_key_code => "activemodel.errors.messages.accepted",:heading => "User Error Message", :example => "attribute: 'licence_agreement',<br> message: 'must be accepted'<br>gives 'Licence Agreement must be accepted'", :description => "Tells the user that he must accept the conditions.") # must be accepted
     TranslationHint.create!(:dot_key_code => "activemodel.errors.messages.blank",:heading => "User Error Message", :example => "", :description => "Tells the user that some data is required") # can't be blank
     TranslationHint.create!(:dot_key_code => "activemodel.errors.messages.confirmation",:heading => "Confirmation Message", :example => "", :description => "Tells the user that 2 lots of data must match e.g. Password confirmation.") # doesn't match %{attribute}
     TranslationHint.create!(:dot_key_code => "activemodel.errors.messages.empty",:heading => "User Error Message", :example => "", :description => "Tells the user that he must choose or type some data for attribute") # can't be empty

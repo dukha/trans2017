@@ -103,22 +103,19 @@ class TranslationsUpload < ActiveRecord::Base
   
   #handle_asynchronously :write_file_to_db2
   def  self.traverse_ruby( node, dot_key_stack=Array.new, dot_key_values_map = Hash.new)#,  container=Hash.new, anchors = Hash.new, in_sequence=nil )
-    #binding.pry
-    #if node.to_s == "%n %u" or node.to_s == "%n%u" then
-     # binding.pry
-    #end
-    #if node.to_s == "4"  then
-      #binding.pry
-    #end
     if node.is_a? Hash then
       #puts "Hash"
-      node.keys.each do |k|
-        dot_key_stack.push(k)
-        traverse_ruby(node[k], dot_key_stack, dot_key_values_map)    
-      end
-      dot_key_stack.pop 
-      #puts dot_key_values_map
-      #return
+      if plural_hash? node
+        binding.pry
+          store_dot_key_value(dot_key_stack, node.to_json, dot_key_values_map)
+      else
+        node.keys.each do |k|
+          dot_key_stack.push(k)
+          traverse_ruby(node[k], dot_key_stack, dot_key_values_map)    
+        end
+        dot_key_stack.pop
+      end 
+
       
     elsif node.is_a? Array then
       # there should be no possibility of having hashes in arrays or arrays in arrays as there could not be a dot key system to manage this
@@ -135,10 +132,7 @@ class TranslationsUpload < ActiveRecord::Base
       store_dot_key_value(dot_key_stack, node.to_json, dot_key_values_map) 
       #return    
     elsif node.is_a? String then
-      #puts "String"
-      if node.include? 'too_long'
-        binding.pry
-      end
+      #puts "String
       store_dot_key_value(dot_key_stack, node, dot_key_values_map)
       #return
     elsif (node.is_a? TrueClass ) || (node.is_a? FalseClass) then
@@ -172,6 +166,9 @@ class TranslationsUpload < ActiveRecord::Base
   end
   
   def self.store_dot_key_value(dot_key_stack, node_str, dot_key_values)
+    #if node_str.is_a? String
+      binding.pry
+    #nd
     dot_key_values.store(dot_key_stack.join('.'), node_str)
     dot_key_stack.pop
   end
@@ -188,6 +185,27 @@ class TranslationsUpload < ActiveRecord::Base
     identifier_array  = yaml_upload_identifier.split(".")
     return identifier_array[identifier_array.length-2]
   end 
+  
+  def self.plural_hash? node
+    #binding.pry
+    if node.is_a? Hash
+      keys = node.keys
+      if keys.empty?
+        return false
+      end
+      keys.each{|k|
+        #if node[k] == "about_x_months"  
+          #binding.pry
+        #end
+        if not CldrType.PLURALS.include?(k) then
+          return false
+        end 
+      }
+      return true
+    else
+      return false
+    end  
+  end
    
   def iso_code
     #binding.pry
@@ -354,7 +372,7 @@ class TranslationsUpload < ActiveRecord::Base
  Adds Czech to Calmapp version. (Works via callbacks in calmapp_version) 
 =end
   def self.demo
-      version = CalmappVersion.joins{calmapp}.where{calmapp.name =~ 'calm%'}.first     
+      version = CalmappVersion.joins{calmapp}.where{calmapp.name =~ 'calm%'}.where{version == 4}.first     
       cs = TranslationLanguage.where{iso_code == 'cs'}.first
       #this will also upload cs.yml
       version.translation_languages << cs

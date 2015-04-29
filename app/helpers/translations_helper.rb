@@ -121,6 +121,7 @@ module TranslationsHelper
   # e.g. <%=theading("listing", :model=> "course_type",:count => 2) %>
   # translation_code can be "new, "edit" or "listing" or "home"  according to yaml paths
   def theading(translation_code, options = {})
+    #binding.pry
     if options[:class] then
       klass = options[:class]
     else
@@ -245,5 +246,12 @@ just substitute twill_paginate for will_paginate
       return format  
     end
   end
-  
+ 
+=begin 
+ def redis_plurals(locale, key, count )
+   trans_key = locale.to_s + '.' +  key
+   I18n.backend
+   
+ end 
+=end
 end
