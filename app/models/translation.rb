@@ -185,8 +185,6 @@ class Translation < ActiveRecord::Base
  other language (for the same version)
 =end  
   def is_plural?
-    #t= nil
-    #if respond_to? plural
     return plural  if language().iso_code == 'en'
     dkc = dot_key_code   
     english = english_translations.where{dot_key_code == my{dkc}}.first
