@@ -85,16 +85,36 @@ module Validations
    end
    # deprecated
    class RedisInstanceValidator< ActiveModel::EachValidator
+     redis_db = nil
      def validate_each(object,attribute, value)
        #
        #redis_db = Redis.new( :db=> value, :password=>$REDIS_PW, :port=>object.port, :host=> object..host)
-       #debugger
+       #binding.pry
        redis_db = Redis.new( :db=> 0, :password=>object.password, :port=>object.port, :host=> object.host)
        # the above line doesn't try to connect immediately. You have to do something with it (like ping) to force it to connect.
        redis_db.ping
      rescue Exception => e
-       if e.message.index("invalid DB index") then
-         object.errors[attribute] = I18n.t($MS + "invalid_redis_db_index.error", :value=>value)
+       
+       if e.is_a? Redis::CannotConnectError then
+         if e.message.index('ECONNREFUSED') then
+           object.errors[:port] = I18n.t($MS+ "redis_connection_refused.error", :value=>object.port)
+         else
+           object.errors[:host] = e.message + " The host address may be invalid on this Redis instance. Host = " + value
+         end 
+       elsif e.is_a? Redis::CommandError then
+         if e.message.index("invalid password") then
+           object.errors[:password] = I18n.t($MS + "invalid_redis_password.error", :value=> '********')
+         elsif e.message.index('NOAUTH')
+           object.errors[:password] = "Redis password is nil. It must have a value"   
+         elsif e.message.index("invalid DB index") then
+           object.errors[attribute] = I18n.t($MS + "invalid_redis_db_index.error", :value=>redis_db.db)
+         else
+           object.errors[:host] = e.message
+         end
+       elsif e.is_a? Redis::ConnectionError then
+         object.errors[:host] = e.message 
+       elsif e.is_a? Redis::TimeoutError then
+         object.errors[:host] = e.message 
        elsif e.message.index("getaddrinfo") then
          object.errors[:host] = I18n.t($MS + "invalid_redis_db_location.error", :value=>object.host)
        elsif e.message.index("Connection refused") then

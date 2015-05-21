@@ -182,6 +182,7 @@ just substitute twill_paginate for will_paginate
         attribute_name = names[1]
       end
     end
+    
     if model_name.nil? then
       ret_val = I18n.t($FL+attribute_name)
     else

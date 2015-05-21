@@ -1,0 +1,214 @@
+# This file should be used as common to all calm applictions
+# See http://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
+
+en:
+  commons:
+    noo: No
+    yess: Yes
+    none: None
+    next: Next >>
+    previous: << Previous
+    no_data: Nil
+    to: to
+    for_user: For User %{user} 
+    clear: Clear
+    close: Close
+    help: Help
+    current_time: Now
+    changed_ago: "Changed %{change_date} ago"
+    visibility:
+      default_visibility: Default Visibility
+      column_visibility: Visible Columns
+      criteria_visibility: Critieria
+    search:
+      criteria: Search Criteria
+      clear: Clear Search
+      operators:
+        from: from
+        to: to
+        between: between
+        gt: greater Than
+        gte: greater than or equals
+        lt: less Than
+        lte: less than or equals
+        matches: contains
+        does_not_match: "doesn't contain"
+        starts_with: starts with
+        ends_with: ends with
+        not_starts_with: "doesn't start with"
+        not_ends_with: "doesn't end with"
+        lte_date: before
+        gte_date: after
+        in: is in group
+        not_in: is not in group
+        eq: is
+        not_eq: is not
+        eq_str: is
+        not_eq_str: is not
+        not_null: is Anything
+        is_null: is Nothing
+        before_something: before %{something}
+        after_something: after %{something}
+        and: and
+        or: or
+        empty_string: is Empty Text
+        is_not_null: is Not Blank
+    error:
+      one: "%{count} error"
+      other: "%{count} errors"
+    problem:
+      one: "%{count} problem"
+      other: "%{count} problems"
+#    timepicker:
+#      close: Close
+#      current_time: Now
+#      clear: Clear
+#      time_only: Choose Time
+#      time: Time
+#      hour: Hours
+#      minute: Minutes
+#      am_names: AM,A
+#      pm_names: PM,P
+#      rtl: false 
+#      previous: Previous
+#      next: next 
+#     week_header_short: Wk
+#      first_day_of_week: 0
+#      millisecond: millisecs
+#      timezone: time zone  
+        
+  #formtastic:
+    #hints:
+      #user:
+        #password: Enter password here
+        #confirm_password: Enter password again
+        #login: Type either your username or email here
+        #current_password: Your current password is also needed
+    
+   
+  menus:
+    admin: Admin
+    lookups: Configuration
+    my_settings: Edit My Settings, including Password
+    user_info: User Preferences
+    home: Home
+    contact: Contact Translator
+    help: Help
+    about: "About Translator" 
+    #%{app_name}"
+    whiteboards: Whiteboards
+    whiteboard_types: Whiteboard Types
+  messages:
+    delete:
+      are_you_sure: 
+        warning: Deleting %{model}. Are you sure?
+      are_you_sure_value:
+        warning: Deleting %{model} with value %{value}. Are you sure?
+      deletion_rejected: 
+        error: Cannot delete this %{model}. It must have other things depending on it (e.g. cannot delete a venue that has courses)
+      success: The %{model} was successfully deleted.
+      error: The %{model} was not able to be deleted  
+      destroy_translation_data: 
+        warning: You will delete all translation data for this %{app} version %{version}. (Not yet implemented). Are you sure?
+      #success: Deleted successfully
+
+    create:
+      success: The %{model} was successfully created.
+      error:: The %{model} was not created
+    update:
+      success: The %{model} was successfully updated.
+      error: The %{model} was unable to be updated
+    operation:
+      error: Failed to %{operation}  ; %{count_message}.
+    no_records_found:
+      error: There were no records found in the database.
+      warning: There were no records found in the database.
+    no_records_found_for_criteria:
+      error: There were no records found in the database that match the given criteria.
+      warning: There were no records found in the database that match the given criteria.
+    no_records_found_with_permissions:
+      warning: There were no records found in the database for which you have permission.
+    application_language_change:
+      success: The application language will be changed to %{language} on next refresh or new page.
+    capslock_on:
+      warning: You are attempting to type username or password with the capslock on. Remember that username and password are case sensitive.
+    record_not_found:
+      error: Unable to find the records to (view, update or delete)
+      warning: Unable to find the records to (view, update or delete)
+    
+    too_many_records_found:
+      warning: More than %{count} records found. Add to search criteria to narrow the search and try again.
+    non_unique_singlevalue_key:
+      #error: "A field value must be unique."
+      error: "%{fieldlist} is already in the database with this value %{valuelist}. Choose a different value to complete this task."
+    non_unique_multivalue_key:
+      #error: "Two or more field values must be unique in combination."
+      error: "These fields %{fieldlist} are already in the database with these values '%{valuelist}'. Choose at least 1 different value to complete this task."
+    existence:
+      error: "%{attribute} = %{value}  does not already exist in %{target}. Add a record to  %{target} or choose another %{target} example. "
+    permission:
+      permission_denied: 
+        error: Sorry, you are not allowed to access that page.  
+    all_rolledback:
+      warning: "All %{model} on this page rolled back"  
+    invalid_at_code:
+      warning: "This code is an invalid AT code." 
+    more_than_1_match_at_code:
+      warning: This code matches with more than 1 AT. Use the ... button to select the AT  
+    
+  links:
+    no_unlock_instructions: Didn't receive unlocking instructions?
+    no_confirmation_instructions: Didn't receive confirmation instructions?
+    forgotten_password: Forgot your password?
+    cancel_registration: Cancel account
+    unhappy: Unhappy?
+  headings:
+    new:
+      heading: "Add %{model}"
+      user: Register New User
+    edit:
+      heading: Edit %{model}
+      user: Edit User   
+    listing:
+      heading: "%{model}"
+    editable_listing:
+      heading: "View or Edit %{model}"  
+    process: 
+      heading: Process %{model}
+    home:
+      heading: Home - Whiteboard
+    
+  lookups:
+    whiteboard_type:
+      system: System
+      localadmin: Local Admin
+      regionaladmin: Regional Admin
+      user: User
+       
+  activerecord:
+    models:
+      whiteboard_type:
+        one: Whiteboard Type
+        other: Whiteboard Types
+    attributes:
+      user:
+        login: User name or email address
+  errors:
+    messages:
+      carrierwave_processing_error: "Cannot resize image."
+      carrierwave_integrity_error: "Not an image."
+      carrierwave_download_error: "Couldn't download image."
+      extension_white_list_error: "You are not allowed to upload %{extension} files, allowed types: %{allowed_types}"
+      extension_black_list_error: "You are not allowed to upload %{extension} files, prohibited types: %{prohibited_types}"        
+      # these messages are for the date_validator gem (copied from the gem for our internationalisation)
+      not_a_date: "%{value} is not a date"
+      after: "%{attribute} must be after %{date}"
+      after_or_equal_to: "%{attribute} must be after or equal to %{date}"
+      before: "%{attribute}} must be before %{date}"
+      before_or_equal_to: "%{attribute}must be before or equal to %{date}"
+      
+
+    
+         
+
+ 

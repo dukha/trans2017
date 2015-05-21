@@ -9,7 +9,7 @@ class CldrType
                 "romanian" =>%w(one few other),
                 "west_slavic" =>%w(one few other)
             } 
-   @@PLURALS = %w(one two few many other)
+   @@PLURALS = %w(zero one two few many other)
    
    def self.PLURALS
      @@PLURALS

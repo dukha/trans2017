@@ -18,13 +18,30 @@ namespace :trans do
   desc "Drops the db and then loads everything again for a demo"
   #task :start_again => [:environment, 'db:drop', 'db:create', :complete_demo]
   task :start_again => [:environment, 'db:drop', 'db:create', 'db:migrate', 'db:seed', 'demo', 'standard_letter_templates:auto_create' , 'pform_app:students_to_courses','pform_queue:receive']
-=end  
+=end 
+ 
+  task :full_seed => [:environment, 'db:migrate:reset', 'db:seed'] do
+    puts "Seeded"
+  end
+  
+  task :mini_demo => [:full_seed] do
+    Demo.mini_demo
+  end
+  desc "db:migrate:reset runs drop, create, migrate"
   task :start_again => [:environment, 'db:migrate:reset', 'db:seed', "trans:demo"] do
     
     FileUtils::remove_dir "public/system/translation_uploads/yaml_uploads", true
   end
   task :demo => [:environment] do
     Demo.demo
+  end
+  
+  task :marks_big_demo => ["trans:start_again"] do
+    Demo.marks_big_demo
+  end
+  
+  task :integ_big_demo => ["trans:start_again"] do
+    Demo.integ_big_demo
   end
 =begin  
   task :start_again_demo => [:environment, 'demo', 'standard_letter_templates:auto_create' ,  'pform_app:students_to_courses','pform_queue:receive']

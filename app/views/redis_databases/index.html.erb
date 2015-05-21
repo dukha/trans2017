@@ -1,4 +1,4 @@
-<%=theading("listing", :model=>"redis_database", :count=>10) %>
+<%=theading("redis_database.and_version_publish", :model=>"redis_database", :count=>10) %>
 <% if RedisDatabase.count==0 then %>
   <%=tflash( "no_records_found", :warning)%><br/>
 <%  else %>

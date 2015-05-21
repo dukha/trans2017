@@ -27,7 +27,9 @@ class Calmapp < ActiveRecord::Base
 
   validates :name, :presence=>true, :uniqueness=>true
  
-  
+  def show_me
+    return "APP " + name  + " app-id = " + id.to_s
+  end
 =begin  
   def save_app_version_database_languages(version=nil, redis_database=nil, languages=nil )
       Calmapp.transaction do

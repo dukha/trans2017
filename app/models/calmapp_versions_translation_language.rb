@@ -54,6 +54,9 @@ class CalmappVersionsTranslationLanguage < ActiveRecord::Base
     #return (CalmappVersion.find(calmapp_version_id).description + " " + TranslationLanguage.find(translation_language_id).name).titlecase
     return (calmapp_version_tl.description + " " + translation_language.name).titlecase
   end
+  def show_me
+    return "CAVTL " + calmapp_version_tl.show_me + " " + translation_language.show_me + " cavtl-id = " + id.to_s
+  end
 =begin
  Uploads the base translation for a new language after added (ie created)
  saves new upload

@@ -215,6 +215,9 @@ en:
     new_invitation: New User Invitation
     versions_languages: Versions and Languages
     version_publish: Publish Application Version
+    admin: Translation Admin
+    user_admin: User Admin
+    new_model: New %{model}
   headings:
     application_subheading: Translator
     write_to_database:
@@ -234,9 +237,9 @@ en:
     calmapp_version:     
       deep_copy_params:
         heading: Version Deep Copy Information 
-     redis_database:
-       and_version_publish:
-         heading: View and publish %{model}(Application Versions)   
+    redis_database:
+      and_version_publish:
+        heading: View and Publish %{model}(Application Versions)   
     #redis_admin: Redis Admin
   activerecord:
     models:

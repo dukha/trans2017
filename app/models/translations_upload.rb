@@ -21,7 +21,7 @@ class TranslationsUpload < ActiveRecord::Base
  @return a hash in dot_key => string_data format, suitable for writing to the db  
 =end
   def write_yaml_file_to_db #overwrite  
-    #binding.pry
+    
     puts "db2"
     puts CalmappVersion.find(calmapp_versions_translation_language.calmapp_version_id).description
     if duplicates_behavior == "overwrite"
@@ -35,41 +35,43 @@ class TranslationsUpload < ActiveRecord::Base
     end     
     begin       
     data  = YAML.load_file(TranslationsUpload.uploaded_to_folder + yaml_upload.url)
-    key_value_pairs = TranslationsUpload.traverse_ruby(data)
-    #binding.pry
+    plurals= Hash.new
+    key_value_pairs = TranslationsUpload.traverse_ruby(data, plurals )
+    
     rescue Psych::SyntaxError => pse
       #logger.error( yaml_upload_identifier() + " has produced the following error: " + pse + " Have a technical person check the syntax of the file")
       error =  PsychSyntaxErrorWrapper.new(pse, yaml_upload_identifier)
       puts error
       logger.error(error)
-      #binding.pry
+      
       raise error
     end  
-    #binding.pry
+    
     ret_val= 'ok' 
     begin
       Translation.transaction do
         
         puts yaml_upload.url
         #puts calmapp_versions_translation_language.id
-        #binding.pry
-        t = BulkTranslations.translations_to_db_from_file(key_value_pairs, id, calmapp_versions_translation_language, duplicates_behavior2)
+        
+        
+        t = BulkTranslations.translations_to_db_from_file(key_value_pairs, id, calmapp_versions_translation_language, duplicates_behavior2, plurals)
           #if t.nil? then
-            #binding.pry
+            
           #end #nil
-          #binding.pry
+          
           
           #update_attributes(:written_to_db => true)
           #base_error = t.errors[:base]
-          #binding.pry
+          
           if t.errors.count > 0 then
-            #binding.pry
+            
             ret_val = t
             # @todo error handling, logging here
             #raise ActiveRecord::Rollback
     #=begin
             messages = ""
-            #binding.pry
+            
             t.errors.full_messages.each { |msg| messages = messages + msg + " " } #each_full{  }
             #messages = messages + "Failed to write file : " + yaml_upload_identifier
             logger.error(messages)
@@ -77,7 +79,7 @@ class TranslationsUpload < ActiveRecord::Base
     #=end
           else
           # set  written to db here
-          #binding.pry
+          
   #           update_attributes(:written_to_db => true)
           end #errors.count
       end #trans 
@@ -86,32 +88,39 @@ class TranslationsUpload < ActiveRecord::Base
         puts msg
         Rails.logger.error(msg)
         raise
-        #binding.pry
+        
        rescue StandardError => error
          msg =  "Error while writing " + yaml_upload_identifier + " message: " + error.message + " No translations written to database"
          puts msg
-         #binding.pry
+         
          Rails.logger.error(msg)
-         #binding.pry
+         
          raise     
        end#  outside block rescues
     
     # end #begin before trans
-    #binding.pry
+    
     return ret_val
   end #def
   
   #handle_asynchronously :write_file_to_db2
-  def  self.traverse_ruby( node, dot_key_stack=Array.new, dot_key_values_map = Hash.new)#,  container=Hash.new, anchors = Hash.new, in_sequence=nil )
+  def  self.traverse_ruby( node, plurals, dot_key_stack=Array.new, dot_key_values_map = Hash.new)#,  container=Hash.new, anchors = Hash.new, in_sequence=nil )
+    #if dot_key_stack.include? 'less_than_x_minutes' then
+      
+    #end      
     if node.is_a? Hash then
       #puts "Hash"
+      #if node.keys.include? :zero then
+        
+      #end
       if plural_hash? node
-        binding.pry
-          store_dot_key_value(dot_key_stack, node.to_json, dot_key_values_map)
+        
+        store_dot_key_value(dot_key_stack, node.to_json, dot_key_values_map, plurals, true)
+        
       else
         node.keys.each do |k|
           dot_key_stack.push(k)
-          traverse_ruby(node[k], dot_key_stack, dot_key_values_map)    
+          traverse_ruby(node[k], plurals, dot_key_stack, dot_key_values_map)    
         end
         dot_key_stack.pop
       end 
@@ -120,82 +129,91 @@ class TranslationsUpload < ActiveRecord::Base
     elsif node.is_a? Array then
       # there should be no possibility of having hashes in arrays or arrays in arrays as there could not be a dot key system to manage this
       # so we assume that each element of an array is a scalar
-      #binding.pry
+      
       # This needs to be broadened out to any array which contains symbols
       #if node.to_s.include? ":year" then #node.to_s == 'order' #&& dot_key_stack.last = "datetime" then
         # In this case the array values are symbols. Symbols don't parse in json!!
         # we get rid of symbols when writing to  the db
-        #binding.pry
+        
         #node.each_index{ |index| node[index] = node[index].inspect}
-        #binding.pry
+        
       #end
-      store_dot_key_value(dot_key_stack, node.to_json, dot_key_values_map) 
+      store_dot_key_value(dot_key_stack, node.to_json, dot_key_values_map, plurals) 
       #return    
     elsif node.is_a? String then
       #puts "String
-      store_dot_key_value(dot_key_stack, node, dot_key_values_map)
+    
+      store_dot_key_value(dot_key_stack, node, dot_key_values_map, plurals)
       #return
     elsif (node.is_a? TrueClass ) || (node.is_a? FalseClass) then
       #puts"Boolean"
       #puts node.to_s
-      store_dot_key_value(dot_key_stack, node.to_s, dot_key_values_map)
+      store_dot_key_value(dot_key_stack, node.to_s, dot_key_values_map, plurals)
       #return 
     elsif node.is_a? Integer then
        #puts "Integer"
        #puts node.to_s
-       store_dot_key_value(dot_key_stack, node.to_s, dot_key_values_map)
+       store_dot_key_value(dot_key_stack, node.to_s, dot_key_values_map, plurals)
        #return
     elsif node.is_a? Float then
        #puts "Float"
        #puts node.to_s
-       store_dot_key_value(dot_key_stack, node.to_s, dot_key_values_map)
+       store_dot_key_value(dot_key_stack, node.to_s, dot_key_values_map, plurals)
        #return
     elsif node.is_a? Symbol then
       #puts "Symbol"
       #puts node.to_s
-      store_dot_key_value(dot_key_stack, node.to_s, dot_key_values_map)
+      store_dot_key_value(dot_key_stack, node.to_s, dot_key_values_map, plurals)
       #return
     elsif node.nil? then
       puts "NIL"
       puts dot_key_stack
-      store_dot_key_value(dot_key_stack, "", dot_key_values_map)  
+      store_dot_key_value(dot_key_stack, "", dot_key_values_map, plurals)  
     else
       puts "UNKNOWN CLASS " + node.class.name
     end
     return dot_key_values_map
   end
-  
-  def self.store_dot_key_value(dot_key_stack, node_str, dot_key_values)
+  # @param plurals is a hash where the keys are dot_key_codes.
+  # store_dot_key_values stores the dot_key with the node as value
+  # but also stores the dot_key in plurals with the value of @param plural
+  # This plurals will be used when writing the translation to the db to make sure that the plural is properly formated
+  def self.store_dot_key_value(dot_key_stack, node_str, dot_key_values, plurals, plural=false)
     #if node_str.is_a? String
-      binding.pry
-    #nd
-    dot_key_values.store(dot_key_stack.join('.'), node_str)
+      
+    #end
+    key = dot_key_stack.join('.')
+    dot_key_values.store(key, node_str)
+    plurals.store(key, plural)
     dot_key_stack.pop
   end
   
   def upload_matches_translation_language_validation
-    #binding.pry
-    #identifier_array  = yaml_upload.identifier.split(".")
-    errors.add(:yaml_upload, I18n.t($MS + "translations_upload.yaml_upload." + "error.file_language_must_match_translation_language",:required_iso_code=>iso_code())) unless iso_code_from_yaml_file_name() ==  iso_code()
     
+    #identifier_array  = yaml_upload.identifier.split(".")
+    errors.add(:yaml_upload, 
+       I18n.t($MS + "translations_upload.yaml_upload." + "error.file_language_must_match_translation_language",
+                 :required_iso_code=>iso_code()
+              )
+       )unless iso_code_from_yaml_file_name() ==  iso_code()
   end
   
   def iso_code_from_yaml_file_name
-    #binding.pry
+    
     identifier_array  = yaml_upload_identifier.split(".")
     return identifier_array[identifier_array.length-2]
   end 
   
   def self.plural_hash? node
-    #binding.pry
-    if node.is_a? Hash
+    
+    if node.is_a? Hash then
       keys = node.keys
       if keys.empty?
         return false
       end
       keys.each{|k|
         #if node[k] == "about_x_months"  
-          #binding.pry
+          
         #end
         if not CldrType.PLURALS.include?(k) then
           return false
@@ -208,7 +226,7 @@ class TranslationsUpload < ActiveRecord::Base
   end
    
   def iso_code
-    #binding.pry
+    
     return calmapp_versions_translation_language.translation_language.iso_code 
   end   
   #  documentation says the should get this with yaml_upload.indentifier. It quite often returns nil
@@ -364,7 +382,7 @@ class TranslationsUpload < ActiveRecord::Base
  Call back to write the translations after a file is uploaded 
 =end
   def do_after_commit
-    #binding.pry
+    
     write_yaml_file_to_db()
 #    ApplicationController.start_delayed_jobs_queue
   end
@@ -372,12 +390,14 @@ class TranslationsUpload < ActiveRecord::Base
  Adds Czech to Calmapp version. (Works via callbacks in calmapp_version) 
 =end
   def self.demo
+      
       version = CalmappVersion.joins{calmapp}.where{calmapp.name =~ 'calm%'}.where{version == 4}.first     
       cs = TranslationLanguage.where{iso_code == 'cs'}.first
       #this will also upload cs.yml
       version.translation_languages << cs
       fr = TranslationLanguage.where{iso_code == 'fr'}.first
       #This will also upload fr.yml
+      
       version.translation_languages << fr
   end
 =begin

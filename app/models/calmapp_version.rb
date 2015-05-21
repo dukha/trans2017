@@ -74,7 +74,9 @@ class CalmappVersion < ActiveRecord::Base
   #def self.validate_version version
     ##return version.match( regex)
   #end
-
+  def show_me
+    return "CAV " + calmapp.show_me + " v:" + version.to_s + " cav-id = " + id.to_s
+  end
   # Don't confuse the virtual attribute translation_languages_available that is just to keep AR happy
   # Returns translation_languages not already assigned to this course, but not english
   def already_added_translation_languages_not_en

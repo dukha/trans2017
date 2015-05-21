@@ -79,6 +79,8 @@ gem 'logging'
 gem 'unobtrusive_flash', '~>3'
 # needed for rails 4.2 apparently
 gem 'responders', '~> 2.0'
+# allows a connection pool for redis. Not sure if needed
+gem 'connection_pool'
 
 group :development, :test do
   gem 'rspec-rails'#, '2.8.0'
@@ -107,7 +109,7 @@ group :development, :test do
   gem 'pry-rails'
   gem 'pry-doc'
   gem 'pry-nav'
-
+  gem 'pry-stack_explorer'
   # generate test data
   gem 'factory_girl_rails', '~> 4.4.0'
 

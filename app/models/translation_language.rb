@@ -8,6 +8,10 @@ class TranslationLanguage < ActiveRecord::Base
  validates :name, :presence => true, :uniqueness => true
  
   scope :english_arr, ->{TranslationLanguage.where{iso_code == 'en'}}
+  
+  def show_me
+    return "LANG " + name + " " + iso_code  + " tl-id = " + id.to_s
+  end
 =begin
  @ return is the TranslationLanguage with 'en' as iso_code
  This is the developers' translation 
@@ -100,7 +104,13 @@ class TranslationLanguage < ActiveRecord::Base
     pa = CldrType.CLDR_PLURAL_TYPES[plural_sort] || []#CldrType.CLDR_PLURAL_TYPES["one_other"]
     return pa
   end
-
+=begin  
+  def self.taal iso_code
+    xx = 'fr'
+    binding.pry
+    return where{iso_code == 'xx'}.to_sql
+  end
+=end
 end
 
 

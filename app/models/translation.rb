@@ -9,6 +9,7 @@ class Translation < ActiveRecord::Base
   
   validates :dot_key_code, :uniqueness=>{:scope=> :cavs_translation_language_id},  :presence=>true 
   validates :calmapp_versions_translation_language, :presence => true
+  before_save :translation_valid_json?
   attr_accessor  :english, :criterion_iso_code, :criterion_cav_id, :written#, :selection_mode 
   @@selection_mode
   def self.selection_mode mode
@@ -20,11 +21,11 @@ class Translation < ActiveRecord::Base
   after_create :add_other_language_records_to_version, :if => Proc.new { |translation| translation.language.iso_code=='en'}
   
   def self.searchable_attr
-    %w(iso_code dot_key_code cav_id translation updated_at)
+    %w(iso_code dot_key_code cav_id translation updated_at plural)
   end
   
   def self.sortable_attr
-    %w(dot_key_code translation translation)
+    %w(dot_key_code translation translation plural)
   end
 =begin
   @param cavtl_alias_identifier a number(or string) to help uniquely identify the sql alias for calmapp_versions_translation_languages. Use this for complex self joins etc
@@ -145,10 +146,11 @@ class Translation < ActiveRecord::Base
   def english_translations 
     cav_id =  calmapp_versions_translation_language.calmapp_version_id
     cavtl_en =  CalmappVersionsTranslationLanguage.
-           where{ calmapp_version_id == cavtl_id }.
+           where{ calmapp_version_id == cav_id }.
            where{ translation_language_id == TranslationLanguage.TL_EN.id}.first
-    return Translation.join{calmapp_version_translation_languages}.
-           where{calmapp_versions_translation_languages.translation_language.id == cavtl_en.id}      
+    return Translation.joins{calmapp_versions_translation_language.translation_language}.
+           where{translation_languages.id == cavtl_en.id}.
+           select("translations.id, dot_key_code, translation_languages.iso_code, cavs_translation_language_id, plural")      
   end
 
   def self.Overwrite
@@ -181,12 +183,27 @@ class Translation < ActiveRecord::Base
  When a new English translation is added then this method adds the same dot key codes for every 
  other language (for the same version)
 =end  
+  def is_plural?
+    return plural  if language().iso_code == 'en' 
+    dkc = dot_key_code   
+    english = english_translations.where{dot_key_code == my{dkc}}.first
+    return english.plural 
+  end
+  def show_me
+    "TRAN " + dot_key_code + " " + translation + " " + calmapp_versions_translation_language.show_me + " tran-id=" +id.to_s
+  end
+=begin
+ When a new English translation is added then this method adds the same dot key codes for every 
+ other language (for the same version)
+=end  
+  
   def add_other_language_records_to_version
+   
    calmapp_version().translation_languages.each do |tl|
      if not tl.iso_code == 'en' then
        cavtl=  CalmappVersionsTranslationLanguage.where{calmapp_version_id  == my{calmapp_version.id}}.where{translation_language_id == my{tl.id}}.first       
        if tl.plurals_same_as_en? || (not Translation.dot_key_code_plural?(dot_key_code,calmapp_version.id))
-         #binding.pry
+         
          t = Translation.new(:dot_key_code => dot_key_code, :cavs_translation_language_id => cavtl.id)
          t.save!
        else
@@ -243,7 +260,7 @@ class Translation < ActiveRecord::Base
     where{dot_key_code == dot_key}.
     #where{cavtl1.calmapp_version_id == version_id}
     where("cavtl1.calmapp_version_id = ?", version_id)
-    #binding.pry
+    
     return ! ret_val.empty?  
     #SpecialPartialDotKey.select("partial_dot_key_code").where{my{dot_key_code} =~ partial_dot_key }.first#.cldr
   end
@@ -292,6 +309,27 @@ class Translation < ActiveRecord::Base
     return translations
   end
  
+  def translation_valid_json?
+    
+    return  if translation.blank? 
+    #return  if JSON.is_json? translation 
+    # We use ActiveSupport::JSON.decode/encode here rather than JSON.parse/to_json as they seems to work with Strings 
+    # and things like "%{attribute} %{value}"
+   # if translation.is_a? String
+      #translation2 = ActiveSupport::JSON.encode(translation)#translation.to_json
+      if not JSON.is_json? translation then
+        #translation = translation2
+        #return true
+      #else
+        #errors.add(:translation, "String cannot be parsed/encoded to json")
+        #return false
+        translation = ActiveSupport::JSON.encode(translation)
+      end
+    #else
+      #errors.add(:translation, "translation must be a string")
+      #return false  
+    #end
+  end
  
   def self.translation_language_from_param language
     if language.is_a? TranslationLanguage then

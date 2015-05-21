@@ -7,9 +7,11 @@ module TranslationHelper
  #return true Use best_in_place as editor
  @return false Display as plain text  
 =end
-  def best_in_place?(attrs)
-    return true if ( attrs["editor"].nil?) or 
-                editor_date_time_select?(attrs) or editor_number_select?(attrs)
+  def best_in_place?(translation)
+    binding.pry
+    return false if translation.is_plural?
+    return true if ( translation.attributes["editor"].nil?) or 
+                editor_date_time_select?(translation.attributes) or editor_number_select?(translation.attributes)
     return false  
   end
 =begin

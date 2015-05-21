@@ -2,6 +2,9 @@ class RedisDatabase < ActiveRecord::Base
   include Validations
   extend SearchModel
   include SearchModel
+  require 'connection_pool'
+  
+  attr_reader :pool_connection
   #validates :with => RedisDbValidator2
   #belongs_to :calmapp_version
   belongs_to :redis_instance
@@ -37,7 +40,31 @@ class RedisDatabase < ActiveRecord::Base
   #after_save :name_database
   #before_delete -> (model) {model.calmapp_versions_redis_database.destroy}, :unless => model.calmapp_versions_redis_database.nil?}#:delete_calmapp_versions_redis_database
   #before_destroy :delete_calmapp_versions_redis_database
-  @connection=nil
+  after_create :after_create_method
+=begin  
+  executed after create. Creates a connection pool for redis db and deleted everything from redis database
+=end  
+  def after_create_method
+    #pool()
+    flush_redis()
+  end
+  def show_me
+    redis_instance.show_me + ":" + "RDB index" + redis_db_index.to_s + " " + " rdb-id=" + id.to_s + " " + calmapp_version.show_me
+  end
+=begin
+  gets the pool the connection pool 
+=end  
+  def pool
+    pool_connection = ConnectionPool.new(size: 10, timeout: 5) do 
+      Redis.new :db=> redis_db_index, :password=> redis_instance.password, :host=> redis_instance.host, :port=> redis_instance.port
+    end 
+    return pool_connection   
+  end
+  
+  def flush_redis
+    pool.with{|con| con.flushdb}
+  end
+  #@connection=nil
   def self.searchable_attr 
      %w(id  calmapp_version_id  )
   end
@@ -89,6 +116,7 @@ class RedisDatabase < ActiveRecord::Base
     ##end
   # returns an instance of Redis class
   # use this singleton for very short transaction. May not be a good idea
+=begin 
   def connect
     #binding.pry
     #@connection is a singleton: only 1 connection per database" will need testing in a multiuser situation
@@ -99,12 +127,10 @@ class RedisDatabase < ActiveRecord::Base
   end
   
   def new_connection
-    con = Redis.new :db=> redis_db_index, :password=> redis_instance.password, :host=> redis_instance.host, :port=> redis_instance.port
-    #con.auth(password)
-    #con.select con.db
+    #con = Redis.new :db=> redis_db_index, :password=> redis_instance.password, :host=> redis_instance.host, :port=> redis_instance.port
     return con
   end
-
+=end
   def database_supports_language? language
     if language.is_a?(TranslationLanguage) then
       language = language.id
@@ -148,18 +174,34 @@ class RedisDatabase < ActiveRecord::Base
  publishes 1 Translation to redis database
  does not disconnect 
 =end  
-  def publish_one_translation(translation, connection)
-    
+  def publish_one_translation(translation) #, con = nil)
     #binding.pry
     translation = Translation.find(translation) if translation.is_a? Integer
     #binding.pry
     dot_key= translation.full_dot_key_code
+=begin    
+    if translation.translation.starts_with? '{' then
+      # this is a plural written has a json hash in the relational db
+      # We need to all the plurals as a hash in redis
+      plurals = JSON.parse(translation.translation)
+      pool.with{ |con| 
+        plurals.each do |k,v|
+          con.hset(dot_key, k, v)
+        end  
+        #con.hset(dot_key, plurals)
+        puts "Published " + dot_key + " = " +  con.hgetall(dot_key).to_json
+      }
+    else
     #if dot_key == "ja.date.abbr_day_names"
       #binding.pry
     #end
     #connect.auth(password)
-    connection.set(dot_key, translation.translation.to_json)
-    puts "Published " + dot_key + " = " + connect.get(dot_key)
+=end
+      pool.with{ |con| 
+        con.set(dot_key, translation.translation)
+        puts "Published " + dot_key + " = " +  con.get(dot_key)
+      }
+    #end
     
   end
 
@@ -169,7 +211,7 @@ class RedisDatabase < ActiveRecord::Base
   def unpublish_one_translation(translation)
     translation = Translation.find(translation) if translation.is_a? Integer
      dot_key= translation.full_dot_key_code
-     connect.del(dot_key)
+     pool.with{ |con| con.del(dot_key)}
   end
   
 
@@ -179,22 +221,24 @@ class RedisDatabase < ActiveRecord::Base
  publishes all translations(for all languages) for the calmapp_version of this redis_database 
 =end  
   def publish_version 
-    con = nil
+    #con = nil
     count = 0
     begin
       translations  = Translation.join_to_cavs_tls_arr(calmapp_version.id)
-      con = new_connection
+      
       # This removes all key value pairs from the db
-      con.flushdb     
-      translations.each{ |t|   
-          publish_one_translation(t, con)
-          count +=1      
-        }
-      con.bgsave
+      pool.with{|con| 
+        con.flushdb     
+        translations.each{ |t|   
+            publish_one_translation(t)#, con)
+            count +=1      
+          }
+        con.bgsave
+       }
     rescue StandardError => se
       raise se
     ensure
-      con.quit
+      #con.quit
     end     
     return count
   end  
@@ -204,41 +248,127 @@ class RedisDatabase < ActiveRecord::Base
       raise StandardError.new("Redis Database cannot be blank" )
     end
   end
-=begin   First removes all existing translations in the redis database
+=begin   
+  First removes all existing translations in the redis database
  Publishes all translations for the given translation language
  @param TranslationLanguage instance 
 =end  
   def publish_version_language translation_language
-    con = nil 
+    #con = nil 
     count = 0
     begin
-      con = new_connection
+      #con = connect
+      binding.pry
       translations  = Translation.join_to_cavs_tls_arr(calmapp_version.id).joins_to_tl_arr.where{tl1.iso_code == translation_language.iso_code}
-      translations.each{ |t|
-        publish_one_translation(t, con)
-        count += 1        
+      pool.with{|con|
+        translations.each{ |t|
+          publish_one_translation(t)#, con)
+          count += 1        
+        }
+        con.bgsave
       }
-      con.bgsave
     rescue  StandardError => se
       raise se    
     ensure
-      con.quit
+      #con.quit
     end  
     return count  
   end  
 
   def self.demo
     marks_redis = RedisInstance.where { description =="Mark's Desktop Computer"}.first
-    ri_integration = RedisInstance.where { description == 'Integration Server' }.first
+    ri_integration = integration_instance
     calm = Calmapp.where(:name=>"calm_registrar").first
-    index = marks_redis.next_index
-    RedisDatabase.create!(:redis_instance_id => marks_redis.id, release_status_id: ReleaseStatus.where{status == 'Development' }.first.id, calmapp_version_id: CalmappVersion.where(:calmapp_id => calm.id, :version=>4).first.id, 
-    :redis_db_index =>  index)
-    index = marks_redis.next_index(index)
+    #index = marks_redis.next_index
     RedisDatabase.create!(:redis_instance_id => marks_redis.id, release_status_id: ReleaseStatus.where{status == 'Development' }.first.id, calmapp_version_id: CalmappVersion.where(:calmapp_id => Calmapp.where(:name=>"translator").first.id, :version=>1).first.id, 
-    :redis_db_index =>  index)
+    :redis_db_index =>  0)
+    #index = marks_redis.next_index(index)
+    RedisDatabase.create!(:redis_instance_id => marks_redis.id, release_status_id: ReleaseStatus.where{status == 'Development' }.first.id, calmapp_version_id: CalmappVersion.where(:calmapp_id => calm.id, :version=>4).first.id, 
+    :redis_db_index =>  1)
+    
+    RedisDatabase.create!(:redis_instance_id => ri_integration.id, release_status_id: ReleaseStatus.where{status == 'Integration' }.first.id, calmapp_version_id: CalmappVersion.where(:calmapp_id => Calmapp.where(:name=>"translator").first.id, :version=>1).first.id, 
+    :redis_db_index =>  0)#ri_integration.next_index)
     RedisDatabase.create!(:redis_instance_id => ri_integration.id, release_status_id: ReleaseStatus.where{status == 'Integration' }.first.id, calmapp_version_id: CalmappVersion.where(:calmapp_id => calm.id, :version=>4).first.id, 
-    :redis_db_index =>  ri_integration.next_index)
+    :redis_db_index =>  1)
+  end
+  def self.marks_instance
+    RedisInstance.where { description =="Mark's Desktop Computer"}.first
+  end
+  def self.integration_instance
+    RedisInstance.where { description == 'Integration Server' }.first
+  end
+  
+  def self.marks_trans_redis
+    return RedisDatabase.where{redis_db_index == 0}.
+            where{redis_instance_id == my{marks_instance.id}}.
+            joins{calmapp_version.calmapp_versions_translation_languages.translation_language}.
+            #where{calmapp_version.calmapp_versions_translation_languages.translation_language.iso_code == 'en'}.
+            select{"calmapp_versions_translation_languages.id as cavtl_id, redis_db_index, redis_databases.id as id, redis_instance_id, redis_databases.calmapp_version_id as calmapp_version_id, release_status_id "}.
+            first
+  end
+  
+  def self.integration_trans_redis
+    return RedisDatabase.where{redis_db_index == 0}.
+            where{redis_instance_id == my{integration_instance.id}}.
+            joins{calmapp_version.calmapp_versions_translation_languages.translation_language}.
+            where{calmapp_version.calmapp_versions_translation_languages.translation_language.iso_code == 'en'}.
+            select{"calmapp_versions_translation_languages.id as cavtl_id, redis_db_index, redis_databases.id as id, redis_instance_id, redis_databases.calmapp_version_id as calmapp_version_id, release_status_id "}.
+            first
+  end
+  
+  def self.integration_reg_redis
+    return RedisDatabase.where{redis_db_index == 1}.
+            where{redis_instance_id == my{integration_instance.id}}.
+            joins{calmapp_version.calmapp_versions_translation_languages.translation_language}.
+            where{calmapp_version.calmapp_versions_translation_languages.translation_language.iso_code == 'en'}.
+            select{"calmapp_versions_translation_languages.id as cavtl_id, redis_db_index, redis_databases.id as id, redis_instance_id, redis_databases.calmapp_version_id as calmapp_version_id, release_status_id "}.
+            first
+  end
+  
+  def self.trans_uploads_for_demo
+    upload_from_dir = upload_dir_for_demo
+    files_to_upload =[File.join(upload_from_dir, 'common.en.yml'), 
+                      File.join(upload_from_dir, 'devise_invitable.en.yml'),
+                      File.join(upload_from_dir, 'devise.en.yml'),
+                      File.join(upload_from_dir, 'translator.en.yml')  ]
+  end
+  def self.upload_dir_for_demo
+    'config/locales2'
+  end  
+    
+  
+  def self.marks_big_demo    
+    redis = marks_trans_redis
+    upload_from_dir = upload_dir_for_demo
+    files_to_upload = trans_uploads_for_demo
+    count = 0
+    files_to_upload.each{ |f|
+      count += 1
+      tu = TranslationsUpload.new(description: "self demo " +count.to_s, cavs_translation_language_id: redis.cavtl_id, yaml_upload: File.new(f) )
+      tu.save!
+      }
+    #version = CalmappVersioon.find(redis.cav_id)
+    redis.publish_version 
+    puts "translator published locally"
+   
+  end 
+  
+  def self.integ_big_demo
+    binding.pry
+    integ  = integration_trans_redis
+    upload_from_dir = upload_dir_for_demo
+    files_to_upload = trans_uploads_for_demo
+    binding.pry
+    count = 0
+    files_to_upload.each{ |f|
+      count += 1
+      tu = TranslationsUpload.new(description: "self demo integ " + count.to_s, cavs_translation_language_id: integ.cavtl_id, yaml_upload: File.new(f) )
+      tu.save!
+      }
+    integration_trans_redis.publish_version
+    puts "reg published on integration"
+    integration_reg_redis.publish_version
+    puts "reg published on integration"
   end
 =begin
 
@@ -314,7 +444,7 @@ end
 # Table name: redis_databases
 #
 #  id                 :integer         not null, primary key
-#  calmapp_version_id :integer         not null
+#  calmapp_version_id :integer         not nullinitializes
 #  redis_instance_id  :integer
 #  redis_db_index     :integer         not null
 #  release_status_id  :integer         not null

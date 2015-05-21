@@ -46,6 +46,9 @@ class RedisInstance < ActiveRecord::Base
   end
 =end
 
+  def show_me
+    return "REDIS INSTANCE " + host + ' ' + port.to_s + " ri-id = " + id.to_s
+  end
   def database_supports_language? language
     if language.is_a(TranslationLanguage) then
       language = language.id
@@ -81,8 +84,18 @@ class RedisInstance < ActiveRecord::Base
   end
   
   def self.demo
+    errors = ""
     marks_redis = RedisInstance.create!(:host=>"45-highfield.internode.on.net", :password => '123456', :port => '6379', :max_databases=>16, :description=> "Mark's Desktop Computer")
-    ri_integration = RedisInstance.create!(:host=>"31.222.138.180", :password => '123456', :port => '6379', :max_databases=>32, :description=>'Integration Server')
+    if not marks_redis.errors.empty? then
+      marks_redis.errors.empty.each { |k,v| errors = errors + ' ' + v}
+      raise StandardError.new(errors)
+    end
+    #ri_integration = RedisInstance.create!(:host=>"31.222.138.180", :password => '123456', :port => '6379', :max_databases=>32, :description=>'Integration Server')
+    ri_integration = RedisInstance.create!(:host=>"162.13.15.68", :password => Rails.application.secrets.redis_pw, :port => '6379', :max_databases=>32, :description=>'Integration Server')
+    if not ri_integration.errors.empty? then
+      ri_integration.errors.empty.each { |k,v| errors = errors + ' ' + v}
+      raise StandardError.new(errors)
+    end
   end
   
   private
@@ -94,7 +107,7 @@ class RedisInstance < ActiveRecord::Base
     
     def not_localhost
       if host.downcase == 'localhost' or host.start_with?('127.') or host.start_with?('10')  then
-        errors.add(:host, "can't refer to localhost. Give the public IP address")
+        errors.add(:host, "can't refer to localhost. Give the public IP address or domain name")
       end 
     end
 end

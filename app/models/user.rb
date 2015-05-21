@@ -113,12 +113,14 @@ class User < ActiveRecord::Base
                 :actual_name=> 'admin'}
      admin = User.create! param
      admin.profiles << Profile.sysadmin
+     
   end
   
   def self.demo
     pw = '123456'
     param = {:password => pw,:password_confirmation => pw,:username => 'albert',:email => 'albert@calm.org', 
               :actual_name=> 'albert'}
+    
     albert = User.create! param
     albert.profiles << Profile.sysadmin
     

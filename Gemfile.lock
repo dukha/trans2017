@@ -90,6 +90,7 @@ GEM
       execjs
     coffee-script-source (1.9.1)
     colorize (0.7.5)
+    connection_pool (2.2.0)
     daemons (1.2.2)
     database_cleaner (1.4.1)
     debug_inspector (0.0.2)
@@ -211,6 +212,9 @@ GEM
       pry (>= 0.9.10, < 0.11.0)
     pry-rails (0.3.3)
       pry (>= 0.9.10)
+    pry-stack_explorer (0.4.9.2)
+      binding_of_caller (>= 0.7)
+      pry (>= 0.9.11)
     puma (2.11.1)
       rack (>= 1.1, < 2.0)
     rack (1.6.0)
@@ -358,6 +362,7 @@ DEPENDENCIES
   carrierwave
   childprocess (= 0.3.6)
   cocoon (~> 1.2.0)
+  connection_pool
   daemons
   database_cleaner
   declarative_authorization!
@@ -385,6 +390,7 @@ DEPENDENCIES
   pry-doc
   pry-nav
   pry-rails
+  pry-stack_explorer
   puma
   rails (~> 4.2.0)
   rails-i18n (~> 4.0.0)
