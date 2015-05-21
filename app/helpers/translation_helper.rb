@@ -8,11 +8,17 @@ module TranslationHelper
  @return false Display as plain text  
 =end
   def best_in_place?(translation)
-    binding.pry
-    return false if translation.is_plural?
+    
+    return false if is_plural?(translation)
     return true if ( translation.attributes["editor"].nil?) or 
                 editor_date_time_select?(translation.attributes) or editor_number_select?(translation.attributes)
     return false  
+  end
+  
+  def is_plural?(translation)
+    t = Translation.find(translation.id)
+    return t.is_plural?
+    
   end
 =begin
  Sets html attributes for the editor control in best in place 

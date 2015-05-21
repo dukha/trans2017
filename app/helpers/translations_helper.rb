@@ -62,7 +62,7 @@ module TranslationsHelper
 =end
 
    def tlink_to(translation_code, url, options = {})
-     if translation_code == 'publish_language'
+     if translation_code == 'new_model'
      #binding.pry
      end
      options[:count] = 1 if options[:model] && options[:count].nil?

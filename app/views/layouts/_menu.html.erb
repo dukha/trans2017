@@ -7,18 +7,24 @@
  */
   var ACCORDION_HEADER_HTML ="h3";
   var ACCORDION_ID_CSS ="#accordion";
+  
   $(function(){
           var cookieName = 'stickyAccordion';
+          var icons = {
+            header: "ui-icon-circle-arrow-e",
+            activeHeader: "ui-icon-circle-arrow-s"
+          };
           // Accordion
           $(ACCORDION_ID_CSS).accordion({ 
             header: ACCORDION_HEADER_HTML ,
             active: 
               //read the cookie and get the last used index
               ( $.cookies.get( cookieName ) || 0 ),
-            change: function( e, ui ){
+            activate: function( e, ui ){
               //write a cookie to remember the h3 clicked
   						$.cookies.set( cookieName, $( this ).find( ACCORDION_HEADER_HTML ).index ( ui.newHeader[0] ) );
-  					}
+  					}, 
+  					icons: icons
           });
         });
 
@@ -37,6 +43,7 @@
       <div>
       <%=taccordion_header("developers") %>
         <ul class="menu">
+          
           <li><%= tlink_to('new_model', new_translation_path, :model=> 'translation', :count=>1, :category=>:menu) %></li>
           <!--li>< %= tlink_to("developers_new_translations", dev_new_translation_path, :category=>:menu) %></li-->
            <!-- This should url should become edit_user_preference_path(current_user.id) when we get the login working -->

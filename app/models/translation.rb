@@ -104,7 +104,7 @@ class Translation < ActiveRecord::Base
   use result[n].attributes to get the data you need
   eg 
   > x = Translation.single_lang_translations('cs',1).first.attributes
-  => {"id"=>673,
+  => {"id"=>en.menus.user_admin673,
  "iso_code"=>"cs",
  "dot_key_code"=>"activerecord.errors.messages.empty",
  "editor"=>nil,
@@ -171,6 +171,7 @@ class Translation < ActiveRecord::Base
   @return Language object for this translation
 =end  
   def language
+    #binding.pry
     return calmapp_versions_translation_language.translation_language
   end 
 =begin
@@ -184,7 +185,9 @@ class Translation < ActiveRecord::Base
  other language (for the same version)
 =end  
   def is_plural?
-    return plural  if language().iso_code == 'en' 
+    #t= nil
+    #if respond_to? plural
+    return plural  if language().iso_code == 'en'
     dkc = dot_key_code   
     english = english_translations.where{dot_key_code == my{dkc}}.first
     return english.plural 

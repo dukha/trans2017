@@ -107,7 +107,7 @@
 <!-- < % i = 0 %>  -->
 <tbody class="ui-widget-content">
   <% @translations.each do |trans| %>
-
+  
   <tr class = "<%= cycle('dataeven', 'dataodd') %>"  id = '<%= dom_id(trans)%>'>
       <td class="<%= cell_class%>" style="word-wrap: break-word;" ><span style="max-width:20px;"><%= trans.dot_key_code %></span></td>
       <!--td class="< %= cell_class %>" style="display:< %=short_key_display%>; ">< %= dot_key_code_last_key(translation.dot_key_code) %></td -->
@@ -128,6 +128,7 @@
          <%elsif not trans.attributes["editor"] == nil then%>
          <!-- ARRAY ORDER EDITOR -->
           <!--a id = '<%=trans.dot_key_code%>' class = '<%="special_editor " + special_editor_name(trans.attributes)%>' 'href = '#' ><%= trans.translation%></a -->
+          
           <span id = '<%=trans.dot_key_code%>' class = '<%="special_editor"%>' style = "color: blue; text_decoration: underline;  word-wrap: break-word;"><%= trans.translation%></span>
           
           <%= form_for trans, as: :translation, url: translation_path(trans), method: :patch, remote: true,  html: { class: "edit", id: "edit_translation" } do |f| %>
@@ -147,10 +148,12 @@
              <%= f.submit t($FA + 'save'), :id=>"ok-special-editor", :style=> "display:none"%>
              <%=button_tag t($FA +  "cancel"), :type=>"button", :id=> 'cancel-special-editor', :style=> "display:none"%> 
              <%end #form %>
+         <elsif is_plural?(trans)>
+         <!-- plural editor here -->
          <%else%>
            <!-- OTHER EDITOR -->
            
-          <span id = '<%=trans.dot_key_code%>' class = '<%="special_editor " + special_editor_name(trans.attributes)%>' ><%= trans.attributes["translation"]%></span>
+          <span id = '<%=trans.dot_key_code%>' class = '<%="special_editor " %>' ><%= trans.attributes["translation"]%></span>
            
           <%= form_for trans, as: :translation, url: translation_path(trans), method: :patch, remote: true,  html: { class: "edit", id: "edit_translation" } do |f| %>
           <!--%=       f.text_field(:id, :style => "display:inline") %>

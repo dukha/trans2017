@@ -19,7 +19,7 @@
 //= require hoverIntent.js
 //= require jquery.cookie.js
 //= require jquery.cookies.2.2.0_1.js
-//= require jquery.treeview.js
+// require jquery.treeview.js
 // Needed for editing a M-N relationship using listboxes (languages in calmapp new)
 //= require jQuery.dualListBox-1.3.js
 //= require cocoon

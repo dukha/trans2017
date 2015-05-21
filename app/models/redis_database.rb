@@ -258,7 +258,7 @@ class RedisDatabase < ActiveRecord::Base
     count = 0
     begin
       #con = connect
-      binding.pry
+      #binding.pry
       translations  = Translation.join_to_cavs_tls_arr(calmapp_version.id).joins_to_tl_arr.where{tl1.iso_code == translation_language.iso_code}
       pool.with{|con|
         translations.each{ |t|
