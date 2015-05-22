@@ -20,6 +20,6 @@ I18n.backend= I18n::Backend::KeyValue.new(Redis.new(db: 0, password: Rails.appli
 #=end
 
 =begin This is the integration server using redis only for translation
-I18n.backend= I18n::Backend::KeyValue.new(Redis.new(db: 0, password: Rails.application.secrets.redis_integration_pw)) 
+I18n.backend= I18n::Backend::KeyValue.new(Redis.new(db: 0, host: "162.13.15.68", password: Rails.application.secrets.redis_pw)) 
   
 =end
