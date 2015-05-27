@@ -68,7 +68,7 @@ en:
       back_to_versions: Back to Versions
       new_invitation: New Invitation
       redis_from_versions: "To add a Redis Database to Another Version, First Select the Version"
-      
+      cancel: Cancel
       translation_languages_calmapp_versions_to_new_upload: Versions
       unlock: Unlock Account
       version:
@@ -117,7 +117,9 @@ en:
       translation:
         array_order: Drag the elements into the correct order and then Save. 
         array: Add or change each translation to match the English translations.
-        array_first_element_null: Add or change each translation to match the English translations.    
+        array_first_element_null: Add or change each translation to match the English translations.
+        special_editor:
+          plural: To edit the plural look at the English values for one and other. Translate the required plurals for your language. These plurals may be different from English e.g zero, two,few, many.      
       user:
         actual_name: Your everyday Given and Family names
         username: The name that this application will know you as. Can be used to signin.
@@ -257,11 +259,11 @@ en:
 #        one: Application Version with Redis Databases
 #        other: Application Version with Redis Databases
       calmapp_versions_translation_language:
-        one: Version Translation Language
-        other: Version Translation Languages
+        one: Version with Translation Language
+        other: Version with Translation Languages
       language:
-        one: Translation Language
-        other: Translation Languages
+        one: Translator Application Language
+        other: Translator Application Languages
       redis_database:
         one: Redis Database
         other: Redis Databases

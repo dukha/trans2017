@@ -23,7 +23,7 @@ class TranslationsController < ApplicationController
   end
   def update
     respond_to do |format|
-      #binding.pry
+      binding.pry
       if @translation.update(translation_params)
         puts "successful update"
         format.html { 
@@ -60,7 +60,22 @@ class TranslationsController < ApplicationController
     possible_where_clauses = prepare_mode()
     search_info = prepare_search()
     if Translation.valid_criteria?(search_info) then
+      
       @translations = Translation.search(current_user, search_info, nil, possible_where_clauses)
+      @translations = @translations.each do |t|
+        #This will prevent strings appearing in quotes in the user interface
+        decoded = ActiveSupport::JSON.decode(t.translation)
+        if not (decoded.is_a? Array or decoded.is_a? Hash) then
+          t.translation = decoded
+        end
+=begin         this didn't work for attribute 'en_translation'
+        decoded = ActiveSupport::JSON.decode(t.attributes["en_translation"])
+        if not (decoded.is_a? Array or decoded.is_a? Hash) then
+          t.attributes["en_translation"] = decoded
+        end
+      binding.pry
+=end
+      end
     else  
       msg = 'Criteria: '
       flash_now= false

@@ -68,7 +68,7 @@ module TranslationHelper
      return english_date_format_example(attributes) if editor_date_time_select?(attributes)  
      return "<i>[This plural not used in English]</i>".html_safe if attributes["en_translation"].nil?
      return "<i>[Not used in English, so left blank. It may be left blank in your language too.] </i>".html_safe if attributes["en_translation"].blank?
-     return attributes["en_translation"]
+     return ActiveSupport::JSON.decode attributes["en_translation"]
    end
    
 =begin
@@ -129,6 +129,7 @@ module TranslationHelper
  @return the name of the special editor (outside best in place) 
 =end     
    def special_editor_name(attrs)
+     return "plural" if attrs["plural_indicator"]
      return attrs["editor"]
    end 
 
@@ -171,6 +172,35 @@ module TranslationHelper
        return ''
      end     
    end
+   
+   def translation_index_form_standard_html1 form
+          #binding.pry
+          html = form.text_field(:translation, :id => "translation_translation", :style=> "display:none")
+          html = html + "\n" + text_field_tag("editor",  "#{form.object.attributes['editor']}", :style=> "display:none")
+          html = html + "\n" + text_field_tag("original_translation",  "#{form.object.attributes['translation']}", :style=> "display:none")
+          html = html + "\n" + text_field_tag("dot_key_code",  "#{form.object.attributes['dot_key_code']}", :style=> "display:none")
+          html = html + "\n" + text_field_tag("english",  "#{form.object.attributes['en_translation']}", :style=> "display:none")
+          return html.html_safe
+   end
+   
+   def translation_index_form_standard_html2 form
+     html = "<div id ='special-editor-hints' style='display:none;'>" + t($FH + 'translation.special_editor.' + special_editor_name(form.object.attributes).downcase) + "</div>"
+     html = html + "<br>" 
+     html = html + form.submit(t($FA + 'save'), :id=>'ok-special-editor', :style=> 'display:none')
+     html = html + button_tag(t($FA +  'cancel'), :type=>'button', :id=> 'cancel-special-editor', :style=> 'display:none') 
+     return html.html_safe
+   end
+   def plural_editing_table attrs
+     html = "<table id = 'plural-editor', style ='display:none;'>"
+     t = ActiveSupport::JSON.decode(attrs["translation"])
+     if t.is_a? Hash then
+       t.each do |k,v|
+         html = html + "<tr><td>" + k + "</td><td>" + text_field_tag( k, v, {:id=> attrs["dot_key_code"]  + "." +k}) + "</td></tr>" 
+       end
+     end
+     html = html +  "</table>"
+     return html.html_safe
+   end     
    private
 =begin
  Contains all the short date formats for a drop down 
@@ -344,7 +374,27 @@ module TranslationHelper
                "%A %d. %B %Y %H:%M" => time.strftime("%A %d. %B %Y %H:%M")}            
      end
      
-     
+     def array_editor trans
+       html = ""
+       html = html + form_for(trans, as: :translation, url: translation_path(trans), method: :patch, remote: true,  html: { class: "edit", id: "edit_translation" } )do |f| 
+             html = html + f.text_field(:translation, :id => "translation_translation", :style=> "display:none")
+             html = html + text_field_tag("editor",  "#{trans.attributes['editor']}", :style=> "display:none")
+             html = html + text_field_tag("original_translation",  "#{trans.attributes['translation']}", :style=> "display:none")
+             html = html + text_field_tag("dot_key_code",  "#{trans.attributes['dot_key_code']}", :style=> "display:none")
+             
+             html = html + text_field_tag("english",  "#{trans.attributes['en_translation']}", :style=> "display:none")
+             if  trans.attributes["editor"] == 'array_order' then
+               html = html + "<ul id= 'sortable' style='list-style: none; margin: 3px; padding: 3px;'></ul>" 
+             elsif trans.attributes["editor"] == 'array' || trans.attributes["editor"] == 'array_first_element_null' then
+               html = html + "<table id = 'array-special-editor'> </table>" 
+             end
+             html = html + "<div id ='special-editor-hints' style='display:none;'>" 
+             html = html + t($FH + "translation." + special_editor_name(trans.attributes)) + "</div>"
+             html = html + "<br>" 
+             html = html + f.submit(t($FA + 'save'), :id=>"ok-special-editor", :style=> "display:none")
+             html = html + button_tag(t($FA +  "cancel"), :type=>"button", :id=> 'cancel-special-editor', :style=> "display:none")
+           end #form
+     end
      def tooltip_label code
        return TranslationHint.new(:dot_key_code => code, :heading=> "Label: " + tooltip_general_help , :example=> "'activerecord.attributes.user.actual_name'. Label could be 'Enter real name of user' or simply(and better) 'Real Name'", :description=> "1 or a few words that describe the attribute name or what the user has to to with this field" )
      end
@@ -476,4 +526,7 @@ module TranslationHelper
        end
        return ret_val.html_safe
      end
+     
+        
+     
 end #module

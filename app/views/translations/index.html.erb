@@ -115,41 +115,45 @@
       <!-- you cannot give this td below a class. It messes up bip -->
       <td id= '<%(best_in_place?(trans) ? "best_in_place" : "special-editor")%>'  style="max-width:40%;">
         <% if best_in_place?(trans) then%>
+          <input id= 'editor-name' type='hidden' value = 'bip'>   
            <%options = {:url => translation_path(trans.id),:as=> input_control(trans.attributes),:ok_button=>"Save", 
              :ok_button_class=> "ok", 
              :cancel_button=>"Cancel", :cancel_button_class => "cancel",
              :place_holder=>"Click to edit", :html_attrs=> html_attrs(trans.attributes)}%>
             <% if input_control(trans.attributes)==:select then 
                options[:collection]= collection?(trans.attributes)
-               #binding.pry
                end%>   
             <%= best_in_place(trans, :translation, options) %>
-          <!--%= best_in_place(trans, :translation)% -->
+         
          <%elsif not trans.attributes["editor"] == nil then%>
          <!-- ARRAY ORDER EDITOR -->
-          <!--a id = '<%=trans.dot_key_code%>' class = '<%="special_editor " + special_editor_name(trans.attributes)%>' 'href = '#' ><%= trans.translation%></a -->
-          
+          <input id= 'editor-name' type='hidden' value = '<%=trans.attributes["editor"]%>'  >
           <span id = '<%=trans.dot_key_code%>' class = '<%="special_editor"%>' style = "color: blue; text_decoration: underline;  word-wrap: break-word;"><%= trans.translation%></span>
           
           <%= form_for trans, as: :translation, url: translation_path(trans), method: :patch, remote: true,  html: { class: "edit", id: "edit_translation" } do |f| %>
-             <%=   f.text_field(:translation, :id => "translation_translation", :style=> "display:none") %>
-             <%= text_field_tag("editor",  "#{trans.attributes['editor']}", :style=> "display:none")%>
-             <%= text_field_tag("original_translation",  "#{trans.attributes['translation']}", :style=> "display:none")%>
-             <%= text_field_tag("dot_key_code",  "#{trans.attributes['dot_key_code']}", :style=> "display:none")%>
-             
-             <%= text_field_tag("english",  "#{trans.attributes['en_translation']}", :style=> "display:none")%>
+             <%=translation_index_form_standard_html1(f)%>
              <%if  trans.attributes["editor"] == 'array_order' then %>
                <ul id= 'sortable' style="list-style: none; margin: 3px; padding: 3px;"></ul> 
              <% elsif trans.attributes["editor"] == 'array' || trans.attributes["editor"] == 'array_first_element_null' then%>
                <table id = 'array-special-editor'> </table> 
              <%end%>
-             <div id ="special-editor-hints" style="display:none;"> <%= t($FH + "translation." + special_editor_name(trans.attributes)) %></div>
-             <br> 
-             <%= f.submit t($FA + 'save'), :id=>"ok-special-editor", :style=> "display:none"%>
-             <%=button_tag t($FA +  "cancel"), :type=>"button", :id=> 'cancel-special-editor', :style=> "display:none"%> 
-             <%end #form %>
-         <elsif is_plural?(trans)>
-         <!-- plural editor here -->
+             <%=translation_index_form_standard_html2(f)%>
+           <%end %>
+         
+         <%elsif is_plural?(trans)%>
+          <!-- plural editor here -->
+           <input id= 'editor-name' type= 'hidden' value = 'plural'  >
+          <span style="color: blue; text_decoration: underline;  word-wrap: break-word;" class="plural_editor" id="<%=trans.dot_key_code%>"><%=trans.translation%></span>
+          
+           <%= form_for trans, as: :translation, url: translation_path(trans), method: :patch, remote: true,  html: { class: "edit", id: "edit_translation" } do |f| %>
+           
+           <%=translation_index_form_standard_html1(f)%>
+                  
+           <%=plural_editing_table(trans.attributes)%>
+           
+           <%=translation_index_form_standard_html2(f)%>
+           
+           <%end%>
          <%else%>
            <!-- OTHER EDITOR -->
            

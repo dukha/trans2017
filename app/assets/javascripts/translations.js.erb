@@ -119,11 +119,13 @@ $().ready(function(){
       return $('<li/>', {class: "ui-state-default",
                          html: html, style: "margin: 3px; padding-left:3px;"}) ;
   };
-  var anchorSelector = "span.special_editor";  
+  var specialEditorSpan = "span.special_editor";
+  var pluralEditorSpan = "span.plural_editor";
+  var anchorSelector = specialEditorSpan + ", " + pluralEditorSpan;  
   var saveButtonSelector =   "input#ok-special-editor";
   var cancelButtonSelector = 'button#cancel-special-editor';
   var originalTranslationSelector = 'input#original_translation';
-  var idInputSelector = 'input#id';
+  //var idInputSelector = 'input#id';
   var dotKeyCodeInputSelector = 'input#dot_key_code';
   var sortableUlSelector = 'ul#sortable';
   
@@ -131,11 +133,11 @@ $().ready(function(){
   var allSortableUlsSelector = 'ul#sortable';
   var hintDivSelector ="div#special-editor-hints";
   var formSelector = "#edit_translation";
-  var editorNameSelector = "input#editor";
+  var editorNameSelector = 'input#editor-name';//"input#editor";
   
   var englishTranslationSelector = 'input#english';
   var arrayEditingTableSelector = 'table#array-special-editor';
- 
+  var pluralEditingTableSelector = 'table#plural-editor'; 
 /*
  * Sets each piece of data into a li inside the targetContainer after removing existing
  */    
@@ -179,10 +181,11 @@ $().ready(function(){
 
   $().ready(function(){
     $('span.best_in_place').on('mousedown',closeOthers);
-    $('span.special_editor').on('mousedown',closeOthers); 
+    $(specialEditorSpan).on('mousedown',closeOthers); 
+    $(pluralEditorSpan).on('mousedown',closeOthers);
     $(allSortableUlsSelector).css('display','none'); 
     $(anchorSelector).click(function(event){
-       anchor = $(this);//$(event.target);"ul#sortable"
+       anchor = $(this);
        containerTd = anchor.parent('td');
        children = getTdChildren(containerTd);
        if(typeof children['editorName'] == 'undefined'){
@@ -190,6 +193,9 @@ $().ready(function(){
        }else if(children['editorName'] == 'array_order'){
          setOrderData(children['ul'], $.parseJSON(decodeURI(encodeURI(anchor.text()))));  
          children['ul'].css("display", "block");
+       }else if(children['editorName'] == 'plural'){
+           children['table'].css("display", 'table');
+           //xxxx
        }else if(children['editorName'] == 'array' || children['editorName'] == 'array_first_element_null'){
          setArrayData(children['table'],$.parseJSON(decodeURI(encodeURI(anchor.text()))), children['englishTranslation'] );
          children['table'].css("display", 'table');    
@@ -225,25 +231,40 @@ $().ready(function(){
   
   var save = function(event){
     containerTd = parentTd(event);
-      children = getTdChildren(containerTd);
-      array = [];
-      if(typeof children['editorName'] == 'undefined'){
-         // do nothing
-      }else if(children['editorName'] == 'array_order'){ 
-         lis = children['ul'].children('li') ;
-         $.each(lis,function(index ,value){
-           array.push(value.textContent);
-         });
-      }else if(children['editorName'] == 'array' || children['editorName'] == 'array_first_element_null'){
-         inputs = children.table.find('input.array-element');
-         $.each(inputs, function(index, input){
-           array.push($(input).val());
-         });            
-      }else{
-         
-      }
+    children = getTdChildren(containerTd);
+    array = [];
+    hash = {};
+    object = null;
+    if(typeof children['editorName'] == 'undefined'){
+       // do nothing
+    }else if(children['editorName'] == 'array_order'){ 
+       lis = children['ul'].children('li') ;
+       $.each(lis,function(index ,value){
+         array.push(value.textContent);
+       });
+       object = array;
+    }else if(children['editorName'] == 'array' || children['editorName'] == 'array_first_element_null'){
+       inputs = children.table.find('input.array-element');
+       $.each(inputs, function(index, input){
+         array.push($(input).val());
+       });
+       object = array;   
+    }else if(children['editorName'] == 'plural'){
+       hash = {};
+       rows = children.table.find('tr');
+       $.each(rows, function(index, value){
+          tds = $(value).find('td');
+          key = $(tds[0]).html();
+          input = $(tds[1]).find('input');
+          val = $(input).val();
+          hash[key] = val;
+       });
+       object = hash;             
+    }else{
+      object = ''; 
+    }
 
-      update = JSON.stringify(array);
+      update = JSON.stringify(object);
       children["translation"].val(update);
       children['anchor'].text(update) ;
       restoreTd(containerTd);
@@ -262,6 +283,17 @@ $().ready(function(){
        if($(children["table"]).children().length != 0){
          $(children["table"]).empty();
        }
+    }else if(children['editorName'] == 'plural'){
+      //xxxx
+      console.log(children['originalTranslation']);
+      hash = JSON.parse(originalTranslation.val());
+       rows = children.table.find('tr');
+       $.each(rows, function(index, value){
+         tds = $(value).find('td');
+         key = $(tds[0]).html();
+         input = $(tds[1]).find('input');
+         $(input).val(hash[key]);
+      });
     }else{
       
     }
@@ -287,6 +319,7 @@ $().ready(function(){
       children['ul'].css("display", 'none');
     }else if(typeof children['table'] != 'undefined'){
       children['table'].css("display", 'none');
+      //xxxx
     }else{
       
     }   
@@ -306,7 +339,7 @@ $().ready(function(){
     saveButton = td.find(saveButtonSelector);
     cancelButton = td.find(cancelButtonSelector);
     originalTranslation = td.find(originalTranslationSelector);
-    id = td.find(idInputSelector);
+    //id = td.find(idInputSelector);
     dotKeyCode = td.find(dotKeyCodeInputSelector);
     translation = td.find(translationSelector);
     hint = td.find(hintDivSelector);
@@ -317,21 +350,23 @@ $().ready(function(){
     ul = undefined;
     div = undefined;
     table = undefined;
+    
     if(editorName == 'array_order' ){
       ul = td.find(sortableUlSelector);
     }else if(editorName == 'array'){
-
       table = td.find(arrayEditingTableSelector);
     }else if(editorName == 'array_first_element_null'){
       table = td.find(arrayEditingTableSelector);
-    }else if(children['editorName'] == 'decimal_format'){
-         
-    }else if(children['editorName'] == 'time_format'){
-                 
-    }else if(children['editorName'] == 'date_format'){ 
-         
-    }else if(children['editorName'] == 'datetime_format'){
+    }else if(editorName == 'decimal_format'){
+         //Taken care of by best in place now
+    }else if(editorName == 'time_format'){
+         //Taken care of by best in place now         
+    }else if(editorName == 'date_format'){ 
+          //Taken care of by best in place now
+    }else if(editorName == 'datetime_format'){
       
+    }else if(editorName == 'plural'){
+      table = td.find(pluralEditingTableSelector);
     }else{
       
     }    
@@ -342,7 +377,7 @@ $().ready(function(){
             div: div, 
             table: table,
             anchor: anchor, 
-            id: id, 
+            //id: id, 
             dotKeyCode: dotKeyCode, 
             originalTranslation: originalTranslation, 
             translation: translation,

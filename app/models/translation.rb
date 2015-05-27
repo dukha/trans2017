@@ -127,7 +127,7 @@ class Translation < ActiveRecord::Base
     basic_select_arr.
     select("english.translation as en_translation, english.updated_at as en_updated_at, translations.translation as translation, 
           tl1.name as language,
-          translations.updated_at as updated_at, special.cldr as cldr, cavtl1.calmapp_version_id as version_id").
+          translations.updated_at as updated_at, special.cldr as cldr, cavtl1.calmapp_version_id as version_id, english.plural as plural_indicator").
     where( "cavtl1.calmapp_version_id = ?",calmapp_version_id).
     where("tl1.iso_code = ?", language).
     order("translations.dot_key_code asc")
