@@ -10,13 +10,15 @@ gem 'devise'
 gem 'devise_invitable'
 # this gem is a ruby mailhandler that will work with exim or sendmail (and others). Tested on exim4. 
 gem 'mail'
+gem 'mailgun-ruby', '~>1.0.3', require: 'mailgun'
+gem 'mailgun_rails'
 #gem 'ruby-gmail'
 #xml parser
 gem 'nokogiri'#, '1.5.0'
 
 # json parser
 gem 'json'
-gem 'gon'
+#gem 'gon'
 # authorisation No authorization solution compatible with rails 4: CanCan looks closest
 gem 'declarative_authorization', :git => "git://github.com/stffn/declarative_authorization.git" #, '0.5.3'
 

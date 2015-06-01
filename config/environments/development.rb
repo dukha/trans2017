@@ -17,7 +17,7 @@ Translate::Application.configure do
   # Don't care if the mailer can't send
   config.action_mailer.raise_delivery_errors = true
   # devise wants this
-  config.action_mailer.default_url_options = { :host => 'localhost:3000' }  
+  #config.action_mailer.default_url_options = { :host => 'localhost:3000' }  
   #config.middleware.use ExceptionNotifier,
   config.middleware.use ExceptionNotification::Rack,
 #     :email_prefix => "[Exception] ",
@@ -25,21 +25,30 @@ Translate::Application.configure do
 #     :exception_recipients => %w{mplennon@gmail.com}
       :email =>{
       :email_prefix => "[Exception] ",
-      :sender_address => %{"translator-notifier" <trans_app@internode.on.net>},
+      :sender_address => %{"translator-notifier" <mplennon@optusnet.com.au>},
     :exception_recipients => %w{mplennon@gmail.com}
     }
   # sendmail users the sendmail_settings below
-  config.action_mailer.delivery_method = :sendmail
+  config.action_mailer.default_url_options = {:host => 'dhamma.org.au'} # 'localhost:3000'}
+  #config.action_mailer.delivery_method = :sendmail
+  config.action_mailer.delivery_method = :mailgun
   # to use google then uncomment the4 line below (It will sue the smtp_settings below)
   #config.action_mailer.delivery_method = :smtp 
   config.action_mailer.perform_deliveries = true 
   config.action_mailer.default :charset => "utf-8" 
   config.action_mailer.raise_delivery_errors = true 
+  
   config.action_mailer.sendmail_settings = { 
     :location => '/usr/sbin/exim', 
     # The -t switch doesn't work in the case of devise_invition
-    :arguments => '-i ' #-t' 
+    :arguments => '-i -t' 
   }
+  
+  config.action_mailer.mailgun_settings = {
+        api_key: "key-47120298e8c9c31b076e5245655e62c7", #'<mailgun api key>',
+        domain: "sandboxa89c6db3f73e4ad6b3377c7bb91dbeb1.mailgun.org" #'<mailgun domain>'
+  }
+  
   config.action_mailer.smtp_settings = {
     address: "smtp.gmail.com",
     port: 587,

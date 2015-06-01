@@ -3,6 +3,7 @@
   accept_user_invitation_url-->
 <h2><%= t 'devise.invitations.edit.header' %></h2>
 <!--invitation_path is not directly in routes: It is devise/invitation#update -->
+
 <%= semantic_form_for resource, :as => resource_name, :url => invitation_path(resource_name), :html => { :method => :put } do |f| %>
   <%= devise_error_messages! %>
   <%= f.inputs do%>
@@ -18,4 +19,6 @@
   <%=f.actions do%>
     <%= f.action :submit, :button_html=>{:value => t("devise.invitations.edit.submit_button")} %>
   <%end%>
+  
+  devise/invitaitons/edit
 <% end %>

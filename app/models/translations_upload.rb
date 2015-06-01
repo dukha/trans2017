@@ -34,12 +34,13 @@ class TranslationsUpload < ActiveRecord::Base
       duplicates_behavior2 = Translation.Overwrite[:continue_unless_blank]
     end     
     begin       
-    data  = YAML.load_file(TranslationsUpload.uploaded_to_folder + yaml_upload.url)
-    plurals= Hash.new
-    key_value_pairs = TranslationsUpload.traverse_ruby(data, plurals )
-    
+      data  = YAML.load_file(TranslationsUpload.uploaded_to_folder + yaml_upload.url)
+      binding.pry
+      plurals= Hash.new
+      key_value_pairs = TranslationsUpload.traverse_ruby(data, plurals )
     rescue Psych::SyntaxError => pse
       #logger.error( yaml_upload_identifier() + " has produced the following error: " + pse + " Have a technical person check the syntax of the file")
+      binding.pry
       error =  PsychSyntaxErrorWrapper.new(pse, yaml_upload_identifier)
       puts error
       logger.error(error)

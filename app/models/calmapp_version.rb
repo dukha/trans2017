@@ -67,7 +67,6 @@ class CalmappVersion < ActiveRecord::Base
   end
   
   def calmapp_name
-    #puts "xxxx" + Application.where(:id => application_id).name
     return Calmapp.where(:id => calmapp_id).first.name.titlecase
   end
   # moved to validations lib

@@ -38,8 +38,8 @@ en:
       show_original: "Original"
       #back: "Back"
       remove: Remove
-      publish: Publish
-      publish_language: Publish %{language} 
+      #publish: Publish
+      translation_language_publish: Publish %{language} 
       no_delete: Undeletable
       #
       create_and_upload: Create and Upload
@@ -54,7 +54,7 @@ en:
       remove_version: Remove Version
       redisdbalter: Change Redis Databases
       version_redis: Publication to Redis
-      version_publish: Publish to Redis
+      version_publish: Publish Version to Redis
       remove_redis_database: Remove This Redis Database
       change_uploads: Change Uploads
       remove_upload: Remove This Upload

@@ -19,7 +19,14 @@ Translate::Application.routes.draw do
    get '/auth_user/set_permission_by_ajax' => 'permissions#set_current_by_ajax', :as => :set_permission_by_ajax, via: :all
 =end   
     
-   devise_for :users #do
+   #devise_for :users #do
+=begin
+   devise_for :users, :path_names => {:sign_in => 'login', :sign_out => 'logout'}, 
+     controllers: {confirmations: "users/confirmations", passwords: "users/passwords", registrations: "users/registrations", 
+         sessions: "users/sessions", 
+         unlocks: "users/unlocks", :invitations => 'users/invitations'}
+=end
+   devise_for :users, :controllers => { :invitations => 'invitations' }
      match '/users/:id', :to => 'users#destroy', :as => :destroy_user, :via => :delete
      #get '/users_select' => 'users#select',      :as => :users_select, via: :all
      #get '/users', :to => 'users#index', :as=> :users

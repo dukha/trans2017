@@ -1,35 +1,4 @@
-<!--
-<script type="text/javascript">
-//This script  handles showing and hiding selection criteria
-  var criteriaDiv ="#criteria";
-  var criteriaButton = "#showHideCriteria";
-  $().ready(function(){
-    //Initialise the criteria to be hidden on first display
-    $(criteriaDiv).hide(); 
-    $(criteriaButton).html(criteriaHiddenText);
-    
-    if( <%= @translations_uploads.count==0 %>){
-      toggleCriteria();
-    }
-    
-    $(criteriaButton).click(function(){
-      toggleCriteria();
-    }); //end click
-  });//end ready
-  var   criteriaHiddenText = "<%=t($FA +'show_something', :something=>t($SC))%>";
-  var   criteriaVisibleText = "<%=t($FA +'hide_something', :something=>t($SC))%>";
-  function toggleCriteria(){
-    if($(criteriaDiv).is(':visible')){ 
-        $(criteriaButton).html(criteriaHiddenText);
-    }else{
-        $(criteriaButton).html(criteriaVisibleText);
-    }
-    // toggle has to be after setting button text otherwise is(':visible') will not work properly
-    $(criteriaDiv).slideToggle('slow');  
-  }
-  
-</script>
--->
+
 <%=theading("listing", :model=>'translations_upload', :count=>11) %>
 <%if TranslationsUpload.respond_to?( :searchable_attr ) and TranslationsUpload.searchable_attr.any? then %>
 <div id = 'data-empty' style = 'display:none'><%= @translations_uploads.empty?.to_s %></div>
@@ -106,10 +75,10 @@
     <tr class = "<%= cycle('dataeven', 'dataodd') %>" >
              
             <td class="<%= cell_class %>"><%= translations_upload.calmapp_versions_translation_language.calmapp_version_tl.description %></td>
-            <!--td class="< %= cell_class %>">< %= translations_upload.translation_language.name %></td-->
+            
              <td class="<%= cell_class %>"><%= translations_upload.calmapp_versions_translation_language.translation_language.name%></td>
             <td class="<%= cell_class %>"><%= translations_upload.description %></td>
-            <!--td class="< %= cell_class %>"> < %=translations_upload.yaml_upload_file_name% ></td -->
+            
             <td class="<%= cell_class %>"> <%=translations_upload.yaml_upload%></td>
           <!--%= link_edit( edit_translations_upload_path(translations_upload), :translations_uploads  ) % -->
       <!--%= link_destroy( translations_upload, :translations_uploads ) %-->

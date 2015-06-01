@@ -4,42 +4,7 @@ $().ready(function(){
   });
 });
 
-/*
- * This script  handles showing and hiding selection criteria
- */
-  var CRITERIA_DIV_SELECTOR = "#criteria";
-  var CRITERIA_BUTTON_SELECTOR = "#showHideCriteria";
-  var NOT_VISISBLE_RECORDS_EMPTY_DIV_SELECTOR = "div#data-empty"
-  //var SHOW_HIDE_CRITERIA_SELECTOR = "#showHideCriteria";
-  //var CRITERIA_SELECTOR = "#criteria"
-  var   criteriaHiddenText = "<%=I18n.t($FA +'show_something', :something=>I18n.t($SC))%>";
-  var   criteriaVisibleText = "<%=I18n.t($FA +'hide_something', :something=>I18n.t($SC))%>";
-  $().ready(function(){
-    
-    if( $(NOT_VISISBLE_RECORDS_EMPTY_DIV_SELECTOR).html() =="true"){
-       $(CRITERIA_BUTTON_SELECTOR).html(criteriaVisibleText);
-       $(CRITERIA_DIV_SELECTOR).slideDown('slow');
-     }else{
-        $(CRITERIA_BUTTON_SELECTOR).html(criteriaHiddenText);
-        $(CRITERIA_DIV_SELECTOR).slideUp('slow');
-     }
-    $(CRITERIA_BUTTON_SELECTOR).click(function(){
-      toggleCriteria();
-    }); //end click
-  });//end ready
-  function toggleCriteria(){
-    console.log("toggling");
-    //Here the text is changed first, assuming the toggle will work in the next commando
-    //Otherwise time errors occur!! In a slow toggle the text is not vis or hidden until the slide finishes
-    if($(CRITERIA_DIV_SELECTOR).is(':visible')){ 
-        $(CRITERIA_BUTTON_SELECTOR).html(criteriaHiddenText);
-    }else{
-        $(CRITERIA_BUTTON_SELECTOR).html(criteriaVisibleText);
-    }
-    // toggle has to be after setting button text otherwise is(':visible') will not work properly
-    $(CRITERIA_DIV_SELECTOR).slideToggle('slow');  
-    
-  }
+
 /*
  * This script sets up inplace editing
  */
@@ -195,7 +160,7 @@ $().ready(function(){
          children['ul'].css("display", "block");
        }else if(children['editorName'] == 'plural'){
            children['table'].css("display", 'table');
-           //xxxx
+          
        }else if(children['editorName'] == 'array' || children['editorName'] == 'array_first_element_null'){
          setArrayData(children['table'],$.parseJSON(decodeURI(encodeURI(anchor.text()))), children['englishTranslation'] );
          children['table'].css("display", 'table');    
@@ -284,7 +249,7 @@ $().ready(function(){
          $(children["table"]).empty();
        }
     }else if(children['editorName'] == 'plural'){
-      //xxxx
+
       console.log(children['originalTranslation']);
       hash = JSON.parse(originalTranslation.val());
        rows = children.table.find('tr');
@@ -319,7 +284,7 @@ $().ready(function(){
       children['ul'].css("display", 'none');
     }else if(typeof children['table'] != 'undefined'){
       children['table'].css("display", 'none');
-      //xxxx
+      
     }else{
       
     }   

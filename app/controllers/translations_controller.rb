@@ -64,7 +64,14 @@ class TranslationsController < ApplicationController
       @translations = Translation.search(current_user, search_info, nil, possible_where_clauses)
       @translations = @translations.each do |t|
         #This will prevent strings appearing in quotes in the user interface
-        decoded = ActiveSupport::JSON.decode(t.translation)
+        if JSON.is_json?(t.translation) then
+          decoded = ActiveSupport::JSON.decode(t.translation)
+        else
+          msg =  t.translation + " IS NOT JSON: bad data. Translation id = " + t.to_s
+          puts msg
+          Rails.logger.error( msg)
+          decoded = t.translation
+        end  
         if not (decoded.is_a? Array or decoded.is_a? Hash) then
           t.translation = decoded
         end

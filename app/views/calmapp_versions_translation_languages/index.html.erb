@@ -71,7 +71,7 @@
           
           <td class="<%= link_cell_class %>">
             <%if calmapp_versions_translation_language.redis_databases_count > 0%>
-              <button id = 'publish'><%=t($FA + "publish")%></button>
+              <button id = 'publish'><%=t($FA + "translation_language_publish", :language=> calmapp_versions_translation_language.translation_language.name)%></button>
               <div id ='tl-publish-flash-<%=calmapp_versions_translation_language.id.to_s%>'></div>
               <div id = 'publishing-get-database'>
               <%=form_tag(calmapp_versions_translation_language_publish_path(calmapp_versions_translation_language.id), 
@@ -87,7 +87,7 @@
                 :navigate=> false, :id =>'publish-language', 
                 
                 :form => }) % --> 
-                <input id = 'publish-language' type = 'submit' name ='submit' value='<%=t($FA + 'publish_language',:language=> calmapp_versions_translation_language.translation_language.name )%>' >
+                <input id = 'publish-language' type = 'submit' name ='submit' value='<%=t($FA + 'translation_language_publish',:language=> calmapp_versions_translation_language.translation_language.name )%>' >
                <%end%> 
                 <img id = 'disappear' src = '/assets/treeview/minus.gif' alt='-' style = 'float:right;'>
               </div>

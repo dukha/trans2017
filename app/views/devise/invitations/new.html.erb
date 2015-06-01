@@ -3,8 +3,9 @@
 <%= form_for resource, :as => resource_name, :url => invitation_path(resource_name), :html => {:method => :post} do |f| %>
   <%= devise_error_messages! %>
 
-<% resource.class.invite_key_fields.each do |field| -%>
-  <p><%= f.label field %><br />
+<% resource.class.invite_key_fields.each do |field| %>
+<!-- invite key fields is set in user.rb via devise :invite_key-->
+  <p><%= f.label t($ARA + "user." + field.to_s) %><br />
   <%= f.text_field field %></p>
 <% end -%>
 

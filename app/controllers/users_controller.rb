@@ -9,7 +9,7 @@ class UsersController < ApplicationController #Devise::RegistrationsController
   
   
   def invite_user
-    #binding.pry
+    binding.pry
     @user = User.invite!(:email => params[:user][:email], :name => params[:user][:name])
     render :html => @user
   end
@@ -32,6 +32,7 @@ class UsersController < ApplicationController #Devise::RegistrationsController
   end
   
   def new
+    #binding.pry
     @user = User.new
   end
   def create

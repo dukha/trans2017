@@ -43,6 +43,7 @@
 //= jQuery.Autosize.Input.js
 // require redis_databases
 // require translations_uploads
+//= require toggle_selection_criteria
 //= require_self
 //= require_tree .
 

@@ -9,8 +9,8 @@ class User < ActiveRecord::Base
   # :token_authenticatable, :confirmable, omniauthable:, Confirmable, :rememberable, :validatable, :encryptable, :recoverable
   devise  :database_authenticatable, :registerable,
          :trackable, :validatable,
-         :timeoutable, :lockable, :invitable, :invite_key => {:email=>'', :actual_name=>''} #,:timeout_in => 10.minutes use value from  config/initializers/devise.rb
-
+         :timeoutable, :lockable, :invitable, :invite_key => {:email=>'', :actual_name=>'' } #,:timeout_in => 10.minutes use value from  config/initializers/devise.rb
+  before_validation :check_username
   # Setup accessible (or protected) attributes for your model
 
   # username is unique by DB index :unique => true
@@ -20,6 +20,7 @@ class User < ActiveRecord::Base
   validates :actual_name, :uniqueness => true
   validates :actual_name, presence: true
   validates :username, :uniqueness => true
+  validates :username, presence: true
   # https://github.com/plataformatec/devise/wiki/How-To:-Allow-users-to-sign_in-using-their-username-or-email-address
   # Virtual attribute for authenticating by either username or email
   # This is in addition to a real persisted field like 'username'
@@ -103,9 +104,7 @@ class User < ActiveRecord::Base
     end
   end
    
- # https://github.com/plataformatec/devise/wiki/How-To:-Allow-users-to-sign_in-using-their-username-or-email-address
- # Overwrite Devise’s find_for_database_authentication method
-
+ 
   def self.seed
      User.create_root_user
      pw = '123456'
@@ -188,6 +187,9 @@ CalmappVersionsTranslationLanguage.new(:translation_language_id =>TranslationLan
    end
  
  protected
+ # https://github.com/plataformatec/devise/wiki/How-To:-Allow-users-to-sign_in-using-their-username-or-email-address
+ # Overwrite Devise’s find_for_database_authentication method
+
    def self.find_for_database_authentication(warden_conditions)
      conditions = warden_conditions.dup
      login = conditions.delete(:login)
@@ -198,7 +200,18 @@ CalmappVersionsTranslationLanguage.new(:translation_language_id =>TranslationLan
       return where{developer == 't'}
     end
   
-  
+private
+  def check_username
+    binding.pry
+    if username.blank? then
+      if not actual_name.blank? then
+        # make username equal to actual_name without whitespace
+      
+        self.username = actual_name.gsub(/\s+/, "")
+        puts username
+      end  
+    end
+  end  
    
    
    

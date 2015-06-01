@@ -1,4 +1,4 @@
-<script type="text/javascript">
+<!--script type="text/javascript">
 //This script  handles showing and hiding selection criteria
   var criteriaDiv ="#criteria";
   var criteriaButton = "#showHideCriteria";
@@ -27,7 +27,7 @@
     $(criteriaDiv).slideToggle('slow');  
   }
   
-</script>
+</script -->
 <%=theading("listing", :model=>'translation_editor_param', :count=>11) %>
 <%if TranslationEditorParam.respond_to?( :searchable_attr ) and TranslationEditorParam.searchable_attr.any? then %>
 <div id = 'data-empty' style = 'display:none'><%= @translation_editor_params.empty?.to_s %></div>

@@ -382,7 +382,7 @@ en:
         yaml_upoad_file_path: Uploaded File 
       user:
         actual_name: Actual Name
-        username: (Online)User Name
+        username: Online User Name
         password: Password
         password_confirmation: Confirm Password
         email: Email
