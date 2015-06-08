@@ -128,6 +128,9 @@ en:
         developer_jobs: "This developer(user) can work on doing the English translations for the following ticked applications."
         profiles: Choose the profile(s) of permissions that you want the user to have. The profile will determine which pages a user can view and which action a user can take.
         admin_jobs: This user is limited to administering the ticked applications.
+        password_change: Only add data here if you want to change your password. If you only want to change other data(eg email address) then leave change and confirm passwords blank.
+        password_current: Security: provide your current password before you can change these values.
+        password_new: Add your new password here only if you want to change it. 
       translation_hints:
         heading: Title for Hint (may contain HTML)
         example: Example of Hint (may contain HTML)
@@ -385,6 +388,8 @@ en:
         username: Online User Name
         password: Password
         password_confirmation: Confirm Password
+        password_current: Current Password
+        password_new: New Password
         email: Email
         profiles: Profiles
         translator: Translator

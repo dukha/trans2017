@@ -11,6 +11,7 @@ class User < ActiveRecord::Base
          :trackable, :validatable,
          :timeoutable, :lockable, :invitable, :invite_key => {:email=>'', :actual_name=>'' } #,:timeout_in => 10.minutes use value from  config/initializers/devise.rb
   before_validation :check_username
+  after_invitation_accepted :notify_admin
   # Setup accessible (or protected) attributes for your model
 
   # username is unique by DB index :unique => true
@@ -31,7 +32,7 @@ class User < ActiveRecord::Base
   #has_many :organisations, :through => :permissions
   
   #The above are being replaced by those below. Keep both for now. mfl
-  has_many :user_profiles
+  has_many :user_profiles, :dependent => :destroy
   #accepts_nested_attributes_for :user_profiles, :reject_if => :all_blank, :allow_destroy => true
   has_many :profiles, :through => :user_profiles
   
@@ -39,15 +40,15 @@ class User < ActiveRecord::Base
   #has_many :cavs_tl_translators, :foreign_key => "translator_id" #, :class_name=> "" 
   #accepts_nested_attributes_for :cavs_tl_translators, :reject_if => :all_blank, :allow_destroy => true
   #has_many :calmapp_versions_translation_languages, :through => :cavs_tl_translators
-  has_many :translator_jobs, :foreign_key => "translator_id" , :class_name=> "CavsTlTranslator"
+  has_many :translator_jobs, :foreign_key => "translator_id" , :class_name=> "CavsTlTranslator", :dependent => :destroy
   #accepts_nested_attributes_for :translator_jobs, :reject_if => :all_blank, :allow_destroy => true
   has_many :translator_cavs_tls, :through => :translator_jobs, :source => :calmapp_versions_translation_language
   
-  has_many :developer_jobs, :foreign_key => "user_id" , :class_name=> "CalmappDeveloper"
+  has_many :developer_jobs, :foreign_key => "user_id" , :class_name=> "CalmappDeveloper", :dependent => :destroy 
   #accepts_nested_attributes_for :developer_jobs, :reject_if => :all_blank, :allow_destroy => true
   has_many :developer_calmapps, :through => :developer_jobs, :source => :calmapp, :class_name=>"Calmapp"
   
-  has_many :admin_jobs, :foreign_key => "user_id" , :class_name=> "CalmappAdministrator"
+  has_many :admin_jobs, :foreign_key => "user_id" , :class_name=> "CalmappAdministrator", :dependent => :destroy
   #accepts_nested_attributes_for :developer_jobs, :reject_if => :all_blank, :allow_destroy => true
   has_many :administrator_calmapps, :through => :admin_jobs, :source => :calmapp, :class_name=>"Calmapp"
 =begin
@@ -202,7 +203,7 @@ CalmappVersionsTranslationLanguage.new(:translation_language_id =>TranslationLan
   
 private
   def check_username
-    binding.pry
+    #binding.pry
     if username.blank? then
       if not actual_name.blank? then
         # make username equal to actual_name without whitespace
@@ -213,7 +214,10 @@ private
     end
   end  
    
-   
+  def notify_admin
+    puts "NOTIFY ADMIN"
+    AdminMailer.user_invitation_accepted id
+  end 
    
 =begin 
 private

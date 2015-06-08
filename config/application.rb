@@ -25,7 +25,7 @@ end
 =end
 Bundler.require(:default, Rails.env)
     
-module Translate
+module Translate 
   class Application < Rails::Application
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
@@ -84,9 +84,10 @@ module Translate
     config.logger = ActiveSupport::TaggedLogging.new(Logger.new("log/#{Rails.env}.log"))
     #config.log_tags = [ lambda { |req| user = req.env['warden'].user; user && user.name || 'Unknown'; }]
     
-    #rails 4.2 and higher allow rescue of after commit problems
+    #rails 4.2 and higher active job with delayed_job
     config.active_record.raise_in_transactional_callbacks = true
     config.active_job.queue_adapter = :delayed_job
+    config.active_job.queue_name_prefix = Rails.env + 'DJ'
 =begin    
       # assign log4r's logger as rails' logger.
     log4r_config= YAML.load_file(File.join(File.dirname(__FILE__),"log4r.yml"))

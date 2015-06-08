@@ -69,7 +69,7 @@ class Profile < ActiveRecord::Base
     reserved_profile = 'sysadmin'
     Profile.create :name => reserved_profile, :roles => Profile.available_roles, :protected_profile => true  unless self.sysadmin
     reserved_profile = 'guest'
-    Profile.create :name => reserved_profile, :roles => [:guest_visit], :protected_profile => true unless self.guest
+    Profile.create :name => reserved_profile, :roles => [:guest_visit, :whiteboards_read], :protected_profile => true unless self.guest
     
     roles= [:translations_read, :translations_write]
     Profile.create(:name=>'translator', :roles => roles, :protected_profile => true) 

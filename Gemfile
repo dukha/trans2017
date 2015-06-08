@@ -35,7 +35,11 @@ gem 'jquery-ui-rails'
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
 gem 'turbolinks'
 gem 'jquery-turbolinks'
-
+# markdown
+gem 'redcarpet'
+# markdown with erb included
+#gem 'html_pipeline_rails'
+ 
 #helps with I18n not used at present. We need to use it to get pagination in the urls, I think
 gem 'routing-filter'#, '0.4.0.pre'
 

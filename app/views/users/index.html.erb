@@ -1,4 +1,31 @@
 <p class="pageheading"><%= t("headings.listing.heading", :model=>t($ARM + "user", :count=>2) ) %></p>
+<%= form_tag users_path, :method => 'get', :class=>'formtastic' do %>
+  <!--%= semantic_form_for translations_path, :method => 'get' do |f| % -->
+    <!--%=f.inputs do%-->
+    <%= hidden_field_tag :direction, params[:direction] %>
+    <%= hidden_field_tag :sort, params[:sort] %>
+    <div id="selection_mode" class = "radio">
+        
+       <input id="user_selection_mode_all" name="selection_mode" type="radio" value="all" 
+                 <%=initialise_selection_mode_radio_buttons("all", params["selection_mode"])%>/>
+              <label for="user_selection_mode_all"><%=tlabel("selection_mode_all", "user")%>
+              </label>
+         
+                <input id="user_selection_mode_untranslated" name="selection_mode" type="radio" value="invitee"  
+                  <%=initialise_selection_mode_radio_buttons("invitees", params["selection_mode"])%>/>
+                <label for="user_selection_mode_untranslated"><%=tlabel("selection_mode_invitee", "user")%>
+              </label>
+         
+                <input id="user_selection_mode_valid" name="selection_mode" type="radio" value="valid"  
+                    <%=initialise_selection_mode_radio_buttons("valid_users", params["selection_mode"])%>/>
+                 <label for="user_selection_mode_valid"><%=tlabel("selection_mode_valid", "user")%>
+              </label>
+              
+                
+    </div>              
+    <%= submit_tag "Search", :name => nil %>
+    
+  <%end%>          
 <%= twill_paginate %>
 <table class="data">
   <tr class="dataheader">
@@ -39,3 +66,10 @@
 
 <%= link_to t('headings.new.heading', :model=> t($ARM + 'user', :count=>1)), new_user_path %> | <%= tlink_to "new_invitation", new_user_invitation_path%></li>
 
+<script>
+$(document).ready(function(){
+  $(function(){
+    $( "div#selection_mode" ).buttonset();
+  });
+)};
+</script>

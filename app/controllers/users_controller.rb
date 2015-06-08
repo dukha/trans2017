@@ -7,17 +7,22 @@ class UsersController < ApplicationController #Devise::RegistrationsController
   #respond_to :html, :xml, :json
   @@model ="user"
   
-  
+=begin @deprecated  
   def invite_user
     binding.pry
     @user = User.invite!(:email => params[:user][:email], :name => params[:user][:name])
     render :html => @user
   end
-
+=end
   # users_select        /:locale/users_select(.:format)                                    {:controller=>"users", :action=>"select"}
   def index
     #binding.pry#respond_to :html, :xml, :json
-    @users = User.paginate :page => params[:page], :per_page => 15
+    @users = User.order("actual_name")
+    extra_where_clauses = prepare_mode()
+    if not extra_where_clauses.empty? then
+      extra_where_clauses.each{ |c| @users = @users.where(c)}
+    end
+    @users = @users.paginate :page => params[:page], :per_page => 15
     respond_to do |format|
       format.html 
       format.xml  { render :xml => @translation_languages }
@@ -64,7 +69,7 @@ class UsersController < ApplicationController #Devise::RegistrationsController
     @user.unlock_access! unless !@user.access_locked?
    
     respond_to do |format|
-      binding.pry
+      #binding.pry
       if @user.update(user_params)#params[:user])
         format.html { redirect_to(users_path, :notice => "User #{@user.username} was successfully updated.") }
         format.xml  { head :ok }
@@ -98,6 +103,23 @@ class UsersController < ApplicationController #Devise::RegistrationsController
       format.js {}
     end
   end
+  
+  protected
+  def prepare_mode
+    mode = params["selection_mode"]
+    extra_where_clauses = []
+    invitee_where = "invitation_accepted_at is not null"
+    valid_where = "invitation_token is null"
+    if mode == "invitee" then
+      extra_where_clauses << invitee_where
+    elsif mode == "valid" then
+      extra_where_clauses << valid_where
+    else # all
+      # do nothing    
+    end
+    return extra_where_clauses
+  end
+
 private
   # Use callbacks to share common setup or constraints between actions.
   def set_user

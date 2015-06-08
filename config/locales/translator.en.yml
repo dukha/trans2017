@@ -366,7 +366,7 @@ en:
         selection_mode: Selection Mode
         selection_mode_all: All translations
         selection_mode_untranslated: Untranslated
-        selection_mode_en_newer: Newer English Translation
+        selection_mode_en_newer: Newer English Translations
         selection_mode_untranslated_and_en_newer: Untranslated and Newer English Translation
       translation_language:
         name: Language Name
@@ -383,10 +383,12 @@ en:
         yaml_upoad_file_path: Uploaded File 
       user:
         actual_name: Actual Name
-        username: (Online)User Name
+        username: Online User Name(Handle)
         password: Password
         password_confirmation: Confirm Password
         email: Email
+        country: Country of Residence
+        phone: Phone Number
         profiles: Profiles
         translator: Translator
         developer: Developer
@@ -396,6 +398,10 @@ en:
         can_app_administer: Can Administer an App
         translation_jobs: Permitted Translations
         development_jobs: Permitted Developments
+        selection_mode: Selection Mode
+        selection_mode_all: All Users
+        selection_mode_invitee: Invitees
+        selection_mode_valid: Valid Users
       translation_hint:
         heading: Title
         example: Example

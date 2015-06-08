@@ -8,7 +8,14 @@ Translate::Application.routes.draw do
    resources :translations_uploads
    # root will check permission and if ok redirect to whiteboards
    #root :to => "whiteboards#index"
-   root :to => "whiteboards#index" #"permissions#select" 
+   #root :to => "whiteboards#index" #"permissions#select" 
+   root :to => 'help#application'
+   get 'help/application', :to => 'help#application', :as => 'application_help'
+   get 'help/translator', :to => 'help#translator', :as => 'translator_help'
+   get 'help/translator_objects', :to => 'help#translator_objects', :as => 'translator_objects_help'
+   get 'help/translation_process', :to => 'help#translation_process', :as => 'translation_process_help'
+   get 'help/developer', :to => 'help#developer', :as =>  'developer_help'
+   get 'help/administrator', :to => 'help#administrator', :as => 'administrator_help'
 =begin
    scope "/auth_user/:user_id" do
       resources :permissions

@@ -19,7 +19,11 @@ class ApplicationController < ActionController::Base
   end 
 =end 
   before_filter  :set_locale
-  after_filter :prepare_unobtrusive_flash
+  
+  before_action :configure_permitted_parameters, if: :devise_controller?
+
+  
+  #after_filter :prepare_unobtrusive_flash
   #rescue_from ActiveRecord::RecordInvalid, :with => :record_invalid
   rescue_from ActiveRecord::RecordInvalid do |exception|
     #tflash[:error] = exception.message
@@ -92,10 +96,13 @@ class ApplicationController < ActionController::Base
   This method is activated by declarative auth to give a better user experience 
   when the user is denided access by decl_auth 
 =end  
+#=begin @deprecated
   def permission_denied
-  flash[:notice] = tmessage(".declarative_authorization.unauthorised",  $W )
+    #binding.pry
+  flash[:notice] = tmessage("declarative_authorization.unauthorised",  $W )
   redirect_to root_url
 end
+#=end
   # Is Authorization.current_user the same as current_user???
   #qq before_filter {|contr| Authorization.current_user = contr.current_user}
 =begin
@@ -178,4 +185,11 @@ This function, together with the scope in routes.rb allows the setting of urls l
     flash[:error] = exception.message + " " + exception.record.to_s
   end
 =end
+
+protected
+
+  def configure_permitted_parameters
+    devise_parameter_sanitizer.for(:account_update) << [:username, :actual_name, :country, :phone, :email]
+    devise_parameter_sanitizer.for(:account_update).flatten
+  end
 end

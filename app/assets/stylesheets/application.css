@@ -50,22 +50,22 @@ a img {
   margin-top: 20px;
 }
 /* added caps_lock status so that it matches flash_alert */
-#flash_notice, #flash_error, #flash_alert, #flash_success, #caps_lock_status, #flash_warning {
+#flash_notice, #flash_error, #flash_alert, #flash_success, #caps_lock_status, #flash_warning, #flash_info, #flash_error1, #flash_error2 {
   padding: 5px 8px;
   margin: 10px 0;
 	width:80%;
 }
-#flash_warning{
-  background-color: #FFD700;
+#flash_notice, #flash_warning{
+  background-color: #FFD700; /*yellow */
   border: solid 1px #C66;
 }
-#flash_notice, #flash_success {
-  background-color: #CFC;
+ #flash_info, #flash_success {
+  background-color: #CFC; /*green*/
   border: solid 1px #6C6;
 }
 /* added caps_lock status so that it matches flash_alert */
-#flash_error, #flash_alert,#caps_lock_status {
-  background-color: #FCC;
+#flash_error, #flash_error1, #flash_error2, #flash_alert,#caps_lock_status {
+  background-color: #FCC; /*pink*/
   border: solid 1px #C66;
 }
 

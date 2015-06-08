@@ -225,7 +225,7 @@ just substitute twill_paginate for will_paginate
   end
 
   def tmessage(subkey, category, interpolations={})
-    #binding.pry
+    
     I18n.t($MS + subkey + "." + category,  interpolations)
   end
   

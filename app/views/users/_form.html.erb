@@ -6,15 +6,15 @@
   end%>
 <%= semantic_form_for(@user, :url => path) do |f| %>
   <%= f.inputs do %>
-      <%= f.input :username%>
-      <%=f.input :actual_name %>
-      <%=f.input :email%>
-      <%= f.input :password %>
-      <%= f.input :password_confirmation %>
-      <!--%=f.input :profiles, :as => :select, :include_blank => true, :collection=> Profile.all.collect {|p| [p.name,p.id]}, :input_html=>{:multiple => false} % -->
-      <!-- This is tricky stuff. We are working with the users has_many :through relation for profiles. Hence we need profile_ids
-           We don't have to declare profile_ids anywhere. Nor do we need to use accepts_nested_attr_for method for the join object-->
-      
+      <!--< %= f.input :username%>
+      < %=f.input :actual_name %>
+      < %=f.input :email%>
+      < %= f.input :password %>
+      < %= f.input :password_confirmation %>
+      < %= f.input :country, :as => :select, :collection=> Country.countries_array.each{ |c| [c, c]} %>
+      < %= f.input :phone %>
+      -->
+      <%=render :partial => 'shared/user_basic_attributes', :locals=>{:f=>f}%>
       
       <li><%=f.label $ARA + "profiles", {:style=>"width:25%;"}%>
         <%profile_cb_count = 0%>
@@ -54,7 +54,7 @@
           <%version_language_cb_count = 0%>
         <%version_language_cbs_per_row = 4%>
         <table style = 'margin-left:25%;'>  
-        <%=f.collection_check_boxes( :translator_cavs_tl_ids, CalmappVersionsTranslationLanguage.permitted_for_translators, :id, :name) do |b| %>
+        <%=f.collection_check_boxes( :translator_cavs_tl_ids, CalmappVersionsTranslationLanguage.permitted_for_translators, :id, :description) do |b| %>
            <%if version_language_cb_count%version_language_cbs_per_row == 0 && version_language_cb_count != 0%>
              </tr>
            <%end%>

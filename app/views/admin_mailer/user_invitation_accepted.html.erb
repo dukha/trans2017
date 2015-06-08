@@ -1,0 +1,17 @@
+<h3>AdminMailer#user_invitation_accepted</h3>
+
+<%= Hi %> <%= @admin_user.username%><br>,
+<p><%=@user.actual_name%> has accepted their User invitation. </p> 
+<p>Please click the link below and give him/her the requiste privileges</p>
+<%= @users_url(@user.id)%>
+
+With metta
+
+Translator Admin Team 
+
+
+
+
+
+
+find me in app/views/admin_mailer/user_invitation_accepted.html.erb

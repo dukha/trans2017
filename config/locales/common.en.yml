@@ -146,9 +146,9 @@ en:
       error: "These fields %{fieldlist} are already in the database with these values '%{valuelist}'. Choose at least 1 different value to complete this task."
     existence:
       error: "%{attribute} = %{value}  does not already exist in %{target}. Add a record to  %{target} or choose another %{target} example. "
-    permission:
-      permission_denied: 
-        error: Sorry, you are not allowed to access that page.  
+    #permission:
+      #permission_denied: 
+        #error: Sorry, you are not allowed to access that page.  
     all_rolledback:
       warning: "All %{model} on this page rolled back"  
     invalid_at_code:

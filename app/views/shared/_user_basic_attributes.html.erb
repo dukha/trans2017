@@ -1,0 +1,8 @@
+<!-- for this to work under all condition  you need to set any new attributes in the parameter sanitizer in application_controller.rb -->
+      <%= f.input :password, :label => t($ARA + "user.password_new"), :hint => t($FH + "user.password_change")  %>
+      <%= f.input :password_confirmation , :hint => t($FH + "user.password_change")%>
+      <%= f.input :username%>
+      <%=f.input :actual_name %>
+      <%=f.input :email%>
+      <%= f.input :country, :as => :select, :collection=> Country.countries_array.each{ |c| [c, c]} %>
+      <%= f.input :phone %>

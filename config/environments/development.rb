@@ -29,7 +29,7 @@ Translate::Application.configure do
     :exception_recipients => %w{mplennon@gmail.com}
     }
   # sendmail users the sendmail_settings below
-  config.action_mailer.default_url_options = {:host => 'dhamma.org.au'} # 'localhost:3000'}
+  config.action_mailer.default_url_options = {:host => 'localhost:3000'} # 'dhamma.org.au'} # }
   #config.action_mailer.delivery_method = :sendmail
   config.action_mailer.delivery_method = :mailgun
   # to use google then uncomment the4 line below (It will sue the smtp_settings below)
