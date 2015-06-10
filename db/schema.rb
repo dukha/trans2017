@@ -11,22 +11,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150605041450) do
+ActiveRecord::Schema.define(version: 20150610225413) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
-
-  create_table "calmapp_administrators", force: :cascade do |t|
-    t.integer  "calmapp_id"
-    t.integer  "user_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "calmapp_developers", force: :cascade do |t|
-    t.integer "calmapp_id"
-    t.integer "user_id"
-  end
 
   create_table "calmapp_versions", force: :cascade do |t|
     t.integer  "calmapp_id",          null: false
@@ -55,11 +43,34 @@ ActiveRecord::Schema.define(version: 20150605041450) do
 
   add_index "calmapps", ["name"], name: "iu_calmapps_name", unique: true, using: :btree
 
+  create_table "cav_tl_administrators", force: :cascade do |t|
+    t.integer  "cavs_translation_language_id"
+    t.integer  "user_id"
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
+  end
+
+  create_table "cav_tl_developers", force: :cascade do |t|
+    t.integer "cavs_translation_language_id"
+    t.integer "user_id"
+  end
+
   create_table "cavs_tl_translators", force: :cascade do |t|
     t.integer  "cavs_translation_language_id", null: false
     t.integer  "translator_id",                null: false
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "contacts", force: :cascade do |t|
+    t.string   "problem_area"
+    t.string   "screen_name"
+    t.string   "last_menu_choice"
+    t.text     "description"
+    t.integer  "user_id",          null: false
+    t.string   "status"
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
   end
 
   create_table "delayed_jobs", force: :cascade do |t|
@@ -171,13 +182,14 @@ ActiveRecord::Schema.define(version: 20150605041450) do
   add_index "translation_languages", ["name"], name: "iu_tlanguages_name", unique: true, using: :btree
 
   create_table "translations", force: :cascade do |t|
-    t.string   "dot_key_code",                 null: false
+    t.string   "dot_key_code",                                 null: false
     t.text     "translation"
     t.integer  "translations_upload_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "cavs_translation_language_id"
     t.boolean  "plural"
+    t.boolean  "plural_incomplete",            default: false
   end
 
   add_index "translations", ["cavs_translation_language_id", "dot_key_code"], name: "iu_translations_language_dot_key_code", unique: true, using: :btree
@@ -240,6 +252,7 @@ ActiveRecord::Schema.define(version: 20150605041450) do
     t.boolean  "application_administrator", default: false
     t.string   "phone"
     t.string   "country"
+    t.boolean  "responds_to_contacts",      default: false
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree

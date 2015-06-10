@@ -15,7 +15,7 @@
       < %= f.input :phone %>
       -->
       <%=render :partial => 'shared/user_basic_attributes', :locals=>{:f=>f}%>
-      
+      <%=f.input :responds_to_contacts %>
       <li><%=f.label $ARA + "profiles", {:style=>"width:25%;"}%>
         <%profile_cb_count = 0%>
         <%profile_cbs_per_row = 4%>

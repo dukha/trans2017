@@ -60,6 +60,7 @@ authorization do
 =end
   standard_roles :users
   standard_roles :profiles
+  standard_roles :contacts
   
   role :users_read do
     has_permission_on [:users], :to => [:index]

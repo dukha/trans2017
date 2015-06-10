@@ -1,0 +1,31 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b><%= tlabel('problem_area', '') %>:</b>
+  <%= @contact.problem_area %>
+</p>
+
+<p>
+  <b><%= tlabel('screen_name', '') %>:</b>
+  <%= @contact.screen_name %>
+</p>
+
+<p>
+  <b><%= tlabel('last_menu_choice', '') %>:</b>
+  <%= @contact.last_menu_choice %>
+</p>
+
+<p>
+  <b><%= tlabel('description', '') %>:</b>
+  <%= @contact.description %>
+</p>
+
+<p>
+  <b><%= tlabel('user_id', '') %>:</b>
+  <%= @contact.user_id %>
+</p>
+
+
+<%=link_edit('edit', edit_contact_path(@contact)) %> |
+<%= link_back(contacts_path) %>
+

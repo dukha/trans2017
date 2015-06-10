@@ -51,5 +51,10 @@ These are called lookups
 Messages are communications to the user. They are usually simple, such as
 * Translations Successfully Published
 * This value is already taken. Choose another
+
 **Error**
-Errors are a particular kind of message which may be longer and tell the user how he/she could recover if a correction is possible
+Errors are a particular kind of message which may be longer and tell the user how he/she could recover if a correction is possible.
+
+**Tabs**
+Tabs are areas of the screen that can be clicked on to show an entirely different view, like in modern browsers.
+Tab names must be translated

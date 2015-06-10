@@ -22,4 +22,7 @@ class HelpController < ApplicationController
   def administrator
     render $APPLICATION_HELP_VIEW_DIR + 'administrator/help.html'
   end
+  def redis_databases
+    render $APPLICATION_HELP_VIEW_DIR + 'administrator/redis_databases/help.html'
+  end
 end

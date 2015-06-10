@@ -122,7 +122,7 @@ class InvitationsController < Devise::InvitationsController
      elsif flash[:error2].blank? 
       flash[:error2] = (k + ' ' + msg)
      else
-       flash[key.to_s] = key + msg
+       flash[key.to_s] = k + " " + msg
      end     
       }
     end

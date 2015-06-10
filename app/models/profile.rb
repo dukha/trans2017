@@ -71,10 +71,10 @@ class Profile < ActiveRecord::Base
     reserved_profile = 'guest'
     Profile.create :name => reserved_profile, :roles => [:guest_visit, :whiteboards_read], :protected_profile => true unless self.guest
     
-    roles= [:translations_read, :translations_write]
+    roles= [:translations_read, :translations_write, :contacts_create]
     Profile.create(:name=>'translator', :roles => roles, :protected_profile => true) 
     
-    roles= [:translations_read, :translations_write]
+    roles= [:translations_read, :translations_write, :translations_destroy, :contacts_create, :contacts_read, :contacts_write, :contacts_destroy]
     Profile.create(:name=>'developer', :roles => roles, :protected_profile => true)
     
   roles= [  :users_read,
@@ -116,7 +116,8 @@ class Profile < ActiveRecord::Base
  :translations_uploads_read,
  :translations_uploads_write,
  :translations_uploads_create,
- :translations_uploads_destroy]
+ :translations_uploads_destroy,
+ :contacts_create, :contacts_destroy, :contacts_write, :contacts_destroy]
    Profile.create(:name=>'application_administrator', :roles => roles, :protected_profile => true)
   end
 

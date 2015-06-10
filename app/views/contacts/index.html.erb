@@ -1,0 +1,165 @@
+<script type="text/javascript">
+//This script  handles showing and hiding selection criteria
+  var criteriaDiv ="#criteria";
+  var criteriaButton = "#showHideCriteria";
+  $().ready(function(){
+    //Initialise the criteria to be hidden on first display
+    $(criteriaDiv).hide(); 
+    $(criteriaButton).html(criteriaHiddenText);
+    
+    if( <%= @contacts.count==0 %>){
+      toggleCriteria();
+    }
+    
+    $(criteriaButton).click(function(){
+      toggleCriteria();
+    }); //end click
+  });//end ready
+  var   criteriaHiddenText = "<%=t($FA +'show_something', :something=>t($SC))%>";
+  var   criteriaVisibleText = "<%=t($FA +'hide_something', :something=>t($SC))%>";
+  function toggleCriteria(){
+    if($(criteriaDiv).is(':visible')){ 
+        $(criteriaButton).html(criteriaHiddenText);
+    }else{
+        $(criteriaButton).html(criteriaVisibleText);
+    }
+    // toggle has to be after setting button text otherwise is(':visible') will not work properly
+    $(criteriaDiv).slideToggle('slow');  
+  }
+  
+</script>
+<%=theading("listing", :model=>'contact', :count=>11) %>
+<%if Contact.respond_to?( :searchable_attr ) and Contact.searchable_attr.any? then %>
+<div id = 'data-empty' style = 'display:none'><%= @contacts.empty?.to_s %></div>
+<button id="showHideCriteria" type='button'>x</button>
+<div id='criteria' class="criteria" >
+  <!-- Use form_tag here because we are not going to work with a new AR model. form_tag doesn't work with formtastic either -->
+  <!-- See controller#index doc for how to use this stuff below. 
+    YOU NEED TO ADD METHODS TO MODEL BEFORE THIS PAGE WILL WORK -->
+  <%= form_tag contacts_path, :method => 'get', :class=>'formtastic' do %>
+    <!--    These next 2 hidden fields needed for sorting from column headers -->
+    <%= hidden_field_tag :direction, params[:direction] %>
+    <%= hidden_field_tag :sort, params[:sort] %>
+    <fieldset class="inputs">
+      <ol>
+     
+      <%if Contact.searchable_attr.include?("problem_area") %>  
+      <li class="string optional" id="contact_problem_area_input"><label for="criterionproblem_area" class="criteria-label" >
+        <%= tlabel("problem_area", "contact") %> </label>
+           <%=select_tag(  :operator_problem_area, options_for_select(operators_2_options(equal_operator), params[:operator_problem_area]),{:include_blank=> true,:class=>'criteria-operators-select', :readonly=>true} ) %> 
+           <!-- The date pikcer here cannot reset itself: once a user chooses a date then the only way of having it not considered it to set it to, say 2000-01-01 and criterion to after
+             Not pretty but whoever makes datepicker doesn't want a reset function as part of it http://jsbin.com/ofare/edit#javascript,html may be a work around -->
+           <%=text_field_tag( :criterion_problem_area, params[:criterion_problem_area])%>
+      </li> 
+      <%end #if  attribute in searchable %> 
+     
+      <%if Contact.searchable_attr.include?("screen_name") %>  
+      <li class="string optional" id="contact_screen_name_input"><label for="criterionscreen_name" class="criteria-label" >
+        <%= tlabel("screen_name", "contact") %> </label>
+           <%=select_tag(  :operator_screen_name, options_for_select(operators_2_options(equal_operator), params[:operator_screen_name]),{:include_blank=> true,:class=>'criteria-operators-select', :readonly=>true} ) %> 
+           <!-- The date pikcer here cannot reset itself: once a user chooses a date then the only way of having it not considered it to set it to, say 2000-01-01 and criterion to after
+             Not pretty but whoever makes datepicker doesn't want a reset function as part of it http://jsbin.com/ofare/edit#javascript,html may be a work around -->
+           <%=text_field_tag( :criterion_screen_name, params[:criterion_screen_name])%>
+      </li> 
+      <%end #if  attribute in searchable %> 
+     
+      <%if Contact.searchable_attr.include?("last_menu_choice") %>  
+      <li class="string optional" id="contact_last_menu_choice_input"><label for="criterionlast_menu_choice" class="criteria-label" >
+        <%= tlabel("last_menu_choice", "contact") %> </label>
+           <%=select_tag(  :operator_last_menu_choice, options_for_select(operators_2_options(equal_operator), params[:operator_last_menu_choice]),{:include_blank=> true,:class=>'criteria-operators-select', :readonly=>true} ) %> 
+           <!-- The date pikcer here cannot reset itself: once a user chooses a date then the only way of having it not considered it to set it to, say 2000-01-01 and criterion to after
+             Not pretty but whoever makes datepicker doesn't want a reset function as part of it http://jsbin.com/ofare/edit#javascript,html may be a work around -->
+           <%=text_field_tag( :criterion_last_menu_choice, params[:criterion_last_menu_choice])%>
+      </li> 
+      <%end #if  attribute in searchable %> 
+     
+      <%if Contact.searchable_attr.include?("description") %>  
+      <li class="string optional" id="contact_description_input"><label for="criteriondescription" class="criteria-label" >
+        <%= tlabel("description", "contact") %> </label>
+           <%=select_tag(  :operator_description, options_for_select(operators_2_options(equal_operator), params[:operator_description]),{:include_blank=> true,:class=>'criteria-operators-select', :readonly=>true} ) %> 
+           <!-- The date pikcer here cannot reset itself: once a user chooses a date then the only way of having it not considered it to set it to, say 2000-01-01 and criterion to after
+             Not pretty but whoever makes datepicker doesn't want a reset function as part of it http://jsbin.com/ofare/edit#javascript,html may be a work around -->
+           <%=text_field_tag( :criterion_description, params[:criterion_description])%>
+      </li> 
+      <%end #if  attribute in searchable %> 
+     
+      <%if Contact.searchable_attr.include?("user_id") %>  
+      <li class="string optional" id="contact_user_id_input"><label for="criterionuser_id" class="criteria-label" >
+        <%= tlabel("user_id", "contact") %> </label>
+           <%=select_tag(  :operator_user_id, options_for_select(operators_2_options(equal_operator), params[:operator_user_id]),{:include_blank=> true,:class=>'criteria-operators-select', :readonly=>true} ) %> 
+           <!-- The date pikcer here cannot reset itself: once a user chooses a date then the only way of having it not considered it to set it to, say 2000-01-01 and criterion to after
+             Not pretty but whoever makes datepicker doesn't want a reset function as part of it http://jsbin.com/ofare/edit#javascript,html may be a work around -->
+           <%=text_field_tag( :criterion_user_id, params[:criterion_user_id])%>
+      </li> 
+      <%end #if  attribute in searchable %> 
+     
+     </ol> 
+   </fieldset>
+      
+      <%= submit_tag "Search", :name => nil %>
+  <%end  #end form_tag do%>
+
+</div>
+<%end # if searchable_attr %>
+
+<% if @contacts.count == 0 then %>
+  
+<%  else %>
+    <%= twill_paginate %>
+
+    <% if Contact.respond_to? :sortable_attr
+      sortable_cols = Contact.sortable_attr
+    else
+      sortable_cols = []
+    end %>
+
+  <table class="data">
+    <tr class="dataheader">
+    
+      <th class ="dataheader"><%=sortable("problem_area","contact", sortable_cols.include?("problem_area"))%></th> 
+  
+    
+      <th class ="dataheader"><%=sortable("screen_name","contact", sortable_cols.include?("screen_name"))%></th> 
+  
+    
+      <th class ="dataheader"><%=sortable("last_menu_choice","contact", sortable_cols.include?("last_menu_choice"))%></th> 
+  
+    
+      <th class ="dataheader"><%=sortable("description","contact", sortable_cols.include?("description"))%></th> 
+  
+    
+      <th class ="dataheader"><%=sortable("user_id","contact", sortable_cols.include?("user_id"))%></th> 
+  
+        <%= link_header 4  %>
+      
+    </tr>
+  
+    
+  <% cell_class = "data" %>
+  <% link_cell_class="link"%>  
+  <% @contacts.each do |contact| %>
+  
+    <tr class = "<%= cycle('dataeven', 'dataodd') %>" >
+            <td class="<%= cell_class %>"><%= contact.problem_area %></td>
+  
+            <td class="<%= cell_class %>"><%= contact.screen_name %></td>
+  
+            <td class="<%= cell_class %>"><%= contact.last_menu_choice %></td>
+  
+            <td class="<%= cell_class %>"><%= contact.description %></td>
+  
+            <td class="<%= cell_class %>"><%= contact.user.actual_name %></td>
+            <td class="<%= cell_class %>"><%= contact.created_at %></td>
+            <td class="<%= cell_class %>"><%= contact.updated_at %></td>
+  
+          <%= link_edit( edit_contact_path(contact), :contacts  ) %>
+      <%= link_destroy( contact, :contacts ) %>
+      
+    </tr>
+  <% end #do data %>
+  </table>
+  <%= twill_paginate %>
+
+<br />
+<%end # if else count %>
+<%=link_new( new_contact_path, :contact)  %>

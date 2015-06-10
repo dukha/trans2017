@@ -24,7 +24,7 @@ module ApplicationHelper
   $CALM ="CALM"
   
   $APPLICATION_NAME = "Translator"#I18n.t("application.translator")
-  $APPLICATION_VERSION ="1.0.0 M2"
+  $APPLICATION_VERSION ="0.9.0"
   
   #$title =  I18n.t( "application.app_title", :app_name=> $APPLICATION_NAME, :app_version=> $APPLICATION_VERSION, :calm=> $CALM  )
 

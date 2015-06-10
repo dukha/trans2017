@@ -22,6 +22,9 @@ class User < ActiveRecord::Base
   validates :actual_name, presence: true
   validates :username, :uniqueness => true
   validates :username, presence: true
+  
+  validates :country, :phone, presence: true, :if => Proc.new { |record|
+ not record.new_record? }
   # https://github.com/plataformatec/devise/wiki/How-To:-Allow-users-to-sign_in-using-their-username-or-email-address
   # Virtual attribute for authenticating by either username or email
   # This is in addition to a real persisted field like 'username'
@@ -51,6 +54,9 @@ class User < ActiveRecord::Base
   has_many :admin_jobs, :foreign_key => "user_id" , :class_name=> "CalmappAdministrator", :dependent => :destroy
   #accepts_nested_attributes_for :developer_jobs, :reject_if => :all_blank, :allow_destroy => true
   has_many :administrator_calmapps, :through => :admin_jobs, :source => :calmapp, :class_name=>"Calmapp"
+
+  #has_many :contact_responding_admins, :class_name => "ContactRespondingAdmin", :dependent => :destroy
+  #has_many :contacts, :through => :contact_responding_admins
 =begin
      for declarative auth
      Returns the role symbols of the given user for declarative_auth. 
@@ -185,6 +191,10 @@ CalmappVersionsTranslationLanguage.new(:translation_language_id =>TranslationLan
 
    CalmappVersionsTranslationLanguages.joins{calmapp_version}.joins{translation_language}.
 =end
+   end
+   
+   def self.contact_responders
+     return User.where{responds_to_contacts == true}.load
    end
  
  protected

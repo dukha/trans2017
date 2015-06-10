@@ -218,6 +218,8 @@ en:
     admin: Translation Admin
     user_admin: User Admin
     new_model: New %{model}
+    contact_us: Contact Us
+    current_contacts: Current Contacts
   headings:
     application_subheading: Translator
     write_to_database:
@@ -307,7 +309,10 @@ en:
         other: Special Keys
       translation_hint:
         one: Translation Hint
-        other: Translation Hints  
+        other: Translation Hints 
+      contact:
+        one: Contact
+        other: Contacts 
     attributes:
       calmapp:
         new_redis_dev_db: Add Redis Developers Database
@@ -320,7 +325,12 @@ en:
       dot_key_code_translation_editor:
         editor: Editor
         dot_key_code: Code
-
+      contact:
+        screen_name: Name of Screen where Problem Occured 
+        last_menu_choice: Last Menu Clicked 
+        description: Description of Problem
+        user_id: User
+        user_email: Users Email
       calmapp_version:
         calmapp_id: Application
         version: Version

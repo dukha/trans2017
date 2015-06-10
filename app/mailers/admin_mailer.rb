@@ -15,4 +15,18 @@ class AdminMailer < ApplicationMailer
       subject: ("Invitation Accepted from " + @new_user.actual_name)
       )
   end
+  
+  def new_contact_from_user contact
+    puts contact.description
+    @contact = contact
+    mails = []
+    User.contact_responders.each{ |responder|
+      @responder = responder
+      mails << mail(
+        to: responder.email,
+        subject: "New user contact from translator application"
+      )
+      }
+    mails  
+  end
 end

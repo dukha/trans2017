@@ -2,10 +2,12 @@ Translate::Application.routes.draw do
 
   
 
+  
   scope "/:locale" do
    resources :profiles
    resources :translation_hints
    resources :translations_uploads
+   resources :contacts
    # root will check permission and if ok redirect to whiteboards
    #root :to => "whiteboards#index"
    #root :to => "whiteboards#index" #"permissions#select" 
@@ -16,6 +18,7 @@ Translate::Application.routes.draw do
    get 'help/translation_process', :to => 'help#translation_process', :as => 'translation_process_help'
    get 'help/developer', :to => 'help#developer', :as =>  'developer_help'
    get 'help/administrator', :to => 'help#administrator', :as => 'administrator_help'
+   get 'help/redis_databases', :to => 'help#redis_databases', :as => 'redis_databases_help' 
 =begin
    scope "/auth_user/:user_id" do
       resources :permissions
@@ -108,9 +111,9 @@ Translate::Application.routes.draw do
    #get "calmapps/all_in_one_create" => "calmapps#all_in_one_create"
    
 
-   get '/contact', :to => 'static_pages#contact'
+   #get '/contact', :to => 'static_pages#contact'
    get '/about',   :to => 'static_pages#about'
-   get '/help',    :to => 'static_pages#help' 
+   #get '/help',    :to => 'static_pages#help' 
   end
   # The priority is based upon order of creation:
   # first created -> highest priority.

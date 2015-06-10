@@ -1,0 +1,17 @@
+<%= semantic_form_for(@contact) do |f| %>
+	<%= f.inputs do %>
+				   <%= f.input :problem_area  %>   
+				   <%= f.input :screen_name  %>   
+				   <%= f.input :last_menu_choice  %>   
+				   <%= f.input :description  %>   
+				   <%= if not f.object.new_record?%>
+				      <%=f.input :status, :as=>:select, :collection=> [['received', 'received'], ['open','open'], ['to_developers','to_developers'], ['answered','answered'], ['closed','closed']] %>  
+		       <%end%>  
+	<% end %>	
+
+        <%= f.actions do %>
+          <%= f.action(:submit) %>
+
+        <% end %>
+<% end %>
+

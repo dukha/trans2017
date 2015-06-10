@@ -19,6 +19,7 @@ class UsersController < ApplicationController #Devise::RegistrationsController
     #binding.pry#respond_to :html, :xml, :json
     @users = User.order("actual_name")
     extra_where_clauses = prepare_mode()
+    binding.pry
     if not extra_where_clauses.empty? then
       extra_where_clauses.each{ |c| @users = @users.where(c)}
     end
@@ -108,7 +109,7 @@ class UsersController < ApplicationController #Devise::RegistrationsController
   def prepare_mode
     mode = params["selection_mode"]
     extra_where_clauses = []
-    invitee_where = "invitation_accepted_at is not null"
+    invitee_where = "invitation_created_at is not null and invitation_accepted_at is null"
     valid_where = "invitation_token is null"
     if mode == "invitee" then
       extra_where_clauses << invitee_where
@@ -124,12 +125,18 @@ private
   # Use callbacks to share common setup or constraints between actions.
   def set_user
     @user = User.find(params[:id])
+=begin   
+  if not @user.new_record? then
+      @user.password = ''
+    end
+=end
   end  
   def  user_params
     #binding.pry
     
     standard_attr = [:email,  :remember_me,
-                :username, :login, :actual_name, :translator, :developer, :application_administrator, {:profile_ids => []}, 
+                :username, :login, :actual_name, :translator, :developer, :application_administrator, :country, :phone, :responds_to_contacts,
+                {:profile_ids => []}, 
                 {:translator_cavs_tl_ids=>[]}, {:developer_calmapp_ids=>[]}, {:administrator_calmapp_ids=>[]} ]
     if params[:user][:password].blank? && params[:user][:password_confirmation].blank? then
       #If the user does not try to update the pw, the we don't update to null (fail anyway)

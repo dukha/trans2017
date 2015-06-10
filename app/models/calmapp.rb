@@ -21,9 +21,7 @@ class Calmapp < ActiveRecord::Base
   has_many :calmapp_versions, :dependent => :restrict_with_exception
   accepts_nested_attributes_for :calmapp_versions, :reject_if => :all_blank, :allow_destroy => true
   
-  has_many :developer_jobs, :foreign_key => "calmapp_id" , :class_name=> "CalmappDeveloper"
-  #accepts_nested_attributes_for :developer_jobs, :reject_if => :all_blank, :allow_destroy => true
-  has_many :developers, :through => :developer_jobs, :source => :user,  :class_name => "User"#, :foreign_key => :user_id 
+  
 
   validates :name, :presence=>true, :uniqueness=>true
  
