@@ -1,15 +1,15 @@
-<h3>Help</h3> 
-<h5> Redis Databases</h5>
+
+<h1> Redis Databases Help</h1>
 The translation system involves making an individual translation in each language for each phrase, word or sentence. These translations are written to a relational database, where they are store securely. 
 <br><br>When a translation is ready then it is published to an in memory database called Redis. This is a very fast database suitable for quick translation to multiple application users.
 <br><br>This form involves matching the version with release status to a Redis database so that the translation can be published to where it can be used by the application quickly and easily.
-<h6>Release Status</h6>
+<h3>Release Status</h3>
 You can match a different Redis database for each Application Version and Release Status.
 <br><br>
 One way of ensuring that the published translation data can be published to developers is to make several different Release Statuses, on for each developer e.g. Development-Ryan, Development-Mark. A developer can then publish their latest translations to their own development application.
-<h6>Redis Instance</h6>
+<h3>Redis Instance</h3>
 A redis instance is Redis running on a server. So you must indentify the server before identifying the database (by index).
-<h6>Redis Database Index</h6>
+<h3>Redis Database Index</h3>
 Each Redis Instance has a predetermined number of databases (default is 16, numbered 0 to 15). One Redis database can contain one Version/Release Status. Thus you cannot choose a Redis Database Index that does not exist, nor an index that is already in use.
 <br><br>
 Further, if you change a database index once some translations are published then all the published translations will disappear for that application version. If the release status is production then you will probably make the application unusable. Not that in this situation, it can be corrected by republishing.

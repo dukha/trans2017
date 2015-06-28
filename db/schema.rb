@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150610225413) do
+ActiveRecord::Schema.define(version: 20150621235055) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -43,14 +43,14 @@ ActiveRecord::Schema.define(version: 20150610225413) do
 
   add_index "calmapps", ["name"], name: "iu_calmapps_name", unique: true, using: :btree
 
-  create_table "cav_tl_administrators", force: :cascade do |t|
+  create_table "cavs_tl_administrators", force: :cascade do |t|
     t.integer  "cavs_translation_language_id"
     t.integer  "user_id"
     t.datetime "created_at",                   null: false
     t.datetime "updated_at",                   null: false
   end
 
-  create_table "cav_tl_developers", force: :cascade do |t|
+  create_table "cavs_tl_developers", force: :cascade do |t|
     t.integer "cavs_translation_language_id"
     t.integer "user_id"
   end
@@ -67,10 +67,10 @@ ActiveRecord::Schema.define(version: 20150610225413) do
     t.string   "screen_name"
     t.string   "last_menu_choice"
     t.text     "description"
-    t.integer  "user_id",          null: false
-    t.string   "status"
-    t.datetime "created_at",       null: false
-    t.datetime "updated_at",       null: false
+    t.integer  "user_id",                               null: false
+    t.string   "status",           default: "received"
+    t.datetime "created_at",                            null: false
+    t.datetime "updated_at",                            null: false
   end
 
   create_table "delayed_jobs", force: :cascade do |t|

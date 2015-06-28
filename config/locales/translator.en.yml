@@ -38,8 +38,8 @@ en:
       show_original: "Original"
       #back: "Back"
       remove: Remove
-      #publish: Publish
-      translation_language_publish: Publish %{language} 
+      publish: Publish
+      publish_language: Publish %{language} 
       no_delete: Undeletable
       #
       create_and_upload: Create and Upload
@@ -54,7 +54,7 @@ en:
       remove_version: Remove Version
       redisdbalter: Change Redis Databases
       version_redis: Publication to Redis
-      version_publish: Publish Version to Redis
+      version_publish: Publish to Redis
       remove_redis_database: Remove This Redis Database
       change_uploads: Change Uploads
       remove_upload: Remove This Upload
@@ -68,7 +68,7 @@ en:
       back_to_versions: Back to Versions
       new_invitation: New Invitation
       redis_from_versions: "To add a Redis Database to Another Version, First Select the Version"
-      
+      cancel: Cancel
       translation_languages_calmapp_versions_to_new_upload: Versions
       unlock: Unlock Account
       version:
@@ -117,7 +117,9 @@ en:
       translation:
         array_order: Drag the elements into the correct order and then Save. 
         array: Add or change each translation to match the English translations.
-        array_first_element_null: Add or change each translation to match the English translations.    
+        array_first_element_null: Add or change each translation to match the English translations.
+        special_editor:
+          plural: To edit the plural look at the English values for one and other. Translate the required plurals for your language. These plurals may be different from English e.g zero, two,few, many.      
       user:
         actual_name: Your everyday Given and Family names
         username: The name that this application will know you as. Can be used to signin.
@@ -125,7 +127,17 @@ en:
         translator_jobs: "This translator(user) can work on translating these ticked version-language combinations."
         developer_jobs: "This developer(user) can work on doing the English translations for the following ticked applications."
         profiles: Choose the profile(s) of permissions that you want the user to have. The profile will determine which pages a user can view and which action a user can take.
-        admin_jobs: This user is limited to administering the ticked applications.
+        
+        password_change: Only add data here if you want to change your password. If you only want to change other data(eg email address) then leave change and confirm passwords blank.
+        password_current: "Security: provide your current password before you can change these values."
+        password_new: Add your new password here only if you want to change it. 
+        responds_to_contacts: Any users with this box ticked will receive mails from users who write via the contact form
+        can_translate: A user with this ticked can tranlate for the application version/ languages whown below
+        can_develop: A user with this ticked can develop the application version chosen giving and editing the English translation
+        can_app_administer: Can Administer an Application version for example publishing a language,
+        translation_jobs: Permitted Translations
+        development_jobs: Permitted Developments
+        administration_jobs: This user is limited to administering the ticked application versions.
       translation_hints:
         heading: Title for Hint (may contain HTML)
         example: Example of Hint (may contain HTML)
@@ -241,8 +253,7 @@ en:
         heading: Version Deep Copy Information 
     redis_database:
       and_version_publish:
-        heading: View and Publish %{model}(Application Versions)   
-    #redis_admin: Redis Admin
+        heading: "View and publish %{model}(Application Versions)"   
   activerecord:
     models:
       calmapp:
@@ -251,53 +262,39 @@ en:
       translations_upload:
         one: Translations Upload
         other: Translations Uploads
-      
       release_status:
         one: Release Status
         other: Release Statuses
       calmapp_version:
         one: Application Version
         other: Application Versions
-#      calmapp_versions_redis_database:
-#        one: Application Version with Redis Databases
-#        other: Application Version with Redis Databases
       calmapp_versions_translation_language:
-        one: Version Translation Language
-        other: Version Translation Languages
+        one: Version with Translation Language
+        other: Version with Translation Languages
       language:
-        one: Translation Language
-        other: Translation Languages
+        one: Translator Application Language
+        other: Translator Application Languages
       redis_database:
         one: Redis Database
         other: Redis Databases
       redis_instance:
         one: Redis Instance
         other: Redis Instances
-      #upload:
-        #one: Upload
-        #other: Uploads
       translation:
         one: Translation
         other: Translations
       translation_language:
         one: Translation Language
         other: Translation Languages
-      translation_parameter:
-        one: Translation Parameter
-        other: Translation Parameters
-      #user_preference:
-        #one: User Preferences
-        #other: User Preferences
+#      translation_parameter:
+#        one: Translation Parameter
+#        other: Translation Parameters
       profile:
         one: User Profiles
         other: User Profiles
-      #permission:
-        #one:  "Access permission"
-        #other: "Access permissions"
       user:
         one: User
-        other: Users  
-       
+        other: Users         
       translations_upload:
         one: Translation Upload
         other: Translation Uploads
@@ -334,7 +331,6 @@ en:
       calmapp_version:
         calmapp_id: Application
         version: Version
-        
         new_version: New Version
         translation_languages: Languages Selected
         translation_languages_available: Languages Available
@@ -345,7 +341,6 @@ en:
         languages: Languages Automatically Copied 
       calmapp_versions_translation_language:
         calmapp_version_id: Version
-        
         translation_language: Language
       language:
         name: Language
@@ -376,19 +371,16 @@ en:
         selection_mode: Selection Mode
         selection_mode_all: All translations
         selection_mode_untranslated: Untranslated
-        selection_mode_en_newer: Newer English Translations
+        selection_mode_en_newer: Newer English Translation
         selection_mode_untranslated_and_en_newer: Untranslated and Newer English Translation
       translation_language:
         name: Language Name
         iso_code: ISO Code
         plural_sort: Category of Plural
       translations_upload:
-        #upload: File Name
-        #upload_file_name: Uploaded File Name
         description: Description
         translation_language: Translation Language
-        calmapp_version_id: Version
-        
+        calmapp_version_id: Version    
         yaml_upload:  Uploadable YAML Translation File
         yaml_upoad_file_path: Uploaded File 
       user:
@@ -396,6 +388,8 @@ en:
         username: Online User Name(Handle)
         password: Password
         password_confirmation: Confirm Password
+        password_current: Current Password
+        password_new: New Password
         email: Email
         country: Country of Residence
         phone: Phone Number
@@ -408,10 +402,13 @@ en:
         can_app_administer: Can Administer an App
         translation_jobs: Permitted Translations
         development_jobs: Permitted Developments
+        application_jobs: Permitted Administrations
+        responds_to_contacts: Responds to Contacts
         selection_mode: Selection Mode
         selection_mode_all: All Users
         selection_mode_invitee: Invitees
         selection_mode_valid: Valid Users
+ 
       translation_hint:
         heading: Title
         example: Example

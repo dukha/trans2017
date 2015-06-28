@@ -28,9 +28,7 @@ class CalmappVersion < ActiveRecord::Base
   accepts_nested_attributes_for :calmapp_versions_translation_languages, :reject_if => :all_blank, :allow_destroy => true
   has_many :translation_languages , :through => :calmapp_versions_translation_languages
   
-  has_many :developer_jobs, :foreign_key => "calmapp_id" , :class_name=> "CalmappDeveloper"
-  #accepts_nested_attributes_for :developer_jobs, :reject_if => :all_blank, :allow_destroy => true
-  has_many :developers, :through => :developer_jobs, :source => :user,  :class_name => "User"#, :foreign_key => :user_id 
+  
 =begin
  def offices_count_valid?
       offices.reject(&:marked_for_destruction?).count >= OFFICES_COUNT_MIN

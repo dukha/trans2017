@@ -1,8 +1,8 @@
 log=Logger.new(STDOUT)
 UserProfile.delete_all
 CavsTlTranslator.delete_all
-CalmappDeveloper.delete_all
-CalmappAdministrator.delete_all
+CavsTlDeveloper.delete_all
+CavsTlAdministrator.delete_all
 
 User.delete_all
 Profile.delete_all

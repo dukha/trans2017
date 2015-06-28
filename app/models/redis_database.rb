@@ -332,10 +332,11 @@ class RedisDatabase < ActiveRecord::Base
                       File.join(upload_from_dir, 'devise.en.yml'),
                       File.join(upload_from_dir, 'translator.en.yml')  ]
   end
+#=begin  
   def self.upload_dir_for_demo
-    'config/locales2'
+    'config/locales'
   end  
-    
+#=end    
   
   def self.marks_big_demo    
     redis = marks_trans_redis

@@ -37,6 +37,8 @@ gem 'turbolinks'
 gem 'jquery-turbolinks'
 # markdown
 gem 'redcarpet'
+# use erb in md files
+gem 'rdiscount'
 # markdown with erb included
 #gem 'html_pipeline_rails'
  

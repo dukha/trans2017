@@ -12,8 +12,10 @@
 > An administrator also would do uploads of yaml files and publish completed translations
 
 > As you can see Translator has 3 types of users
-* [Translators](translator)
-* [Developers (programmers)](developer)
-* [Administrators](administrator)
 
-click for normal [Home](../whiteboards) 
+* [Translators](<%=translator_help_path%>)
+* [Developers (programmers)](<%=developer_help_path%>)
+* [Administrators](<%=administrator_help_path%>)
+
+click for normal [Home](<%=whiteboards_path%>) 
+

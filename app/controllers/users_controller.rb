@@ -19,7 +19,7 @@ class UsersController < ApplicationController #Devise::RegistrationsController
     #binding.pry#respond_to :html, :xml, :json
     @users = User.order("actual_name")
     extra_where_clauses = prepare_mode()
-    binding.pry
+    #binding.pry
     if not extra_where_clauses.empty? then
       extra_where_clauses.each{ |c| @users = @users.where(c)}
     end
@@ -57,6 +57,9 @@ class UsersController < ApplicationController #Devise::RegistrationsController
     end
   end
 
+  def reset_user_password
+    
+  end
   #edit_password GET   /:locale/users/:id/edit_password(.:format)   {:controller=>"users", :action=>"edit"}
   def edit
     #@user = User.find(params[:id])
@@ -135,9 +138,12 @@ private
     #binding.pry
     
     standard_attr = [:email,  :remember_me,
-                :username, :login, :actual_name, :translator, :developer, :application_administrator, :country, :phone, :responds_to_contacts,
+                :username, :login, :actual_name, :translator, :developer, :application_administrator, 
+                :country, :phone, :responds_to_contacts,
                 {:profile_ids => []}, 
-                {:translator_cavs_tl_ids=>[]}, {:developer_calmapp_ids=>[]}, {:administrator_calmapp_ids=>[]} ]
+                {:translator_cavs_tl_ids=>[]}, 
+                {:developer_cavs_tl_ids=>[]}, 
+                {:administrator_cavs_tl_ids=>[]} ]
     if params[:user][:password].blank? && params[:user][:password_confirmation].blank? then
       #If the user does not try to update the pw, the we don't update to null (fail anyway)
       return params.require(:user).permit(standard_attr)

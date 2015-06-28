@@ -2,18 +2,11 @@
 <%if @user.new_record? then
     path = user_create_path
   else  
-    path = user_update_path
+    path = user_update_path(@user.id)
   end%>
-<%= semantic_form_for(@user, :url => path) do |f| %>
+  
+<%= semantic_form_for(@user, :url => path, html: {:autocomplete=>'off'}) do |f| %>
   <%= f.inputs do %>
-      <!--< %= f.input :username%>
-      < %=f.input :actual_name %>
-      < %=f.input :email%>
-      < %= f.input :password %>
-      < %= f.input :password_confirmation %>
-      < %= f.input :country, :as => :select, :collection=> Country.countries_array.each{ |c| [c, c]} %>
-      < %= f.input :phone %>
-      -->
       <%=render :partial => 'shared/user_basic_attributes', :locals=>{:f=>f}%>
       <%=f.input :responds_to_contacts %>
       <li><%=f.label $ARA + "profiles", {:style=>"width:25%;"}%>
@@ -86,14 +79,14 @@
        </li>
        <li id='development-jobs-list' class = 'invisible-visible'>  
          <label><%=t($ARA + "user.development_jobs")%></label> 
-          <%calmapp_developer_cb_count = 0%>
-        <%calmapp_developer_cbs_per_row = 4%>
+          <%developer_cb_count = 0%>
+        <%developer_cbs_per_row = 4%>
         <table style = 'margin-left:25%;'>  
-        <%=f.collection_check_boxes( :developer_calmapp_ids, Calmapp.all, :id, :name) do |b| %>
-           <%if calmapp_developer_cb_count%calmapp_developer_cbs_per_row == 0 && calmapp_developer_cb_count != 0%>
+        <%=f.collection_check_boxes( :developer_cavs_tl_ids, CalmappVersionsTranslationLanguage.permitted_for_developers, :id, :description) do |b| %>
+           <%if developer_cb_count%developer_cbs_per_row == 0 && developer_cb_count != 0%>
              </tr>
            <%end%>
-           <%if calmapp_developer_cb_count%calmapp_developer_cbs_per_row == 0%>
+           <%if developer_cb_count%developer_cbs_per_row == 0%>
              <tr class = 'multi-checkboxes'>
            <%end%>
             <td class = 'multi-checkbox'>
@@ -101,10 +94,10 @@
                     b.check_box + b.text
                   }
                %>
-              <%calmapp_developer_cb_count += 1%>
+              <%developer_cb_count += 1%>
             </td>    
          <%end%>
-         <%if calmapp_developer_cb_count%calmapp_developer_cbs_per_row != 0%>
+         <%if developer_cb_count%developer_cbs_per_row != 0%>
              </tr>
          <%end%>
         </table>
@@ -119,14 +112,14 @@
        </li>
        <li id='administration-jobs-list' class = 'invisible-visible'>  
          <label><%=t($ARA + "user.admin_jobs")%></label> 
-          <%calmapp_admin_cb_count = 0%>
-        <%calmapp_admin_cbs_per_row = 4%>
+          <%admin_cb_count = 0%>
+        <%admin_cbs_per_row = 4%>
         <table style = 'margin-left:25%;'>  
-        <%=f.collection_check_boxes( :administrator_calmapp_ids, Calmapp.all, :id, :name) do |b| %>
-           <%if calmapp_admin_cb_count%calmapp_admin_cbs_per_row == 0 && calmapp_admin_cb_count != 0%>
+        <%=f.collection_check_boxes( :administrator_cavs_tl_ids, CalmappVersionsTranslationLanguage.permitted_for_administrators, :id, :description) do |b| %>
+           <%if admin_cb_count%admin_cbs_per_row == 0 && admin_cb_count != 0%>
              </tr>
            <%end%>
-           <%if calmapp_admin_cb_count%calmapp_admin_cbs_per_row == 0%>
+           <%if admin_cb_count%admin_cbs_per_row == 0%>
              <tr class = 'multi-checkboxes'>
            <%end%>
             <td class = 'multi-checkbox'>
@@ -134,10 +127,10 @@
                     b.check_box + b.text
                   }
                %>
-              <%calmapp_admin_cb_count += 1%>
+              <%admin_cb_count += 1%>
             </td>    
          <%end%>
-         <%if calmapp_admin_cb_count%calmapp_admin_cbs_per_row != 0%>
+         <%if admin_cb_count%admin_cbs_per_row != 0%>
              </tr>
          <%end%>
         </table>

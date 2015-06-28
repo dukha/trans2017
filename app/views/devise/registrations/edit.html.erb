@@ -1,6 +1,6 @@
 <!--h2>Edit < %= resource_name.to_s.humanize %></h2 -->
 <p class ='pageheading'>Edit Me</p>
-<%= semantic_form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => { :method => :put }) do |f| %>
+<%= semantic_form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => { :method => :put,:autocomplete=>'off' }) do |f| %>
   <!--%= devise_error_messages! % -->
   <%=f.inputs  do%>
   <!-- for this to work you need to set any new attributes in the parameter sanitizer in application_controller.rb -->

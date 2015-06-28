@@ -47,13 +47,13 @@ class User < ActiveRecord::Base
   #accepts_nested_attributes_for :translator_jobs, :reject_if => :all_blank, :allow_destroy => true
   has_many :translator_cavs_tls, :through => :translator_jobs, :source => :calmapp_versions_translation_language
   
-  has_many :developer_jobs, :foreign_key => "user_id" , :class_name=> "CalmappDeveloper", :dependent => :destroy 
+  has_many :developer_jobs, :foreign_key => "user_id" , :class_name=> "CavsTlDeveloper", :dependent => :destroy 
   #accepts_nested_attributes_for :developer_jobs, :reject_if => :all_blank, :allow_destroy => true
-  has_many :developer_calmapps, :through => :developer_jobs, :source => :calmapp, :class_name=>"Calmapp"
+  has_many :developer_cavs_tls, :through => :developer_jobs, :source => :calmapp_versions_translation_language#, :class_name=>"Calmapp"
   
-  has_many :admin_jobs, :foreign_key => "user_id" , :class_name=> "CalmappAdministrator", :dependent => :destroy
+  has_many :administrator_jobs, :foreign_key => "user_id" , :class_name=> "CavsTlAdministrator", :dependent => :destroy
   #accepts_nested_attributes_for :developer_jobs, :reject_if => :all_blank, :allow_destroy => true
-  has_many :administrator_calmapps, :through => :admin_jobs, :source => :calmapp, :class_name=>"Calmapp"
+  has_many :administrator_cavs_tls, :through => :administrator_jobs, :source => :calmapp_versions_translation_language#, :class_name=>"Calmapp"
 
   #has_many :contact_responding_admins, :class_name => "ContactRespondingAdmin", :dependent => :destroy
   #has_many :contacts, :through => :contact_responding_admins
@@ -142,7 +142,8 @@ class User < ActiveRecord::Base
     developer=User.create! param
     developer.profiles << Profile.where {name == "developer"}.first
     #binding.pry
-    developer.developer_calmapps << Calmapp.where{name == "calm_registrar" }.first
+    developer.developer_cavs_tls << CalmappVersionsTranslationLanguage.joins(:calmapp_version_tl).where{calmapp_version_tl.version  == "4" }.
+       joins(:translation_language).where{translation_language.iso_code =='en'}.first
     log.info("devvie created")
     
     param[:username]='addy'
@@ -152,7 +153,8 @@ class User < ActiveRecord::Base
     admin=User.create! param
     admin.profiles << Profile.where {name == "application_administrator"}.first
     #binding.pry
-    admin.administrator_calmapps << Calmapp.where{name == "calm_registrar" }.first
+    admin.administrator_cavs_tls = CalmappVersionsTranslationLanguage.joins(:calmapp_version_tl).where{calmapp_version_tl.version  == "4" }.all
+    
     log.info("addy created")
     
     param[:username]= 'trannie'
@@ -208,9 +210,16 @@ CalmappVersionsTranslationLanguage.new(:translation_language_id =>TranslationLan
    end
   
     def self.developers
-      return where{developer == 't'}
+      return where{developer == true}
     end
   
+   def self.translator
+     return where{translator == true}
+   end
+   
+   def self.administrator
+     return where{administrator == true}
+   end
 private
   def check_username
     #binding.pry

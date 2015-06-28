@@ -22,6 +22,13 @@ class CalmappVersionsTranslationLanguage < ActiveRecord::Base
   
   has_many :cavs_tl_translators, :foreign_key=> "cavs_translation_language_id"
   has_many :translators, :through => :cavs_tl_translators, :class_name => 'User', :source=> 'user'
+  
+  has_many :developer_jobs, :foreign_key => "cavs_translation_language_id" , :class_name=> "CavsTlDeveloper"
+  has_many :developers, :through => :developer_jobs, :source => :user,  :class_name => "User", :foreign_key => :user_id 
+  
+  has_many :administrator_jobs, :foreign_key => "cavs_translation_language_id" , :class_name=> "CavsTlDeveloper"
+  has_many :administrators, :through => :administrator_jobs, :source => :user,  :class_name => "User", :foreign_key => :user_id
+  
   # once we have saved a new language then we upload the base file for that translation 
   after_create :base_locale_translations_for_new_translation_languages
   after_update :do_after_update
@@ -41,6 +48,14 @@ class CalmappVersionsTranslationLanguage < ActiveRecord::Base
      #all.load - [TranslationLanguage.TL_EN ]
      en_id = TranslationLanguage.TL_EN.id
      where{translation_language_id != my{en_id} }.load 
+  end
+  def self.permitted_for_developers
+     #all.load - [TranslationLanguage.TL_EN ]
+     en_id = TranslationLanguage.TL_EN.id
+     where{translation_language_id == my{en_id} }.load 
+  end
+  def self.permitted_for_administrators
+     all
   end
   
   def redis_databases
