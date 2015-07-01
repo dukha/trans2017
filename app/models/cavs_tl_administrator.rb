@@ -7,4 +7,5 @@ class CavsTlAdministrator < ActiveRecord::Base
   
   #validates :user_id, :calmapp_id, presence: true
   validates :user_id, :uniqueness => {:scope=> :cavs_translation_language_id}
+  
 end

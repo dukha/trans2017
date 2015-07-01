@@ -132,7 +132,7 @@ end
       @dot_key_code_translation_editor = DotKeyCodeTranslationEditor.find(params[:id])
     end
 
-    # Only allow a trusted parameter "white list" through.
+    
     def dot_key_code_translation_editors
       params.require(:dot_key_code_translation_editor).permit(:dot_key_code, :param_name, :param_order, :param_default)
     end

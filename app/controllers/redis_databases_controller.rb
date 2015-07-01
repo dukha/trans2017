@@ -160,7 +160,7 @@ private
       @redis_database = RedisDatabase.find(params[:id])
     end
 
-    # Only allow a trusted parameter "white list" through.
+    
     def redis_database_params
       params.require(:redis_database).permit(:redis_instance_id, :redis_db_index)
     end

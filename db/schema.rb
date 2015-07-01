@@ -152,15 +152,6 @@ ActiveRecord::Schema.define(version: 20150621235055) do
 
   add_index "special_partial_dot_keys", ["partial_dot_key"], name: "index_special_partial_dot_keys_on_partial_dot_key", using: :btree
 
-  create_table "translation_editor_params", force: :cascade do |t|
-    t.integer  "translation_editor_id"
-    t.string   "param_name"
-    t.string   "param_sequence"
-    t.string   "param_default"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "translation_hints", force: :cascade do |t|
     t.string   "dot_key_code", null: false
     t.string   "heading"

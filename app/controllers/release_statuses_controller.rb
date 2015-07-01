@@ -96,8 +96,7 @@ class ReleaseStatusesController < ApplicationController
       @release_status = ReleaseStatus.find(params[:id])
     end
 
-    # Only allow a trusted parameter "white list" through.
-    def release_status_params
+  
         params.require(:release_status).permit(:status)
     end
     

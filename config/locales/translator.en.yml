@@ -367,6 +367,7 @@ en:
         iso_code: Language
         calmapp_version: App Version
         cav_id: App Version
+        cavtl_id: App Version - Language
         en_translation: English
         selection_mode: Selection Mode
         selection_mode_all: All translations

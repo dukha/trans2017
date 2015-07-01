@@ -131,7 +131,7 @@ end
       @special_partial_dot_key = SpecialPartialDotKey.find(params[:id])
     end
 
-    # Only allow a trusted parameter "white list" through.
+
     def special_partial_dot_key_params
       params.require(:special_partial_dot_key).permit(:partial_dot_key, :sort, :cldr)
     end

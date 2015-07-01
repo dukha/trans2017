@@ -82,7 +82,13 @@ class ProfilesController < ApplicationController
   private
     def  profile_params
       roles_array_2_sym
-      params.require(:profile).permit(:name, :rools=>[])
+      if @profile.new_record?
+        params.require(:profile).permit(:name, :rools=>[])
+      elsif @profile.protected_profile
+        params.require(:profile).permit(:rools=>[])
+      else
+        params.require(:profile).permit(:name, :rools=>[])
+      end    
     end
     
     def set_profile

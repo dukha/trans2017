@@ -82,7 +82,7 @@ class CalmappVersionsTranslationLanguagesController < ApplicationController
   def update
     #binding.pry
     #@calmapp_versions_translation_language = CalmappVersionsTranslationLanguage.find(params[:id])
-    @calmapp_versions_translation_language.assign_attributes(calmapp_versions_translation_language_params)#params[:calmapp_versions_translation_language])
+    @calmapp_versions_translation_language.assign_attributes(calmapp_versions_translation_language_params)
     
     respond_to do |format|
       begin
@@ -170,7 +170,7 @@ class CalmappVersionsTranslationLanguagesController < ApplicationController
       @calmapp_versions_translation_language = CalmappVersionsTranslationLanguage.find(params[:id])
     end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
+    
     def calmapp_versions_translation_language_params
 =begin 
       binding.pry

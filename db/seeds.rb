@@ -24,7 +24,7 @@ Profile.delete_all
 
 SpecialPartialDotKey.delete_all
 DotKeyCodeTranslationEditor.delete_all
-TranslationEditorParam.delete_all
+#TranslationEditorParam.delete_all
 Translation.delete_all
 
 systemWBType = WhiteboardType.create(:name_english=>"system", :translation_code=>"system")

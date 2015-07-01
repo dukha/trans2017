@@ -10,7 +10,7 @@ class Translation < ActiveRecord::Base
   validates :dot_key_code, :uniqueness=>{:scope=> :cavs_translation_language_id},  :presence=>true 
   validates :calmapp_versions_translation_language, :presence => true
   before_save :translation_valid_json?
-  attr_accessor  :english, :criterion_iso_code, :criterion_cav_id, :written#, :selection_mode 
+  attr_accessor  :english, :criterion_iso_code, :criterion_cav_id, :criterion_cavtl_id, :written#, :selection_mode 
   @@selection_mode
   def self.selection_mode mode
     @@selection = mode
@@ -21,7 +21,7 @@ class Translation < ActiveRecord::Base
   after_create :add_other_language_records_to_version, :if => Proc.new { |translation| translation.language.iso_code=='en'}
   
   def self.searchable_attr
-    %w(iso_code dot_key_code cav_id translation updated_at plural)
+    %w(iso_code dot_key_code cav_id translation updated_at plural cavtl_id)
   end
   
   def self.sortable_attr
@@ -132,6 +132,13 @@ class Translation < ActiveRecord::Base
     where("tl1.iso_code = ?", language).
     order("translations.dot_key_code asc")
   }
+=begin
+ Shockingly inefficient. Rewrite using association joins (or none with assoc joins)
+=end  
+  scope :single_lang_version_translations_arr, ->(cavtl_id) {
+    cavtl = CalmappVersionsTranslationLanguage.find(cavtl_id)
+    single_lang_translations_arr(cavtl.translation_language_id, cavtl.calmapp_version_id)
+  }
 
 =begin
  dependency scope outer_joins_special_dot_keys_arr will give cldr attr 
@@ -236,18 +243,27 @@ class Translation < ActiveRecord::Base
     [ ops.starts_with,  ops.ends_with,  ops.matches,  ops.does_not_match,  ops.equals,  ops.is_null,  ops.not_null]
   end
   def self.valid_criteria? search_info
-    if search_info[:criteria]["iso_code"].nil? then
-      message = message = I18n.t($ARA + "translation.iso_code") + " " + I18n.t($EM + "blank", "iso_code" )
-      search_info[:messages]=[] if search_info[:messages].nil?
-      search_info[:messages] << {"iso_code" => message}
-    end
-    
-    if search_info[:criteria]["cav_id"].nil? then
-      message = I18n.t($ARA + "translation.cav_id") + " " + I18n.t($EM + "blank", "cav_id" )
-      search_info[:messages]=[] if search_info[:messages].nil?
-      search_info[:messages] << {"criterion_cav_id" => message}
-    end
-   
+    if search_info[:criteria]["cavtl_id"].nil? then
+=begin      
+      if search_info[:criteria]["iso_code"].nil? then
+        message = I18n.t($ARA + "translation.iso_code") + " " + I18n.t($EM + "blank", "iso_code" )
+        search_info[:messages]=[] if search_info[:messages].nil?
+        search_info[:messages] << {"iso_code" => message}
+      end
+      
+      if search_info[:criteria]["cav_id"].nil? then
+        message = I18n.t($ARA + "translation.cav_id") + " " + I18n.t($EM + "blank", "cav_id" )
+        search_info[:messages]=[] if search_info[:messages].nil?
+        search_info[:messages] << {"criterion_cav_id" => message}
+      end
+=end
+      
+        message = I18n.t($ARA + "translation.cavtl_id") + " " + I18n.t($EM + "blank", "cavtl_id" )
+        search_info[:messages]=[] if search_info[:messages].nil?
+        search_info[:messages] << {"cavtl_id" => message}
+    else
+      
+    end  
     return search_info[:messages].empty?
   end
   
@@ -279,9 +295,14 @@ class Translation < ActiveRecord::Base
     if not ar_relation.nil? then
       translations = ar_relation
     else
-      translations = single_lang_translations_arr(criteria.delete("iso_code"), criteria.delete("cav_id"))
-      operators.delete("iso_code")
-      operators.delete("cav_id")
+      if not criteria["cavtl_id"].blank? then
+        translations = single_lang_version_translations_arr( criteria.delete("cavtl_id"))
+        operators.delete("cavtl_id")
+      else
+        translations = single_lang_translations_arr(criteria.delete("iso_code"), criteria.delete("cav_id"))
+        operators.delete("iso_code")
+        operators.delete("cav_id")
+      end
     end
     # We need to do this for dot key code otherwise it will split on '.'
     # in and not_in are a bit shakey. They come to the controller as lists as a string. So we try to split

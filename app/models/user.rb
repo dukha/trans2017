@@ -57,6 +57,8 @@ class User < ActiveRecord::Base
 
   #has_many :contact_responding_admins, :class_name => "ContactRespondingAdmin", :dependent => :destroy
   #has_many :contacts, :through => :contact_responding_admins
+  
+  after_create :add_cavs_tls, :if => Proc.new {|user| }
 =begin
      for declarative auth
      Returns the role symbols of the given user for declarative_auth. 
@@ -96,7 +98,9 @@ class User < ActiveRecord::Base
        puts "Your new password: '#{pw}'"
     else
      
-      param = {:password => pw,:password_confirmation => pw,:username => username,:email => 'root@localhost.localdomain', :actual_name=> 'root'}
+      param = {:password => pw,:password_confirmation => pw,:username => username,
+        :email => 'root@localhost.localdomain', :actual_name=> 'root', 
+        :country=> 'Australia', :phone => '819999'}
       puts "creating user"
       u = User.create! param
       puts "creating permission"
@@ -115,8 +119,8 @@ class User < ActiveRecord::Base
   def self.seed
      User.create_root_user
      pw = '123456'
-     param = {:password => pw,:password_confirmation => pw,:username => 'sysadmin',:email => 'admin@calm.org', 
-                :actual_name=> 'admin'}
+     param = {:password => pw,:password_confirmation => pw,:username => $SYSADMIN,:email => 'admin@calm.org', 
+                :actual_name=> 'admin', :country=> 'Australia', :phone => '456000'}
      admin = User.create! param
      admin.profiles << Profile.sysadmin
      
@@ -125,13 +129,13 @@ class User < ActiveRecord::Base
   def self.demo
     pw = '123456'
     param = {:password => pw,:password_confirmation => pw,:username => 'albert',:email => 'albert@calm.org', 
-              :actual_name=> 'albert'}
+              :actual_name=> 'albert', :country=> 'Australia', :phone => '213000'}
     
     albert = User.create! param
     albert.profiles << Profile.sysadmin
     
     param = {:password => pw,:password_confirmation => pw,:username => 'a',:email => 'a@calm.org', 
-              :actual_name=> 'a'}
+              :actual_name=> 'a', :country=> 'Australia', :phone => '2459999'}
     a = User.create! param
     a.profiles << Profile.sysadmin
     
@@ -139,6 +143,8 @@ class User < ActiveRecord::Base
     param[:actual_name] = 'Developer User'
     param[:email]= 'developer@calm.org'
     param[:developer] = true
+    param[:country]= 'Australia' 
+    param[:phone] = '456000'
     developer=User.create! param
     developer.profiles << Profile.where {name == "developer"}.first
     #binding.pry
@@ -150,6 +156,8 @@ class User < ActiveRecord::Base
     param[:actual_name] = 'Application Admin'
     param[:email]= 'addy@calm.org'
     param[:application_administrator] = true
+    param[:country]= 'Australia' 
+    param[:phone] = '111111111'
     admin=User.create! param
     admin.profiles << Profile.where {name == "application_administrator"}.first
     #binding.pry
@@ -161,6 +169,8 @@ class User < ActiveRecord::Base
     param[:actual_name] = 'Translator User'
     param[:email]= 'translator@calm.org'
     param[:translator] = true
+    param[:country]= 'Australia' 
+    param[:phone] = '3400000000'
     translator=User.create! param
     translator.profiles << Profile.where {name == "translator"}.first
      

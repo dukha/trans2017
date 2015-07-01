@@ -59,6 +59,7 @@ class TranslationsController < ApplicationController
     require 'will_paginate/array'
     possible_where_clauses = prepare_mode()
     search_info = prepare_search()
+    #binding.pry
     if Translation.valid_criteria?(search_info) then
       
       @translations = Translation.search(current_user, search_info, nil, possible_where_clauses)
@@ -255,7 +256,7 @@ class TranslationsController < ApplicationController
       @translation = Translation.find(params[:id])
     end
 
-    # Only allow a trusted parameter "white list" through.
+    
     # modify for developers
     def translation_params
       params.require(:translation).permit(:translation)

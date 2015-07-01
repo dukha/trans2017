@@ -130,7 +130,7 @@ end
       @contact = Contact.find(params[:id])
     end
 
-    # Only allow a trusted parameter "white list" through.
+  
     def contact_params
       params.require(:contact).permit(:problem_area, :screen_name, :last_menu_choice, :description, :user_id)
     end

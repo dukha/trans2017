@@ -127,7 +127,7 @@ class RedisInstancesController < ApplicationController
       @redis_instance = RedisInstance.find(params[:id])
     end
 
-    # Only allow a trusted parameter "white list" through.
+    
     def redis_instance_params
       params.require(:redis_instance).permit(:host, :port, :password, :max_databases, :description)
     end

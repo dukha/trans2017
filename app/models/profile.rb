@@ -1,9 +1,10 @@
 class Profile < ActiveRecord::Base
-
+  #attr_readonly :name
   has_many :user_profiles
   has_many :users, :through => :user_profiles 
   validates :name, :presence => true, :uniqueness=>true
-
+  
+  #validate :only_non_protected_profiles, :on => :update
   # roles are defineds as symbols in config/authorization_rules.rb
   # list all roles which are defiend there:  Authorization::Engine.instance.roles
   # roles do not change in any way at run-time so there is no need to keep them in the DB
@@ -55,6 +56,13 @@ class Profile < ActiveRecord::Base
   def to_s
     display
   end
+=begin  
+  def only_non_protected_profiles
+    if protecteded_profile
+      
+    end
+  end
+=end
  
   # seed makes sure the profiles named sysadmin or guest remain reserved
   def self.seed
@@ -66,7 +74,7 @@ class Profile < ActiveRecord::Base
     ]
     Profile.create :name => reserved_profile, :roles => roles, :protected_profile => true unless self.recovery_profile
 
-    reserved_profile = 'sysadmin'
+    reserved_profile = $SYSADMIN
     Profile.create :name => reserved_profile, :roles => Profile.available_roles, :protected_profile => true  unless self.sysadmin
     reserved_profile = 'guest'
     Profile.create :name => reserved_profile, :roles => [:guest_visit, :whiteboards_read], :protected_profile => true unless self.guest
@@ -133,7 +141,7 @@ class Profile < ActiveRecord::Base
 
   # profile to use for root user
   def self.sysadmin
-    Profile.find_by(name: "sysadmin")
+    Profile.find_by(name: $SYSADMIN)
   end
 
   # profile to use for guest user

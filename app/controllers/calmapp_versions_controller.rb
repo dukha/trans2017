@@ -295,7 +295,7 @@ class CalmappVersionsController < ApplicationController
       @calmapp_version = CalmappVersion.find(params[:id])
     end
 
-    # Only allow a trusted parameter "white list" through.
+   
     def calmapp_version_params
       params.require(:calmapp_version).permit(:calmapp_id, 
          :version,  

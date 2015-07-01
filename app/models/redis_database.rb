@@ -340,18 +340,15 @@ class RedisDatabase < ActiveRecord::Base
   
   def self.marks_big_demo    
     redis = marks_trans_redis
-    upload_from_dir = upload_dir_for_demo
     files_to_upload = trans_uploads_for_demo
     count = 0
     files_to_upload.each{ |f|
       count += 1
       tu = TranslationsUpload.new(description: "self demo " +count.to_s, cavs_translation_language_id: redis.cavtl_id, yaml_upload: File.new(f) )
       tu.save!
-      }
-    #version = CalmappVersioon.find(redis.cav_id)
+    }
     redis.publish_version 
-    puts "translator published locally"
-   
+    puts "translator published locally via MARKS BIG DEMO" 
   end 
   
   def self.integ_big_demo
@@ -359,7 +356,7 @@ class RedisDatabase < ActiveRecord::Base
     integ  = integration_trans_redis
     upload_from_dir = upload_dir_for_demo
     files_to_upload = trans_uploads_for_demo
-    binding.pry
+    #binding.pry
     count = 0
     files_to_upload.each{ |f|
       count += 1
@@ -369,7 +366,7 @@ class RedisDatabase < ActiveRecord::Base
     integration_trans_redis.publish_version
     puts "reg published on integration"
     integration_reg_redis.publish_version
-    puts "reg published on integration"
+    puts "reg published on integration via INTEG BIG DEMO"
   end
 =begin
 

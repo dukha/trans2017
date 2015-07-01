@@ -43,6 +43,9 @@ namespace :trans do
   task :integ_big_demo => ["trans:start_again"] do
     Demo.integ_big_demo
   end
+  task :translation_demo => ["trans:marks_big_demo"] do
+    Demo.translation_demo
+  end
 =begin  
   task :start_again_demo => [:environment, 'demo', 'standard_letter_templates:auto_create' ,  'pform_app:students_to_courses','pform_queue:receive']
 

@@ -200,7 +200,12 @@ module TranslationHelper
      end
      html = html +  "</table>"
      return html.html_safe
-   end     
+   end  
+   
+   def users_cavs_tls
+     arr = current_user.translator_cavs_tls + current_user.developer_cavs_tls + current_user.administrator_cavs_tls
+     return arr.uniq
+   end   
    private
 =begin
  Contains all the short date formats for a drop down 

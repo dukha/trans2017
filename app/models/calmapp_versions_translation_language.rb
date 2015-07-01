@@ -12,6 +12,7 @@ class CalmappVersionsTranslationLanguage < ActiveRecord::Base
   belongs_to :calmapp_version_tl, :inverse_of=>:calmapp_versions_translation_languages, :class_name => "CalmappVersion", :foreign_key =>"calmapp_version_id"
   belongs_to :translation_language
   has_many :translations, :foreign_key=> "cavs_translation_language_id"
+  has_many :translations_uploads
   validates :translation_language_id, :uniqueness => {:scope=> :calmapp_version_id}
   validates :calmapp_version_id, :uniqueness => {:scope=> :translation_language_id}
   #validates :calmapp_version, :existence=>true
@@ -30,20 +31,16 @@ class CalmappVersionsTranslationLanguage < ActiveRecord::Base
   has_many :administrators, :through => :administrator_jobs, :source => :user,  :class_name => "User", :foreign_key => :user_id
   
   # once we have saved a new language then we upload the base file for that translation 
-  after_create :base_locale_translations_for_new_translation_languages
-  after_update :do_after_update
+  after_create :base_locale_translations_for_new_translation_languages, :add_this_to_sysadmin_users
+  #after_update :do_after_update
   before_destroy :deep_destroy
+
 =begin  
-  def create attributes=nil, options ={}, &block
-    binding.pry
-    super attributes, options, block
-  end 
-=end    
   def do_after_update
-    #binding.pry
+    binding.pry
     puts "after translation upload"
   end 
-  
+=end  
   def self.permitted_for_translators
      #all.load - [TranslationLanguage.TL_EN ]
      en_id = TranslationLanguage.TL_EN.id
@@ -72,6 +69,20 @@ class CalmappVersionsTranslationLanguage < ActiveRecord::Base
   def show_me
     return "CAVTL " + calmapp_version_tl.show_me + " " + translation_language.show_me + " cavtl-id = " + id.to_s
   end
+  
+=begin
+ Sysadmin profiled users must have access to all cav_tls for translation purposes 
+=end
+  def add_this_to_sysadmin_users
+    #Profile.sysadmin
+    #binding.pry
+    users = User.includes(:profiles).where(profiles: { name: $SYSADMIN }).all
+    users.each do |u|
+      if not u.administrator_cavs_tls.includes(self) then
+        u.administrator_cavs_tls << self
+      end  
+    end
+  end  
 =begin
  Uploads the base translation for a new language after added (ie created)
  saves new upload

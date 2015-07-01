@@ -101,8 +101,7 @@ class CalmappVersion < ActiveRecord::Base
   end
   def add_english
     puts "after save in add_english"
-    #binding.pry
-    english = TranslationLanguage.where{iso_code == 'en'}.first
+    english = TranslationLanguage.TL_EN #TranslationLanguage.where{iso_code == 'en'}.first
     english_id = english.id
     if translation_languages.where{id == my{english_id}}.empty?#bsearch{ |x|   x.id == english_id }
         translation_languages <<  english
