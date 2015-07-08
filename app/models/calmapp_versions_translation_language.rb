@@ -32,6 +32,7 @@ class CalmappVersionsTranslationLanguage < ActiveRecord::Base
   
   # once we have saved a new language then we upload the base file for that translation 
   after_create :base_locale_translations_for_new_translation_languages, :add_this_to_sysadmin_users
+  after_commit :after_commit_on_create, :on => :create
   #after_update :do_after_update
   before_destroy :deep_destroy
 
@@ -78,7 +79,7 @@ class CalmappVersionsTranslationLanguage < ActiveRecord::Base
     #binding.pry
     users = User.includes(:profiles).where(profiles: { name: $SYSADMIN }).all
     users.each do |u|
-      if not u.administrator_cavs_tls.includes(self) then
+      if not u.administrator_cavs_tls.include?(self) then
         u.administrator_cavs_tls << self
       end  
     end
@@ -126,6 +127,33 @@ class CalmappVersionsTranslationLanguage < ActiveRecord::Base
    end # not found
   end # def
   
+  def after_commit_on_create
+    CalmappVersionsTranslationLanguage.add_all_dot_keys_from_en_for_new_translation_language(id)
+  end
+  def self.add_all_dot_keys_from_en_for_new_translation_language(cavtl_id)
+    #after commit on create : add_all_en_dot_keys_for_new_translation_languages
+    #binding.pry
+    cavtl = CalmappVersionsTranslationLanguage.find(cavtl_id)
+    en_trans = Translation.single_lang_translations_arr("en", cavtl.calmapp_version_id).all
+    count =0 
+    en_trans.each do |t|
+      #binding.pry
+      tt = Translation.find(t.id)
+      #new_cavtl = CalmappVersionsTranslationLanguage.create!(  :calmapp_version_id => cavtl.calmapp_version_id, :translation_language_id => cavtl.id)
+      plural_incomplete = nil
+      # because we only put in dot_key_codes, no translations at this point
+      plural_incomplete = true if tt.is_plural?
+      
+      Translation.create!(
+           :dot_key_code => t.dot_key_code, 
+           :cavs_translation_language_id => cavtl.id, 
+           :translation => ActiveSupport::JSON.encode(''),
+           :plural_incomplete => plural_incomplete) unless Translation.where{dot_key_code == my{t.dot_key_code}}.where{cavs_translation_language_id == my{cavtl.id}}.exists?
+      count = count + 1
+      return if count == 3
+    end
+    
+  end
   
   def base_locale_file_name
     translation_language.iso_code + ".yml"

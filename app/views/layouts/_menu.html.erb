@@ -29,11 +29,15 @@
         });
 
 </script>
+
 <div id="accordion">
+    <%if permitted_to? :index, :translations %>
       <div>
         <%=taccordion_header("translations") %>
         <ul class="menu">
+          <%if permitted_to? :index, :translations %>
           <li><%= tlink_to("translations", translations_path, :category=>:menu) %></li>
+          <%end%>
            <!-- This should url should become edit_user_preference_path(current_user.id) when we get the login working -- >
            < % if current_user != nil then % >
              
@@ -41,6 +45,7 @@
         </ul>
       </div>
       <div>
+    <%end%>    
       <%=taccordion_header("developers") %>
         <ul class="menu">
           

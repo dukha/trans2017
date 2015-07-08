@@ -88,7 +88,7 @@ en:
       calmapp_version:
         version: "Enter the version here. Format can be numbers, decimals or words."
         add_languages: If this checkbox is not checked then no language will be written to the database
-        translation_languages: English is required in all versions.
+        translation_languages: English(en) is required in all versions so you can  neither add nor remove English(en) here.
       calmapp:
         name: Enter the application name.
         new_version: If this checkbox is not checked then no version will be written to the database

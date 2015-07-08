@@ -23,7 +23,7 @@ class TranslationsController < ApplicationController
   end
   def update
     respond_to do |format|
-      binding.pry
+      #binding.pry
       if @translation.update(translation_params)
         puts "successful update"
         format.html { 
@@ -67,7 +67,10 @@ class TranslationsController < ApplicationController
         #This will prevent strings appearing in quotes in the user interface
         if JSON.is_json?(t.translation) then
           decoded = ActiveSupport::JSON.decode(t.translation)
+        elsif t.translation.nil?
+          decoded = "" 
         else
+          #binding.pry
           msg =  t.translation + " IS NOT JSON: bad data. Translation id = " + t.to_s
           puts msg
           Rails.logger.error( msg)
@@ -97,6 +100,10 @@ class TranslationsController < ApplicationController
       flash.now[:error] = msg if flash_now
       # in this case we make an ActivRecord Relation with 0 records so that we can redisplay
       @translations =  Translation.where{id == -1}
+    end
+    #binding.pry
+    if @translations.count == 0 then
+      flash[:warning] = "No translations found for the criteria give. Check your criteria."
     end
     @translations =@translations.paginate(:page => params[:page], :per_page => 30)
     # pass data directly to js

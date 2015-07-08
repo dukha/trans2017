@@ -12,6 +12,7 @@
 *= require tooltips
 *= require unobtrusive_flash_ui
 *= require unobtrusive_flash_override 
+*= require github-markdown 
 *= require_self
 
 

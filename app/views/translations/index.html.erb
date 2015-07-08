@@ -118,7 +118,8 @@
   <tr class = "<%= cycle('dataeven', 'dataodd') %>"  id = '<%= dom_id(trans)%>'>
       <td class="<%= cell_class%>" style="word-wrap: break-word;" ><span style="max-width:20px;"><%= trans.dot_key_code %></span></td>
       <!--td class="< %= cell_class %>" style="display:< %=short_key_display%>; ">< %= dot_key_code_last_key(translation.dot_key_code) %></td -->
-      <td class="<%= cell_class%>" style="max-width:40%;word-wrap: break-word;" data-tooltip = "<%=translation_tooltip(trans.attributes)%>"> <%= format_english(trans.attributes) %></td>
+      <td class="<%= cell_class%>" style="max-width:40%;word-wrap: break-word;" data-tooltip = "<%=translation_tooltip(trans.attributes)%>"> 
+        <%= format_english(trans.attributes, is_plural?(trans)) %></td>
       <!-- you cannot give this td below a class. It messes up bip -->
       <td id= '<%(best_in_place?(trans) ? "best_in_place" : "special-editor")%>'  style="max-width:40%;">
         <% if best_in_place?(trans) then%>
@@ -150,13 +151,19 @@
          <%elsif is_plural?(trans)%>
           <!-- plural editor here -->
            <input id= 'editor-name' type= 'hidden' value = 'plural'  >
-          <span style="color: blue; text_decoration: underline;  word-wrap: break-word;" class="plural_editor" id="<%=trans.dot_key_code%>"><%=trans.translation%></span>
+           
+           <%if not JSON.is_json?(trans.translation)
+             hash = {"other"=> trans.translation}
+             trans.translation = ActiveSupport::JSON.encode(hash)
+           end %>
+     
+          <span style="color: blue; text_decoration: underline;  word-wrap: break-word;" class="plural_editor" id="<%=trans.dot_key_code%>"><%=plural_translation_static_text(trans.translation)%></span>
           
            <%= form_for trans, as: :translation, url: translation_path(trans), method: :patch, remote: true,  html: { class: "edit", id: "edit_translation" } do |f| %>
            
            <%=translation_index_form_standard_html1(f)%>
                   
-           <%=plural_editing_table(trans.attributes)%>
+           <%=plural_editing_table(trans)%>
            
            <%=translation_index_form_standard_html2(f)%>
            

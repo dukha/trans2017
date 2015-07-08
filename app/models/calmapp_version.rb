@@ -39,7 +39,7 @@ class CalmappVersion < ActiveRecord::Base
   
   # should be after_save, however we can't do this
   #after_update :add_english
-  after_create :add_english, :if => Proc.new { |cav| cav.copied_from_version.blank? }
+  before_create :add_english, :if => Proc.new { |cav| cav.copied_from_version.blank? }
 =begin
 @return a collection of all calmapp names with versions
 =end
@@ -91,7 +91,11 @@ class CalmappVersion < ActiveRecord::Base
   def available_translation_languages
       return TranslationLanguage.all - en_in_array - already_added_translation_languages_not_en
   end
-   
+  
+  def translation_languages_not_en
+    return translation_languages - en_in_array 
+    
+  end 
   def to_s
     description
   end
@@ -100,14 +104,19 @@ class CalmappVersion < ActiveRecord::Base
     joins("join calmapps on calmapp_id = calmapps.id ").order( "calmapps.name asc")
   end
   def add_english
-    puts "after save in add_english"
+    puts "before create in add_english"
     english = TranslationLanguage.TL_EN #TranslationLanguage.where{iso_code == 'en'}.first
     english_id = english.id
+    binding.pry
     if translation_languages.where{id == my{english_id}}.empty?#bsearch{ |x|   x.id == english_id }
-        translation_languages <<  english
-        puts "ADD_EN"
+        #translation_languages <<  english
+        # en must be first in the array for create
+        #translation_languages.unshift(english)
+        #binding.pry
+        calmapp_versions_translation_languages << CalmappVersionsTranslationLanguage.new(:translation_language_id => english.id)
+        puts "ADDED_EN"
     else
-      "DONT ADD EN"
+      "EN   already exxists: not ADDED"
     end
   end
 =begin

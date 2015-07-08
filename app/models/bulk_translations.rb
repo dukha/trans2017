@@ -7,23 +7,25 @@ class BulkTranslations
 =begin
   @param a calmapp_version_translation_language_instance  
   @return all english translations for the version 
-=end  
+  @deprecated
   def self.english_translations calmapp_versions_translation_language
     cav_id = calmapp_versions_translation_language.calmapp_version_id
     CalmappVersionsTranslationLanguage.where{ calmapp_version_id == cav_id}.
        where{translation_language_id == TranslationLanguage.TL_EN.id}.first.translations
   end
-  
+=end 
+
+ 
 =begin
  plural forms come in arrays like ['one', 'other'] or ['one', 'few', 'many', 'other']
  Given a dot key code which is identified adot_key_code ilikes a plural, this method will save all appropriate plurals
  for this dot key code, without translation
- @param plurals and array of plural forms
+ @param plural_keys and array of plural forms
  @param dot_key_code
  @param cavtl The relevant calmapp_version_translation_language object for this dot key  
  @return array with saved plurals
 =end  
-  def self.save_new_plurals(plural_keys, dot_key_code, cavtl)#, plurals, translation = nil)
+  def self.save_new_plurals(plural_keys, dot_key_code, cavtl, plurals, translation = nil)
    # this array will have its last element overridden in each iteration of plurals.each
    dot_key_code_array = dot_key_code.split('.')
    # We now have to check if the dot_key_code without the plural is in the 'en' translation
@@ -139,17 +141,22 @@ class BulkTranslations
     translation = nil
     language = calmapp_versions_translation_language.translation_language.iso_code
     plural_same_as_en = calmapp_versions_translation_language.translation_language.plurals_same_as_en?()
+    previous_translation = nil
     keys.each do |k|
       translation = translation_to_db_from_file(k, hash[k], translation_upload_id, calmapp_versions_translation_language, plural_same_as_en, overwrite, plurals)    
       if translation.nil? then
+        
         #this is the situation where the translation language is not en and the english translation for the saem dot key does not exist
-        next
+        next if k != keys.last
+        return previous_translation
       end  
       if  translation.errors.count > 0 then
         return translation
       end
-      
-      count += 1 if translation.written
+      if translation.written then
+        previous_translation = translation
+        count += 1
+      end   
     end # do
     msg = "keys written to db >= " + count.to_s
     puts msg
@@ -276,7 +283,7 @@ def self.non_english_plural_translations_to_db_from_file(dkc, translation, trans
                          where{cavs_translation_language_id == cavtl_en_id }.
                          where{dot_key_code =~ (dkc_search_pl_min + '%')}.exists?) then
               # If this is a plural situation then we still need to write it
-                  t_array = save_new_plurals(plurals, dkc, calmapp_versions_translation_language, plurals, translation )
+                  t_array = save_new_plurals(plural_keys, dkc, calmapp_versions_translation_language, plurals, translation )
                   if t_array.is_a?(Array) && !t_array.empty? then
                     ret_val= t_array.last
                   else
@@ -354,8 +361,9 @@ end
   end  
   
   def self.do_overwrite_condition(dkc, translation, calmapp_versions_translation_language, translations_upload_id, overwrite, object, plural_keys, msg_data, plurals)
+    plural_key = full_key(calmapp_versions_translation_language, dkc)
     if overwrite == Translation.Overwrite[:all] then
-            plural_key = full_key(calmapp_versions_translation_language, dkc)
+            
             #msg = "Object to be persisted because 'all' parameter chosen"
             if object.translation != translation then
               b = object.update_attributes!(
@@ -382,6 +390,7 @@ end
           #puts "If duplicate key then continue unless translation blank"
           if object.translation.nil? then 
             #We update where the translation is nil anyway
+            binding.pry
             b = object.update_attributes!(
                      :translation=> translation, 
                      :cavs_translation_language_id => calmapp_versions_translation_language.id, 

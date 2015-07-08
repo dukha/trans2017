@@ -92,6 +92,7 @@ class ApplicationController < ActionController::Base
 
   #$APPLICATION_NAME = "CALM Translator"
   #$APPLICATION_VERSION ="0.0.0 M1"
+  @markdown_file = false
 =begin  
   This method is activated by declarative auth to give a better user experience 
   when the user is denided access by decl_auth 

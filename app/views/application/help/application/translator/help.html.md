@@ -8,10 +8,14 @@ A single translation consists of the following information
 - A translation 
 
 ##Just want to get started now?
-Click [Translations](../translations)
+* Read this first [Role of English](<%=role_of_english_help_path%>)
+* Then Click [Translations](../translations)
 
 ##More Information about Translations
 Click [Translation Types](translator_objects)
 
 ##To Understand How the Translation Process Works
 Click [Translation Process](translation_process)
+
+##To Understand Codes in the translations
+Click [Role of English](<%=role_of_english_help_path%>)

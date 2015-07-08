@@ -47,7 +47,7 @@ class Demo
   def self.translation_demo
     #regv = CalmappVersion.joins{:calmapp}.joins(:redis_databases).where{calmapp.name == 'calm_registrar'}.first
     #regv = CalmappVersion.joins{:calmapp}.joins(:redis_databases).where{calmapp.name == 'calm_registrar'}.where{redis_databases.release_status_id == 1}.select("redis_databases.id").first
-    regv_query = CalmappVersion.joins{:calmapp}.joins(:redis_databases).joins{redis_databases.release_status}.where{calmapp.name == 'calm_registrar'}.where{redis_databases.release_statuses.status == "Development"}.select("calmapp_versions.id as cav_id, redis_databases.id as rdb_id").first
+    regv_query = CalmappVersion.joins{:calmapp}.joins(:redis_databases => :release_status).where{calmapp.name == 'calm_registrar'}.where{redis_databases.release_statuses.status == "Development"}.select("calmapp_versions.id as cav_id, redis_databases.id as rdb_id").first
     regv = CalmappVersion.find(regv_query.cav_id)
     rdb = RedisDatabase.find(regv_query.rdb_id)
     cavtl_en = CalmappVersionsTranslationLanguage.where{calmapp_version_id == my{ regv_query.cav_id}}.where{translation_language_id == my{TranslationLanguage.TL_EN.id}}.first

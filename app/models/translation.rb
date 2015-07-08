@@ -155,8 +155,8 @@ class Translation < ActiveRecord::Base
     cavtl_en =  CalmappVersionsTranslationLanguage.
            where{ calmapp_version_id == cav_id }.
            where{ translation_language_id == TranslationLanguage.TL_EN.id}.first
-    return Translation.joins{calmapp_versions_translation_language.translation_language}.
-           where{translation_languages.id == cavtl_en.id}.
+    return Translation.joins{calmapp_versions_translation_language.translation_language}. 
+           where{calmapp_versions_translation_languages.id == cavtl_en.id}.
            select("translations.id, dot_key_code, translation_languages.iso_code, cavs_translation_language_id, plural")      
   end
 
@@ -197,6 +197,9 @@ class Translation < ActiveRecord::Base
     english = english_translations.where{dot_key_code == my{dkc}}.first
     return english.plural 
   end
+  
+  
+  
   def show_me
     "TRAN " + dot_key_code + " " + translation + " " + calmapp_versions_translation_language.show_me + " tran-id=" +id.to_s
   end

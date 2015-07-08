@@ -32,10 +32,11 @@
 
         <!-- /td -->
 				<td id="appmaintd"  class="maindisplay">
-					<div id="container">
+					<div id="container" class = <%= @markdown_file ? "markdown-body" : "x"%>>
 					  
 					  <div id="flash">
 					    <!--flash baby flash -->
+					    
     			    <% flash.each do |name, msg| %>
       			     <%if msg.blank? || msg == true %>
       			        <%return%> 

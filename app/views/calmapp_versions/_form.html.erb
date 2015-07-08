@@ -63,7 +63,7 @@
              </td>
              <!--/div -->
              <td  class="dual-listboxes-data"><%=  f.input :calmapp_versions_translation_languages, :label=>false, :as=>:select, 
-                 :collection=>f.object.translation_languages.collect {|tl| [tl.name,tl.id]}, :hint=>false, :multiple=>"multiple", 
+                 :collection=>f.object.translation_languages_not_en.collect {|tl| [tl.name,tl.id]}, :hint=>false, :multiple=>"multiple", 
                  :input_html => { :class => "dual-listboxes-selected-data", :id => "assigned-translation-languages-box", :size=>'10',:style=>"width:100%; height:100%;"   }  %>
                <select id="box2Storage-tl"></select>
              </td>

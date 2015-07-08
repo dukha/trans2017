@@ -64,11 +64,22 @@ module TranslationHelper
 =begin
   Formats the english transation on the index
 =end   
-   def format_english attributes     
+   def format_english attributes, plural     
      return english_date_format_example(attributes) if editor_date_time_select?(attributes)  
      return "<i>[This plural not used in English]</i>".html_safe if attributes["en_translation"].nil?
      return "<i>[Not used in English, so left blank. It may be left blank in your language too.] </i>".html_safe if attributes["en_translation"].blank?
-     return ActiveSupport::JSON.decode attributes["en_translation"]
+     hash = ActiveSupport::JSON.decode attributes["en_translation"]
+     if  not plural 
+       return hash  
+     else
+       #binding.pry
+       html = "<table>"
+       hash.each{|k, v|
+         html = html + "<tr><td>" + k + ": "  + v + "</td></tr>" 
+       }
+       html = html + "</table>"  
+       return html.html_safe
+     end
    end
    
 =begin
@@ -192,15 +203,41 @@ module TranslationHelper
    end
    def plural_editing_table attrs
      html = "<table id = 'plural-editor', style ='display:none;'>"
-     t = ActiveSupport::JSON.decode(attrs["translation"])
+     begin
+       t = ActiveSupport::JSON.decode(attrs["translation"])
+     rescue StandardError => e
+       #binding.pry
+       puts e.message
+       raise
+     end  
      if t.is_a? Hash then
        t.each do |k,v|
-         html = html + "<tr><td>" + k + "</td><td>" + text_field_tag( k, v, {:id=> attrs["dot_key_code"]  + "." +k}) + "</td></tr>" 
+         html = html + "<tr><td>" + k + "</td><td>"
+         if v.length <= 35 then       
+           html = html + text_field_tag( k, v, {:id=> attrs["dot_key_code"]  + "." + k, :size=>35}) 
+         else
+           html = html + text_area_tag(k,v, {:id=> attrs["dot_key_code"]  + "." + k, :cols=>35})
+         end
+         html = html + "</td></tr>"  
        end
      end
      html = html +  "</table>"
      return html.html_safe
    end  
+   
+   def plural_translation_static_text(translation)
+     #t = translation.translation
+     t = ActiveSupport::JSON.decode(translation)
+     if t.is_a? Hash then
+       binding.pry
+       html = "<table>"
+       t.each{|k, v|
+         html = html + "<tr><td>" + k + ": "  + v + "</td></tr>" 
+       }
+       html = html + "</table>"  
+       return html.html_safe
+     end
+   end
    
    def users_cavs_tls
      arr = current_user.translator_cavs_tls + current_user.developer_cavs_tls + current_user.administrator_cavs_tls
