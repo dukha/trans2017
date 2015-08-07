@@ -1,0 +1,20 @@
+<%= semantic_form_for(@delayed_job) do |f| %>
+	<%= f.inputs do %>
+	         <%= f.input :last_error, :as=> :text%>
+	         <%= f.input :handler, :as=> :text%> 
+	         <%=f.input :queue%>  
+				   <%= f.input :priority %>   
+				   <%= f.input :attempts, :input_html=>{:disabled=> 'disabled'}  %> 
+				   <%= f.input :run_at, :as=>:string, :input_html=>{:disabled=> 'disabled'}  %>
+				   <%= f.input :locked_at, :as=>:string, :input_html=>{:disabled=> 'disabled'}%>   
+				   <%= f.input :failed_at, :as=>:string, :input_html=>{:disabled=> 'disabled'}   %>   
+				    
+		
+	<% end %>	
+
+        <%= f.actions do %>
+          <%= f.action(:submit) %>
+
+        <% end %>
+<% end %>
+

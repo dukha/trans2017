@@ -1,0 +1,149 @@
+<script type="text/javascript">
+//This script  handles showing and hiding selection criteria
+  var criteriaDiv ="#criteria";
+  var criteriaButton = "#showHideCriteria";
+  $().ready(function(){
+    //Initialise the criteria to be hidden on first display
+    $(criteriaDiv).hide(); 
+    $(criteriaButton).html(criteriaHiddenText);
+    
+    if( <%= @delayed_jobs.count==0 %>){
+      toggleCriteria();
+    }
+    
+    $(criteriaButton).click(function(){
+      toggleCriteria();
+    }); //end click
+  });//end ready
+  var   criteriaHiddenText = "<%=t($FA +'show_something', :something=>t($SC))%>";
+  var   criteriaVisibleText = "<%=t($FA +'hide_something', :something=>t($SC))%>";
+  function toggleCriteria(){
+    if($(criteriaDiv).is(':visible')){ 
+        $(criteriaButton).html(criteriaHiddenText);
+    }else{
+        $(criteriaButton).html(criteriaVisibleText);
+    }
+    // toggle has to be after setting button text otherwise is(':visible') will not work properly
+    $(criteriaDiv).slideToggle('slow');  
+  }
+  
+</script>
+<%=theading("listing", :model=>'delayed_job', :count=>11) %>
+<%if DelayedJob.respond_to?( :searchable_attr ) and DelayedJob.searchable_attr.any? then %>
+<div id = 'data-empty' style = 'display:none'><%= @delayed_jobs.empty?.to_s %></div>
+<button id="showHideCriteria" type='button'>x</button>
+<div id='criteria' class="criteria" >
+  <!-- Use form_tag here because we are not going to work with a new AR model. form_tag doesn't work with formtastic either -->
+  <!-- See controller#index doc for how to use this stuff below. 
+    YOU NEED TO ADD METHODS TO MODEL BEFORE THIS PAGE WILL WORK -->
+  <%= form_tag delayed_jobs_path, :method => 'get', :class=>'formtastic' do %>
+    <!--    These next 2 hidden fields needed for sorting from column headers -->
+    <%= hidden_field_tag :direction, params[:direction] %>
+    <%= hidden_field_tag :sort, params[:sort] %>
+    <fieldset class="inputs">
+      <ol>
+     
+      <%if DelayedJob.searchable_attr.include?("priority") %>  
+      <li class="string optional" id="delayed_job_priority_input"><label for="criterionpriority" class="criteria-label" >
+        <%= tlabel("priority", "delayed_job") %> </label>
+           <%=select_tag(  :operator_priority, options_for_select(operators_2_options(equal_operator), params[:operator_priority]),{:include_blank=> true,:class=>'criteria-operators-select', :readonly=>true} ) %> 
+           <!-- The date pikcer here cannot reset itself: once a user chooses a date then the only way of having it not considered it to set it to, say 2000-01-01 and criterion to after
+             Not pretty but whoever makes datepicker doesn't want a reset function as part of it http://jsbin.com/ofare/edit#javascript,html may be a work around -->
+           <%=text_field_tag( :criterion_priority, params[:criterion_priority])%>
+      </li> 
+      <%end #if  attribute in searchable %> 
+     
+      <%if DelayedJob.searchable_attr.include?("attempts") %>  
+      <li class="string optional" id="delayed_job_attempts_input"><label for="criterionattempts" class="criteria-label" >
+        <%= tlabel("attempts", "delayed_job") %> </label>
+           <%=select_tag(  :operator_attempts, options_for_select(operators_2_options(equal_operator), params[:operator_attempts]),{:include_blank=> true,:class=>'criteria-operators-select', :readonly=>true} ) %> 
+           <!-- The date pikcer here cannot reset itself: once a user chooses a date then the only way of having it not considered it to set it to, say 2000-01-01 and criterion to after
+             Not pretty but whoever makes datepicker doesn't want a reset function as part of it http://jsbin.com/ofare/edit#javascript,html may be a work around -->
+           <%=text_field_tag( :criterion_attempts, params[:criterion_attempts])%>
+      </li> 
+      <%end #if  attribute in searchable %> 
+     
+      <%if DelayedJob.searchable_attr.include?("failed_at") %>  
+      <li class="string optional" id="delayed_job_failed_at_input"><label for="criterionfailed_at" class="criteria-label" >
+        <%= tlabel("failed_at", "delayed_job") %> </label>
+           <%=select_tag(  :operator_failed_at, options_for_select(operators_2_options(equal_operator), params[:operator_failed_at]),{:include_blank=> true,:class=>'criteria-operators-select', :readonly=>true} ) %> 
+           <!-- The date pikcer here cannot reset itself: once a user chooses a date then the only way of having it not considered it to set it to, say 2000-01-01 and criterion to after
+             Not pretty but whoever makes datepicker doesn't want a reset function as part of it http://jsbin.com/ofare/edit#javascript,html may be a work around -->
+           <%=text_field_tag( :criterion_failed_at, params[:criterion_failed_at])%>
+      </li> 
+      <%end #if  attribute in searchable %> 
+     
+      <%if DelayedJob.searchable_attr.include?("run_at") %>  
+      <li class="string optional" id="delayed_job_run_at_input"><label for="criterionrun_at" class="criteria-label" >
+        <%= tlabel("run_at", "delayed_job") %> </label>
+           <%=select_tag(  :operator_run_at, options_for_select(operators_2_options(equal_operator), params[:operator_run_at]),{:include_blank=> true,:class=>'criteria-operators-select', :readonly=>true} ) %> 
+           <!-- The date pikcer here cannot reset itself: once a user chooses a date then the only way of having it not considered it to set it to, say 2000-01-01 and criterion to after
+             Not pretty but whoever makes datepicker doesn't want a reset function as part of it http://jsbin.com/ofare/edit#javascript,html may be a work around -->
+           <%=text_field_tag( :criterion_run_at, params[:criterion_run_at])%>
+      </li> 
+      <%end #if  attribute in searchable %> 
+     
+     </ol> 
+   </fieldset>
+      
+      <%= submit_tag "Search", :name => nil %>
+  <%end  #end form_tag do%>
+
+</div>
+<%end # if searchable_attr %>
+
+<% if @delayed_jobs.count == 0 then %>
+  
+<%  else %>
+    <%= twill_paginate %>
+
+    <% if DelayedJob.respond_to? :sortable_attr
+      sortable_cols = DelayedJob.sortable_attr
+    else
+      sortable_cols = []
+    end %>
+
+  <table class="data">
+    <tr class="dataheader">
+       <th class ="dataheader"><%=sortable("last_error","delayed_job", sortable_cols.include?("last_error"))%></th> 
+      
+      <th class ="dataheader"><%=sortable("handler","delayed_job", sortable_cols.include?("handler"))%></th> 
+     
+      <th class ="dataheader"><%=sortable("attempts","delayed_job", sortable_cols.include?("attempts"))%></th> 
+      <th class ="dataheader"><%=sortable("locked_at","delayed_job", sortable_cols.include?("locked_at"))%></th> 
+      <th class ="dataheader"><%=sortable("run_at","delayed_job", sortable_cols.include?("run_at"))%></th> 
+      <th class ="dataheader"><%=sortable("failed_at","delayed_job", sortable_cols.include?("failed_at"))%></th> 
+      <th class ="dataheader"><%=sortable("priority","delayed_job", sortable_cols.include?("priority"))%></th> 
+    
+      
+  
+        <%= link_header 2 %>
+      
+    </tr>
+  
+    
+  <% cell_class = "data" %>
+  <% link_cell_class="link"%>  
+  <% @delayed_jobs.each do |delayed_job| %>
+  
+    <tr class = "<%= cycle('dataeven', 'dataodd') %>" >
+           <td class="<%= cell_class %>"><textarea cols = '40' rows = "10" disabled = 'disabled'><%= delayed_job.last_error%></textarea></td>
+           <td class="<%= cell_class %>"><textarea cols = '40' rows = "10" disabled = 'disabled'><%= delayed_job.handler %></textarea></td>
+            <td class="<%= cell_class %>"><%= delayed_job.attempts %></td>
+            <td class="<%= cell_class %>"><%= display_timestamp(delayed_job.locked_at) %></td>
+            <td class="<%= cell_class %>"><%= display_timestamp(delayed_job.run_at)  %></td>
+            <td class="<%= cell_class %>"><%= display_timestamp(delayed_job.failed_at) %></td>
+            <td class="<%= cell_class %>"><%= delayed_job.priority %></td>
+            
+  
+          <%= link_edit( edit_delayed_job_path(delayed_job), :delayed_jobs  ) %>
+          <%= link_destroy( delayed_job, :delayed_jobs ) %>
+      
+    </tr>
+  <% end #do data %>
+  </table>
+  <%= twill_paginate %>
+
+<br />
+<%end # if else count %>
+

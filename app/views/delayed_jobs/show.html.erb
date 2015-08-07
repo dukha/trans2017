@@ -1,0 +1,26 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b><%= tlabel('priority', '') %>:</b>
+  <%= @delayed_job.priority %>
+</p>
+
+<p>
+  <b><%= tlabel('attempts', '') %>:</b>
+  <%= @delayed_job.attempts %>
+</p>
+
+<p>
+  <b><%= tlabel('failed_at', '') %>:</b>
+  <%= @delayed_job.failed_at %>
+</p>
+
+<p>
+  <b><%= tlabel('run_at', '') %>:</b>
+  <%= @delayed_job.run_at %>
+</p>
+
+
+<%=link_edit('edit', edit_delayed_job_path(@delayed_job)) %> |
+<%= link_back(delayed_jobs_path) %>
+
