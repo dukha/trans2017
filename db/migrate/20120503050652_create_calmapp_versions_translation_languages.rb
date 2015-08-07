@@ -35,7 +35,7 @@ class CreateCalmappVersionsTranslationLanguages < ActiveRecord::Migration
         ON DELETE CASCADE
     SQL
 =end
-  add_index :calmapp_versions_translation_languages, [:calmapp_version_id, :translation_language_id], {:unique=>true, :name=>"iu_calmapp_versions_languages_calmapp_id_lanugage_id" }
+  add_index :calmapp_versions_translation_languages, [:calmapp_version_id, :translation_language_id], {:unique=>true, :name=>"iu_calmapp_versions_id_translation_lanugage_id" }
 
   
   end

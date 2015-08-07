@@ -8,12 +8,12 @@
 
 #this line below shows how to chain the backend so that anything msiing in redis may be found in yaml
 
-#=begin Use this for using yaml as an additional resource on local machine
+=begin Use this for using yaml as an additional resource on local machine
 I18n.backend= I18n::Backend::Chain.new(
    I18n::Backend::KeyValue.new(Redis.new(db: 0, password: Rails.application.secrets.redis_local_pw)),
    I18n.backend
    ) 
-#=end
+=end
 
 =begin This is the local server using redis only for translation
 I18n.backend= I18n::Backend::KeyValue.new(Redis.new(db: 0, password: Rails.application.secrets.redis_local_pw))

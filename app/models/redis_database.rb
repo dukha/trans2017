@@ -7,7 +7,7 @@ class RedisDatabase < ActiveRecord::Base
   attr_reader :pool_connection
   #validates :with => RedisDbValidator2
   #belongs_to :calmapp_version
-  belongs_to :redis_instance
+  belongs_to :redis_instance#, :dependent => :restrict_with_exception
   belongs_to :calmapp_version, inverse_of: :redis_databases
   #belongs_to :calmapp_versions_redis_database
   #has_one :calmapp_versions_redis_database
@@ -72,35 +72,6 @@ class RedisDatabase < ActiveRecord::Base
       []
   end
   
-=begin
-  def save!
-    if new_record?
-      state='new'
-    end
-    super
-    new_record state
-  end
-  def save
-    if new_record?
-      state='new'
-    end
-    result = super
-    new_record state
-  end 
-  def new_record state
-    if state=='new' then
-      redis = connect
-      redis.flushdb
-      temp_redis = Redis.new :db=> 0, :password=> redis_instance.password, :host=> redis_instance.host, :port=> redis_instance.port 
-      temp_redis.set name, redis_db_index
-    end
-  end
-=end
-=begin @deprecated  
-  def delete_calmapp_versions_redis_database
-      calmapp_versions_redis_database.destroy
-  end
-=end  
   def description
     #binding.pry
     #db_name = calmapp_version.description + " / Redis Instance: " + short_name
@@ -112,10 +83,7 @@ class RedisDatabase < ActiveRecord::Base
     db_name = redis_instance.description + 
     ": DB Index: " + redis_db_index.to_s
   end
-  #def name
-    ##end
-  # returns an instance of Redis class
-  # use this singleton for very short transaction. May not be a good idea
+
 =begin 
   def connect
     #binding.pry
@@ -138,7 +106,7 @@ class RedisDatabase < ActiveRecord::Base
     return calmapp_version.language_ids.include? language
   end
 
-  def redis_to_yaml #file
+  def redis_to_yaml 
     redis = Redis.new(:db=>redis_db_index, :host=>redis_instance.host, :port=> redis_instance.port, :password=>redis_instance.password )
     key_array= redis.keys('*')
     container = Hash.new
@@ -427,26 +395,4 @@ class RedisDatabase < ActiveRecord::Base
 =end
 end
 
-
-    #calmapp_version.translation_languages.each{ |tl|
-      #translations  = Translation.join_to_cavs_tls_arr(calmapp_version.id).joins_to_tl_arr.where{tl1.iso_code == tl}
-      #translations.each{ |t|
-        #t.publish_translation(id)         
-      #}
-      
-    #}
-
-
-# == Schema Information
-#
-# Table name: redis_databases
-#
-#  id                 :integer         not null, primary key
-#  calmapp_version_id :integer         not nullinitializes
-#  redis_instance_id  :integer
-#  redis_db_index     :integer         not null
-#  release_status_id  :integer         not null
-#  created_at         :datetime
-#  updated_at         :datetime
-#
 

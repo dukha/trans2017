@@ -1,3 +1,4 @@
+
 <%=theading("listing", :model=>"redis_instance", :count=>10) %>
 <% if RedisInstance.count==0 then %>
   <%=tflash( "no_records_found", :warning)%><br/>

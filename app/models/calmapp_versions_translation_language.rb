@@ -32,16 +32,17 @@ class CalmappVersionsTranslationLanguage < ActiveRecord::Base
   
   # once we have saved a new language then we upload the base file for that translation 
   after_create :base_locale_translations_for_new_translation_languages, :add_this_to_sysadmin_users
-  after_commit :after_commit_on_create, :on => :create
-  #after_update :do_after_update
-  before_destroy :deep_destroy
-
-=begin  
-  def do_after_update
-    binding.pry
-    puts "after translation upload"
+  after_commit :do_after_commit_on_create, :on => :create
+  before_destroy :do_before_destroy
+  
+  
+  def do_before_destroy
+    #CalmappVersionsTranslationLanguage.destroy_dependents(self.id)
+    if translation_language.iso_code != 'en' then
+      #CavstlDestroyDependentsJob.set(:wait=> 2.minutes).perform_later(id)
+      CavstlDestroyDependentsJob.perform_later(id)
+    end
   end 
-=end  
   def self.permitted_for_translators
      #all.load - [TranslationLanguage.TL_EN ]
      en_id = TranslationLanguage.TL_EN.id
@@ -75,8 +76,7 @@ class CalmappVersionsTranslationLanguage < ActiveRecord::Base
  Sysadmin profiled users must have access to all cav_tls for translation purposes 
 =end
   def add_this_to_sysadmin_users
-    #Profile.sysadmin
-    #binding.pry
+    puts "after commit in calmapp_versions_translation_language"
     users = User.includes(:profiles).where(profiles: { name: $SYSADMIN }).all
     users.each do |u|
       if not u.administrator_cavs_tls.include?(self) then
@@ -127,32 +127,99 @@ class CalmappVersionsTranslationLanguage < ActiveRecord::Base
    end # not found
   end # def
   
-  def after_commit_on_create
-    CalmappVersionsTranslationLanguage.add_all_dot_keys_from_en_for_new_translation_language(id)
-  end
-  def self.add_all_dot_keys_from_en_for_new_translation_language(cavtl_id)
-    #after commit on create : add_all_en_dot_keys_for_new_translation_languages
+  def do_after_commit_on_create
+    #self.delay.add_all_dot_keys_from_en_for_new_translation_language # (id)
     #binding.pry
-    cavtl = CalmappVersionsTranslationLanguage.find(cavtl_id)
-    en_trans = Translation.single_lang_translations_arr("en", cavtl.calmapp_version_id).all
-    count =0 
-    en_trans.each do |t|
-      #binding.pry
-      tt = Translation.find(t.id)
-      #new_cavtl = CalmappVersionsTranslationLanguage.create!(  :calmapp_version_id => cavtl.calmapp_version_id, :translation_language_id => cavtl.id)
-      plural_incomplete = nil
-      # because we only put in dot_key_codes, no translations at this point
-      plural_incomplete = true if tt.is_plural?
-      
-      Translation.create!(
-           :dot_key_code => t.dot_key_code, 
-           :cavs_translation_language_id => cavtl.id, 
-           :translation => ActiveSupport::JSON.encode(''),
-           :plural_incomplete => plural_incomplete) unless Translation.where{dot_key_code == my{t.dot_key_code}}.where{cavs_translation_language_id == my{cavtl.id}}.exists?
-      count = count + 1
-      return if count == 3
+    if translation_language.iso_code != 'en' then
+      AddEnKeysForNewLanguageJob.set(:wait=> 2.minutes).perform_later(id)
     end
-    
+  end
+  def add_all_dot_keys_from_en_for_new_translation_language #(cavtl_id)
+    #puts "after commit on create : add_all_en_dot_keys_for_new_translation_languages"
+    msg = "Callback: 'add_all_dot_keys_from_en_for_new_translation_language'. Adding new blank translations after for a new language in " + show_me
+    Rails.logger.info(msg )
+    puts msg
+    #binding.pry
+    begin
+      cavtl = self #CalmappVersionsTranslationLanguage.find(cavtl_id)
+      puts cavtl.to_s
+      en_trans = Translation.single_lang_translations_arr("en", cavtl.calmapp_version_id).all
+      #puts "English keys to be added" 
+      
+      count =0 
+      en_trans.each do |en_t|
+        #if en_t.dot_key_code.include?(".record_invalid") then
+          #binding.pry
+       #end
+        foreign = Translation.where{dot_key_code == my{en_t.dot_key_code}}.where{cavs_translation_language_id == my{cavtl.id}}.first
+        #if cavtl.translation_language.iso_code =='cs' && t.dot_key_code == 'activemodel.errors.format'
+          #binding.pry
+        #end
+        if not foreign.nil?
+          puts "dkc + tl.iso_code +  existing translation" 
+          puts foreign.dot_key_code + " " + foreign.calmapp_versions_translation_language.translation_language.iso_code + " " + foreign.translation.to_s #+ " " + f.translation.class.name
+        end
+        #we must reselect because a query result won't have associations
+        #tt = Translation.find(t.id)
+        #new_cavtl = CalmappVersionsTranslationLanguage.create!(  :calmapp_version_id => cavtl.calmapp_version_id, :translation_language_id => cavtl.id)
+        #exists = where{cavs_translation_language_id == my{cavtl.id}}.where{translation_language_id == my{translation_language.id}}
+        #foreign_blank = ActiveSupport::JSON.encode("")
+        test =  ActiveSupport::JSON.decode(en_t.translation)
+        incomplete = false
+        #if (en_t.dot_key_code.include? ".template.") && (translation_language.iso_code == 'ja')
+          #binding.pry
+        #end
+        if test.is_a? Array
+          length = test.length
+          foreign_blank = ActiveSupport::JSON.encode([length])
+          incomplete = true
+        elsif test.is_a? Hash
+          blank = {}
+          if en_t.special_structure == "plural"
+            #binding.pry
+            plurals = translation_language.plurals
+            plurals.each{ |pl| blank[pl] = ''}
+            #foreign.calmapp_versions_translation_language.translation_language.plurals.each{ |pl| blank[pl]= ''}  
+          else
+            test.keys.each{ |k| blank[k] = '' }
+          end  
+          foreign_blank = ActiveSupport::JSON.encode(blank)
+          incomplete = true
+        else
+          foreign_blank =  ActiveSupport::JSON.encode(foreign_blank)  
+        end    
+        if foreign.nil?
+          new_t = Translation.create!(
+             :dot_key_code => en_t.dot_key_code, 
+             :cavs_translation_language_id => cavtl.id,
+             :translation => foreign_blank, 
+             :incomplete=> incomplete)
+        #elsif foreign.translation.blank?      
+          #updated_t =  foreign.update_attributes!(:translation => en_t.translation) #unless (f.nil? && (not t.blank?))     
+             #:plural_incomplete => plural_incomplete)
+             #puts "New translation = " + new_t.to_s
+         else
+           #en_t.tran blank
+         end     
+         puts "New translation added for dot_key: " + en_t.dot_key_code + " language: " + translation_language.name + " translation: '" + foreign_blank unless new_t.nil?
+         #puts "Updated translation for dot_key: " + t.dot_key_code + " language: " + translation_language.name + " translation: '" + t.translation + "'" unless updated_t.nil?
+         puts ""
+        count = count + 1
+        # debug return if count == 3
+      end # do t
+      msg = "Successful completion of Callback: 'add_all_dot_keys_from_en_for_new_translation_language'. Count = " + count.to_s
+      Rails.logger.info(msg)
+      puts msg
+    rescue StandardError => se
+      msg = "Error in Callback: 'add_all_dot_keys_from_en_for_new_translation_language'."
+      Rails.logger.error(msg)
+      Rails.logger.error(se.message)
+      Rails.logger.error(se.backtrace.join("\n"))
+      puts msg
+      puts se.message
+      puts se.backtrace.join("\n")
+      raise
+    end  
   end
   
   def base_locale_file_name
@@ -166,15 +233,17 @@ class CalmappVersionsTranslationLanguage < ActiveRecord::Base
   def self.find_languages_not_in_version  language_ids_array, version_id
     where{calmapp_version_id == version_id}.where{translation_language_id << language_ids_array}
   end
-  
-  def deep_destroy()
+  def deep_destroy
+     CalmappVersionsTranslationLanguage.destroy_dependents(self.id)
+     delete
+  end
+  def self.destroy_dependents(id)
     #if current_user.role_symbols.include?(:calmapp_versions_translation_languages_deepdestroy)
+      cavtl = CalmappVersionTranslationLanguage.find(id)
       transaction do
-         translations.find_each {|t| t.delete}
-         translations_uploads.find_each{|tl| tl.delete}
-         translators.find_each { |tor| tor.delete}
-         #destroy 
-         delete
+         cavtl.translations.find_each {|t| t.delete}
+         cavtl.translations_uploads.find_each{|tl| tl.delete}
+         cavtl.translators.find_each { |tor| tor.delete}
       end # transaction
     #else
       #raise Exceptions::NoLanguageDeleteAuthorisation.new({version: calmapp_version_tl.name, language: translation_language.full_name})

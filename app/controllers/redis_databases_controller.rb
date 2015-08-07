@@ -111,13 +111,20 @@ class RedisDatabasesController < ApplicationController
   # DELETE /redis_databases/1
   # DELETE /redis_databases/1.xml
   def destroy
-    #@redis_database = RedisDatabase.find(params[:id])
-    @redis_database.destroy
-    tflash('delete', :success, {:model=>@@model, :count=>1})
-    respond_to do |format|
-      format.html { redirect_to(redis_databases_url) }
-      format.js {}
-    end
+    begin
+      @redis_database.destroy
+      tflash('delete', :success, {:model=>@@model, :count=>1})
+      respond_to do |format|
+        format.html { redirect_to(redis_databases_url) }
+        format.js {}
+      end
+    rescue StandardError => e
+      @calmapp_version = nil
+      flash[:error] = e.message
+      respond_to do |format|
+        format.js
+      end
+    end #rescue  
   end
 
   def redis_to_yaml_get_file

@@ -36,14 +36,7 @@
 					  
 					  <div id="flash">
 					    <!--flash baby flash -->
-					    
-    			    <% flash.each do |name, msg| %>
-      			     <%if msg.blank? || msg == true %>
-      			        <%return%> 
-      			     <%else%>
-      			        <%= content_tag :div, msg, :id => "flash_#{name}" %>
-      			    <% end %> 
-      			  <%end%>  
+					    <%=display_flashes()%>   			   
             </div>  
         
 

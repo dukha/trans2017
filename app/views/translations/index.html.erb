@@ -93,17 +93,29 @@
   <thead class="ui-widget-header" style = "color:black">
   <tr class="dataheader">
 
-    
+    <%header_style = "font-size:1.1em;"%>
+    <%width_css = @translations.empty? ? width_style : width_style(@translations[0].attributes["iso_code"])%>
 
     <!--th class ="dataheader" style="display:< %=full_key_display%>;"> <%=tlabel('dot_key_code', 'translation') %></th-->
-    <th class ="dataheader" style="display:<%=wrapped_key_display%>;  width:20%; font-size:1.1em;"><%=tlabel('dot_key_code', 'translation') %></th>
-    <th class ="dataheader"  style= "font-size:1.1em;"><%=tlabel('en_translation', 'translation') %></th>
-    <!--th class ="dataheader" style="display:<%=short_key_display%>;" ><%=tlabel('dot_key_code', 'translation') %></th -->
+    <th class ="dataheader" style="display:<%=wrapped_key_display%>;<%=width_css[:dot_key_code]%><%=header_style%>"><%=tlabel('dot_key_code', 'translation') %></th>
+    <%if not @translations.empty?%>
+      <%if @translations[0].attributes['iso_code'] != 'en' %>
+        <th class ="dataheader"  style= '<%=header_style%><%=width_css[:en_translation]%>'><%=tlabel('en_translation', 'translation') %></th>
+      <%end%>
+      
+    <%end%>
+    
+    <!--th class ="dataheader" style="display:< %=short_key_display%>;" >< %=tlabel('dot_key_code', 'translation') %></th -->
    
-    <th class ="dataheader" style= "font-size:1.1em;"><%= (@translations.empty? ? '' : @translations[0].attributes["language"] + " ") + tlabel('translation', 'translation') %></th>
-     
-    <!--th class="linkheader"></th>
-    <th class="linkheader"></th-->
+    <th class ="dataheader" style= '<%=header_style%><%=width_css[:translation]%>'><%= (@translations.empty? ? '' : @translations[0].attributes["language"] + " ") + tlabel('translation', 'translation') %></th>
+     <th class ="dataheader" style='<%=header_style%><%=width_css[:special_structure]%>';>Plural</td>
+       <th class ="dataheader" style='<%=header_style%><%=width_css[:incomplete]%>';>Incomplete</td>
+    <%if not @translations.empty?%>
+      <%if @translations[0].attributes['iso_code'] == 'en'%> 
+      <th class="linkheader" style = <%=header_style%><%=header_style%><%=width_css[:delete]%>'></th>
+      <%end%>
+    <%end%>
+    <!--th class="linkheader"></th-->
     
   </tr>
 </thead>
@@ -115,15 +127,20 @@
 <tbody class="ui-widget-content">
   <% @translations.each do |trans| %>
   
+     <%translation = Translation.find(trans.id)%>
   <tr class = "<%= cycle('dataeven', 'dataodd') %>"  id = '<%= dom_id(trans)%>'>
-      <td class="<%= cell_class%>" style="word-wrap: break-word;" ><span style="max-width:20px;"><%= trans.dot_key_code %></span></td>
+      <td class="<%= cell_class%>" style="word-wrap: break-word;<%=width_css[:dot_key_code]%>" ><span style="max-width:20px;"><%= trans.dot_key_code %></span></td>
       <!--td class="< %= cell_class %>" style="display:< %=short_key_display%>; ">< %= dot_key_code_last_key(translation.dot_key_code) %></td -->
-      <td class="<%= cell_class%>" style="max-width:40%;word-wrap: break-word;" data-tooltip = "<%=translation_tooltip(trans.attributes)%>"> 
-        <%= format_english(trans.attributes, is_plural?(trans)) %></td>
+      <%if @translations[0].attributes['iso_code'] != 'en'%>
+      <td class="<%= cell_class%>" style="<%=width_css[:en_translation]%>;word-wrap: break-word;" data-tooltip = "<%=translation_tooltip(trans.attributes)%>"> 
+        <%= format_english(trans.attributes) %></td>
+      <%end%>
+      
       <!-- you cannot give this td below a class. It messes up bip -->
-      <td id= '<%(best_in_place?(trans) ? "best_in_place" : "special-editor")%>'  style="max-width:40%;">
+      <td id= '<%(best_in_place?(trans) ? "best_in_place" : "special-editor")%>' class="editor-container" style="<%=width_css[:translation]%>">
         <% if best_in_place?(trans) then%>
           <input id= 'editor-name' type='hidden' value = 'bip'>   
+           <div id = 'local-flash'></div>
            <%options = {:url => translation_path(trans.id),:as=> input_control(trans.attributes),:ok_button=>"Save", 
              :ok_button_class=> "ok", 
              :cancel_button=>"Cancel", :cancel_button_class => "cancel",
@@ -136,10 +153,11 @@
          <%elsif not trans.attributes["editor"] == nil then%>
          <!-- ARRAY ORDER EDITOR -->
           <input id= 'editor-name' type='hidden' value = '<%=trans.attributes["editor"]%>'  >
-          <span id = '<%=trans.dot_key_code%>' class = '<%="special_editor"%>' style = "color: blue; text_decoration: underline;  word-wrap: break-word;"><%= trans.translation%></span>
+           <div id = 'local-flash'></div>
+          <span id = '<%=trans.dot_key_code%>' class = '<%="special_editor"%>' style = "color: blue;   word-wrap: break-word;"><%= trans.translation%></span>
           
-          <%= form_for trans, as: :translation, url: translation_path(trans), method: :patch, remote: true,  html: { class: "edit", id: "edit_translation" } do |f| %>
-             <%=translation_index_form_standard_html1(f)%>
+          <%= form_for translation,  url: translation_path(trans), remote: true,  html: {  method: "post", class: "edit", id: "edit_translation" } do |f| %>
+             <%=translation_index_form_standard_html1(f, trans)%>
              <%if  trans.attributes["editor"] == 'array_order' then %>
                <ul id= 'sortable' style="list-style: none; margin: 3px; padding: 3px;"></ul> 
              <% elsif trans.attributes["editor"] == 'array' || trans.attributes["editor"] == 'array_first_element_null' then%>
@@ -148,22 +166,22 @@
              <%=translation_index_form_standard_html2(f)%>
            <%end %>
          
-         <%elsif is_plural?(trans)%>
+         <%elsif trans.attributes["special_structure"] == Translation::TRANS_PLURAL%>
           <!-- plural editor here -->
            <input id= 'editor-name' type= 'hidden' value = 'plural'  >
-           
+           <div id = 'local-flash'></div>
            <%if not JSON.is_json?(trans.translation)
              hash = {"other"=> trans.translation}
              trans.translation = ActiveSupport::JSON.encode(hash)
            end %>
      
-          <span style="color: blue; text_decoration: underline;  word-wrap: break-word;" class="plural_editor" id="<%=trans.dot_key_code%>"><%=plural_translation_static_text(trans.translation)%></span>
+          <span style="color: blue;   word-wrap: break-word;" class="plural_editor" id="<%=trans.dot_key_code%>"><%=plural_translation_static_text(trans.translation)%></span>
           
-           <%= form_for trans, as: :translation, url: translation_path(trans), method: :patch, remote: true,  html: { class: "edit", id: "edit_translation" } do |f| %>
-           
-           <%=translation_index_form_standard_html1(f)%>
+           <%= form_for(translation, :as=>:translation,  url: translation_path(trans), remote: true, method: "post", html: {  class: "edit", id: "edit_translation" }) do |f| %>
+          
+           <%=translation_index_form_standard_html1(f, trans)%>
                   
-           <%=plural_editing_table(trans)%>
+           <%=plural_editing_table(trans.attributes)%>
            
            <%=translation_index_form_standard_html2(f)%>
            
@@ -173,7 +191,7 @@
            
           <span id = '<%=trans.dot_key_code%>' class = '<%="special_editor " %>' ><%= trans.attributes["translation"]%></span>
            
-          <%= form_for trans, as: :translation, url: translation_path(trans), method: :patch, remote: true,  html: { class: "edit", id: "edit_translation" } do |f| %>
+          <%= form_for translation, url: translation_path(trans),  remote: true,  html: { method: "post", class: "edit", id: "edit_translation" } do |f| %>
           <!--%=       f.text_field(:id, :style => "display:inline") %>
              <%=   f.text_field(:translation) %>
              <%= text_field_tag("editor", value = "not_bip")%>
@@ -190,13 +208,29 @@
          <%end #elsif %>
          
       </td>
-    
-  <!-- <!--td class="< %= link_cell_class %>">< %= tlink_to  'edit', edito_translation_path + '?dot_key_code_no_lang=' +dot_key_code_no_lang(translation.dot_key_code) %></td> -->
-    <!-- <td class="< %= link_cell_class %>">< %= tlink_to 'destroy',  translation , :confirm => 'delete.are_you_sure', :model => "translation", :value=>('Index: '+ translation.dot_key), :method => :delete %></td> -->
+      <td class="<%= cell_class%>" style = "<%=width_css[:special_structure]%>">
+              <%=check_box_tag("translation[plural]",(trans.attributes["special_structure"] == Translation::TRANS_PLURAL),  
+              (trans.attributes["special_structure"] == Translation::TRANS_PLURAL), :disabled=>'disabled')%> 
+     </td>
+      
+        <td class="<%= cell_class%>" style = "<%=width_css[:incomplete]%>">
+        <%if trans.attributes["special_structure"] then%>
+          <%=check_box_tag("translation[special_structure]",trans.attributes["incomplete"],  trans.attributes["incomplete"])%> 
+        <%end%>
+        </td>
+      
+      <!-- %if permitted_to_destroy?(translation, trans.attributes) % -->
+        <%if trans.iso_code == 'en' %>
+         <%=link_destroy(translation, :translations, {:confirm => 'delete.translation.are_you_sure',
+               :dot_key_code => trans.attributes["dot_key_code"], 
+               :english_translation => trans.attributes["en_translation"]}, 'td', {:style => width_css[:delete]}) %>    
+      <%end%>
+  
   </tr>
-  </tbody>
+  
   <!-- >< % i+=1%> -->
 <% end # each trans%>
+
 </table>
 
 <!--div id="special-editor-background" class="special-editor-background" style="display:none; position:absolute;" </div -->

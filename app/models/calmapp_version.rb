@@ -28,18 +28,9 @@ class CalmappVersion < ActiveRecord::Base
   accepts_nested_attributes_for :calmapp_versions_translation_languages, :reject_if => :all_blank, :allow_destroy => true
   has_many :translation_languages , :through => :calmapp_versions_translation_languages
   
-  
-=begin
- def offices_count_valid?
-      offices.reject(&:marked_for_destruction?).count >= OFFICES_COUNT_MIN
-    end 
-=end
-  
-  #validates :calmapp_id, :existence=>true
-  
   # should be after_save, however we can't do this
   #after_update :add_english
-  before_create :add_english, :if => Proc.new { |cav| cav.copied_from_version.blank? }
+  before_create :do_before_create,   :if => Proc.new { |cav| cav.copied_from_version.blank? }
 =begin
 @return a collection of all calmapp names with versions
 =end
@@ -103,20 +94,39 @@ class CalmappVersion < ActiveRecord::Base
   def self.version_select
     joins("join calmapps on calmapp_id = calmapps.id ").order( "calmapps.name asc")
   end
+  def do_before_create
+    #This must becalled before save as it ensures that en is the first language in the list
+    # We don't need to delay this as it is a relatively short process
+    add_english
+  end
   def add_english
     puts "before create in add_english"
-    english = TranslationLanguage.TL_EN #TranslationLanguage.where{iso_code == 'en'}.first
+    english = TranslationLanguage.TL_EN 
     english_id = english.id
-    binding.pry
-    if translation_languages.where{id == my{english_id}}.empty?#bsearch{ |x|   x.id == english_id }
-        #translation_languages <<  english
-        # en must be first in the array for create
-        #translation_languages.unshift(english)
+    #englsih must be first in the array fo translation_languages to be added
+    en_first = false
+   #binding.pry
+    if calmapp_versions_translation_languages.empty?
+      en_first = false
+    elsif  calmapp_versions_translation_languages.first.translation_language.iso_code == english.iso_code
+      en_first = true 
+    end
+    if not en_first then
+        arr = []
+        calmapp_versions_translation_languages.each do |cavtl|
+          arr<< cavtl
+        end
+        calmapp_versions_translation_languages.reset
+        arr.delete_if {|cavtl| cavtl.translation_language_id == english_id}
+        arr.insert(0, CalmappVersionsTranslationLanguage.new(:translation_language_id => english_id))
+        arr.each{ |cavtl|
+          #binding.pry
+          calmapp_versions_translation_languages << cavtl
+        } 
         #binding.pry
-        calmapp_versions_translation_languages << CalmappVersionsTranslationLanguage.new(:translation_language_id => english.id)
         puts "ADDED_EN"
     else
-      "EN   already exxists: not ADDED"
+      "EN   already exxists first in array: not ADDED"
     end
   end
 =begin

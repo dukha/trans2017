@@ -100,12 +100,20 @@ class UsersController < ApplicationController #Devise::RegistrationsController
   end
 
   def destroy
+    begin
     @user.destroy
     tflash('delete', :success, {:model=>@@model, :count=>1, :now=> true})
     respond_to do |format|
       format.html { redirect_to(users_url) }
       format.js {}
     end
+    rescue StandardError => e
+      @user = nil
+      flash[:error] = e.message
+      respond_to do |format|
+        format.js
+      end
+    end #rescue  
   end
   
   protected

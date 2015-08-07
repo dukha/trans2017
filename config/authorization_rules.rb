@@ -18,24 +18,19 @@ authorization do
   def standard_roles aResourceSymbol
     r = (aResourceSymbol.to_s + "_read").to_sym
     role r do
-      #has_permission_on aResourceSymbol, :to => :read
       has_permission_on aResourceSymbol, :to => [:index, :show]
-      #has_permission_on :CalmSessions, :to => [:new, :create, :destroy]
     end
     r = (aResourceSymbol.to_s + "_write").to_sym
     role r do
       has_permission_on aResourceSymbol, :to => [:edit, :update]
-      #has_permission_on :CalmSessions, :to => [:new, :create, :destroy]
     end
     r = (aResourceSymbol.to_s + "_create").to_sym
     role r do
       has_permission_on aResourceSymbol, :to => [:new, :create]
-      #has_permission_on :CalmSessions, :to => [:new, :create, :destroy]
     end
     r = (aResourceSymbol.to_s + "_destroy").to_sym
     role r do
       has_permission_on aResourceSymbol, :to => [:destroy]
-      #has_permission_on :CalmSessions, :to => [:new, :create, :destroy]
     end
   end
 
@@ -61,6 +56,23 @@ authorization do
   standard_roles :users
   standard_roles :profiles
   standard_roles :contacts
+  #standard_roles :delayed_jobs
+  
+  role :delayed_jobs_read  do
+    has_permission_on [:delayed_jobs], :to => [:index, :show]
+  end
+  
+  role :delayed_jobs_write  do
+    has_permission_on [:delayed_jobs], :to => [:edit, :update]
+  end
+  
+  role :delayed_jobs_destroy  do
+    has_permission_on [:delayed_jobs], :to => [:destoy]
+  end
+  
+  role :delayed_jobs_start  do
+    has_permission_on [:delayed_jobs], :to => [:start]
+  end
   
   role :users_read do
     has_permission_on [:users], :to => [:index]

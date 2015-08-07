@@ -22,13 +22,30 @@ class TranslationsController < ApplicationController
     end
   end
   def update
-    respond_to do |format|
-      #binding.pry
-      if @translation.update(translation_params)
+    #binding.pry
+      if params[:editor] == Translation::TRANS_PLURAL
+        my_params = {:translation=> params[:translation_plural]}
+      else
+        my_params = translation_params
+      end
+      begin
+        result = @translation.update(my_params)
+      rescue StandardError =>sd
+        
+        @translation.errors.add(sd.message)
+      end  
+       #c
+       #binding.pry
+      if result
+       #binding.pry
         puts "successful update"
-        format.html { 
-          redirect_to(@translation, :notice => 'Translation was successfully updated.') 
-        }
+        flash.now[:success] = "Successful Update now"
+        flash[:notice] = "Successful Update wait" 
+        #respond_to do |format|
+=begin        
+          format.html { 
+            redirect_to(@translation, :notice => 'Translation was successfully updated.') 
+          }
           format.json { 
             if params["editor"].nil? then
               #binding.pry
@@ -38,13 +55,37 @@ class TranslationsController < ApplicationController
               #render
               render :json => {:result => "ok"}
             end
-         }
+           }
+=end           
+           #format.js
+         #end # do  
       else
+        #binding.pry
+        if not @translation.errors.empty?
+          flash.now[:error] = @translation.errors.message 
+        else 
+          flash.now[:error] = "An error has occurred wihich prevented this translation from going further"  
+        end
         puts "unsuccessful update"
-        format.html { render :action => "edit" }
-        format.json { respond_with_bip(@translation) }
+        #respond_to do |format|
+          #format.html { render :action => "edit" }
+          #format.json { respond_with_bip(@translation) }
+          #format.js
+        #end # do
       end #if update else
-    end #respond
+      #binding.pry
+      respond_to do |format|
+        format.json { 
+            if params["editor"].nil? then
+              #binding.pry
+             respond_with_bip(@translation) 
+            else
+              puts "Data error: params['editor'] is nil" 
+            end
+            }  
+        format.js {}
+      end #respond
+      #render :js => ActiveSupport::JSON.encode("update.js")
   end #def update
 
   def index
@@ -65,8 +106,14 @@ class TranslationsController < ApplicationController
       @translations = Translation.search(current_user, search_info, nil, possible_where_clauses)
       @translations = @translations.each do |t|
         #This will prevent strings appearing in quotes in the user interface
+        
         if JSON.is_json?(t.translation) then
-          decoded = ActiveSupport::JSON.decode(t.translation)
+          #if t.translation.start_with? '{', '['
+           # binding.pry
+            #decoded = t.translation
+         # else
+            decoded = ActiveSupport::JSON.decode(t.translation) #unless t.translation.start_with? '{', '['
+          #end 
         elsif t.translation.nil?
           decoded = "" 
         else
@@ -113,7 +160,7 @@ class TranslationsController < ApplicationController
     respond_to do |format|
       
       format.html # index.html.erb
-      format.xml  { render :xml => @translations }
+      format.js  {}
     end
   end
 =begin
@@ -148,13 +195,24 @@ class TranslationsController < ApplicationController
   def destroy
     
     if @translation.calmapp_versions_translation_language.translation_language.iso_code == 'en' then 
-      @translation.destroy
-       tflash('delete', :success, {:model=>@@model, :count=>1})
-      respond_to do |format|
-        format.html { redirect_to(translation_languages_path) }
-        format.js {}
-      end
-    end
+      binding.pry
+      begin
+        @translation.destroy
+        tflash('delete', :success, {:model=>@@model, :count=>1})
+        respond_to do |format|
+          
+          format.html { redirect_to(translation_languages_path) }
+          format.js {}
+        end
+      rescue StandardError => e
+        puts e.backtrace.join("\n")
+        @translation = nil
+        flash[:error] = e.message
+        respond_to do |format|
+          format.js
+        end
+      end #rescue  
+    end #if
   end
   
   def prepare_mode
@@ -266,7 +324,7 @@ class TranslationsController < ApplicationController
     
     # modify for developers
     def translation_params
-      params.require(:translation).permit(:translation)
+        params.require(:translation).permit(:translation) 
     end  
    
 end

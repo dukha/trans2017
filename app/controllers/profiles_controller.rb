@@ -71,12 +71,19 @@ class ProfilesController < ApplicationController
   # DELETE /profiles/1
   # DELETE /profiles/1.xml
   def destroy
+    begin
     @profile.destroy
-
     respond_to do |format|
       format.html { redirect_to(profiles_url) }
       format.js {}
     end
+    rescue StandardError => e
+      @profile = nil
+      flash[:error] = e.message
+      respond_to do |format|
+        format.js
+      end
+    end #rescue  
   end
   
   private

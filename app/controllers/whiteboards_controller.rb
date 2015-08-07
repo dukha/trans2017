@@ -89,14 +89,21 @@ class WhiteboardsController < ApplicationController
   # DELETE /whiteboards/1
   # DELETE /whiteboards/1.xml
   def destroy
-    #@whiteboard = Whiteboard.find(params[:id])
-    @whiteboard.destroy
-    tflash('delete', :success, {:model=>@@model, :count=>1})
-    respond_to do |format|
-      format.html { redirect_to(whiteboards_url) }
-      format.xml  { head :ok }
-      format.js {}
-    end
+    begin
+      @whiteboard.destroy
+      tflash('delete', :success, {:model=>@@model, :count=>1})
+      respond_to do |format|
+        format.html { redirect_to(whiteboards_url) }
+        format.xml  { head :ok }
+        format.js {}
+      end
+    rescue StandardError => e
+      @whiteboard = nil
+      flash[:error] = e.message
+      respond_to do |format|
+        format.js
+      end
+    end #rescue  
   end
 private
   def whiteboard_params

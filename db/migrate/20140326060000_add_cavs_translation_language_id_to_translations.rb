@@ -5,6 +5,7 @@ class AddCavsTranslationLanguageIdToTranslations < ActiveRecord::Migration
     add_column :translations, :cavs_translation_language_id, :integer, :nullable=>false
     add_index :translations, [:cavs_translation_language_id, :dot_key_code], :unique=> true, :name=> :iu_translations_language_dot_key_code
     add_index :translations, :cavs_translation_language_id, :unique=> false, :name=> :i_translations_language
+    add_index :translations,  :dot_key_code,  :name=> :i_dot_key_code
   end
   
   def down

@@ -81,13 +81,20 @@ class ReleaseStatusesController < ApplicationController
   # DELETE /release_statuses/1
   # DELETE /release_statuses/1.xml
   def destroy
-    #@release_status = ReleaseStatus.find(params[:id])
+    begin
     @release_status.destroy
     tflash('delete', :success, {:model=>@@model})
     respond_to do |format|
       format.html { redirect_to(release_statuses_url) }
       format.js {}
     end
+    rescue StandardError => e
+      @release_status = nil
+      flash[:error] = e.message
+      respond_to do |format|
+        format.js
+      end
+    end #rescue  
   end
   
    private

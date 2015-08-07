@@ -101,9 +101,12 @@ en:
   messages:
     delete:
       are_you_sure: 
-        warning: Deleting %{model}. Are you sure?
+        warning: Deleting %{model}. Are you sure?  
       are_you_sure_value:
         warning: Deleting %{model} with value %{value}. Are you sure?
+      translation:
+        are_you_sure: 
+          warning: "Deleting this English translation('%{english_translation}') will automatically delete ALL translations with the same Dot Key Code: '%{dot_key_code}'. This is major. Are you sure???"    
       deletion_rejected: 
         error: Cannot delete this %{model}. It must have other things depending on it (e.g. cannot delete a venue that has courses)
       success: The %{model} was successfully deleted.

@@ -102,7 +102,8 @@ $().ready(function(){
   
   var englishTranslationSelector = 'input#english';
   var arrayEditingTableSelector = 'table#array-special-editor';
-  var pluralEditingTableSelector = 'table#plural-editor'; 
+  var pluralEditingTableSelector =  'table#plural-editing'; 
+  var containerSelector = 'td.editor-container'; 
 /*
  * Sets each piece of data into a li inside the targetContainer after removing existing
  */    
@@ -138,8 +139,8 @@ $().ready(function(){
   var closeOthers = function(event){
     result = $("button.ok, input#ok-special-editor").filter(":visible");
     $.each(result, function(index, value){
-      td = $(value).parents('td');
-      cancel($(td[0]));
+      td = $(value).closest(containerSelector);
+      cancel($(td));
     });
     return true;
   };
@@ -151,7 +152,7 @@ $().ready(function(){
     $(allSortableUlsSelector).css('display','none'); 
     $(anchorSelector).click(function(event){
        anchor = $(this);
-       containerTd = anchor.parent('td');
+       containerTd = anchor.closest(containerSelector);
        children = getTdChildren(containerTd);
        if(typeof children['editorName'] == 'undefined'){
          // do nothing
@@ -160,7 +161,7 @@ $().ready(function(){
          children['ul'].css("display", "block");
        }else if(children['editorName'] == 'plural'){
            children['table'].css("display", 'table');
-          
+           console.log("end_plural");
        }else if(children['editorName'] == 'array' || children['editorName'] == 'array_first_element_null'){
          setArrayData(children['table'],$.parseJSON(decodeURI(encodeURI(anchor.text()))), children['englishTranslation'] );
          children['table'].css("display", 'table');    
@@ -171,16 +172,16 @@ $().ready(function(){
        children['saveButton'].css("display", 'inline');
        children['cancelButton'].css("display", 'inline'); 
        children['hint'].css("display", 'inline'); 
+    }); //end anchor
+    $('.best_in_place').on("ajax:success", function (event, data, status, xhr) {
+      
+          success($(this).closest('tr').find('#local-flash'));
+          
+     }).on("ajax:error", function(e, xhr, status, error){
+      alert("ajax error from on button");
     });
     
-    $(saveButtonSelector).on('ajax:success', function(event, data, status, xhr) {
-      
-    });
-    $(formSelector).on("ajax:success", function(e, data, status, xhr){
-    }
-    ).on("ajax:error", function(e, xhr, status, error){
-      alert("ajax error from on form");
-    });
+    
     $(saveButtonSelector).click(function(event){
       console.log("in save click");
       return save(event);
@@ -188,12 +189,23 @@ $().ready(function(){
     
     $(cancelButtonSelector).click(function(event){
 
-      return cancel($(this).parents('td')[0]);
+      return cancel($(this).closest(containerSelector));
     });  
 
   }); //end ready
   
-  
+  function success(object){
+      object.html('Sweet').css("background-color", 'palegreen');
+      timer(object);
+  }
+  function error(object){
+    object.html('Update Failure').css("background-color", 'pink'); 
+    timer(object);
+  }
+  function timer(object){
+    timeoutID = window.setTimeout(function(){object.empty();},10000);
+  }
+    
   var save = function(event){
     containerTd = parentTd(event);
     children = getTdChildren(containerTd);
@@ -215,13 +227,16 @@ $().ready(function(){
        });
        object = array;   
     }else if(children['editorName'] == 'plural'){
-       hash = {};
+       //hash = {};
        rows = children.table.find('tr');
        $.each(rows, function(index, value){
           tds = $(value).find('td');
           key = $(tds[0]).html();
-          input = $(tds[1]).find('input');
-          val = $(input).val();
+          trans_object = $(tds[1]).find('textarea');
+          if(trans_object == null){
+            trans_object = $(tds[1]).find('input');
+          } 
+          val = $(trans_object).val();
           hash[key] = val;
        });
        object = hash;             
@@ -249,15 +264,14 @@ $().ready(function(){
          $(children["table"]).empty();
        }
     }else if(children['editorName'] == 'plural'){
-
       console.log(children['originalTranslation']);
-      hash = JSON.parse(originalTranslation.val());
+      hash = JSON.parse(children['originalTranslation'].val());
        rows = children.table.find('tr');
        $.each(rows, function(index, value){
          tds = $(value).find('td');
          key = $(tds[0]).html();
-         input = $(tds[1]).find('input');
-         $(input).val(hash[key]);
+         textarea = $(tds[1]).find('textarea');
+         $(textarea).val(hash[key]);
       });
     }else{
       
@@ -266,7 +280,7 @@ $().ready(function(){
   };
   
   var parentTd = function(event){
-    return $(event.target).parents('td')[0];
+    return $(event.target).closest(containerSelector)[0];
   };
   
   var restoreTd = function(td){
@@ -319,7 +333,7 @@ $().ready(function(){
     if(editorName == 'array_order' ){
       ul = td.find(sortableUlSelector);
     }else if(editorName == 'array'){
-      table = td.find(arrayEditingTableSelector);
+      table = td.find(arrayEditingTableSelector); 
     }else if(editorName == 'array_first_element_null'){
       table = td.find(arrayEditingTableSelector);
     }else if(editorName == 'decimal_format'){

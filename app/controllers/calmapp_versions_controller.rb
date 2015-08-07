@@ -104,13 +104,20 @@ class CalmappVersionsController < ApplicationController
   # DELETE /calmapp_versions/1.xml
   def destroy
     #set_calmapp_version
-    @calmapp_version.destroy
-
-    respond_to do |format|
-      tflash('delete', :success, {:model=>@@model, :count=>1})
-      format.html { redirect_to(calmapp_versions_url) }
-      format.js {}
-    end
+    begin
+      @calmapp_version.destroy
+      respond_to do |format|
+        tflash('delete', :success, {:model=>@@model, :count=>1})
+        format.html { redirect_to(calmapp_versions_url) }
+        format.js {}
+      end
+    rescue StandardError => e
+      @calmapp_version = nil
+      flash[:error] = e.message
+      respond_to do |format|
+        format.js
+      end
+    end #rescue  
   end
 
 

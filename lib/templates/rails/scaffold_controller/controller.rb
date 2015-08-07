@@ -17,7 +17,7 @@ class <%= controller_class_name %>Controller < ApplicationController
   # Comment out the next 2 lines if not using authentication and authorisation
   before_filter :authenticate_user!
   filter_access_to :all
-
+  before_action :set_<%= singular_table_name %>, only: [ :edit, :update, :destroy, :show]
   @@model ="<%= singular_table_name %>"
 
   # GET <%= route_url %>
@@ -126,6 +126,25 @@ end
     @<%= orm_instance.destroy %>
     
     redirect_to <%= index_helper %>_url, notice: <%= "'#{human_name} was successfully destroyed.'" %>
+    begin
+      @<%= orm_instance.destroy %>.destroy
+      respond_to do |format|
+        tflash('delete', :success, {:model=>@@model, :count=>1})
+        format.html { redirect_to(<%= plural_table_name %>_url) }
+        format.js {}
+      end 
+    rescue StandardError => e
+      @contact = nil
+      flash[:error] = e.message
+      respond_to do |format|
+        format.js
+      end
+    end #rescue 
+  
+  
+  
+  
+  
   end
 
   private

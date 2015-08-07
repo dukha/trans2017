@@ -83,18 +83,19 @@ class CalmappsController < ApplicationController
   def destroy
     begin
       @calmapp.destroy
-      #tflash('delete', :success, {:model=>@@model, :count=>1})
+      tflash('delete', :success, {:model=>@@model, :count=>1})
       respond_to do |format|
         tflash('delete', :success, {:model=>@@model, :count=>1})
         format.html { redirect_to(calmapps_url) }
         format.js {}
       end 
-    rescue ActiveRecord::DeleteRestrictionError => e
-      # We need to do this here as an calmapp cannot be deleted whilst it has dependent versions
-      @calmapp.errors.add(:base, e)
-      #redirect_to calmapps_path
-      render :action=> "index"
-    end
+    rescue StandardError => e
+      @calmapp = nil
+      flash[:error] = e.message
+      respond_to do |format|
+        format.js
+      end
+    end #rescue  
   end
 
   # rails 4 Strong Params needs this: Not tested yet

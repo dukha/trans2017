@@ -118,12 +118,19 @@ end
 
   # DELETE /dot_key_code_translation_editors/1
   def destroy
-    @dot_key_code_translation_editor.destroy
-    
+    begin
+    @dot_key_code_translation_editor.destroy   
     respond_to{ |format|
       format.html {redirect_to dot_key_code_translation_editors_url, notice: ' translation editor param was successfully destroyed.'}
       format.js {}
     }
+    rescue StandardError => e
+      @dot_key_code_translation_editor = nil
+      flash[:error] = e.message
+      respond_to do |format|
+        format.js
+      end
+    end #rescue  
   end
 
   private

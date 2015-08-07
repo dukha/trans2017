@@ -82,14 +82,20 @@ class LanguagesController < ApplicationController
   # DELETE /languages/1
   # DELETE /languages/1.xml
   def destroy
-    #@language = Language.find(params[:id])
-    #set_language
-    @language.destroy
-     tflash('delete', :success, {:model=>@@model, :count=>1})
-    respond_to do |format|
-      format.html { redirect_to(languages_url) }
-      format.js {}
-    end
+    begin
+      @language.destroy
+       tflash('delete', :success, {:model=>@@model, :count=>1})
+      respond_to do |format|
+        format.html { redirect_to(languages_url) }
+        format.js {}
+      end
+    rescue StandardError => e
+      @language = nil
+      flash[:error] = e.message
+      respond_to do |format|
+        format.js
+      end
+    end #rescue  
   end
 =begin
   From anywhere in the application the user can change language

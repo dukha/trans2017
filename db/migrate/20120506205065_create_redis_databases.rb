@@ -7,7 +7,7 @@ class CreateRedisDatabases < ActiveRecord::Migration
       t.references  :release_status, :null=>false
       t.timestamps
   end
-  
+=begin  
   execute <<-SQL
        Alter table redis_databases
         drop constraint  IF EXISTS  fk_redis_databases_redis_instances
@@ -46,7 +46,7 @@ class CreateRedisDatabases < ActiveRecord::Migration
         REFERENCES release_statuses(id)
         ON DELETE RESTRICT
     SQL
-    
+=end    
   end
 
   def down

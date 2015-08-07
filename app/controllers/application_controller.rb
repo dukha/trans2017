@@ -34,6 +34,13 @@ class ApplicationController < ActionController::Base
 
       render :action => (exception.record.new_record? ? :new : :edit)
   end
+=begin  
+  rescue_from ActiveRecord::DeleteRestrictionError do |exception|
+    binding.pry
+    flash.now[:error] = exception.message
+    redirect_to(:back, :error => exception.message)
+  end
+=end
   #Rescuing a violation of DB unique constraint
 =begin
   rescue_from ActiveRecord::RecordNotUnique do |not_unique|

@@ -7,6 +7,7 @@ class Contact < ActiveRecord::Base
   after_create :mail_to_admins
   
   def mail_to_admins
+    #@todo
     puts "mail_to_admins"
   end
 end

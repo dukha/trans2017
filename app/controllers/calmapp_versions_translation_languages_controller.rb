@@ -117,12 +117,20 @@ class CalmappVersionsTranslationLanguagesController < ApplicationController
   # DELETE /calmapp_versions_translation_languages/1
   # DELETE /calmapp_versions_translation_languages/1.json
   def destroy
-    @calmapp_versions_translation_language.destroy
-    respond_to do |format|
-      format.html { redirect_to calmapp_versions_translation_languages_url }
-      format.json { head :no_content }
-      format.js {}
-    end  
+    begin 
+      @calmapp_versions_translation_language.destroy
+      respond_to do |format|
+        format.html { redirect_to calmapp_versions_translation_languages_url }
+        format.json { head :no_content }
+        format.js {}
+      end  
+    rescue StandardError => e
+      @calmapp_versions_translation_language = nil
+      flash[:error] = e.message
+      respond_to do |format|
+        format.js
+      end
+    end #rescue  
   end
   
   def deep_destroy

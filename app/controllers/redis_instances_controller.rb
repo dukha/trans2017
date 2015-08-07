@@ -83,12 +83,23 @@ class RedisInstancesController < ApplicationController
   # DELETE /redis_instances/1
   # DELETE /redis_instances/1.xml
   def destroy
-    @redis_instance.destroy
-    tflash('delete', :success, {:model=>@@model, :count=>1})
-    respond_to do |format|
-      format.html { redirect_to(redis_instances_url) }
-      format.js {}
-    end
+    begin
+      #binding.pry  
+      @redis_instance.destroy
+      tflash('delete', :success, {:model=>@@model, :count=>1})
+      respond_to do |format|
+        #binding.pry
+        format.html { redirect_to(redis_instances_url) }
+        format.js {}
+      end
+    rescue StandardError => e
+      #binding.pry
+      @redis_instance = nil
+      flash[:error] = e.message
+      respond_to do |format|
+        format.js
+      end
+    end  
   end
 
   def unused_redis_database_indexes

@@ -58,6 +58,29 @@ gem "redis" #, :git => "git://github.com/ezmobius/redis-rb.git"
 #gem "bunny"
 # runs long running jobs in background
 gem 'delayed_job_active_record'
+=begin
+Delayed job needs daemons to run jobs in production
+RAILS_ENV=production script/delayed_job start
+RAILS_ENV=production script/delayed_job stop
+
+# Runs two workers in separate processes.
+RAILS_ENV=production script/delayed_job -n 2 start
+RAILS_ENV=production script/delayed_job stop
+
+# Set the --queue or --queues option to work from a particular queue.
+RAILS_ENV=production script/delayed_job --queue=tracking start
+RAILS_ENV=production script/delayed_job --queues=mailers,tasks start
+
+# Use the --pool option to specify a worker pool. You can use this option multiple times to start different numbers of workers for different queues.
+# The following command will start 1 worker for the tracking queue,
+# 2 workers for the mailers and tasks queues, and 2 workers for any jobs:
+RAILS_ENV=production script/delayed_job --pool=tracking --pool=mailers,tasks:2 --pool=*:2 start
+
+# Runs all available jobs and then exits
+RAILS_ENV=production script/delayed_job start --exit-on-complete
+# or to run in the foreground
+RAILS_ENV=production script/delayed_job run --exit-on-complete
+=end
 gem 'daemons'
 
 gem 'execjs'
@@ -84,7 +107,7 @@ gem 'rails-i18n', '~>4.0.0'
 #gem 'log4r', :git => "git://github.com/colbygk/log4r"
 gem 'logging'
 # allows for easy showing of flash even for ajax requests
-gem 'unobtrusive_flash', '~>3'
+#gem 'unobtrusive_flash', '~>3'
 # needed for rails 4.2 apparently
 gem 'responders', '~> 2.0'
 # allows a connection pool for redis. Not sure if needed
@@ -117,6 +140,7 @@ group :development, :test do
   gem 'pry-rails'
   gem 'pry-doc'
   gem 'pry-nav'
+  # Use show-stack to see stack. use up and down to traverse the stack
   gem 'pry-stack_explorer'
   # generate test data
   gem 'factory_girl_rails', '~> 4.4.0'
@@ -127,7 +151,7 @@ end # end group dev, test
   gem 'sass-rails', '~>5.0.0' #:git=> "git://github.com/rails/sass-rails"#, " ~> 3.2.5"
   #gem 'coffee-rails', '~>4.0.0'#, "~> 3.2.1"
   gem 'uglifier','~>2.2.1'
-  gem 'web-console', '~> 2.0'
+  
 
 group :test do
   gem 'shoulda-matchers'#, '~>2.6.0'
@@ -142,4 +166,5 @@ group :development do
   gem 'capistrano-rails', '~> 1.1', require: false
   gem 'capistrano-bundler', '~> 1.1', require: false
   gem 'rvm1-capistrano3', require: false
+  gem 'web-console', '~> 2.0'
 end

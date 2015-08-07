@@ -25,7 +25,7 @@
 class RedisInstance < ActiveRecord::Base
   
   include Validations
-  has_many :redis_databases
+  has_many :redis_databases, :dependent => :restrict_with_exception
   
   
   validates :host,:presence=>true
@@ -114,16 +114,4 @@ class RedisInstance < ActiveRecord::Base
     end
 end
 
-
-
-
-# == Schema Information
-#
-# Table name: redis_instances
-#
-#  id       :integer         not null, primary key
-#  host     :string(255)     not null
-#  port     :integer         not null
-#  password :string(255)     not null
-#
 

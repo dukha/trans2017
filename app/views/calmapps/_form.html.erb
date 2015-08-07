@@ -1,34 +1,34 @@
 <%= semantic_form_for(@calmapp) do |f| %>
 	<%= f.inputs do %>
     <%= f.input :name %> 
-            <li id='development-jobs-list'>   
+            <!-- li id='development-jobs-list' >   
               
-              <%=f.label t($ARA + "calmapp.developers"), {:style=>"width:25%;"}%>
-               <%calmapp_developer_cb_count = 0%>
-               <% calmapp_developer_cbs_per_row = 4%>
+              <!--%=f.label t($ARA + "calmapp.developers"), {:style=>"width:25%;"}%>
+               < !--%calmapp_developer_cb_count = 0%>
+               < % calmapp_developer_cbs_per_row = 4%>
                <table style = 'margin-left:25%;'> 
                  <!--%binding.pry% --> 
-               <%=f.collection_check_boxes( :developer_ids, User.developers, :id, :actual_name ) do |b| %>
-           <%if calmapp_developer_cb_count%calmapp_developer_cbs_per_row == 0 && calmapp_developer_cb_count != 0%>
+               <!--%=f.collection_check_boxes( :developer_ids, User.developers, :id, :actual_name ) do |b| %>
+           < %if calmapp_developer_cb_count%calmapp_developer_cbs_per_row == 0 && calmapp_developer_cb_count != 0%>
              </tr>
-           <%end%>
-           <%if calmapp_developer_cb_count%calmapp_developer_cbs_per_row == 0%>
+           < %end%>
+           < %if calmapp_developer_cb_count%calmapp_developer_cbs_per_row == 0%>
              <tr class = 'multi-checkboxes'>
-           <%end%>
-            <td class = 'multi-checkbox'>
-              <%=  b.label(:"data-value" => b.value, :style=>"width:auto; padding-right:5px" ) { 
+           < %end%>
+            < td class = 'multi-checkbox'>
+              < % =  b.label(:"data-value" => b.value, :style=>"width:auto; padding-right:5px" ) { 
                     b.check_box + b.text
                   }
                %>
-              <%calmapp_developer_cb_count += 1%>
+              < %calmapp_developer_cb_count += 1%>
             </td>    
-         <%end%>
-         <%if calmapp_developer_cb_count%calmapp_developer_cbs_per_row != 0%>
+         < %end%>
+         < %if calmapp_developer_cb_count%calmapp_developer_cbs_per_row != 0%>
              </tr>
-         <%end%>
+         < %end%>
         </table>
-        <p class="inline-hints"><%= t($FH + "calmapp.developers") %></p>
-      </li>  
+        <p class="inline-hints">< %= t($FH + "calmapp.developers") %></p>
+      </li -->  
        <p class= "nesting-heading"><%=t($ARM + "calmapp_version", :count=>3)%></p>
        <%= f.semantic_fields_for :calmapp_versions do |cav| %>         
          <%= render :partial=>'calmapp_versions/calmapp_version_simple_details', :locals=>{:f=> cav}  %>            

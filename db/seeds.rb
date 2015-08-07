@@ -1,4 +1,6 @@
 log=Logger.new(STDOUT)
+DelayedJob.delete_all
+Contact.delete_all
 UserProfile.delete_all
 CavsTlTranslator.delete_all
 CavsTlDeveloper.delete_all

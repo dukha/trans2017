@@ -58,7 +58,7 @@ module ButtonLinkHelper
   # link_destroy course_type, :course_types
   # <td class='link'><a href="/de/course_types/31" data-confirm="Sind Sie sicher?" data-method="delete" rel="nofollow">Löschen</a></td>
   # Usage in dropdown menu : <%=link_destroy(course, :courses, {:category=>'menu'}, 'li') %> 
-  def link_destroy obj, resource, options={}, html_container='td'
+  def link_destroy obj, resource, options={},  html_container='td', html_container_options = {}
     #binding.pry
     html = " "
     #binding.pry
@@ -86,23 +86,34 @@ module ButtonLinkHelper
       end
       options[:method] = :delete   
       options[:navigate] = false
-      #binding.pry
+     
       a= tlink_to("destroy", obj, options) 
-
-      html = wrap_in_html_container(a, html_container, 'link')
+      if html_container_options[:class] == nil
+         html_container_options[:class] = 'link'
+      end
+      html = wrap_in_html_container(a, html_container, html_container_options)
     end
     html.html_safe
   end
 
   # wrap html in e.g. <td> tags. if container empty then do not wrap
-  def wrap_in_html_container html, container, klass='link'
+  def wrap_in_html_container html, container, html_container_options = {}
     if container.empty?
       html
     else
-      "<" + container + " class='" + klass +"'>" +html +"</" +container +">"
+      "<" + container + html_options_to_s(html_container_options) + ">" + html + "</" +container + ">"
     end
   end
-
+  
+  def html_options_to_s options
+    keys = options.keys
+    html = ''
+    #binding.pry
+    keys.each do |k|
+      html = html + " " + k.to_s + " = '" + (options[k].nil? ? '': (options[k] + "'"))
+    end
+    return html
+  end 
   def link_show(url, resource, options= {})
      html = " "
     if options[:model].nil? then
@@ -165,7 +176,7 @@ module ButtonLinkHelper
         model= singular_table_name_from( resource).pluralize  
       end
       a = link_to(tmenu(model_plural), eval(model_plural + "_path"), options) 
-      html = wrap_in_html_container a, 'li', 'menuItem'
+      html = wrap_in_html_container a, 'li', :class => 'menuItem'
     end
     #ebugger
     return html.html_safe

@@ -33,7 +33,7 @@ ActiveRecord::Schema.define(version: 20150621235055) do
     t.datetime "updated_at"
   end
 
-  add_index "calmapp_versions_translation_languages", ["calmapp_version_id", "translation_language_id"], name: "iu_calmapp_versions_languages_calmapp_id_lanugage_id", unique: true, using: :btree
+  add_index "calmapp_versions_translation_languages", ["calmapp_version_id", "translation_language_id"], name: "iu_calmapp_versions_id_translation_lanugage_id", unique: true, using: :btree
 
   create_table "calmapps", force: :cascade do |t|
     t.string   "name",       null: false
@@ -179,13 +179,16 @@ ActiveRecord::Schema.define(version: 20150621235055) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "cavs_translation_language_id"
-    t.boolean  "plural"
-    t.boolean  "plural_incomplete",            default: false
+    t.string   "special_structure"
+    t.boolean  "incomplete",                   default: false
   end
 
   add_index "translations", ["cavs_translation_language_id", "dot_key_code"], name: "iu_translations_language_dot_key_code", unique: true, using: :btree
   add_index "translations", ["cavs_translation_language_id"], name: "i_translations_language", using: :btree
+  add_index "translations", ["dot_key_code"], name: "i_dot_key_code", using: :btree
   add_index "translations", ["dot_key_code"], name: "i_translations_dot_key_code", using: :btree
+  add_index "translations", ["incomplete"], name: "i_incomplete", using: :btree
+  add_index "translations", ["special_structure"], name: "i_special_structure", using: :btree
 
   create_table "translations_uploads", force: :cascade do |t|
     t.string   "description"
@@ -249,6 +252,7 @@ ActiveRecord::Schema.define(version: 20150621235055) do
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
   add_index "users", ["invitation_token"], name: "index_users_on_invitation_token", unique: true, using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
+  add_index "users", ["username"], name: "iu_username", unique: true, using: :btree
 
   create_table "whiteboard_types", force: :cascade do |t|
     t.string   "name_english"
@@ -267,6 +271,5 @@ ActiveRecord::Schema.define(version: 20150621235055) do
   add_index "whiteboards", ["whiteboard_type_id"], name: "iu_whiteboards_whiteboard_type", unique: true, using: :btree
 
   add_foreign_key "calmapp_versions", "calmapps", name: "fk_calmapp_versions_calmapps", on_delete: :restrict
-  add_foreign_key "redis_databases", "redis_instances", name: "fk_redis_databases_redis_instances", on_delete: :restrict
   add_foreign_key "whiteboards", "whiteboard_types", name: "fk_whiteboards_whiteboard_types", on_delete: :cascade
 end

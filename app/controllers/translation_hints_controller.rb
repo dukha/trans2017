@@ -53,9 +53,17 @@ class TranslationHintsController < ApplicationController
   end
 
   def destroy
-    @translation_hint.destroy
-    #respond_with(@translation_hint)
-    redirect_to(:action=>:index)
+    begin
+      @translation_hint.destroy
+      #respond_with(@translation_hint)
+      #redirect_to(:action=>:index)
+    rescue StandardError => e
+      @calmapp_version = nil
+      flash[:error] = e.message
+      respond_to do |format|
+        format.js
+      end
+    end #rescue  
   end
 
   private

@@ -204,6 +204,7 @@ en:
     translations: Translations
     translator_index: Translate in Table
     profiles: Profiles
+    delayed_jobs: Delayed Jobs
     #translation_uploads: Translation Uploads
     #translation_file_lines: English Translation
     calmapps: Applications
@@ -227,8 +228,9 @@ en:
     new_invitation: New User Invitation
     versions_languages: Versions and Languages
     version_publish: Publish Application Version
-    admin: Translation Admin
+    translation_admin: Translation Admin
     user_admin: User Admin
+    application_admin: Application Admin
     new_model: New %{model}
     contact_us: Contact Us
     current_contacts: Current Contacts
@@ -271,6 +273,9 @@ en:
       calmapp_versions_translation_language:
         one: Version with Translation Language
         other: Version with Translation Languages
+      delayed_job:
+        one: Delayed Job
+        other: Delayed Jobs  
       language:
         one: Translator Application Language
         other: Translator Application Languages
@@ -319,6 +324,15 @@ en:
       translation_parameter:
         language_id: Language
         redis_database_id: Redis Database
+      delayed_job:
+        handler: Job Handler
+        last_error: Last Error
+        attempts: Attempts
+        run_at: Time Run
+        locked_at: Time Locked
+        failed_at: Time Failed
+        priority: Priority
+        Queue: Queue Name   
       dot_key_code_translation_editor:
         editor: Editor
         dot_key_code: Code
@@ -470,11 +484,11 @@ en:
       warning: "Failed to create '%{code}'  in redis. "
     base_locale_file_not_found:
       warning: "The file '%{file_name}' does not exist in '%{folder}'. Someone will have to fill in about 160 more translations if you can't find this file. You can also copy and rename a file from a close locale. e.g. copy zh-CN.yml renaming to zh-MY.yml for Malaysian Chinese. You can also look for it at %{fuchs}."   
-    are_you_sure:
-        all_translations_also_deleted:
-          warning: |
-            Are you sure that you want to delete this file from the database?
-            All translations in this file will also be deleted (from the database).
+    #are_you_sure:
+        #all_translations_also_deleted:
+          #warning: |
+            #Are you sure that you want to delete this file from the database?
+            #All translations in this file will also be deleted (from the database).
     #yaml_upload_content_type: 
       #error: "'%{yu}' is not the correct file type (Must be 'x-yaml', having '.yml' suffix)"
     declarative_authorization:

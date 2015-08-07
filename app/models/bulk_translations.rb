@@ -2,20 +2,6 @@
  This class is an overflow class for writing bulk translations (from files) Translation   
 =end
 class BulkTranslations
-  
-  
-=begin
-  @param a calmapp_version_translation_language_instance  
-  @return all english translations for the version 
-  @deprecated
-  def self.english_translations calmapp_versions_translation_language
-    cav_id = calmapp_versions_translation_language.calmapp_version_id
-    CalmappVersionsTranslationLanguage.where{ calmapp_version_id == cav_id}.
-       where{translation_language_id == TranslationLanguage.TL_EN.id}.first.translations
-  end
-=end 
-
- 
 =begin
  plural forms come in arrays like ['one', 'other'] or ['one', 'few', 'many', 'other']
  Given a dot key code which is identified adot_key_code ilikes a plural, this method will save all appropriate plurals
@@ -25,28 +11,38 @@ class BulkTranslations
  @param cavtl The relevant calmapp_version_translation_language object for this dot key  
  @return array with saved plurals
 =end  
-  def self.save_new_plurals(plural_keys, dot_key_code, cavtl, plurals, translation = nil)
+  def self.save_new_plurals(plural_keys, dot_key_code, cavtl, plurals, translation = nil, incomplete = false)
    # this array will have its last element overridden in each iteration of plurals.each
+   #binding.pry
    dot_key_code_array = dot_key_code.split('.')
    # We now have to check if the dot_key_code without the plural is in the 'en' translation
    ret_val = []
-   
+=begin   
+   This code moved to Translation#create_plural_template 
    translation_hash = {}
    plural_keys.each do |k|
      translation_hash[k]=''
    end #each
    translation_json = translation_hash.to_json
+=end
+   translation_json = Translation.create_plural_template(plural_keys)
    dkc = nil
+   binding.pry
    if CldrType.PLURALS.include?(dot_key_code_array.last) then
+     # in this case the plural has been mistakenly added to the dot_key_code array
      dot_key_code_array = dot_key_code_array[0..(dot_key_code_array.length-2)]
      dkc = dot_key_code_array.join('.')
    else
      dkc = dot_key_code_array.join('.')
    end #include
    # Check that translations do not already exist
+   special_structure = nil
+   if cavtl.translation_language.iso_code == 'en'
+     special_structure = Translation::TRANS_PLURAL
+   end
    t = Translation.where{cavs_translation_language_id == my{cavtl.id}}.where{dot_key_code = my{dkc}}
    if t.nil? then
-     ret_val << Translation.new(:dot_key_code => dkc, :cavs_translation_language_id => cavtl.id, :translation => translation_json )
+     ret_val << Translation.new(:dot_key_code => dkc, :cavs_translation_language_id => cavtl.id, :translation => translation_json, :incomplete => incomplete, :special_structure => special_structure )
    else  
      begin
        JSON.parse t.translation
@@ -80,7 +76,7 @@ class BulkTranslations
  @param dot_key_code_split_array thet = Translation.new(:dot_key_code => new_dot_key_code, :cavs_translation_language_id => cavtl.id, :translation => translation, :plural => plurals[dot_key_code]) dot_key_code that was found (in array form) to be modified by a new plural form in this method
  @param cavtl The relevant calmapp_version_translation_language object for this dot key
  Should be now deprecated
-=end  
+
   def self.save_one_new_plural(plural_key, dot_key_code_split_array, cavtl, plurals, translation = nil)
     ret_val = nil
     if plural_key != '' then
@@ -124,6 +120,7 @@ class BulkTranslations
     end # not exists? 
     return ret_val 
   end
+=end  
   
 =begin
  After a yaml translation file is uploaded this method writes the translation to the db
@@ -134,7 +131,7 @@ class BulkTranslations
  @return the written translation
 =end  
   def self.translations_to_db_from_file hash, translation_upload_id, calmapp_versions_translation_language, overwrite, plurals
-    
+    #binding.pry
     keys =  hash.keys
     puts "Number of keys in hash to be written " + keys.count.to_s
     count=0
@@ -142,7 +139,11 @@ class BulkTranslations
     language = calmapp_versions_translation_language.translation_language.iso_code
     plural_same_as_en = calmapp_versions_translation_language.translation_language.plurals_same_as_en?()
     previous_translation = nil
+    
     keys.each do |k|
+      if (k.include?(".header")) && (calmapp_versions_translation_language.translation_language.iso_code == 'ja')
+        binding.pry
+      end
       translation = translation_to_db_from_file(k, hash[k], translation_upload_id, calmapp_versions_translation_language, plural_same_as_en, overwrite, plurals)    
       if translation.nil? then
         
@@ -192,43 +193,98 @@ class BulkTranslations
   In the case of plurals, there must be a PARTIAL dot_key_code in en
 =end
   def self.translation_to_db_from_file key, translation,translations_upload_id, calmapp_versions_translation_language, plural_same_as_en, overwrite, plurals
+    #binding.pry
     split_hash= split_full_dot_key_code key
     language = calmapp_versions_translation_language.translation_language.iso_code
     dkc = split_hash[:dot_key_code]
-    
+    is_plural = false
+    is_partially_written_plural = false
     msg_data = trans_msg_data(translation, language, dkc)
     
     en_translation_exists = nil
     if language != 'en' then 
+      puts "lang is not en"
       en_translation_exists = english_translation_exists(calmapp_versions_translation_language, dkc)
       if en_translation_exists
+       
         msg = "English translation exists for " + msg_data
       else
-        msg = "English translation DOES NOT exists for " + msg_data + ' Cannot write translation unless English (en) translation exists'  
-      end  
+        plurals = calmapp_versions_translation_language.translation_language.plurals
+        binding.pry
+        split_dkc = dkc.split('.')
+        test_dkc = split_dkc[0..split_dkc.length-2].join('.')
+        if plurals.include?(split_dkc.last) && english_translation_exists(calmapp_versions_translation_language, test_dkc)
+          #We have a plural that has nothing written to the db yet
+           dkc = test_dkc
+           msg_data = trans_msg_data(translation, language, dkc)
+           msg = "English translation exists for " + msg_data
+           is_plural = true
+           is_partially_written_plural = false
+           
+           plurals.delete(split_dkc.last)
+           plurals_hash = { split_dkc.last => translation}
+           plurals.each{|p| plurals_hash[p] = '' }
+           translation = ActiveSupport::JSON.encode(plurals_hash)
+        else
+          msg = "English translation DOES NOT exists for " + msg_data + ' Cannot write translation unless English (en) translation exists'
+        end #check plurals    
+      end # en exists 
       Rails.logger.info msg
       return unless en_translation_exists
     end
 
     if not plural_same_as_en then
+      puts "plural not same as en"
       plural_keys = calmapp_versions_translation_language.translation_language.plurals_array 
     else
       plural_keys = []
     end
     # We are interested in finding out if it is already a plural like .xxx.one or .xxx.other
-    end_of_dkc = dkc.split('.').last
-    if language == 'en' || 
-        en_translation_exists || 
-        (CldrType.CLDR_plurals.include?(end_of_dkc) && end_of_dkc != 'one' && end_of_dkc != 'other') then
-      exists = Translation.where{(dot_key_code == dkc) & (cavs_translation_language_id == calmapp_versions_translation_language.id)}#(language== split_hash[:language])} 
+    #end_of_dkc = dkc.split('.').last
+    #if CldrType.CLDR_plurals.include?(end_of_dkc)
+      #binding.pry
+    #end
+    
+    if language == 'en' || en_translation_exists #|| 
+        #(CldrType.CLDR_plurals.include?(end_of_dkc) && end_of_dkc != 'one' && end_of_dkc != 'other') then
+      query = Translation.where{(dot_key_code == dkc) & (cavs_translation_language_id == calmapp_versions_translation_language.id)} 
+      puts "langu is en OR plural is in dkc "
       
-      if exists.count > 0
-        object = exists.first
+      if query.exists?  
+        object = query.first
+        if is_plural then
+          is_partially_written_plural = true
+          existing_plural_hash = ActiveSupport::JSON.decode(object.translation)
+          new_plural_hash = ActiveSupport::JSON.decode(translation)
+          joined_plural_hash =  {}
+          existing_plurals_hash.keys.each{ |k| 
+            if existing_plurals_hash[k].blank?
+              if not new_plurals_hash[k].blank?
+                joined plurals_hash[k] = new_plurals_hash[k]
+              else
+                #do nothing
+              end
+            elsif   (not existing_plurals_hash[k].blank?) && (not new_plurals_hash[k].blank?)
+                  joined_plurals_hash[k] = new_plurals_hash
+                     
+            elsif  (existing_plurals_hash[k].blank?) && ( new_plurals_hash[k].blank?)
+              joined_plurals_hash[k] = ''
+            end
+          } #keys  
+          translation = ActiveSupport::JSON.encode( joined_plurals_hash)      
+        end #is_plural
         puts "Dot_key_code already exists for " + msg_data
+      else
+        #if calmapp_versions_translation_language.translation_language.iso_code == 'cs'
+          #binding.pry
+        #end
       end
-      if not JSON.is_json?(translation) then
-        translation = translation.to_json
-      end
+      #if not JSON.is_json?(translation) then
+        #translation = translation.to_json
+      #end
+      #if ((dkc.include?(".header")) && (calmapp_versions_translation_language.translation_language.iso_code == 'ja'))
+        #binding.pry
+      #end
       if not object.nil? then
          return do_overwrite_condition(dkc, translation, calmapp_versions_translation_language, translations_upload_id, overwrite, object, plural_keys, msg_data, plurals)
       else # object does not exist in db
@@ -327,6 +383,8 @@ end
     puts msg
     Rails.logger.info msg
     ret_val = Translation.new(:cavs_translation_language_id => calmapp_versions_translation_language.id, :dot_key_code=> dkc, :translation=>translation, :translations_upload_id => translations_upload_id)
+    ret_val.error.add(msg)
+    return ret_val
   end
   
 =begin
@@ -341,10 +399,13 @@ end
   
   def self.english_translation_exists(calmapp_versions_translation_language, dkc)
     english_tl = TranslationLanguage.TL_EN #TranslationLanguage.where{iso_code == 'en'}
-    
+    #binding.pry
     cav_id = calmapp_versions_translation_language.calmapp_version_id
     tl_id = english_tl.id
     english_calmapp_versions_translation_language = CalmappVersionsTranslationLanguage.where{(calmapp_version_id == my{cav_id}) & (translation_language_id ==  my{tl_id})}.first
+    if english_calmapp_versions_translation_language.nil?
+      binding.pry
+    end
     en_cav_tl_id = english_calmapp_versions_translation_language.id
     en_translation_ar_relation = Translation.where{(dot_key_code == my{dkc}) &  (cavs_translation_language_id == my{en_cav_tl_id})}
     english_translation_exists =  en_translation_ar_relation.count
@@ -362,6 +423,9 @@ end
   
   def self.do_overwrite_condition(dkc, translation, calmapp_versions_translation_language, translations_upload_id, overwrite, object, plural_keys, msg_data, plurals)
     plural_key = full_key(calmapp_versions_translation_language, dkc)
+    if dkc.include? ".header"
+      binding.pry
+    end
     if overwrite == Translation.Overwrite[:all] then
             
             #msg = "Object to be persisted because 'all' parameter chosen"
@@ -370,34 +434,27 @@ end
                          :translation=> translation, 
                          :cavs_translation_language_id => calmapp_versions_translation_language.id, 
                          :translations_upload_id=> translations_upload_id, 
-                         plural: plural_value(plurals, plural_key)
+                         #plural: plural_value(plurals, plural_key)
+                         
                          )
-              #
-              #objecif not JSON.is_json?(translation) then
               translation = translation.to_json
-            endt_persisted = true
-              msg = "Object persisted: old translation: " + object.translation + " replaced with new translation: " + msg_data
-              
+              msg = "Object persisted: old translation: " + object.translation + " replaced with new translation: " + msg_data             
             else
                msg = "Object to be persisted is the same as already stored: " + msg_data
             end
             Rails.logger.info msg
-            puts msg
-              
+            puts msg  
             object.written = true
             return object
         elsif overwrite == Translation.Overwrite[:continue_unless_blank] then
-          #puts "If duplicate key then continue unless translation blank"
           if object.translation.nil? then 
             #We update where the translation is nil anyway
-            binding.pry
             b = object.update_attributes!(
                      :translation=> translation, 
                      :cavs_translation_language_id => calmapp_versions_translation_language.id, 
                      :translations_upload_id=> translations_upload_id, 
-                     plural: plural_value(plurals, plural_key)
+                     #plural: plural_value(plurals, plural_key)
                      )
-            #object_persisted = true
             msg = "overwrite: persisted anyway because translation blank: " + msg_data
             Rails.logger.info msg
             puts msg
@@ -419,7 +476,7 @@ end
                     :translation=> translation, 
                     :cavs_translation_language_id => calmapp_versions_translation_language.id, 
                     :translations_upload_id=> translations_upload_id, 
-                    plural: plural_value(plurals, plural_key)
+                    #plural: plural_value(plurals, plural_key)
                     )
             #object_persisted = true
             msg = "Overwrite: persisted anyway because tranlation blank: translation: " + msg_data
@@ -436,7 +493,7 @@ end
                     :cavs_translation_language_id => calmapp_versions_translation_language.id, 
                     :dot_key_code=> dkc, :translation=>translation, 
                     :translations_upload_id => translations_upload_id, 
-                    plural: plural_value(plurals, plural_key)
+                    #plural: plural_value(plurals, plural_key)
                     )
             ret_val.errors.add(:dot_key_code, I18n.t("messages.write_file_to_db.cancel", {:language=> language, :dot_key_code => object.dot_key_code}))
             ret_val.written = false
@@ -456,22 +513,28 @@ end
   def self.do_new_condition(dkc, translation, calmapp_versions_translation_language, translations_upload_id, msg_data, plurals)
     msg = "Write new translation: " + msg_data
     puts msg
+    #if calmapp_versions_translation_language.translation_language.iso_code == 'ja'
+      #binding.pry
+    #end 
+    #if dkc.include? ".header"
+      #binding.pry
+    #end
     Rails.logger.info msg
     plural_key = full_key(calmapp_versions_translation_language, dkc)
     #plural_val = plural_value(plural_key)
     
     ret_val = Translation.new(
          :cavs_translation_language_id => calmapp_versions_translation_language.id, 
-         :dot_key_code=> dkc, :translation=>translation, 
+         :dot_key_code=> dkc, 
+         :translation=>translation, 
          :translations_upload_id => translations_upload_id, 
-         plural: plural_value(plurals, plural_key)#((en?(plural_key)) ?  (plurals[plural_key]) : nil )
-         )
-    
+         #plural: plural_value(plurals, plural_key)
+         )  
     ret_val.save!       
     ret_val.written = true
     return ret_val
   end    
-  
+=begin  
   def self.en? full_key
     return full_key[0..2] == 'en.'
   end
@@ -479,5 +542,6 @@ end
   def self.plural_value(plurals, full_key)
     return plurals[full_key] if en?(full_key)
     return nil
-  end  
+  end 
+=end 
 end

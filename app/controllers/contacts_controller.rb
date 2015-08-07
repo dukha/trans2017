@@ -11,6 +11,7 @@ class ContactsController < ApplicationController
 =end
   # Comment out the next 2 lines if not using authentication and authorisation
   before_filter :authenticate_user!
+  before_action :set_contact, only: [ :edit, :update, :destroy, :show]
   filter_access_to :all
 
   @@model ="contact"
@@ -119,9 +120,20 @@ end
 
   # DELETE /contacts/1
   def destroy
-    @contact.destroy
-    
-    redirect_to contacts_url, notice: 'Contact was successfully destroyed.'
+    begin
+      @contact.destroy
+      respond_to do |format|
+        tflash('delete', :success, {:model=>@@model, :count=>1})
+        format.html { redirect_to(contacts_url) }
+        format.js {}
+      end 
+    rescue StandardError => e
+      @contact = nil
+      flash[:error] = e.message
+      respond_to do |format|
+        format.js
+      end
+    end #rescue  
   end
 
   private

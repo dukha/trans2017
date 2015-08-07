@@ -30,7 +30,7 @@
 // require jquery.dataTables.js
 // require jquery.jeditable.js
 // require KeyTable.js
-//= require unobtrusive_flash
+// require unobtrusive_flash
 // These below are in and required by best_in_place gem
 //= require jquery.purr
 //= require best_in_place
@@ -49,12 +49,12 @@
 
 //Turbolinks.ProgressBar.enable();
 
-
+/*
 if(UnobtrusiveFlash.flashOptions == null){
   UnobtrusiveFlash.flashOptions= {};
 }
 UnobtrusiveFlash.flashOptions['timeout'] = 10000;
-
+*/
 var HELP = namespace("help");
 
 function deleteBlanksFromSelectBox(boxId){

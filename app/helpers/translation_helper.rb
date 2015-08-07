@@ -8,18 +8,20 @@ module TranslationHelper
  @return false Display as plain text  
 =end
   def best_in_place?(translation)
-    
-    return false if is_plural?(translation)
+    #binding.pry
+    #translation that is passed is only a query ressult: We need to get the real object for the next line
+    return false if Translation.find(translation.id).is_plural?#is_plural?(translation)
     return true if ( translation.attributes["editor"].nil?) or 
                 editor_date_time_select?(translation.attributes) or editor_number_select?(translation.attributes)
     return false  
   end
-  
+=begin  
   def is_plural?(translation)
     t = Translation.find(translation.id)
     return t.is_plural?
     
   end
+=end
 =begin
  Sets html attributes for the editor control in best in place 
 =end  
@@ -64,22 +66,41 @@ module TranslationHelper
 =begin
   Formats the english transation on the index
 =end   
-   def format_english attributes, plural     
+   def format_english attributes#, plural     
      return english_date_format_example(attributes) if editor_date_time_select?(attributes)  
      return "<i>[This plural not used in English]</i>".html_safe if attributes["en_translation"].nil?
      return "<i>[Not used in English, so left blank. It may be left blank in your language too.] </i>".html_safe if attributes["en_translation"].blank?
-     hash = ActiveSupport::JSON.decode attributes["en_translation"]
-     if  not plural 
-       return hash  
-     else
+     en = attributes["en_translation"]
+     object = ActiveSupport::JSON.decode(en) if JSON.is_json?(en)
+     if  object.is_a?(Hash) && (attributes["special_structure"] == Translation::TRANS_PLURAL)   
        #binding.pry
        html = "<table>"
-       hash.each{|k, v|
+       object.each{|k, v|
          html = html + "<tr><td>" + k + ": "  + v + "</td></tr>" 
        }
        html = html + "</table>"  
        return html.html_safe
-     end
+     elsif object.is_a?(Array) && 
+            (attributes["special_structure"] == Translation::TRANS_ARRAY_13_NULL || 
+                attributes["special_structure"] == Translation::TRANS_ARRAY_7 ||
+                attributes["special_structure"] == Translation::TRANS_ORDER_ARRAY)
+       html = "<table>"
+       object.each{ |e|
+         if e.nil?
+           next
+         end
+         #element = e
+         #if e.blank?
+           #element = 'null'
+         #end
+         html = html + "<tr><td>" + e.to_s + ((e == object.last) ? "" : ", ") + "</td></tr>"
+         }
+         html = html + "</table>"
+         return html.html_safe
+     #elsif object.is_a? Arrray && attributes["special_structure"] == Translation.TRANS_ARRAY_7  
+     else
+       return attributes["en_translation"].html_safe
+     end #if..elsif
    end
    
 =begin
@@ -108,6 +129,7 @@ module TranslationHelper
      month = date.month  
      day_abbrev = JSON.parse(Translation.single_lang_translations_arr(iso_code,version_id).where{dot_key_code ==  "date.abbr_day_names"}.first.translation)[dow]
      day_full = JSON.parse(Translation.single_lang_translations_arr(iso_code,version_id).where{dot_key_code ==  "date.day_names"}.first.translation)[dow]
+     #binding.pry
      month_abbrev = JSON.parse(Translation.single_lang_translations_arr(iso_code,version_id).where{dot_key_code ==  "date.abbr_month_names"}.first.translation)[month]
      month_full = JSON.parse(Translation.single_lang_translations_arr(iso_code,version_id).where{dot_key_code ==  "date.month_names"}.first.translation)[month]
      result = {month_full: month_full, month_abbrev: month_abbrev, day_full: day_full, day_abbrev: day_abbrev}.with_indifferent_access  
@@ -140,8 +162,9 @@ module TranslationHelper
  @return the name of the special editor (outside best in place) 
 =end     
    def special_editor_name(attrs)
-     return "plural" if attrs["plural_indicator"]
-     return attrs["editor"]
+     return "plural" if attrs["special_structure"] == Translation::TRANS_PLURAL
+     return attrs["editor"] if not attrs["editor"].nil?
+     return"bip"
    end 
 
 
@@ -183,19 +206,37 @@ module TranslationHelper
        return ''
      end     
    end
-   
-   def translation_index_form_standard_html1 form
+=begin
+ @param form is the formtastic form object
+ @param q_object is the original query object. It may not have all attributes but has extra atrributes becasue of the join in the query 
+=end   
+   def translation_index_form_standard_html1 form, q_object
           #binding.pry
+          if form.object.attributes['editor'].blank?
+            if form.object.attributes["special_structure"] == Translation::TRANS_PLURAL
+              editor = 'plural'
+             else
+               editor = ''
+             end
+          else
+            editor =  form.object.attributes['editor']
+          end  
           html = form.text_field(:translation, :id => "translation_translation", :style=> "display:none")
-          html = html + "\n" + text_field_tag("editor",  "#{form.object.attributes['editor']}", :style=> "display:none")
+          html = html + "\n" + text_field_tag("editor",  "#{editor}", :style=> "display:none")
           html = html + "\n" + text_field_tag("original_translation",  "#{form.object.attributes['translation']}", :style=> "display:none")
           html = html + "\n" + text_field_tag("dot_key_code",  "#{form.object.attributes['dot_key_code']}", :style=> "display:none")
-          html = html + "\n" + text_field_tag("english",  "#{form.object.attributes['en_translation']}", :style=> "display:none")
+          #binding.pry
+          en = ((q_object.attributes["iso_code"] == 'en') ? ("#{q_object.attributes['en_translation']}") : ("#{q_object.attributes['en_translation']}"))
+          html = html + "\n" + text_field_tag("english",  en, :style=> "display:none")
           return html.html_safe
    end
-   
-   def translation_index_form_standard_html2 form
-     html = "<div id ='special-editor-hints' style='display:none;'>" + t($FH + 'translation.special_editor.' + special_editor_name(form.object.attributes).downcase) + "</div>"
+=begin
+ @param form is the formtastic form object
+ @param q_object is the original query object. It may not have all attributes but has extra atrributes becasue of the join in the query 
+=end   
+   def translation_index_form_standard_html2 form#, q_object
+     html = "<div id ='special-editor-hints' style='display:none;'>" + t($FH + 'translation.special_editor.' + 
+     special_editor_name(form.object.attributes).downcase) + "</div>"
      html = html + "<br>" 
      html = html + form.submit(t($FA + 'save'), :id=>'ok-special-editor', :style=> 'display:none')
      html = html + button_tag(t($FA +  'cancel'), :type=>'button', :id=> 'cancel-special-editor', :style=> 'display:none') 
@@ -210,18 +251,20 @@ module TranslationHelper
        puts e.message
        raise
      end  
+     #binding.pry
      if t.is_a? Hash then
        t.each do |k,v|
          html = html + "<tr><td>" + k + "</td><td>"
          if v.length <= 35 then       
-           html = html + text_field_tag( k, v, {:id=> attrs["dot_key_code"]  + "." + k, :size=>35}) 
+           html = html + text_field_tag( k, v, {:id=> attrs["dot_key_code"]  + "." + k, :size=>35, :name =>"translation_plural[" + k + "]"}) 
          else
-           html = html + text_area_tag(k,v, {:id=> attrs["dot_key_code"]  + "." + k, :cols=>35})
+           html = html + text_area_tag(k,v, {:id=> attrs["dot_key_code"]  + "." + k, :cols=>35, :name =>"translation_plural[" + k + "]"})
          end
          html = html + "</td></tr>"  
        end
      end
      html = html +  "</table>"
+     #binding.pry
      return html.html_safe
    end  
    
@@ -229,8 +272,8 @@ module TranslationHelper
      #t = translation.translation
      t = ActiveSupport::JSON.decode(translation)
      if t.is_a? Hash then
-       binding.pry
-       html = "<table>"
+       #binding.pry
+       html = "<table id = 'plural-editing'>"
        t.each{|k, v|
          html = html + "<tr><td>" + k + ": "  + v + "</td></tr>" 
        }
@@ -415,7 +458,7 @@ module TranslationHelper
                "%A, %e. %B %Y, %H:%M" => time.strftime("%A, %e. %B %Y, %H:%M"),
                "%A %d. %B %Y %H:%M" => time.strftime("%A %d. %B %Y %H:%M")}            
      end
-     
+=begin     @deprecated
      def array_editor trans
        html = ""
        html = html + form_for(trans, as: :translation, url: translation_path(trans), method: :patch, remote: true,  html: { class: "edit", id: "edit_translation" } )do |f| 
@@ -423,7 +466,7 @@ module TranslationHelper
              html = html + text_field_tag("editor",  "#{trans.attributes['editor']}", :style=> "display:none")
              html = html + text_field_tag("original_translation",  "#{trans.attributes['translation']}", :style=> "display:none")
              html = html + text_field_tag("dot_key_code",  "#{trans.attributes['dot_key_code']}", :style=> "display:none")
-             
+             binding.pry
              html = html + text_field_tag("english",  "#{trans.attributes['en_translation']}", :style=> "display:none")
              if  trans.attributes["editor"] == 'array_order' then
                html = html + "<ul id= 'sortable' style='list-style: none; margin: 3px; padding: 3px;'></ul>" 
@@ -437,6 +480,7 @@ module TranslationHelper
              html = html + button_tag(t($FA +  "cancel"), :type=>"button", :id=> 'cancel-special-editor', :style=> "display:none")
            end #form
      end
+=end
      def tooltip_label code
        return TranslationHint.new(:dot_key_code => code, :heading=> "Label: " + tooltip_general_help , :example=> "'activerecord.attributes.user.actual_name'. Label could be 'Enter real name of user' or simply(and better) 'Real Name'", :description=> "1 or a few words that describe the attribute name or what the user has to to with this field" )
      end
@@ -569,6 +613,17 @@ module TranslationHelper
        return ret_val.html_safe
      end
      
-        
+    def permitted_to_destroy?( translation, attrs) 
+      return permitted_to?(:delete,  translation) && attrs["language"] == 'en'
+    end  
      
+    def width_style(iso_code = nil)
+      if iso_code.blank?
+         return {:dot_key_code => "", :translation=> "", :en_translation=> "", :special_structure=>"", :delete => "" }
+      elsif iso_code == 'en'
+        return {:dot_key_code => "width:40%;", :translation=> "width:40%;", :special_structure=>"width:5%;", :incomplete => "width:5%;", :delete => "width:10%;" }
+      else  
+        return {:dot_key_code => "width:20%;", :translation=> "width:40%;", :en_translation=> "width:30%;", :special_structure=>"width:5%;", :incomplete => "width:5%;" }
+      end
+    end
 end #module

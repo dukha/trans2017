@@ -3,11 +3,13 @@ Translate::Application.routes.draw do
   
 
   
+  
   scope "/:locale" do
    resources :profiles
    resources :translation_hints
    resources :translations_uploads
    resources :contacts
+   resources :delayed_jobs
    # root will check permission and if ok redirect to whiteboards
    #root :to => "whiteboards#index"
    #root :to => "whiteboards#index" #"permissions#select" 
@@ -54,6 +56,7 @@ Translate::Application.routes.draw do
      #get "users/new_invitation", :to => "users#new_invitation", :as=> :new_user_invitation
      post "users/add_invitation", :to => "users#invite_user", :as => :invite_user
    #end
+    get "delayed_job/start", :to => "delayed_jobs#start", :as => "start_delayed_jobs_queue"
    resources :languages
    resources :users, :only => [:index]
    resources :whiteboard_types

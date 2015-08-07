@@ -90,7 +90,7 @@ class WhiteboardTypesController < ApplicationController
   # DELETE /whiteboard_types/1
   # DELETE /whiteboard_types/1.xml
   def destroy
-    #@whiteboard_type = WhiteboardType.find(params[:id])
+    begin
     @whiteboard_type.destroy
     tflash('delete', :success, {:model=>@@model, :count=>1})
     respond_to do |format|
@@ -98,6 +98,13 @@ class WhiteboardTypesController < ApplicationController
       format.xml  { head :ok }
       format.js {}
     end
+    rescue StandardError => e
+      @whiteboard_type = nil
+      flash[:error] = e.message
+      respond_to do |format|
+        format.js
+      end
+    end #rescue  
   end
   
 private
