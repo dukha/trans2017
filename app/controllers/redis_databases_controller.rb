@@ -73,9 +73,9 @@ class RedisDatabasesController < ApplicationController
   # POST /redis_databases.xml
   def create
     @redis_database = RedisDatabase.new(params[:redis_database])
-    #binding.pry
+
     respond_to do |format|
-      #binding.pry
+  
       #if @redis_database.create_redis_db
         if @redis_database.save then
           tflash('create', :success, {:model=>@@model, :count=>1})
@@ -140,13 +140,18 @@ class RedisDatabasesController < ApplicationController
 =begin
  This method publishes the whole application version to the chosen redis database  
 =end
-  def publish
-    begin
+  def versionpublish
+    # 1
+
+    begin      
       redis_db = RedisDatabase.find(params[:id])
-      count = redis_db.publish_version 
+      count = redis_db.translations_ready_to_publish().count 
+      #result = redis_db.version_publish()
+      PublishVersionToRedisJob.perform_later(redis_db.id)
+      
       if request.xhr? then
         payload = {"result" => count, "status" =>200}
-        flash[:notice] = "Published to #{redis_db.description} : Total Translations Published = #{count}"
+        flash[:notice] = "#{count} translations are queued to be published on: #{redis_db.description}"
         respond_to do |format|
           format.js
         end

@@ -1,7 +1,6 @@
 FactoryGirl.define do
   factory :calmapp_version do
     sequence(:version) {|n| "#{n}.#{n+1}"}
-    #binding.pry
     calmapp
     
     before(:create) do |version, evaluator|

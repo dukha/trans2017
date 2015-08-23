@@ -29,10 +29,10 @@
   
 </script>
 <%=theading("listing", :model=>'delayed_job', :count=>11) %>
-<%if DelayedJob.respond_to?( :searchable_attr ) and DelayedJob.searchable_attr.any? then %>
+<%if DelayedJob.respond_to?( :searchable_attr ) && DelayedJob.searchable_attr.any? then %>
 <div id = 'data-empty' style = 'display:none'><%= @delayed_jobs.empty?.to_s %></div>
 <button id="showHideCriteria" type='button'>x</button>
-<div id='criteria' class="criteria" >
+<div id='criteria' class="criteria" >  
   <!-- Use form_tag here because we are not going to work with a new AR model. form_tag doesn't work with formtastic either -->
   <!-- See controller#index doc for how to use this stuff below. 
     YOU NEED TO ADD METHODS TO MODEL BEFORE THIS PAGE WILL WORK -->

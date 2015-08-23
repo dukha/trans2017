@@ -107,8 +107,8 @@ Translate::Application.routes.draw do
    get "redis_databases/redis_to_yaml/:id" => "redis_databases#redis_to_yaml", :as => "redis_to_yaml", via: :all
    get "calmapp_version/version_alterredisdb/:id" => "calmapp_versions#redisdbalter", :as => "version_alterredisdb"#, via: :all
    #get "calmapp_versions_redis_database/version_alterwithredisdb/:calmapp_versions_redis_database_id" => "calmapp_versions_redis_databases#version_alterwithredisdb", :as => "version_alterredisdb"#, via: :all
-   post "calmapp_version/version_publish/:id" => "redis_databases#publish", :as =>"calmapp_version_publish" #, :via => :all
-   post "calmapp_versions_translation_language/publish/:id" => "calmapp_versions_translation_languages#publish_language", :as =>"calmapp_versions_translation_language_publish"
+   post "calmapp_version/version_publish/:id" => "redis_databases#versionpublish", :as =>"redis_databases_versionpublish" #, :via => :all
+   post "calmapp_versions_translation_language/publish/:id" => "calmapp_versions_translation_languages#languagepublish", :as =>"calmapp_versions_translation_languages_languagepublish"
    resources :translation_editor_params
    resources :special_partial_dot_keys
    resources :dot_key_code_translation_editors, :only=> [:index, :edit, :show] 

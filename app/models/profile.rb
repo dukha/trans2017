@@ -66,7 +66,7 @@ class Profile < ActiveRecord::Base
  
   # seed makes sure the profiles named sysadmin or guest remain reserved
   def self.seed
-    #binding.pry
+
     reserved_profile = 'recovery_profile'
     roles = [:profiles_read, :profiles_write , :profiles_create, 
       #:permissions_read, :permissions_write , :permissions_create,

@@ -135,8 +135,6 @@ group :development, :test do
 
 
   # =============  debugging tools
-  # to set breakpoint add line:  binding.pry
-  # more at http://pry.github.com/
   gem 'pry-rails'
   gem 'pry-doc'
   gem 'pry-nav'

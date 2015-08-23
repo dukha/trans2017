@@ -123,16 +123,16 @@ end
     
     #redirect_to delayed_jobs_url, notice: 'Delayed job was successfully destroyed.'
     begin
-      #binding.pry  
+        
       @delayed_job.destroy
       tflash('delete', :success, {:model=>@@model, :count=>1})
       respond_to do |format|
-        #binding.pry
+    
         format.html { redirect_to(delayed_jobs_url) }
         format.js {}
       end
     rescue StandardError => e
-      #binding.pry
+  
       @delayed_job = nil
       flash[:error] = e.message
       respond_to do |format|

@@ -85,7 +85,7 @@
           <li><%= tlink_to("version_publish", redis_databases_path, :category=>:menu) %></li>
           <li><%= tlink_to("translations_uploads", calmapp_versions_translation_languages_path, :category=>:menu) %></li>
           <li><%= tlink_to("versions_languages", calmapp_versions_translation_languages_path, :category=>:menu) %></li>
-          
+          <li><%= tlink_to("publish_language", calmapp_versions_translation_languages_path, :category=>:menu) %></li>
           <% if false then %>
             <li><%= tlink_to("redis_admins", redis_admins_path, :category=>:menu) %></li>
           <%end%>

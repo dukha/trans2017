@@ -1,5 +1,6 @@
 /* This import contains the matching colours etc for jquery sunny them*/
-@import 'sunny';
+/*@import 'sunny';*/
+@import 'smoothness';
 $margin:2px;
 $padding:2px; 
 $footerheight:70px;
@@ -13,7 +14,7 @@ $indexfont-size: small;
 
 html,body{
     /* overrides what is in application.css (from nifty)*/
-    background-color:#cd923f;
+    background-color: $body-color;//#cd923f;
     height:100%;
     margin:0px;
     padding:0px;
@@ -130,6 +131,20 @@ div#table{
 /**
  *   file and web-browser are classes in jquery.treeview take out
  */
+
+table.data{
+  border-color: $table-border-color;
+}
+table.plural-editor{
+  background-color : $editor-background-color;
+}
+table.array-editor{ 
+  background-color : $editor-background-color;
+}
+ul.order-editor{
+  background-color : $editor-background-color;
+}
+  
 tr.dataodd, tr.dataeven, span.file, span.web-browser{ //}, div.addChildrenLocation {
   font-size: $indexfont-size;
   font-weight: $indexfont-weight;

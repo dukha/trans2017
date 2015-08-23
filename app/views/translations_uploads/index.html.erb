@@ -1,6 +1,6 @@
 
 <%=theading("listing", :model=>'translations_upload', :count=>11) %>
-<%if TranslationsUpload.respond_to?( :searchable_attr ) and TranslationsUpload.searchable_attr.any? then %>
+<%if TranslationsUpload.respond_to?( :searchable_attr ) && TranslationsUpload.searchable_attr.any? then %>
 <div id = 'data-empty' style = 'display:none'><%= @translations_uploads.empty?.to_s %></div>
 <button id="showHideCriteria" type='button'>x</button>
 <div id='criteria' class="criteria" >

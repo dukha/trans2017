@@ -2,7 +2,7 @@ $().ready(function(){
   $("button.ok").click(function(){
     tr = $(this).parents('tr.dataodd', 'tr.dataeven');
   });
-});
+}); //ready
 
 
 /*
@@ -18,13 +18,16 @@ $().ready(function(){
       return false;
     });
     
-  });
+ }); // ready
 /*
  * This script sets up the selection mode radio buttons
  */
   $(function(){
     $( "div#selection_mode" ).buttonset();
   });
+  
+  
+   
   
 /*
  * Script enlarges and restores editing index for translations
@@ -49,6 +52,8 @@ $().ready(function(){
       toggleHeaderMenu();
       toggleMaxMinImages();
     });
+    
+   
   });//ready 
   function toggleHeaderMenu(){
     $(headerDiv).toggle();
@@ -84,12 +89,13 @@ $().ready(function(){
       return $('<li/>', {class: "ui-state-default",
                          html: html, style: "margin: 3px; padding-left:3px;"}) ;
   };
-  var specialEditorSpan = "span.special_editor";
-  var pluralEditorSpan = "span.plural_editor";
-  var anchorSelector = specialEditorSpan + ", " + pluralEditorSpan;  
+  var specialAnchorSpan = "span.special-anchor";
+  var pluralAnchorSpan = "span.plural-anchor";
+  var bestInPlaceSpan = 'span.best_in_place';
+  var anchorSelector = specialAnchorSpan + ", " + pluralAnchorSpan;// + ", " + bestInPlaceSpan;  
   var saveButtonSelector =   "input#ok-special-editor";
   var cancelButtonSelector = 'button#cancel-special-editor';
-  var originalTranslationSelector = 'input#original_translation';
+  var originalTranslationSelector = 'input#original-translation';
   //var idInputSelector = 'input#id';
   var dotKeyCodeInputSelector = 'input#dot_key_code';
   var sortableUlSelector = 'ul#sortable';
@@ -102,7 +108,7 @@ $().ready(function(){
   
   var englishTranslationSelector = 'input#english';
   var arrayEditingTableSelector = 'table#array-special-editor';
-  var pluralEditingTableSelector =  'table#plural-editing'; 
+  var pluralEditingTableSelector =  'table#plural-editor'; 
   var containerSelector = 'td.editor-container'; 
 /*
  * Sets each piece of data into a li inside the targetContainer after removing existing
@@ -146,10 +152,11 @@ $().ready(function(){
   };
 
   $().ready(function(){
+    
     $('span.best_in_place').on('mousedown',closeOthers);
-    $(specialEditorSpan).on('mousedown',closeOthers); 
-    $(pluralEditorSpan).on('mousedown',closeOthers);
-    $(allSortableUlsSelector).css('display','none'); 
+    $(specialAnchorSpan).on('mousedown',closeOthers); 
+    $(pluralAnchorSpan).on('mousedown',closeOthers);
+    $(allSortableUlsSelector).hide(200);//.css('display','none'); 
     $(anchorSelector).click(function(event){
        anchor = $(this);
        containerTd = anchor.closest(containerSelector);
@@ -160,25 +167,49 @@ $().ready(function(){
          setOrderData(children['ul'], $.parseJSON(decodeURI(encodeURI(anchor.text()))));  
          children['ul'].css("display", "block");
        }else if(children['editorName'] == 'plural'){
-           children['table'].css("display", 'table');
+           children['table'].show(200);//.css("display", 'table');
+           console.log(children['table'].is(":visible"));
            console.log("end_plural");
        }else if(children['editorName'] == 'array' || children['editorName'] == 'array_first_element_null'){
          setArrayData(children['table'],$.parseJSON(decodeURI(encodeURI(anchor.text()))), children['englishTranslation'] );
-         children['table'].css("display", 'table');    
+         children['table'].show(200);//.css("display", 'table');    
+       }else if(chidlren["editorName"] == 'bip'){
+         console.log("bip");
        }else{
+         console.log("unknown editor");  
        }
-       anchor.css("display", "none");
-       children['form'].css("display", 'block');
+       anchor.hide(200);//.css("display", "none");
+       children['form'].show(200);//.css("display", 'block');
        children['saveButton'].css("display", 'inline');
        children['cancelButton'].css("display", 'inline'); 
        children['hint'].css("display", 'inline'); 
+       //if(children['editorName'] != undefined || 
+       if( children['editorName'].html() != '' ){
+         //For non bip editors: bip already has this
+         $(containerTd).find('input[type=text], textarea').keydown(function(e){  
+            if(e.keyCode == 13 ){  
+               $(children['saveButton']).click();
+               return false;
+             }  
+          });//end keydown
+       }; //end if
+       
     }); //end anchor
+    /* Not called at present: Needs more testu=ing. To be called on save
+     * Opens up the next editor down the page 
+     */
+    openNextRowEditor = function(objectSelector){
+      nextTr = $(objectSelector).closest('tr.dataeven, tr.dataodd').next('tr.dataodd, tr.dataeven');
+      $(nextTr.find(anchorSelector)).click();
+    };
+     
     $('.best_in_place').on("ajax:success", function (event, data, status, xhr) {
       
-          success($(this).closest('tr').find('#local-flash'));
+          showSuccess($(this).closest('tr').find('#local-flash'));
           
      }).on("ajax:error", function(e, xhr, status, error){
-      alert("ajax error from on button");
+      //alert("ajax error from on button");
+      showError($(this).closest('tr').find('#local-flash'), xhr.responseText);
     });
     
     
@@ -194,18 +225,21 @@ $().ready(function(){
 
   }); //end ready
   
-  function success(object){
+  function showSuccess(object){
       object.html('Sweet').css("background-color", 'palegreen');
-      timer(object);
+      ttimer(object);
   }
-  function error(object){
-    object.html('Update Failure').css("background-color", 'pink'); 
-    timer(object);
+  function showError(object, error){
+    object.html(jQuery.trim(error).substring(0, 260)).css("background-color", 'pink'); 
+    ttimer(object);
   }
-  function timer(object){
-    timeoutID = window.setTimeout(function(){object.empty();},10000);
+  function ttimer(object){
+    timeoutID = window.setTimeout(function(){object.empty();},15000);
   }
-    
+  /* This function is not called when bip is used
+   *  This function does not actually save the data.
+    That is done on the backend via a ruby ajax call. This only restores the screen and puts the data ready for the form
+   */  
   var save = function(event){
     containerTd = parentTd(event);
     children = getTdChildren(containerTd);
@@ -232,22 +266,28 @@ $().ready(function(){
        $.each(rows, function(index, value){
           tds = $(value).find('td');
           key = $(tds[0]).html();
-          trans_object = $(tds[1]).find('textarea');
-          if(trans_object == null){
-            trans_object = $(tds[1]).find('input');
+          transObject = $(tds[1]).find('textarea');
+          if(transObject.length == 0){
+            // The input is not doen with a text field
+            transObject = $(tds[1]).find('input');
           } 
-          val = $(trans_object).val();
+          val = $(transObject).val();
           hash[key] = val;
        });
        object = hash;             
     }else{
       object = ''; 
     }
-
+       
       update = JSON.stringify(object);
       children["translation"].val(update);
       children['anchor'].text(update) ;
       restoreTd(containerTd);
+      
+      //openNextRowEditor(containerTd);
+      // Here we open up the next editor after the end of the click
+     
+       
       return true;
   };
   var cancel = function(containerTd){
@@ -287,17 +327,17 @@ $().ready(function(){
     console.log("in restor td");
     children = getTdChildren(td);
     children['anchor'].css("display", "inline");
-    children['form'].css("display", 'none');
-    children['saveButton'].css("display", 'none');
-    children['cancelButton'].css("display", 'none');
-    children['hint'].css("display", 'none');
-    console.log(typeof children['ul']);
-    console.log(typeof children['div']); 
-    console.log(typeof children['table']);    
+    children['form'].hide(200);//.css("display", 'none');
+    children['saveButton'].hide(200);//.css("display", 'none');
+    children['cancelButton'].hide(200);//.css("display", 'none');
+    children['hint'].hide(200);//.css("display", 'none');
+    //console.log(typeof children['ul']);
+    //console.log(typeof children['div']); 
+    //console.log(typeof children['table']);    
     if(typeof children['ul'] != 'undefined'){
-      children['ul'].css("display", 'none');
+      children['ul'].hide(200);//.css("display", 'none');
     }else if(typeof children['table'] != 'undefined'){
-      children['table'].css("display", 'none');
+      children['table'].hide(200);//.css("display", 'none');
       
     }else{
       
@@ -324,8 +364,10 @@ $().ready(function(){
     hint = td.find(hintDivSelector);
     editorName = td.find(editorNameSelector)[0].defaultValue;
     
-    englishJson = td.find(englishTranslationSelector)[0].value;
-    english = $.parseJSON(decodeURI(encodeURI(englishJson)));
+    //if(editorName != 'bip'){
+      englishJson = td.find(englishTranslationSelector)[0].value;
+      english = $.parseJSON(decodeURI(encodeURI(englishJson)));
+    //}
     ul = undefined;
     div = undefined;
     table = undefined;
@@ -335,7 +377,7 @@ $().ready(function(){
     }else if(editorName == 'array'){
       table = td.find(arrayEditingTableSelector); 
     }else if(editorName == 'array_first_element_null'){
-      table = td.find(arrayEditingTableSelector);
+      table = td.find(arrayEditingTableSelector);  
     }else if(editorName == 'decimal_format'){
          //Taken care of by best in place now
     }else if(editorName == 'time_format'){

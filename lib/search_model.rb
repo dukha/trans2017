@@ -88,7 +88,7 @@ module SearchModel
   def build_lazy_loader ar_relation, criteria ={},  operators= {}
     ops = Operators.new
     criteria.each { |k,v|
-       #binding.pry
+   
        attr= 'squeel.' + k.to_s
       if operators[k]== ops.equal  then
         ar_relation= ar_relation.where{|squeel| eval(attr) == v }
@@ -134,7 +134,7 @@ module SearchModel
   end
   
   def build_lazy_loading_sorter ar_relation, sorting= {}
-    #binding.pry
+
     if ! (sorting[:sort].nil? || sorting[:direction].nil?) then
          # We reorder here rather than order because sortable columns wouldn't work with multiple sorts
          ar_relation = ar_relation.reorder(sorting[:sort] + ' ' + sorting[:direction])
@@ -154,7 +154,7 @@ module SearchModel
      else
        lazy_loader = activerecord_relation  
      end
-     #binding.pry
+ 
      lazy_loader = build_lazy_loader(lazy_loader, search_info[:criteria], search_info[:operators])
      lazy_loader =  build_lazy_loading_sorter(lazy_loader, search_info[:sorting])
      return lazy_loader

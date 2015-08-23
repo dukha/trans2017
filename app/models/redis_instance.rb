@@ -58,7 +58,6 @@ class RedisInstance < ActiveRecord::Base
   
   def unused_redis_database_indexes() 
     ar = (0..(max_databases - 1)).to_a
-    #binding.pry
     redis_databases.each{|rdb| ar.delete(rdb.redis_db_index)}
     return ar
   end
@@ -70,7 +69,6 @@ class RedisInstance < ActiveRecord::Base
         ret_val = indexes[0] 
       elsif indexes.last == last_index then
         # This is an error condition: Not enough redis database
-        #binding.pry
         raise Exceptions::NoRedisDatabasesLeft.new({description: description})
       else   
         indexes.delete_if {|el| el <= last_index}
@@ -78,7 +76,6 @@ class RedisInstance < ActiveRecord::Base
       end  
     else
       # This is an error condition: Not enough redis database
-      #binding.pry
       raise Exceptions::NoRedisDatabasesLeft.new({description: description})
     end #not empty
   end

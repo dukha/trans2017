@@ -15,7 +15,7 @@ class InvitationsController < Devise::InvitationsController
 #=begin 
  
   def new
-    #binding.pry
+
     super
   end
   
@@ -40,7 +40,7 @@ class InvitationsController < Devise::InvitationsController
  
 #=end
    def edit
-      #binding.pry
+  
       super
    end
   
@@ -56,11 +56,11 @@ class InvitationsController < Devise::InvitationsController
       set_flash_message :notice, flash_message if is_flashing_format?
       resource.profiles << Profile.where{name == 'guest'}.first
       flash[:warning] = "When you sign in you will only have guest privilege (you cannot do very much) until an administrator adjusts your account."
-      #binding.pry
+  
       sign_in(resource_name, resource)
       require './app/mailers/admin_mailer'
       user = User.find(resource.id)
-      #binding.pry
+  
       AdminMailer.user_invitation_accepted(user).deliver_now
       respond_with resource, :location => after_accept_path_for(resource)
     else

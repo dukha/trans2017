@@ -63,7 +63,7 @@ describe TranslationsUploadsController do
 =end 
   describe "GET index" do
     it "assigns all translations_uploads as @translations_uploads" do
-      #binding.pry
+
       #translations_upload = TranslationsUpload.create! valid_attributes
       
       #get :index, {}, valid_session

@@ -32,7 +32,7 @@ module ButtonLinkHelper
   # link_display display_public_schedule_path(public_schedule),  :public_schedules
   def link_display url, resource, options={}
     html = " "
-    #binding.pry
+
     if permitted_to? :display, table_symbol_from(resource)
       html =  "<td class='link'>"+ 
         tlink_to("display", url, options)+
@@ -59,9 +59,8 @@ module ButtonLinkHelper
   # <td class='link'><a href="/de/course_types/31" data-confirm="Sind Sie sicher?" data-method="delete" rel="nofollow">Löschen</a></td>
   # Usage in dropdown menu : <%=link_destroy(course, :courses, {:category=>'menu'}, 'li') %> 
   def link_destroy obj, resource, options={},  html_container='td', html_container_options = {}
-    #binding.pry
+
     html = " "
-    #binding.pry
     if permitted_to? :destroy, table_symbol_from(resource)
       #if options[:confirm].nil? && options[:data][:confirm].nil? then
         #options[:data][:confirm] = 'delete.are_you_sure' 
@@ -108,7 +107,7 @@ module ButtonLinkHelper
   def html_options_to_s options
     keys = options.keys
     html = ''
-    #binding.pry
+
     keys.each do |k|
       html = html + " " + k.to_s + " = '" + (options[k].nil? ? '': (options[k] + "'"))
     end

@@ -2,7 +2,6 @@ module Paperclip
   class Parseyaml < Processor
     @@tempdir = "tmp/paperclip/"
     def initialize file, options = {}, attachment = nil
-      #binding.pry
       @file           = file
       
       
@@ -17,10 +16,8 @@ module Paperclip
         Dir.mkdir(@@tempdir, 777)
       end  
       tempfile_path =  @@tempdir +  Time.now.strftime("%Y%m%d%H%M%S%9N") + ".yml"
-      binding.pry
       FileUtils.cp(@file.path, tempfile_path)
       FileUtils.chmod(0777, tempfile_path)
-      #binding.pry
       #@file.rewind
       #file_content = File.read(@file.path)
       #@file.rewind

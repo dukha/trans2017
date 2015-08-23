@@ -73,10 +73,10 @@ class RedisDatabase < ActiveRecord::Base
   end
   
   def description
-    #binding.pry
+
     #db_name = calmapp_version.description + " / Redis Instance: " + short_name
     return short_name
-    #binding.pry
+
     #connect.setname db_name
   end
   def short_name
@@ -86,7 +86,7 @@ class RedisDatabase < ActiveRecord::Base
 
 =begin 
   def connect
-    #binding.pry
+
     #@connection is a singleton: only 1 connection per database" will need testing in a multiuser situation
     if ! @connection then
       @connection = new_connection
@@ -143,28 +143,10 @@ class RedisDatabase < ActiveRecord::Base
  does not disconnect 
 =end  
   def publish_one_translation(translation) #, con = nil)
-    #binding.pry
+
     translation = Translation.find(translation) if translation.is_a? Integer
-    #binding.pry
+
     dot_key= translation.full_dot_key_code
-=begin    
-    if translation.translation.starts_with? '{' then
-      # this is a plural written has a json hash in the relational db
-      # We need to all the plurals as a hash in redis
-      plurals = JSON.parse(translation.translation)
-      pool.with{ |con| 
-        plurals.each do |k,v|
-          con.hset(dot_key, k, v)
-        end  
-        #con.hset(dot_key, plurals)
-        puts "Published " + dot_key + " = " +  con.hgetall(dot_key).to_json
-      }
-    else
-    #if dot_key == "ja.date.abbr_day_names"
-      #binding.pry
-    #end
-    #connect.auth(password)
-=end
       pool.with{ |con| 
         con.set(dot_key, translation.translation)
         puts "Published " + dot_key + " = " +  con.get(dot_key)
@@ -183,24 +165,29 @@ class RedisDatabase < ActiveRecord::Base
   end
   
 
+   
+   
 
 =begin
   First removes all existing translations in the redis database 
  publishes all translations(for all languages) for the calmapp_version of this redis_database 
 =end  
-  def publish_version 
+  def version_publish 
+    # 2
     #con = nil
-    count = 0
+    #count = 0
     begin
       translations  = Translation.join_to_cavs_tls_arr(calmapp_version.id)
+      count = translations.count
       
       # This removes all key value pairs from the db
       pool.with{|con| 
         con.flushdb     
         translations.each{ |t|   
             publish_one_translation(t)#, con)
-            count +=1      
+            #count +=1      
           }
+        # save what you have jsut written to redis (in background)  
         con.bgsave
        }
     rescue StandardError => se
@@ -208,7 +195,7 @@ class RedisDatabase < ActiveRecord::Base
     ensure
       #con.quit
     end     
-    return count
+    #return count
   end  
   
   def self.validate_redis_db_params redis_db_id
@@ -216,22 +203,44 @@ class RedisDatabase < ActiveRecord::Base
       raise StandardError.new("Redis Database cannot be blank" )
     end
   end
+=begin  
+  def version_ready_to_publish
+    Translation.version_ready_to_publish(calmapp_version)
+  end
+=end  
+  def version_language_ready_to_publish translation_language
+    # 2
+
+    translations = Translation.version_language_ready_to_publish(calmapp_version, translation_language)
+  end
+  
+  def translations_ready_to_publish
+    return Translation.version_ready_to_publish(calmapp_version)
+  end
 =begin   
   First removes all existing translations in the redis database
  Publishes all translations for the given translation language
  @param TranslationLanguage instance 
-=end  
-  def publish_version_language translation_language
+#=end  
+   def version_language_publish translation_language
+     
+     RedisDatabase.version_language_publish_from_ids(calmapp_version.id, translation_language_id)
+     #PublishLanguageToRedisJob.perform_later(calmapp_version.id, translation_language.id)
+     
+   end 
+=end   
+   def self.version_language_publish_from_ids(calmapp_version_id, translation_language_id)
+    # d
     #con = nil 
-    count = 0
+    #count = 0
     begin
-      #con = connect
-      #binding.pry
-      translations  = Translation.join_to_cavs_tls_arr(calmapp_version.id).joins_to_tl_arr.where{tl1.iso_code == translation_language.iso_code}
+      translations = Translation.version_language_ready_to_publish(calmapp_version_id, translation_language_id)
+      #translations = Translation.translations_ready_to_publish(calmapp_version_id, translation_language_id)
+      #translations  = Translation.join_to_cavs_tls_arr(calmapp_version_id).joins_to_tl_arr.where{tl1.id == translation_language_id}.where{incomplete == false}
       pool.with{|con|
         translations.each{ |t|
           publish_one_translation(t)#, con)
-          count += 1        
+          #count += 1        
         }
         con.bgsave
       }
@@ -315,25 +324,24 @@ class RedisDatabase < ActiveRecord::Base
       tu = TranslationsUpload.new(description: "self demo " +count.to_s, cavs_translation_language_id: redis.cavtl_id, yaml_upload: File.new(f) )
       tu.save!
     }
-    redis.publish_version 
+    redis.version_publish 
     puts "translator published locally via MARKS BIG DEMO" 
   end 
   
   def self.integ_big_demo
-    binding.pry
     integ  = integration_trans_redis
     upload_from_dir = upload_dir_for_demo
     files_to_upload = trans_uploads_for_demo
-    #binding.pry
+
     count = 0
     files_to_upload.each{ |f|
       count += 1
       tu = TranslationsUpload.new(description: "self demo integ " + count.to_s, cavs_translation_language_id: integ.cavtl_id, yaml_upload: File.new(f) )
       tu.save!
       }
-    integration_trans_redis.publish_version
+    integration_trans_redis.version_publish
     puts "reg published on integration"
-    integration_reg_redis.publish_version
+    integration_reg_redis.version_publish
     puts "reg published on integration via INTEG BIG DEMO"
   end
 =begin

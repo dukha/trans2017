@@ -1,9 +1,4 @@
 class User < ActiveRecord::Base
-#  # Include default devise modules. Others available are:
-#  # :token_authenticatable, :encryptable, :confirmable, :lockable, :timeoutable and :omniauthable
-#  devise :invitable, :database_authenticatable, :registerable,
-#         :recoverable, :rememberable, :trackable, :validatable
-   #attr_accessor :profile_ids
   # Setup accessible (or protected) attributes for your model
   # Include default devise modules. Others available are:
   # :token_authenticatable, :confirmable, omniauthable:, Confirmable, :rememberable, :validatable, :encryptable, :recoverable
@@ -29,20 +24,10 @@ class User < ActiveRecord::Base
   # Virtual attribute for authenticating by either username or email
   # This is in addition to a real persisted field like 'username'
   attr_accessor :login
-
-  # these relationships model the configured access permissions
-  #has_many :permissions, :dependent => :destroy
-  #has_many :organisations, :through => :permissions
-  
   #The above are being replaced by those below. Keep both for now. mfl
   has_many :user_profiles, :dependent => :destroy
   #accepts_nested_attributes_for :user_profiles, :reject_if => :all_blank, :allow_destroy => true
   has_many :profiles, :through => :user_profiles
-  
-  
-  #has_many :cavs_tl_translators, :foreign_key => "translator_id" #, :class_name=> "" 
-  #accepts_nested_attributes_for :cavs_tl_translators, :reject_if => :all_blank, :allow_destroy => true
-  #has_many :calmapp_versions_translation_languages, :through => :cavs_tl_translators
   has_many :translator_jobs, :foreign_key => "translator_id" , :class_name=> "CavsTlTranslator", :dependent => :destroy
   #accepts_nested_attributes_for :translator_jobs, :reject_if => :all_blank, :allow_destroy => true
   has_many :translator_cavs_tls, :through => :translator_jobs, :source => :calmapp_versions_translation_language
@@ -54,9 +39,6 @@ class User < ActiveRecord::Base
   has_many :administrator_jobs, :foreign_key => "user_id" , :class_name=> "CavsTlAdministrator", :dependent => :destroy
   #accepts_nested_attributes_for :developer_jobs, :reject_if => :all_blank, :allow_destroy => true
   has_many :administrator_cavs_tls, :through => :administrator_jobs, :source => :calmapp_versions_translation_language#, :class_name=>"Calmapp"
-
-  #has_many :contact_responding_admins, :class_name => "ContactRespondingAdmin", :dependent => :destroy
-  #has_many :contacts, :through => :contact_responding_admins
   
   after_create :add_cavs_tls, :if => Proc.new {|user| }
 =begin
@@ -70,7 +52,7 @@ class User < ActiveRecord::Base
       # this role is not assigned anywhere else!
       return [:guest]
     else
-      #binding.pry
+  
       # below is the code for using the permissions model
       #current_permission.profile.roles.collect {|role|role.to_sym}
       
@@ -104,7 +86,7 @@ class User < ActiveRecord::Base
       puts "creating user"
       u = User.create! param
       puts "creating permission"
-      #binding.pry
+  
       u.profiles << Profile.sysadmin
       
       u.reload
@@ -147,7 +129,7 @@ class User < ActiveRecord::Base
     param[:phone] = '456000'
     developer=User.create! param
     developer.profiles << Profile.where {name == "developer"}.first
-    #binding.pry
+
     developer.developer_cavs_tls << CalmappVersionsTranslationLanguage.joins(:calmapp_version_tl).where{calmapp_version_tl.version  == "4" }.
        joins(:translation_language).where{translation_language.iso_code =='en'}.first
     log.info("devvie created")
@@ -160,7 +142,7 @@ class User < ActiveRecord::Base
     param[:phone] = '111111111'
     admin=User.create! param
     admin.profiles << Profile.where {name == "application_administrator"}.first
-    #binding.pry
+
     admin.administrator_cavs_tls = CalmappVersionsTranslationLanguage.joins(:calmapp_version_tl).where{calmapp_version_tl.version  == "4" }.all
     
     log.info("addy created")
@@ -232,7 +214,7 @@ CalmappVersionsTranslationLanguage.new(:translation_language_id =>TranslationLan
    end
 private
   def check_username
-    #binding.pry
+
     if username.blank? then
       if not actual_name.blank? then
         # make username equal to actual_name without whitespace

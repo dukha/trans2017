@@ -17,7 +17,7 @@ describe CalmappVersion do
        CalmappVersion.skip_callback(:create, :after, :add_english )
     end
     it { should validate_presence_of(:version)}
-    #binding.pry
+
     it { should validate_uniqueness_of(:version).scoped_to(:calmapp_id) }
     #it {should validate_numericality_of(:version)}
   end #validations

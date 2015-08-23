@@ -2,26 +2,16 @@ class CalmappVersion < ActiveRecord::Base
   #require 'validations'
   include Validations
   #languages available is a virtual attribute to allow languages_available to be used in the new form
-  # :add_languages, :new_redis_db are virtual attributes for the user to indicate that a languages and redis database are to be added at the same time as a new version
   attr_accessor :translation_languages_available, :add_languages, :new_redis_dev_db, 
            :translation_languages_assigned, 
          :warnings, :previous_id
 
   belongs_to :calmapp #, :class_name => "Application", :foreign_key => "calmapp_id"
   
-  #has_many :calmapp_versions_redis_database#, :inverse_of=>:calmapp_version_rd, 
-           #:class_name => "CalmappVersionsRedisDatabase",
-             #:foreign_key=>"calmapp_version_id"
-  #accepts_nested_attributes_for :calmapp_versions_redis_database, :reject_if => :all_blank, :allow_destroy => true
-  
   has_many :redis_databases, inverse_of: :calmapp_version#, :through =>:calmapp_versions_redis_database#, :source=>:calmapp_version_rd
   accepts_nested_attributes_for :redis_databases, :reject_if => :all_blank, :allow_destroy => true
  
   validates  :version,  :presence=>true, :uniqueness=>{:scope =>:calmapp_id}
-  #validates :version, :numericality=>true#=> {:only_integer=>false, :allow_nil =>false}
-  
-  #validates :calmapp, :presence=>true
-
   has_many :calmapp_versions_translation_languages, :dependent => :restrict_with_exception, 
             :inverse_of => :calmapp_version_tl,
             :foreign_key=> "calmapp_version_id"
@@ -62,10 +52,7 @@ class CalmappVersion < ActiveRecord::Base
   def calmapp_name
     return Calmapp.where(:id => calmapp_id).first.name.titlecase
   end
-  # moved to validations lib
-  #def self.validate_version version
-    ##return version.match( regex)
-  #end
+
   def show_me
     return "CAV " + calmapp.show_me + " v:" + version.to_s + " cav-id = " + id.to_s
   end
@@ -105,7 +92,6 @@ class CalmappVersion < ActiveRecord::Base
     english_id = english.id
     #englsih must be first in the array fo translation_languages to be added
     en_first = false
-   #binding.pry
     if calmapp_versions_translation_languages.empty?
       en_first = false
     elsif  calmapp_versions_translation_languages.first.translation_language.iso_code == english.iso_code
@@ -120,10 +106,10 @@ class CalmappVersion < ActiveRecord::Base
         arr.delete_if {|cavtl| cavtl.translation_language_id == english_id}
         arr.insert(0, CalmappVersionsTranslationLanguage.new(:translation_language_id => english_id))
         arr.each{ |cavtl|
-          #binding.pry
+      
           calmapp_versions_translation_languages << cavtl
         } 
-        #binding.pry
+    
         puts "ADDED_EN"
     else
       "EN   already exxists first in array: not ADDED"
@@ -155,7 +141,6 @@ class CalmappVersion < ActiveRecord::Base
   def self.finish_deep_copy(old_version, new_version, user, copy_translation_languages, copy_translations)
     begin
       if copy_translation_languages then #&& ! copy_translations then
-        binding.pry
         new_version.translation_languages.concat(old_version.translation_languages)
         if copy_translations then
           old_version.calmapp_versions_translation_languages.find_each do |cavtl|

@@ -2,7 +2,7 @@ class AddEnKeysForNewLanguageJob < ActiveJob::Base
   queue_as :default
 
   def perform(cavs_translation_language_id)
-    #binding.pry
+
     begin
       cavtl = CalmappVersionsTranslationLanguage.find(cavs_translation_language_id)
       cavtl.add_all_dot_keys_from_en_for_new_translation_language

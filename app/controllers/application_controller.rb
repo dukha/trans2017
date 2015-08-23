@@ -36,7 +36,7 @@ class ApplicationController < ActionController::Base
   end
 =begin  
   rescue_from ActiveRecord::DeleteRestrictionError do |exception|
-    binding.pry
+    
     flash.now[:error] = exception.message
     redirect_to(:back, :error => exception.message)
   end
@@ -49,7 +49,7 @@ class ApplicationController < ActionController::Base
         # We have a postgres non_unique error. This should only happen for multicolumn unique indexes
         # which cannot be properly trapped by active record.
         # We make a translatable more user friendly inde
-        binding.pry
+        
         message.gsub!("PGError:","")
         messages = message.split("\n")
         opening_bracket1_index = messages[1].index("(")
@@ -90,7 +90,7 @@ class ApplicationController < ActionController::Base
       #user_friendly_message
       #puts user_friendly_message
       flash[:error]= user_friendly_message
-      binding.pry
+      
       render :action => ((messages.length > 2) && (messages[2].index("INSERT INTO"))) ? :new : :edit
       #render :action => "new", :controller => "calmapps"
   end 
@@ -106,7 +106,7 @@ class ApplicationController < ActionController::Base
 =end  
 #=begin @deprecated
   def permission_denied
-    #binding.pry
+    
   flash[:notice] = tmessage("declarative_authorization.unauthorised",  $W )
   redirect_to root_url
 end
@@ -148,7 +148,7 @@ This function, together with the scope in routes.rb allows the setting of urls l
 =end
   def call_rake(task, options = {})
     options[:RAILS_ENV] ||= Rails.env
-    #binding.pry
+    
     options["params"] = JSON.generate(params["calmapp_version"])#options.map { |n, v| "#{n.to_s}=#{JSON.generate(v)}}" }
     #puts args 
     args = options.map{ |k,v| "#{k.to_s} = #{v}"  } 
@@ -164,10 +164,10 @@ This function, together with the scope in routes.rb allows the setting of urls l
   end
 =end
   def self.start_delayed_jobs_queue
-    #binding.pry
+    
     #system "RAILS_ENV=#{Rails.env} bin/delayed_job start --exit-on-complete 2>&1 >> #{Rails.root}/log/background.log"
     system "RAILS_ENV=#{Rails.env} bin/delayed_job start --exit-on-complete 2>&1"
-    #binding.pry
+    
   end
 =begin
   Use this function to rescue all situations

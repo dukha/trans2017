@@ -29,7 +29,7 @@
   
 </script>
 <%%=theading("listing", :model=>'<%=singular_table_name%>', :count=>11) %>
-<%%if <%= class_name %>.respond_to?( :searchable_attr ) and <%= class_name %>.searchable_attr.any? then %>
+<%%if <%= class_name %>.respond_to?( :searchable_attr ) && <%= class_name %>.searchable_attr.any? then %>
 <div id = 'data-empty' style = 'display:none'><%%= @<%= plural_table_name %>.empty?.to_s %></div>
 <button id="showHideCriteria" type='button'>x</button>
 <div id='criteria' class="criteria" >

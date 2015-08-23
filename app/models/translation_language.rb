@@ -19,6 +19,10 @@ class TranslationLanguage < ActiveRecord::Base
   def self.TL_EN
     return english_arr.first
   end 
+  
+  def english?
+    return iso_code == 'en'
+  end
 
  def self.seed
   return TranslationLanguage.create!(:plural_sort=>"one_other", :iso_code=> "en", :name=>"English" )
@@ -104,13 +108,7 @@ class TranslationLanguage < ActiveRecord::Base
     pa = CldrType.CLDR_PLURAL_TYPES[plural_sort] || []#CldrType.CLDR_PLURAL_TYPES["one_other"]
     return pa
   end
-=begin  
-  def self.taal iso_code
-    xx = 'fr'
-    binding.pry
-    return where{iso_code == 'xx'}.to_sql
-  end
-=end
+
 end
 
 

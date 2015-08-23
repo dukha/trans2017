@@ -44,9 +44,9 @@
         <%= tlink_to  'new_redis_for_version', version_alterredisdb_path(redis_database.calmapp_version.id) %>
       <%end%>
     </td>
-    <td class="<%= link_cell_class %>"  ><%= tlink_to 'version_publish',calmapp_version_publish_path(redis_database),{
+    <td class="<%= link_cell_class %>"  ><%= tlink_to 'version_publish',redis_databases_versionpublish_path(redis_database),{
                       :data=>{:type=>"json", :disable_with=> "Publishing...."},
-                      :"data-tooltip" => t($FH + 'redis_database.version_publish', :version_name=>redis_database.calmapp_version.description , :db_name=> redis_database.short_name),
+                      #:"data-tooltip" => t($FH + 'redis_database.version_publish', :version_name=>redis_database.calmapp_version.description , :db_name=> redis_database.short_name),
                       :method=> "post", 
                       :form=>{:id=>"publish"}, 
                       :remote=> true, 

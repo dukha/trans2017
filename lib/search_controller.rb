@@ -18,7 +18,7 @@ module SearchController
   # operator_list produces a list of operators in an hash that match the criteria and can be used by squeel
   # searchable_attr are a list of attribtes of the primary model which are searchable. usually accessed from the model like accessible_attr
   def operator_list searchable_attr = {}, criteria_symbols ={}
-    #binding.pry
+
     operators = {}
     searchable_attr.each{|attr|
       operator_key = attr_2_operator_sym(attr)
@@ -40,7 +40,7 @@ module SearchController
           operators[attr]='eq'  
         end  # not params
       else
-        #binding.pry
+    
         # These criteria are missed in the run through the criteria, so we here add the operator and attr even though there is only an operator
         if operators_that_dont_need_criterion.include?(params[operator_key]) then
           operators[attr] = params[operator_key]
@@ -57,7 +57,7 @@ module SearchController
   # @param searchable_attr are a hash of attribtes of the primary model which are searchable. usually accessed from the model like accessible_attr
   # @param formats is a hash of formats(primarily dates strftime )  , keyed by criterion where a date is in a format other than default  
   def criterion_list searchable_attr = {}, formats ={}, criteria = {}
-    #binding.pry
+
     searchable_attr.each{|attr|
       criterion_key = attr_2_criterion_sym(attr)
       #operator_key = attr_2_operator(attr)
@@ -84,7 +84,7 @@ module SearchController
   end  
   
   def attr_2_criterion_sym attribute
-    #binding.pry
+
      ("criterion_" + attribute).to_sym
   end 
   
@@ -103,10 +103,10 @@ module SearchController
   
   def init_search(current_user, searchable_attr={}, sortable_attr={})
      #searchable_attr = AssistantTeacher.searchable_attr
-    #binding.pry
+
     criteria=criterion_list(searchable_attr)
     operators=operator_list( searchable_attr, criteria)
-    #binding.pry
+
     #sortable_attr=AssistantTeacher.sortable_attr
     sorting=sort_list(sortable_attr)
     info = {}

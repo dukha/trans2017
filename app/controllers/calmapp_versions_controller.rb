@@ -127,16 +127,16 @@ class CalmappVersionsController < ApplicationController
  We are not going to use it. Too hard to call rake from within giving it params as json
  We'll fudge and use delayed_job instead 
  @deprecated until next version
-=end  
+
   def version_create_detached
     #@calmapp_version = CalmappVersion.new(params[:calmapp_version])
     #params_json = JSON.generate(params)
     return call_rake("version:create")
   end
-  
+=end   
 
   def deep_copy_params
-    #binding.pry
+
     set_calmapp_version
     @previous_calmapp_version = @calmapp_version
     @calmapp_version = CalmappVersion.new(:calmapp_id => @previous_calmapp_version.calmapp_id, :previous_id =>@previous_calmapp_version.id, :copied_from_version => @previous_calmapp_version.version)
@@ -155,7 +155,7 @@ class CalmappVersionsController < ApplicationController
         flash[:success] = "Application Version copied. All the languages and translations are in a background process. You will get a mail to let you know the result"
         redirect_to action: "index"
       else
-         #binding.pry
+     
          flash[:error] = @calmapp_version.errors.messages[:version]
          @previous_calmapp_version =CalmappVersion.find(@calmapp_version.previous_id)
          #params["id"] = params["calmapp_version"]["previous_id"]
@@ -167,7 +167,7 @@ class CalmappVersionsController < ApplicationController
         
         
     #rescue StandardError => e
-      #binding.pry
+  
       #params["id"] = params["calmapp_version"]["previous_id"]
       #set_calmapp_version
       #@previous_calmapp_version = @calmapp_version
@@ -182,7 +182,6 @@ class CalmappVersionsController < ApplicationController
   
    private
      def redis_db_update? 
-       #binding.pry
        return params[:calmapp_version][:calmapp_versions_translation_language_ids] == nil
      end
      

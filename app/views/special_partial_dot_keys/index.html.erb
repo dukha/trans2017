@@ -1,5 +1,5 @@
 <%=theading("listing", :model=>'special_partial_dot_key', :count=>11) %>
-<%if SpecialPartialDotKey.respond_to?( :searchable_attr ) and SpecialPartialDotKey.searchable_attr.any? then %>
+<%if SpecialPartialDotKey.respond_to?( :searchable_attr ) && SpecialPartialDotKey.searchable_attr.any? then %>
 <div id = 'data-empty' style = 'display:none'><%= @special_partial_dot_keys.empty?.to_s %></div>
 <button id="showHideCriteria" type='button'>x</button>
 <div id='criteria' class="criteria" >

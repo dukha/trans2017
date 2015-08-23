@@ -40,6 +40,7 @@ en:
       remove: Remove
       publish: Publish
       publish_language: Publish %{language} 
+      translation_language_publish: Publish %{language} Translations
       no_delete: Undeletable
       #
       create_and_upload: Create and Upload
@@ -234,6 +235,7 @@ en:
     new_model: New %{model}
     contact_us: Contact Us
     current_contacts: Current Contacts
+    publish_language: Publish a Language
   headings:
     application_subheading: Translator
     write_to_database:

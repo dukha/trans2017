@@ -4,7 +4,9 @@
 *=require jquery.treeview
 *=require simple-dropdown-index
 *=require jquery-ui
-*=require sunny/jquery-ui-1.10.3
+* require sunny/jquery-ui-1.10.3
+*=require smoothness/theme
+*=require _smoothness
 *= require dual-listboxes
 * =require popup 
 *=require trans
@@ -24,8 +26,9 @@
   height: 5px !important;
 }*/
 /* form nifty   * require ui-lightness/jquery-ui-1.8.6.custom.css*/
+@import 'smoothness'
 body {
-  background-color:  #BB6F04; /*#4B7399;*/
+  //background-color: $body-color; /*#BB6F04; /*#4B7399;*/
   font-family: Verdana, Helvetica, Arial;
   font-size: 14px;
 }

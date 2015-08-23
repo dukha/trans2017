@@ -2,24 +2,22 @@ class UsersController < ApplicationController #Devise::RegistrationsController
 
   before_action :authenticate_user!
   before_action :set_user, only: [ :edit, :update, :destroy, :unlock_user]
-  #before_action :test
   filter_access_to :all
-  #respond_to :html, :xml, :json
+
   @@model ="user"
   
 =begin @deprecated  
   def invite_user
-    binding.pry
+    
     @user = User.invite!(:email => params[:user][:email], :name => params[:user][:name])
     render :html => @user
   end
 =end
   # users_select        /:locale/users_select(.:format)                                    {:controller=>"users", :action=>"select"}
   def index
-    #binding.pry#respond_to :html, :xml, :json
     @users = User.order("actual_name")
     extra_where_clauses = prepare_mode()
-    #binding.pry
+
     if not extra_where_clauses.empty? then
       extra_where_clauses.each{ |c| @users = @users.where(c)}
     end
@@ -38,20 +36,15 @@ class UsersController < ApplicationController #Devise::RegistrationsController
   end
   
   def new
-    #binding.pry
+
     @user = User.new
   end
   def create
-    #build_resource(sign_up_params)
-    #binding.pry
     @user = User.new(user_params)
-    #@user.profile_ids = []
+
     if @user.save
-      #redirect_to admin_editors_path
       redirect_to users_path
     else
-      #clean_up_passwords resource
-      #respond_with resource
       flash[:error] = "Failed to save " + @user.username
       render :action => :new
     end
@@ -60,10 +53,9 @@ class UsersController < ApplicationController #Devise::RegistrationsController
   def reset_user_password
     
   end
-  #edit_password GET   /:locale/users/:id/edit_password(.:format)   {:controller=>"users", :action=>"edit"}
+  
   def edit
-    #@user = User.find(params[:id])
-    #@user.profile_ids = @user.profiles.collect { |p| p.id }
+    
   end
 
   #update_password PUT /:locale/users/:id/update_password(.:format) {:controller=>"users", :action=>"update"}
@@ -73,7 +65,7 @@ class UsersController < ApplicationController #Devise::RegistrationsController
     @user.unlock_access! unless !@user.access_locked?
    
     respond_to do |format|
-      #binding.pry
+  
       if @user.update(user_params)#params[:user])
         format.html { redirect_to(users_path, :notice => "User #{@user.username} was successfully updated.") }
         format.xml  { head :ok }
@@ -143,8 +135,6 @@ private
 =end
   end  
   def  user_params
-    #binding.pry
-    
     standard_attr = [:email,  :remember_me,
                 :username, :login, :actual_name, :translator, :developer, :application_administrator, 
                 :country, :phone, :responds_to_contacts,

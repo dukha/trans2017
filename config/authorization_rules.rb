@@ -15,22 +15,46 @@ authorization do
   # list all roles which are defiend here by:
   # Authorization::Engine.instance.roles
 
-  def standard_roles aResourceSymbol
-    r = (aResourceSymbol.to_s + "_read").to_sym
-    role r do
-      has_permission_on aResourceSymbol, :to => [:index, :show]
+  def standard_roles aResourceSymbol, options = {}
+    roles_read = [:index, :show]
+    roles_write = [:edit, :update]
+    roles_create = [:new, :create]
+    roles_destroy = [:destroy]
+    exclude = options[:exclude]
+    if ! exclude.is_a? Array
+      exclude = [exclude] 
     end
-    r = (aResourceSymbol.to_s + "_write").to_sym
-    role r do
-      has_permission_on aResourceSymbol, :to => [:edit, :update]
+    if ! exclude.nil?
+      if ! exclude.empty?
+        roles_read = roles_read - exclude
+        roles_write = roles_write - exclude
+        roles_create = roles_create - exclude
+        roles_destroy = roles_destroy - exclude
+      end
     end
-    r = (aResourceSymbol.to_s + "_create").to_sym
-    role r do
-      has_permission_on aResourceSymbol, :to => [:new, :create]
+    if !roles_read.empty?
+      r = (aResourceSymbol.to_s + "_read").to_sym
+      role r do
+        has_permission_on aResourceSymbol, :to => roles_read
+      end
     end
-    r = (aResourceSymbol.to_s + "_destroy").to_sym
-    role r do
-      has_permission_on aResourceSymbol, :to => [:destroy]
+    if !roles_write.empty?
+      r = (aResourceSymbol.to_s + "_write").to_sym
+      role r do
+        has_permission_on aResourceSymbol, :to => roles_write
+      end
+    end
+    if !roles_create.empty?
+      r = (aResourceSymbol.to_s + "_create").to_sym
+      role r do
+        has_permission_on aResourceSymbol, :to => roles_create
+      end
+    end
+    if !roles_destroy.empty?
+      r = (aResourceSymbol.to_s + "_destroy").to_sym
+      role r do
+        has_permission_on aResourceSymbol, :to => roles_destroy
+      end
     end
   end
 
@@ -56,8 +80,12 @@ authorization do
   standard_roles :users
   standard_roles :profiles
   standard_roles :contacts
-  #standard_roles :delayed_jobs
+  standard_roles :delayed_jobs, {:exclude => :create}
   
+  role :rules_read do
+    has_permission_on :authorization_rules, :to => [:read]
+  end
+=begin  
   role :delayed_jobs_read  do
     has_permission_on [:delayed_jobs], :to => [:index, :show]
   end
@@ -73,7 +101,7 @@ authorization do
   role :delayed_jobs_start  do
     has_permission_on [:delayed_jobs], :to => [:start]
   end
-  
+=end  
   role :users_read do
     has_permission_on [:users], :to => [:index]
   end
@@ -102,11 +130,11 @@ authorization do
   role :calmapp_versions_deepcopyparams do
     has_permission_on [:calmapp_versions], :to=> [:deep_copy_params]
   end
-  role :calmapp_versions_publish do
-    has_permission_on [:redis_databases], :to => [:publish]
+  role :redis_databases_versionpublish do
+    has_permission_on [:redis_databases], :to => [:versionpublish]
   end
-  role :calmapp_versions_translation_languages_publish do
-    has_permission_on [:calmapp_versions_translation_languages], :to => [:publish_language]
+  role :calmapp_versions_translation_languages_languagepublish do
+    has_permission_on [:calmapp_versions_translation_languages], :to => [:languagepublish]
   end
   
   role :users_invite do
@@ -117,7 +145,7 @@ authorization do
   
   
  role :translations_develop do
-   has_permission_on [:translations], :to => [:index, :update, :index, :delete, :new, :edit, :create] do
+   has_permission_on [:translations], :to => [:index, :update, :index, :destroy, :new, :edit, :create] do
      if_attribute :"calamapp_version_translation_language.calmapp_version.calmapp" =>  intersects_with {user.developer_calmapps}
     end 
  end  

@@ -1,5 +1,5 @@
 class TranslationsController < ApplicationController
-  
+  #include TranslationHelper
   before_action :authenticate_user!
   before_action :set_translation, only: [ :edit, :update, :destroy, :show]
   filter_access_to :all
@@ -21,71 +21,53 @@ class TranslationsController < ApplicationController
       format.html
     end
   end
+  #This update only tested for xhr
   def update
-    #binding.pry
       if params[:editor] == Translation::TRANS_PLURAL
-        my_params = {:translation=> params[:translation_plural]}
+    
+        hash  = params[:translation_plural]
+        new_hash = ActiveSupport::JSON.encode(hash)
+        my_params = {:translation => new_hash}
       else
         my_params = translation_params
-      end
+      end # plural
       begin
-        result = @translation.update(my_params)
+        @translation.assign_attributes(my_params)
+        result = @translation.save!           #update(my_params)
+        @translation.plural_translation_html_display = TranslationHelper.plural_translation_static_text(@translation.translation)
       rescue StandardError =>sd
-        
-        @translation.errors.add(sd.message)
+        # We let this proceed and take care of it with a flash only
+        #@translation.errors.add(:translation, sd.message)
+        #flash[:error] = sd.message
+      rescue Exception => e
+        Rails.logger.error(e.message)
+        ExceptionNotifier.notify_exception(exception,
+      :data=> {:message => e.message})
       end  
-       #c
-       #binding.pry
       if result
-       #binding.pry
+   
         puts "successful update"
-        flash.now[:success] = "Successful Update now"
-        flash[:notice] = "Successful Update wait" 
-        #respond_to do |format|
-=begin        
-          format.html { 
-            redirect_to(@translation, :notice => 'Translation was successfully updated.') 
-          }
-          format.json { 
-            if params["editor"].nil? then
-              #binding.pry
-             respond_with_bip(@translation) 
-            else
-              #binding.pry
-              #render
-              render :json => {:result => "ok"}
-            end
-           }
-=end           
-           #format.js
-         #end # do  
+        flash[:success] = "Successful Update"
       else
-        #binding.pry
+    
         if not @translation.errors.empty?
-          flash.now[:error] = @translation.errors.message 
+          flash[:error] = @translation.errors[:translation] 
         else 
-          flash.now[:error] = "An error has occurred wihich prevented this translation from going further"  
+          flash[:error] = "An error has occurred which prevented this translation from going further"  
         end
         puts "unsuccessful update"
-        #respond_to do |format|
-          #format.html { render :action => "edit" }
-          #format.json { respond_with_bip(@translation) }
-          #format.js
-        #end # do
       end #if update else
-      #binding.pry
+  
       respond_to do |format|
-        format.json { 
+        format.json {
             if params["editor"].nil? then
-              #binding.pry
-             respond_with_bip(@translation) 
+              respond_with_bip(@translation) 
             else
               puts "Data error: params['editor'] is nil" 
             end
             }  
         format.js {}
       end #respond
-      #render :js => ActiveSupport::JSON.encode("update.js")
   end #def update
 
   def index
@@ -98,26 +80,20 @@ class TranslationsController < ApplicationController
     # The array will still paginate provided we have will_paginate/array
     # messy but it works!! 
     require 'will_paginate/array'
-    possible_where_clauses = prepare_mode()
+    possible_where_clauses_and_params = prepare_mode()
     search_info = prepare_search()
-    #binding.pry
+
     if Translation.valid_criteria?(search_info) then
-      
-      @translations = Translation.search(current_user, search_info, nil, possible_where_clauses)
+  
+      @translations = Translation.search(current_user, search_info, nil, possible_where_clauses_and_params)
       @translations = @translations.each do |t|
         #This will prevent strings appearing in quotes in the user interface
         
         if JSON.is_json?(t.translation) then
-          #if t.translation.start_with? '{', '['
-           # binding.pry
-            #decoded = t.translation
-         # else
             decoded = ActiveSupport::JSON.decode(t.translation) #unless t.translation.start_with? '{', '['
-          #end 
         elsif t.translation.nil?
           decoded = "" 
         else
-          #binding.pry
           msg =  t.translation + " IS NOT JSON: bad data. Translation id = " + t.to_s
           puts msg
           Rails.logger.error( msg)
@@ -131,7 +107,7 @@ class TranslationsController < ApplicationController
         if not (decoded.is_a? Array or decoded.is_a? Hash) then
           t.attributes["en_translation"] = decoded
         end
-      binding.pry
+      
 =end
       end
     else  
@@ -139,7 +115,7 @@ class TranslationsController < ApplicationController
       flash_now= false
       search_info[:messages].each do |m|
         m.keys.each{ |k,v| 
-          #binding.pry
+      
           flash_now = true
           msg.concat( "#{m[k] + '. '}") 
         }
@@ -148,7 +124,7 @@ class TranslationsController < ApplicationController
       # in this case we make an ActivRecord Relation with 0 records so that we can redisplay
       @translations =  Translation.where{id == -1}
     end
-    #binding.pry
+
     if @translations.count == 0 then
       flash[:warning] = "No translations found for the criteria give. Check your criteria."
     end
@@ -195,7 +171,7 @@ class TranslationsController < ApplicationController
   def destroy
     
     if @translation.calmapp_versions_translation_language.translation_language.iso_code == 'en' then 
-      binding.pry
+      
       begin
         @translation.destroy
         tflash('delete', :success, {:model=>@@model, :count=>1})
@@ -218,15 +194,22 @@ class TranslationsController < ApplicationController
   def prepare_mode
     mode = params["selection_mode"]
     extra_where_clauses = []
-    en_newer_where = "english.updated_at > translations.updated_at"
-    untranslated_where = "translations.translation is null"
+    extra_where_params = []
+    en_newer_where = "(english.updated_at > translations.updated_at or (translations.incomplete = true))"
+    #en_newer_params = [true]
+    #en_newer = {en_newer_where => en_newer_params}
+    untranslated_where =  "(translations.translation is null or translations.translation = '' or translations.incomplete = true)"
+    #untranslated_params = [true] 
+    #untranslated = {untranslated_where => untranslated_params}
     if mode == "untranslated" then
       extra_where_clauses << untranslated_where
+      
     elsif mode == "en_newer" then
       extra_where_clauses << en_newer_where
+
     elsif mode == 'both_untranslated_and_en_newer'  then
-      extra_where_clauses << en_newer_where
       extra_where_clauses << untranslated_where
+      extra_where_clauses << en_newer_where     
     else # all
       # do nothing    
     end
@@ -251,7 +234,7 @@ class TranslationsController < ApplicationController
   end
 =begin  
   def search
-    #binding.pry
+
     # We need to make a preliminary ar relation so that we can do the join. The selects are important so that we can get the region (for translation) 
     #activerecord_relation = Translation.all #, @language)
     #
@@ -268,14 +251,14 @@ class TranslationsController < ApplicationController
     
     # Uses params to prepare the criteria and operators for the search  
     search_info = init_search(current_user, searchable_attr, sortable_attr)
-    binding.pry
+    
     activerecord_relation = Translation.single_lang_translations(search_info[:criteria].delete("iso_code"), search_info[:criteria].delete("cav_id"))
     search_info[:operators].delete("iso_code")
     search_info[:operators].delete("cav_id")
-     #binding.pry
+ 
     # Does the search
     @translations = Translation.search(current_user, search_info, activerecord_relation)
-    #binding.pry
+
   end
 =end
   protected

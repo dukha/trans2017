@@ -19,7 +19,7 @@ class CalmappsController < ApplicationController
   # GET /calmapps/1
   # GET /applications/1.xml
   def show
-    #binding.pry
+
     #@calmapp = Calmapp.find(params[:id])
 
     respond_to do |format|
@@ -40,13 +40,13 @@ class CalmappsController < ApplicationController
   end
   def create
     @calmapp = Calmapp.new(calmapp_params) 
-    #binding.pry
+
     respond_to do |format|
       if @calmapp.save( )
         format.html { redirect_to calmapps_url, notice: 'Calmapp was successfully created.' }
         format.json { render action: 'show', status: :created, location: @calmapp }
       else
-        #binding.pry
+    
         format.html { render action: 'new' }
         format.json { render json: @calmapp.errors, status: :unprocessable_entity }
       end
@@ -65,7 +65,7 @@ class CalmappsController < ApplicationController
   
     
     respond_to do |format|
-      #binding.pry
+  
       if @calmapp.update(calmapp_params) #params[:calmapp], without_protection: true)
         
         tflash('update', :success, {:model=>@@model, :count=>1})

@@ -63,7 +63,7 @@ module TranslationsHelper
 
    def tlink_to(translation_code, url, options = {})
      if translation_code == 'new_model'
-     #binding.pry
+ 
      end
      options[:count] = 1 if options[:model] && options[:count].nil?
      model = options[:model]
@@ -77,7 +77,7 @@ module TranslationsHelper
        end
        options[:model]= tr_model
      end
-     #binding.pry
+ 
      if options[:category].nil? or options[:category]== :action then
        tlabel = I18n.t($FA + translation_code, options )
      elsif options[:category]== :menu then
@@ -121,7 +121,7 @@ module TranslationsHelper
   # e.g. <%=theading("listing", :model=> "course_type",:count => 2) %>
   # translation_code can be "new, "edit" or "listing" or "home"  according to yaml paths
   def theading(translation_code, options = {})
-    #binding.pry
+
     if options[:class] then
       klass = options[:class]
     else
@@ -237,7 +237,7 @@ just substitute twill_paginate for will_paginate
  
  # format type is either Jquery_time, strftime or timepicker
  def time_format format_type=nil
-    #binding.pry
+
     format =I18n.t("time.formats.default_time_only")
     if format_type=="jquery_time" then
       return strftime_format_2_js_format_simple(format)

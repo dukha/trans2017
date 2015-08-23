@@ -15,9 +15,6 @@ class CalmappVersionsTranslationLanguage < ActiveRecord::Base
   has_many :translations_uploads
   validates :translation_language_id, :uniqueness => {:scope=> :calmapp_version_id}
   validates :calmapp_version_id, :uniqueness => {:scope=> :translation_language_id}
-  #validates :calmapp_version, :existence=>true
-  #validates :language, :existence=>true
-  #attr_accessor :write
   has_many :translations_uploads, :foreign_key=> "cavs_translation_language_id"
   accepts_nested_attributes_for :translations_uploads, :reject_if => :all_blank, :allow_destroy => true
   
@@ -89,7 +86,7 @@ class CalmappVersionsTranslationLanguage < ActiveRecord::Base
  saves new upload
 =end
   def base_locale_translations_for_new_translation_languages
-    #binding.pry
+
     puts "after save in base_locale_translations_for_new_translation_languages"
     
     uploads =  TranslationsUpload.where{cavs_translation_language_id == my{id}}.load
@@ -128,10 +125,8 @@ class CalmappVersionsTranslationLanguage < ActiveRecord::Base
   end # def
   
   def do_after_commit_on_create
-    #self.delay.add_all_dot_keys_from_en_for_new_translation_language # (id)
-    #binding.pry
     if translation_language.iso_code != 'en' then
-      AddEnKeysForNewLanguageJob.set(:wait=> 2.minutes).perform_later(id)
+      AddEnKeysForNewLanguageJob.set(:wait=> 10.minutes).perform_later(id)
     end
   end
   def add_all_dot_keys_from_en_for_new_translation_language #(cavtl_id)
@@ -139,7 +134,7 @@ class CalmappVersionsTranslationLanguage < ActiveRecord::Base
     msg = "Callback: 'add_all_dot_keys_from_en_for_new_translation_language'. Adding new blank translations after for a new language in " + show_me
     Rails.logger.info(msg )
     puts msg
-    #binding.pry
+
     begin
       cavtl = self #CalmappVersionsTranslationLanguage.find(cavtl_id)
       puts cavtl.to_s
@@ -148,27 +143,13 @@ class CalmappVersionsTranslationLanguage < ActiveRecord::Base
       
       count =0 
       en_trans.each do |en_t|
-        #if en_t.dot_key_code.include?(".record_invalid") then
-          #binding.pry
-       #end
         foreign = Translation.where{dot_key_code == my{en_t.dot_key_code}}.where{cavs_translation_language_id == my{cavtl.id}}.first
-        #if cavtl.translation_language.iso_code =='cs' && t.dot_key_code == 'activemodel.errors.format'
-          #binding.pry
-        #end
         if not foreign.nil?
           puts "dkc + tl.iso_code +  existing translation" 
           puts foreign.dot_key_code + " " + foreign.calmapp_versions_translation_language.translation_language.iso_code + " " + foreign.translation.to_s #+ " " + f.translation.class.name
         end
-        #we must reselect because a query result won't have associations
-        #tt = Translation.find(t.id)
-        #new_cavtl = CalmappVersionsTranslationLanguage.create!(  :calmapp_version_id => cavtl.calmapp_version_id, :translation_language_id => cavtl.id)
-        #exists = where{cavs_translation_language_id == my{cavtl.id}}.where{translation_language_id == my{translation_language.id}}
-        #foreign_blank = ActiveSupport::JSON.encode("")
         test =  ActiveSupport::JSON.decode(en_t.translation)
         incomplete = false
-        #if (en_t.dot_key_code.include? ".template.") && (translation_language.iso_code == 'ja')
-          #binding.pry
-        #end
         if test.is_a? Array
           length = test.length
           foreign_blank = ActiveSupport::JSON.encode([length])
@@ -176,7 +157,6 @@ class CalmappVersionsTranslationLanguage < ActiveRecord::Base
         elsif test.is_a? Hash
           blank = {}
           if en_t.special_structure == "plural"
-            #binding.pry
             plurals = translation_language.plurals
             plurals.each{ |pl| blank[pl] = ''}
             #foreign.calmapp_versions_translation_language.translation_language.plurals.each{ |pl| blank[pl]= ''}  

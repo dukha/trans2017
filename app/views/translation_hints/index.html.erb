@@ -1,7 +1,7 @@
 
 <%require 'will_paginate/array' %>
 <%=theading("listing", :model=>'translation_hint', :count=>11) %>
-<%if TranslationHint.respond_to?( :searchable_attr ) and TranslationHint.searchable_attr.any? then %>
+<%if TranslationHint.respond_to?( :searchable_attr ) && TranslationHint.searchable_attr.any? then %>
 <div id = 'data-empty' style = 'display:none'><%= @translation_hints.empty?.to_s %></div>
 <button id="showHideCriteria" type='button'>x</button>
 <div id='criteria' class="criteria" >

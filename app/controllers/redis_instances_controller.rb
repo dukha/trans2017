@@ -84,16 +84,16 @@ class RedisInstancesController < ApplicationController
   # DELETE /redis_instances/1.xml
   def destroy
     begin
-      #binding.pry  
+    
       @redis_instance.destroy
       tflash('delete', :success, {:model=>@@model, :count=>1})
       respond_to do |format|
-        #binding.pry
+    
         format.html { redirect_to(redis_instances_url) }
         format.js {}
       end
     rescue StandardError => e
-      #binding.pry
+  
       @redis_instance = nil
       flash[:error] = e.message
       respond_to do |format|
@@ -104,7 +104,7 @@ class RedisInstancesController < ApplicationController
 
   def unused_redis_database_indexes
     #puts  "unused_redis_database_indexes"
-    #binding.pry
+
     ri = RedisInstance.find(params[:redis_instance_id])
     data = ri.unused_redis_database_indexes()
     if request.xhr?
@@ -115,7 +115,7 @@ class RedisInstancesController < ApplicationController
   end 
   
   def next_redis_database_index
-    #binding.pry
+
     begin
       last_index = params[:last_index].to_i unless params[:last_index].nil?
       last_index ||= -1 
@@ -127,7 +127,7 @@ class RedisInstancesController < ApplicationController
         return ret_val
       end #xhr 
     rescue Exceptions::NoRedisDatabasesLeft => e
-        #binding.pry
+    
         render :json => {:error => e.message}, :status=>403
     end 
   end #def

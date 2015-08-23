@@ -1,7 +1,7 @@
 =begin
 I18n::Backend::Base.module_eval do
   def translate(locale, key, options = {})
-    #binding.pry
+ 
     puts "marks eval"
     raise InvalidLocale.new(locale) unless locale
     entry = key && lookup(locale, key, options[:scope], options)
@@ -26,7 +26,7 @@ I18n::Backend::Base.module_eval do
          entry = resolve(locale, test_key, entry, options)
        }
 = end
-        binding.pry
+
         entry  = pluralize(locale, entry, count)
         pluralized = true
         puts "in entry nil count"
@@ -69,7 +69,6 @@ I18n::Backend::Pluralization.module_eval do
       puts I18n.backend.class.name
       return entry unless entry.is_a?(Hash) and count
     end
-    binding.pry
 
     pluralizer = pluralizer(locale)
     if pluralizer.respond_to?(:call)

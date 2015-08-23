@@ -2,7 +2,7 @@
 <% cell_class = "data" %>
 <% link_cell_class="link"%> 
 
-<%if CalmappVersionsTranslationLanguage.respond_to?( :searchable_attr ) and CalmappVersionsTranslationLanguage.searchable_attr.any? then %>
+<%if CalmappVersionsTranslationLanguage.respond_to?( :searchable_attr ) && CalmappVersionsTranslationLanguage.searchable_attr.any? then %>
 <button id="showHideCriteria" type='button'>x</button>
 <div id = 'data-empty' style = 'display:none'><%= @calmapp_versions_translation_languages.empty?.to_s %></div>
 <div id='criteria' class="criteria" >
@@ -71,10 +71,10 @@
           
           <td class="<%= link_cell_class %>">
             <%if calmapp_versions_translation_language.redis_databases_count > 0%>
-              <button id = 'publish'><%=t($FA + "translation_language_publish", :language=> calmapp_versions_translation_language.translation_language.name)%></button>
+              <button id = 'publish'><%=t($FA + "publish_language", :language=> calmapp_versions_translation_language.translation_language.name)%></button>
               <div id ='tl-publish-flash-<%=calmapp_versions_translation_language.id.to_s%>'></div>
               <div id = 'publishing-get-database'>
-              <%=form_tag(calmapp_versions_translation_language_publish_path(calmapp_versions_translation_language.id), 
+              <%=form_tag(calmapp_versions_translation_languages_languagepublish_path(calmapp_versions_translation_language.id), 
               :remote=> true, 
               :id=> 'publish-language') do %> 
                 

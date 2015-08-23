@@ -18,6 +18,7 @@ Calmapp.delete_all
 Language.delete_all
 TranslationLanguage.delete_all
 TranslationHint.delete_all
+TranslationsUpload.delete_all
 Whiteboard.delete_all
 ReleaseStatus.delete_all
 WhiteboardType.delete_all

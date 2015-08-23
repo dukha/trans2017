@@ -8,7 +8,6 @@ class UserProfile < ActiveRecord::Base
   
   
   def add_cavs_tls
-    #binding.pry
     if profile.name == $SYSADMIN then
       user.application_administrator = true
       user.administrator_cavs_tls << CalmappVersionsTranslationLanguage.all

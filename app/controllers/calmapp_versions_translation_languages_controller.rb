@@ -12,19 +12,19 @@ class CalmappVersionsTranslationLanguagesController < ApplicationController
   # GET /calmapp_versions_translation_languages
   # GET /calmapp_versions_translation_languages.json
   def index
-    #binding.pry
+
     #@calmapp_versions_translation_languages = CalmappVersionsTranslationLanguage.paginate(:page => params[:page], :per_page=>15)
     search_info = init_search(current_user, CalmappVersionsTranslationLanguage.searchable_attr, CalmappVersionsTranslationLanguage.sortable_attr)
       #if Translation.valid_criteria?(search_info) then
         @calmapp_versions_translation_languages = CalmappVersionsTranslationLanguage.search(current_user, search_info)
-        #binding.pry
+    
       #else  
         #msg = 'Criteria: '
         #flash_now= false
-        #binding.pry
+    
         #search_info[:messages].each do |m|
          # m.keys.each{ |k,v| 
-            #binding.pry
+        
           #  flash_now = true
            # msg.concat( "#{m[k] + '. '}") 
           #}
@@ -34,12 +34,12 @@ class CalmappVersionsTranslationLanguagesController < ApplicationController
         # in this case we make an ActivRecord Relation with 0 records so that we can redisplay
         #@translations =  Translation.where{id == -1}
       #end
-      #binding.pry
+  
       #end
    
-    #binding.pry
+
     @calmapp_versions_translation_languages = @calmapp_versions_translation_languages.paginate(:page => params[:page], :per_page => 30)
-    #binding.pry
+
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @calmapp_versions_translation_languages }
@@ -64,7 +64,7 @@ class CalmappVersionsTranslationLanguagesController < ApplicationController
   # POST /calmapp_versions_translation_languages.json
   def create
     @calmapp_versions_translation_language = CalmappVersionsTranslationLanguage.new(calmapp_versions_translation_language_params) 
-    binding.pry
+    
     respond_to do |format|
       if @calmapp_versions_translation_language.save
         tflash('create', :success, {:model=>@@model, :count=>1})
@@ -80,19 +80,19 @@ class CalmappVersionsTranslationLanguagesController < ApplicationController
   # PATCH/PUT /calmapp_versions_translation_languages/1
   # PATCH/PUT /calmapp_versions_translation_languages/1.json
   def update
-    #binding.pry
+
     #@calmapp_versions_translation_language = CalmappVersionsTranslationLanguage.find(params[:id])
     @calmapp_versions_translation_language.assign_attributes(calmapp_versions_translation_language_params)
     
     respond_to do |format|
       begin
       if @calmapp_versions_translation_language.save
-        #binding.pry
+    
         tflash('update', :success, {:model=>@@model, :count=>1})
         format.html { redirect_to( :action => "index")}#, notice: 'Calmapp versions translation language was successfully updated.') }
         format.json { head :no_content }
       else
-        #binding.pry
+    
         format.html { render action: 'edit' }
         format.json { render json: @calmapp_versions_translation_language.errors, status: :unprocessable_entity }
       end # save
@@ -101,12 +101,12 @@ class CalmappVersionsTranslationLanguagesController < ApplicationController
         #flash[:notice] = "Failed to write file : " + pse.file_name + ". The syntax in the file was wrong. Ask for technical help. No upload done."
         format.html { redirect_to action: 'edit' }
       rescue UploadTranslationError => ute
-        #binding.pry
+    
         flash[:error]= ute.message
         flash[:notice] = "Failed to write file : " + ute.file_name + ". No upload done."
         format.html { redirect_to action: 'edit' } 
       #rescue StandardError => e
-        #binding.pry
+    
         #flash[:error]= e.message 
         #flash[:notice] = "Failed to write file : " + e.file_name + ". No upload done."
         #format.html { redirect_to action: 'edit' } 
@@ -145,17 +145,23 @@ class CalmappVersionsTranslationLanguagesController < ApplicationController
 =begin
  publish_language publishes a single language translations of a particular version to the chosen redis_database  
 =end
-  def publish_language
-    @calmapp_versions_translation_language_id = params[:id]
+  def languagepublish
+    # a 
+    #@calmapp_versions_translation_language_id = params[:id]
     calmapp_versions_translation_language = CalmappVersionsTranslationLanguage.find(params[:id])
-    calmapp_versions_translation_language.translation_language
+    #calmapp_versions_translation_language.translation_language
+    #count = Translation.where{cavs_translation_language_id == calmapp_versions_translation_language.id}.where{incomplete == false}
     begin
       RedisDatabase.validate_redis_db_params(params[:redis_database_id])
+  
       redis_db = RedisDatabase.find(params[:redis_database_id])
-      count = redis_db.publish_version_language(calmapp_versions_translation_language.translation_language)   
+      count = redis_db.version_language_ready_to_publish(calmapp_versions_translation_language.translation_language).count  
+      #count = redis_db.publish_version_language(calmapp_versions_translation_language.translation_language)
+      PublishLanguageToRedisJob.perform_later(calmapp_versions_translation_language.calmapp_version_tl.id, calmapp_versions_translation_language.translation_language.id)
+     
       if request.xhr? then
         payload = {"result" => count, "status" =>200}
-        flash[:notice] = "Published to #{redis_db.description} : Total Translations Published = #{count}"
+        flash[:notice] = "Queued #{count} translations to #{redis_db.description} for publishing."
         respond_to do |format|
           format.js
         end
@@ -181,7 +187,7 @@ class CalmappVersionsTranslationLanguagesController < ApplicationController
     
     def calmapp_versions_translation_language_params
 =begin 
-      binding.pry
+      
       nested_keys = params.require(:calmapp_versions_translation_language).fetch(:translations_uploads_attributes, {}).keys
   params.require(:calmapp_versions_translation_language).permit(:translation_language_id, :calmapp_version_id,
                        :calmapp_version, :translation_language,:translations_uploads_attributes => nested_keys)

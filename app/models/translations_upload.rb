@@ -35,12 +35,12 @@ class TranslationsUpload < ActiveRecord::Base
     end     
     begin       
       data  = YAML.load_file(TranslationsUpload.uploaded_to_folder + yaml_upload.url)
-      #binding.pry
+  
       plurals= Hash.new
       key_value_pairs = TranslationsUpload.traverse_ruby(data, plurals, calmapp_versions_translation_language.calmapp_version_tl.id )
     rescue Psych::SyntaxError => pse
       #logger.error( yaml_upload_identifier() + " has produced the following error: " + pse + " Have a technical person check the syntax of the file")
-      #binding.pry
+  
       error =  PsychSyntaxErrorWrapper.new(pse, yaml_upload_identifier)
       puts error
       logger.error(error)
@@ -52,7 +52,7 @@ class TranslationsUpload < ActiveRecord::Base
     begin
       Translation.transaction do
         puts yaml_upload.url
-        t = BulkTranslations.translations_to_db_from_file(key_value_pairs, id, calmapp_versions_translation_language, duplicates_behavior2, plurals)
+        t = BulkTranslations2.translations_to_db_from_file(key_value_pairs, id, calmapp_versions_translation_language, duplicates_behavior2)#, plurals)
         if t.errors.count > 0 then
           ret_val = t
           messages = ""           
@@ -92,8 +92,24 @@ class TranslationsUpload < ActiveRecord::Base
 =end  
   def  self.traverse_ruby( node, plurals, version_id, dot_key_stack=Array.new, dot_key_values_map = Hash.new)#,  container=Hash.new, anchors = Hash.new, in_sequence=nil )     
     if node.is_a? Hash then
-      #binding.pry
-      if dot_key_stack.length > 1 and dot_key_stack[0] == 'en' and Translation.plural_hash? node
+#as it was on 28 June      
+      if Translation.plural_hash? node
+        
+        store_dot_key_value(dot_key_stack, node.to_json, dot_key_values_map, plurals, true)
+        
+      else
+    
+        node.keys.each do |k|
+          dot_key_stack.push(k)
+          traverse_ruby(node[k], plurals, version_id, dot_key_stack, dot_key_values_map)    
+        end
+        dot_key_stack.pop
+      end 
+      
+=begin
+As it was on 2 Aug June  
+
+       if dot_key_stack.length > 1 and dot_key_stack[0] == 'en' and Translation.plural_hash? node
         store_dot_key_value(dot_key_stack, node.to_json, dot_key_values_map, plurals, true)
       elsif dot_key_stack.length > 1 and dot_key_stack[0] != 'en' and Translation.dot_key_code_plural?(dot_key_stack[1..dot_key_stack.length-1].join('.'), version_id)  
         # we only store a dot key as a plural if the dot_key is an 'en' langauge
@@ -104,7 +120,31 @@ class TranslationsUpload < ActiveRecord::Base
           traverse_ruby(node[k], plurals, version_id, dot_key_stack, dot_key_values_map)    
         end
         dot_key_stack.pop
-      end    
+
+      end  
+=end
+=begin 
+ As it was on 8 Aug 
+     
+  
+      plural = Translation.plural_hash? node
+  
+      if dot_key_stack.length > 1 and dot_key_stack[0] == 'en' and plural
+        # we have an en plural
+        store_dot_key_value(dot_key_stack, node.to_json, dot_key_values_map, plurals, true)
+      elsif dot_key_stack.length > 1 and dot_key_stack[0] != 'en' and Translation.dot_key_code_plural?(dot_key_stack[1..dot_key_stack.length-1].join('.'), version_id)  
+        # we only store a dot key as a plural if the dot_key is an 'en' langauge
+        store_dot_key_value(dot_key_stack, node.to_json, dot_key_values_map, plurals, false) 
+      if dot_key_stack.length > 1
+        store_dot_key_value(dot_key_stack, node.to_json, dot_key_values_map, plurals, plural)
+      else
+        node.keys.each do |k|
+          dot_key_stack.push(k)
+          traverse_ruby(node[k], plurals, version_id, dot_key_stack, dot_key_values_map)    
+        end
+        dot_key_stack.pop
+      end
+=end    
     elsif node.is_a? Array then
       store_dot_key_value(dot_key_stack, node.to_json, dot_key_values_map, plurals)   
     elsif node.is_a? String then
@@ -313,9 +353,28 @@ class TranslationsUpload < ActiveRecord::Base
 =end
   def do_after_commit
     
-    write_yaml_file_to_db()
-#    ApplicationController.start_delayed_jobs_queue
+    #write_yaml_file_to_db()
+    #DELAYED JOB
+    TranslationsUploadWriteYamlJob.perform_later(id)
+=begin #   
+    Translation.check_translations_match_english2(
+      #calmapp_versions_translation_language.calmapp_version_id, 
+      #calmapp_versions_translation_language.translation_language.iso_code
+      calmapp_versions_translation_language)
+=end    
   end
+  
+  def self.write_yaml(id)
+    tu = TranslationsUpload.find(id)
+    tu.write_yaml_file_to_db()
+  end
+=begin  
+  def self.check_translations(id)
+    cavtl = TranslationsUpload.find(id).calmapp_versions_translation_language
+    Translation.check_translations_match_english2(cavtl)
+  end
+=end  
+  
 =begin
  Adds Czech to Calmapp version. (Works via callbacks in calmapp_version) 
 =end

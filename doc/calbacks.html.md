@@ -19,6 +19,11 @@ redis_database
 * after_create :after_create_method
 
 ##translation
+* before_validation :do_before_validation
+> if en
+>> add special_structure info to translation
+All languages
+>> do_incomplete Adds the incomplete data to translation if en record is a special structure
 * before_save :translation_valid_json? 
 * after_create :add_other_language_records_to_version, :if => Proc.new { |translation| translation.language.iso_code=='en'}
 >>When a new English translation is added, it adds nil translations for all other existing languages.

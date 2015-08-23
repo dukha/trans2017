@@ -122,7 +122,6 @@ config.autoload_paths += %W(#{config.root}/lib
  @param interpolations must have :description as description of Redis Instance
 =end
     def initialize interpolations = {}, level = 'warning' 
-      binding.pry
        super(@@Translation_code,  interpolations, level )
       
     end

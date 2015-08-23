@@ -1,14 +1,25 @@
 //This will delete the line just deleted erb syntax is #{dom_id(user)}
-
-$(body).css("background-color", "red")
-var identifier = '<%=dom_id(@translation)';
+//console.log("abcdef");
+//$('body').css("background-color", "red")
+var identifier = '<%=dom_id(@translation)%>';
+console.log(identifier);
 row = $('tr#' + identifier);
-console.log("update.js")
-<%binding.pry%>
-var flash_selector = "div#local-flash"; //.concat(@translation.id.to_s)%>  
-row.find(flash_selector);
-$("<%=flash_selector%>").html("<%=j display_flashes%>");
+//console.log("update.js");
+anchor = row.find('span.plural-anchor');
+console.log("anchor");
+console.log(anchor);
+
+console.log("<%=@translation.plural_translation_html_display%>");
+<%if @translation.is_plural? %>
+   $(anchor).html( "<%=@translation.plural_translation_html_display%>");
+<%end%>
+//$(anchor).html( 'ababab');//< %="xcxx"% >);
+//< % = plural_editing_table({"translation"=> @translation.translation, "dot_key_code" => @translation.dot_key_code}) %>
+//);
+var flashSelector = "div#local-flash"; //.concat(@translation.id.to_s)%>  
+var flashDiv = row.find(flashSelector);
+flashDiv.html("<%=j display_flashes%>");
 timeoutID = window.setTimeout(clearFlash,30000);
 function clearFlash(){
-  $("<%=flash_selector%>").empty();
+  flashDiv.empty();
 }
