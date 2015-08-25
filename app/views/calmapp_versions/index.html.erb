@@ -9,9 +9,15 @@
       <th class ="dataheader"><%=tlabel('calmapp_id',  'calmapp_version') %></th>
       <th class ="dataheader"><%=tlabel('version','calmapp_version') %></th>
       <th class="linkheader"></th>
+      <%if has_role? :redisdbalter, :redis_databases%>
       <th class="linkheader"></th>
-      <th class="linkheader"></th> 
-      <th class="linkheader"></th>  
+      <%end%>
+      <%if has_role? :deepcopy, :calmapp_versions%>
+        <th class="linkheader"></th> 
+      <%end%>
+      <% if has_role?(:deepdestroy, :calamapp_version)%>
+      <th class="linkheader"></th>
+      <%end%>  
     </tr>
   
     
@@ -23,9 +29,12 @@
       <td class="<%= cell_class %>"><%= name %></td>
       <td class="<%= cell_class %>"><%= version %></td>
       <%= link_edit   edit_calmapp_version_path(calmapp_version), "calmapp_version", {:edit=> "edit_and_change_languages"} %>
-      <td class="<%= link_cell_class %>"><%= tlink_to "redisdbalter", version_alterredisdb_path(calmapp_version)%></td>
-     
-      <td class="<%= link_cell_class %>"><%= tlink_to "deepcopyparams", version_deep_copy_params_path(calmapp_version)%> </td>
+      <%if has_role? :redisdbalter, :redis_databases%>
+       <td class="<%= link_cell_class %>"><%= tlink_to "redisdbalter", version_alterredisdb_path(calmapp_version)%></td>
+      <%end%> 
+      <%if has_role? :deepcopy, :calmapp_versions%>
+        <td class="<%= link_cell_class %>"><%= tlink_to "deepcopyparams", version_deep_copy_params_path(calmapp_version)%> </td>
+      <%end%>
       <!--td class="< %= link_cell_class %>">< %= tlink_to "version_redis", redis_databases_path %></td -->
       <!--td class="< %= link_cell_class %>">< %= tlink_to "version_redis", calmapp_versions_redis_databases_path + "?criterion_calmapp_version_id=" + calmapp_version.id.to_s + "&operator_calmapp_version_id=eq"%></td -->
       
@@ -36,9 +45,9 @@
         <div>No publication databases setup</div> 
       < %end% >
       </td -->
-      
-      <%=link_destroy calmapp_version, "calmapp_version", {:data=>{:confirm=>"delete.destroy_translation_data"}, :app=>name, :version=>version}%>
-      
+      <% if has_role?(:deepdestroy, :calamapp_version)%>
+        <%=link_destroy calmapp_version, "calmapp_version", {:data=>{:confirm=>"delete.destroy_translation_data"}, :app=>name, :version=>version}%>
+      <%end%>
   </tr>
 <% end %>
 </table>

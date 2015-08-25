@@ -193,7 +193,7 @@ This function, together with the scope in routes.rb allows the setting of urls l
     flash[:error] = exception.message + " " + exception.record.to_s
   end
 =end
-
+ 
 protected
 
   def configure_permitted_parameters

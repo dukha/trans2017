@@ -5,7 +5,7 @@ class CavstlDestroyDependentsJob < ActiveJob::Base
 
     begin
       cavtl = CalmappVersionsTranslationLanguage.find(cavs_translation_language_id)
-      cavtl.deep_destroy
+      cavtl.destroy_dependents #deep_destroy
     rescue => exception
   
       ExceptionNotifier.notify_exception(exception,

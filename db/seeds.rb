@@ -44,7 +44,7 @@ ReleaseStatus.create!(:status => "Production")
 log.info("Release Status data inserted successfully.")
 
 
-Whiteboard.create!(:whiteboard_type_id=> systemWBType.id, :info => 'Edit to write message here.')#:info=>"Translator application under development." )
+Whiteboard.create!(:whiteboard_type_id=> systemWBType.id, :info => 'WELCOME TO TRANSLATOR.')#:info=>"Translator application under development." )
 Whiteboard.create!(:whiteboard_type_id=> userWBType.id, :info=> 'Edit to write message here.')#"We need translators for Russian.")
 log.info("Whiteboards data inserted successfully.")
 #User.create!(  :email=> 'translator@calm.org', :password=>'123456', :confirm_password=>'123456', :actual_name=> 'joe smith', :username => "joe",:current_permission_id=>1)

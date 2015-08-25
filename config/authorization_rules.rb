@@ -56,7 +56,8 @@ authorization do
         has_permission_on aResourceSymbol, :to => roles_destroy
       end
     end
-  end
+ end #def 
+  
 
 #privileges do
 #  privilege :read do
@@ -140,14 +141,12 @@ authorization do
   role :users_invite do
     has_permission_on [:users], :to => [:invite_user]
     has_permission_on [:invitations], :to => [ :create, :new, :update, :edit]
-  end
-  
-  
+  end   
   
  role :translations_develop do
    has_permission_on [:translations], :to => [:index, :update, :index, :destroy, :new, :edit, :create] do
      if_attribute :"calamapp_version_translation_language.calmapp_version.calmapp" =>  intersects_with {user.developer_calmapps}
-    end 
+   end 
  end  
   
   role :translations_translate do

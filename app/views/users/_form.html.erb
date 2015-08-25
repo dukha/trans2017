@@ -4,15 +4,19 @@
   else  
     path = user_update_path(@user.id)
   end%>
-  
 <%= semantic_form_for(@user, :url => path, html: {:autocomplete=>'off'}) do |f| %>
   <%= f.inputs do %>
       <%=render :partial => 'shared/user_basic_attributes', :locals=>{:f=>f}%>
+
+      <%if f.object.invited_by_id %>
+        <li><label style = "width:25%;">Inviter</label><%=User.find(f.object.invited_by_id).actual_name%></li>
+      <%end%>
       <%=f.input :responds_to_contacts %>
+      
       <li><%=f.label $ARA + "profiles", {:style=>"width:25%;"}%>
         <%profile_cb_count = 0%>
         <%profile_cbs_per_row = 4%>
-        <table>  
+        <table class = 'checkboxes'>  
         <%=f.collection_check_boxes( :profile_ids, Profile.all, :id, :name) do |b| %>
            <%if profile_cb_count%profile_cbs_per_row == 0 && profile_cb_count != 0%>
              </tr>

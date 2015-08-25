@@ -1,7 +1,7 @@
 <p><%= t("devise.mailer.invitation_instructions.hello", actual_name: @resource.actual_name) %></p>
 
 <p><%= t("devise.mailer.invitation_instructions.someone_invited_you", 
-   url: root_path(:locale=> locale), app_name: $APPLICATION_NAME).html_safe %></p>
+   url: root_url(:locale=> locale), app_name: $APPLICATION_NAME).html_safe %></p>
 
 
 <p><%= link_to t("devise.mailer.invitation_instructions.accept"), 

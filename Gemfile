@@ -1,5 +1,5 @@
 source 'http://rubygems.org'
-gem 'rails', '~>4.2.0'#'~>3.2.8'
+gem 'rails', '~>4.2.2'#'~>3.2.8'
 # postgresql connector
 gem 'pg'#, '~>0.12.2'
 # layout of all forms
@@ -146,7 +146,7 @@ group :development, :test do
 end # end group dev, test
 
 
-  gem 'sass-rails', '~>5.0.0' #:git=> "git://github.com/rails/sass-rails"#, " ~> 3.2.5"
+  gem 'sass-rails', '~>5.0.3' #:git=> "git://github.com/rails/sass-rails"#, " ~> 3.2.5"
   #gem 'coffee-rails', '~>4.0.0'#, "~> 3.2.1"
   gem 'uglifier','~>2.2.1'
   

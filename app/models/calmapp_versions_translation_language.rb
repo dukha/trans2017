@@ -32,7 +32,9 @@ class CalmappVersionsTranslationLanguage < ActiveRecord::Base
   after_commit :do_after_commit_on_create, :on => :create
   before_destroy :do_before_destroy
   
-  
+=begin
+ @deprecated 
+
   def do_before_destroy
     #CalmappVersionsTranslationLanguage.destroy_dependents(self.id)
     if translation_language.iso_code != 'en' then
@@ -40,6 +42,7 @@ class CalmappVersionsTranslationLanguage < ActiveRecord::Base
       CavstlDestroyDependentsJob.perform_later(id)
     end
   end 
+=end
   def self.permitted_for_translators
      #all.load - [TranslationLanguage.TL_EN ]
      en_id = TranslationLanguage.TL_EN.id

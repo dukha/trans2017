@@ -79,10 +79,15 @@ class Profile < ActiveRecord::Base
     reserved_profile = 'guest'
     Profile.create :name => reserved_profile, :roles => [:guest_visit, :whiteboards_read], :protected_profile => true unless self.guest
     
-    roles= [:translations_read, :translations_write, :contacts_create]
+    roles= [:translations_read, :translations_write, :contacts_create, :calmapp_versions_translation_languages_read, 
+      :calmapp_versions_translation_languages_languagepublish, :redis_databases_read, :redis_instances_read,
+      :release_statuses_read, :translation_languages_read]
     Profile.create(:name=>'translator', :roles => roles, :protected_profile => true) 
     
-    roles= [:translations_read, :translations_write, :translations_destroy, :contacts_create, :contacts_read, :contacts_write, :contacts_destroy]
+    roles= [:translations_read, :translations_write, :translations_destroy, :contacts_create, :contacts_read, 
+      :contacts_write, :contacts_destroy, :translation_hints_read, :transaltion_hints_write, :translation_hints_destroy, 
+      :translation_hints_create, :calmapp_versions_translation_languages_languagepublish, :redis_databases_read, :redis_instances_read,
+      :release_statuses_read, :translation_languages_read, :calmapp_versions_versionpublish]
     Profile.create(:name=>'developer', :roles => roles, :protected_profile => true)
     
   roles= [  :users_read,

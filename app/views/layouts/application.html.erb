@@ -24,9 +24,9 @@
     <table id ="appmaintable" >
       <tr>
         <td id="appmenutd" class="maindisplay" >
-
-          <%= render  'layouts/menu' %>
-
+          <%if ! current_user.nil?%>
+            <%= render  'layouts/menu' %>
+          <%end%>
         </td>
         <!-- td id="appmaintd" class="maindisplay"  -->
 

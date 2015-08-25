@@ -102,7 +102,7 @@ end
 
     if @contact.save
       tflash('create', :success, {:model=>@@model, :count=>1})  
-      redirect_to @contacts, notice: 'Contact was successfully created.'
+      redirect_to( :controller => 'whiteboards',:action => "index")
     else
       render action: 'new'
     end
@@ -112,7 +112,7 @@ end
   def update
     if @contact.update(contact_params)
        tflash('update', :success, {:model=>@@model, :count=>1})
-      redirect_to @contacts, notice: 'Contact was successfully updated.'
+       redirect_to( :action => "index")
     else
       render action: 'edit'
     end

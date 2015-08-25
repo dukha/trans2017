@@ -3,7 +3,6 @@ class UsersController < ApplicationController #Devise::RegistrationsController
   before_action :authenticate_user!
   before_action :set_user, only: [ :edit, :update, :destroy, :unlock_user]
   filter_access_to :all
-
   @@model ="user"
   
 =begin @deprecated  
@@ -59,11 +58,9 @@ class UsersController < ApplicationController #Devise::RegistrationsController
   end
 
   #update_password PUT /:locale/users/:id/update_password(.:format) {:controller=>"users", :action=>"update"}
-  def update
-    #@user = User.find(params[:id])
-   
+  def update   
     @user.unlock_access! unless !@user.access_locked?
-   
+    binding.pry
     respond_to do |format|
   
       if @user.update(user_params)#params[:user])
@@ -107,8 +104,8 @@ class UsersController < ApplicationController #Devise::RegistrationsController
       end
     end #rescue  
   end
-  
-  protected
+ 
+protected
   def prepare_mode
     mode = params["selection_mode"]
     extra_where_clauses = []
@@ -123,6 +120,7 @@ class UsersController < ApplicationController #Devise::RegistrationsController
     end
     return extra_where_clauses
   end
+
 
 private
   # Use callbacks to share common setup or constraints between actions.

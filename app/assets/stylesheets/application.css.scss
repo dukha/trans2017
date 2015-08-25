@@ -1,0 +1,23 @@
+/*
+* require smoothness.css
+*= require cocoon
+*= require formtastic
+*=require formtastic_changes
+*=require jquery.treeview
+*=require simple-dropdown-index
+*=require jquery-ui
+* require sunny/jquery-ui-1.10.3
+*= require smoothness/theme
+*= require dual-listboxes
+*= require popup 
+*=require trans
+*= require scaffold
+*= require tooltips 
+*= require github-markdown 
+*= require translations
+*= require_self
+
+
+* require_tree .
+*/
+@import 'smoothness.css'

@@ -32,6 +32,8 @@
          <!-- %= button_to t($FA + 'sign_out', :username=>current_user.username), destroy_user_session_path, :method => :delete ,:form_class => "button_to_fake", :id => 'signout', :confirm => 'Are you sure?' % -->
          <!--%= button_to t($FA + 'sign_out', :username=>current_user.username), destroy_user_session_path, :method => :delete ,:form_class => "button_to_fake", :id => 'signout', data: {confirm: t($MSDS)} % -->
          <%= button_to t($FA + 'sign_out', :username=>current_user.username), destroy_user_session_path, :method => :delete ,:form_class => "button_to_fake", :id => 'signout' %>
+      <%else%>
+        <%=button_to "Sign In", new_user_session_path%>
       <% end %>  
         
         <!--script type ="text/javascript">

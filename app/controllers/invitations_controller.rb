@@ -20,7 +20,8 @@ class InvitationsController < Devise::InvitationsController
   end
   
   def create
-     
+    #binding.pry
+     #invited_by_id
     self.resource = invite_resource
     resource_invited = resource.errors.empty?
 
@@ -45,13 +46,14 @@ class InvitationsController < Devise::InvitationsController
    end
   
    def update
-    
+    #binding.pry
     self.resource = accept_resource
     invitation_accepted = resource.errors.empty?
 
     yield resource if block_given?
 
     if invitation_accepted
+      #binding.pry
       flash_message = resource.active_for_authentication? ? :updated : :updated_not_active
       set_flash_message :notice, flash_message if is_flashing_format?
       resource.profiles << Profile.where{name == 'guest'}.first
@@ -59,9 +61,9 @@ class InvitationsController < Devise::InvitationsController
   
       sign_in(resource_name, resource)
       require './app/mailers/admin_mailer'
-      user = User.find(resource.id)
-  
-      AdminMailer.user_invitation_accepted(user).deliver_now
+      url = user_edit_url(resource.invited_by_id)
+      link = link_to("user Record", url)
+      AdminMailer.user_invitation_accepted(resource, link).deliver_now
       respond_with resource, :location => after_accept_path_for(resource)
     else
       flash_errors(resource)
@@ -91,7 +93,39 @@ class InvitationsController < Devise::InvitationsController
       #u.permit(:first_name, :last_name, :phone, :password, :password_confirmation,:invitation_token)
       #u.permit(:actual_name, :username, :phone, :password, :password_confirmation, :invitation_token)
   end
-
+=begin
+  # this is called when creating invitation
+  # should return an instance of resource class
+  def invite_resource
+    #binding.pry
+    ## skip sending emails on invite
+    resource_class.invite!(invite_params, current_inviter) do |u|
+      u.skip_invitation = true
+    end
+  end
+=end
+  # this is called when accepting invitation
+  # should return an instance of resource class
+  def accept_resource
+     #binding.pry
+    resource = resource_class.accept_invitation!(update_resource_params)
+    ## Report accepting invitation to analytics
+    #Analytics.report('invite.accept', resource.id)
+    resource
+  end
+  
+  def configure_permitted_parameters
+  # Only add some parameters
+  #binding.pry
+  devise_parameter_sanitizer.for(:accept_invitation).concat [:actual_name, :username, :country, :phone, :invited_by_id]
+  # Override accepted parameters
+=begin
+  devise_parameter_sanitizer.for(:accept_invitation) do |u|
+    u.permit(:first_name, :last_name, :phone, :password, :password_confirmation,
+             :invitation_token)
+  end
+=end
+end
   
   private
     def format_message exception

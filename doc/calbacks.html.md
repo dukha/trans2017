@@ -8,7 +8,7 @@
   
 ##calmapp_version: 
 * before_create :add_english
->>Adds the Englsih language to the version if the user left it out. Englsh is required for all versions
+>>Adds the English language to the version if the user left it out. Englsh is required for all versions
 >>Not done as delayed job as a short process.
 
 ##redis_instance 

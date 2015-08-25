@@ -409,7 +409,7 @@ en:
         password_new: New Password
         email: Email
         country: Country of Residence
-        phone: Phone Number
+        phone: Phone Number(including area code)
         profiles: Profiles
         translator: Translator
         developer: Developer

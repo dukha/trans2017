@@ -120,7 +120,7 @@ class Translation < ActiveRecord::Base
      when TRANS_PLURAL
        #tl = CalmappVersionsTranslationLanguage.find(cavs_translation_language_id).translation_language
        pl = tl.plurals
-    if dot_key_code == "errors.messages.wrong_length" && tl.iso_code == 'cs'
+    #if dot_key_code == "errors.messages.wrong_length" && tl.iso_code == 'cs'
        if not trans.is_a? Hash     
          if trans.is_a? String
            # translation can be single string: this will be take an an "other" translation and will work
@@ -157,8 +157,8 @@ class Translation < ActiveRecord::Base
              unless p == "other" && many_insteadof_other 
                trans[p] = '' 
                blank = true  #unless p == "other" && many_insteadof_other
-             end
-           end      
+             end #unless
+           end #not trans.keys      
          } 
          if trans.length == 1 && trans.keys[0] == "other" && (not trans[keys[0]].blank?)
            trans = trans[keys[0]]
@@ -243,7 +243,7 @@ class Translation < ActiveRecord::Base
         self.incomplete = true
       end    
     end # when  
- if dot_key_code == "errors.messages.wrong_length" && tl.iso_code == 'cs'
+ #if dot_key_code == "errors.messages.wrong_length" && tl.iso_code == 'cs'
     if JSON.is_json?(trans)
       self.translation = trans
     else

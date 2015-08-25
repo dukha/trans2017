@@ -1,6 +1,94 @@
 /* This import contains the matching colours etc for jquery sunny them*/
 /*@import 'sunny';*/
-@import 'smoothness';
+/*@import 'smoothness';*/
+
+/* from applicaton.css */
+/*@import 'smoothness.css';*/
+body {
+  /*background-color: $body-color; /*#BB6F04; /*#4B7399;*/
+  font-family: Verdana, Helvetica, Arial;
+  font-size: 14px;
+}
+
+a img {
+  border: none;
+}
+
+
+
+.clear {
+  clear: both;
+  height: 0;
+  overflow: hidden;
+}
+
+#container {
+  width: 75%;
+  margin: 0 auto;
+  background-color: #FFF;
+  padding: 20px 40px;
+  border: solid 1px black;
+  margin-top: 20px;
+}
+/* added caps_lock status so that it matches flash_alert */
+
+
+.fieldWithErrors {
+  display: inline;
+}
+
+.error_messages {
+  width: 400px;
+  border: 2px solid #CF0000;
+  padding: 0px;
+  padding-bottom: 12px;
+  margin-bottom: 20px;
+  background-color: #f0f0f0;
+  font-size: 12px;
+}
+
+.error_messages h2 {
+  text-align: left;
+  font-weight: bold;
+  padding: 5px 10px;
+  font-size: 12px;
+  margin: 0;
+  background-color: #c00;
+  color: #fff;
+}
+
+.error_messages p {
+  margin: 8px 10px;
+}
+
+.error_messages ul {
+  margin: 0;
+}
+#user_nav{
+  color: #ffffff;
+  width:90%;
+  text-align:right;
+}
+#user_nav a{
+  color:#ffffff;
+}
+#username{
+  font-style:italic;
+}
+/* end appliaton.css */
+
+
+
+
+
+
+
+
+
+
+
+
+
 $margin:2px;
 $padding:2px; 
 $footerheight:70px;
@@ -14,7 +102,8 @@ $indexfont-size: small;
 
 html,body{
     /* overrides what is in application.css (from nifty)*/
-    background-color: $body-color;//#cd923f;
+    background-color: dimgray;
+    /*$body-color;/ * /#cd923f;*/
     height:100%;
     margin:0px;
     padding:0px;
@@ -31,7 +120,8 @@ img.logo{
     width:90%;
 }
 .heading, .subheading{
-    color:$headingcolor;
+    color: #14BDF7;
+    /*$headingcolor;*/
     text-align:center;
     vertical-align:middle;
 }
@@ -122,9 +212,12 @@ table.data{
   /*border-collapse:collapse;*/
   
 }
+$editor-background-color: rgba( 180,180,180, 0.4);
+$nested-border-colour: rgba( 100,100,100, 0.6);
 div#table{
   border:solid;
-  border-color:$nested-border-colour;
+  border-color: $nested-border-colour;
+  /**/
   margin: 0px;
   padding:0px;
 }
@@ -133,7 +226,8 @@ div#table{
  */
 
 table.data{
-  border-color: $table-border-color;
+  border-color: rgba( 100,100,100, 0.6);
+  /*$table-border-color;*/
 }
 table.plural-editor{
   background-color : $editor-background-color;
@@ -150,16 +244,19 @@ tr.dataodd, tr.dataeven, span.file, span.web-browser{ //}, div.addChildrenLocati
   font-weight: $indexfont-weight;
 }
 tr.dataeven, div.dataeven{
-  background-color: $data-even-colour; /* #CAEAFF;*/
+  background-color: rgba(220,220,220, 0.7);
+  /*$data-even-colour; / * #CAEAFF;*/
 }
 tr.dataodd, div.dataodd{
   
 }
 div.new{
-  background-color: $data-new-color
+  background-color: #e5a34f
+  /*$data-new-color*/
 }
 tr.dataheader, div#table div#header-row{
-  background-color:$table-header-background-colour;
+  background-color:gainsboro;
+  /*$table-header-background-colour;*/
   font-weight:700;
   #font-size: 120%;
 }
@@ -327,7 +424,8 @@ button.toFrom{
 }
 */
 a, .ui-widget-color a, .ui-widget-content a {
-  color: $anchorcolor;
+  color: #0000ff;
+  /*$anchorcolor;*/
   background-color: transparent;
   //color: #0000FF;
 }
@@ -337,7 +435,8 @@ a{
 }
 //ul.menu 
 a:hover{
-  color: $anchorhovercolor;
+  color:  #008000;
+  /*$anchorhovercolor;*/
   background-color: transparent;
 }
 /* Goes with Best in place */
@@ -356,7 +455,8 @@ div.criteria{
   display: block; 
   border: solid;
   border-width:1px;
-  border-color: $data-even-colour; 
+  border-color: rgba(220,220,220, 0.7);
+  /*$data-even-colour;*/ 
   padding: 5px;
   margin: 5px;
 }
@@ -378,6 +478,7 @@ form.formtastic fieldset > ol > li.nested-fields{
   border-width:2px;
   border-bottom-style:solid;
   border-color: $nested-border-colour;
+  /*$nested-border-colour;*/
   padding-bottom:10px;
   padding-left: 20px;
 }
@@ -386,12 +487,13 @@ form.formtastic fieldset > ol > li.nested-fields li{
   //background-color: green; 
   
 }
-
+$mid-heading-colour: rgba( 180,180,180, 1);
 .nesting-heading {
   font-size:15px; 
   font-weight:700;
   margin-left:20px;
   color:  $mid-heading-colour;
+  
 }
 
 /*.nested-heading {
@@ -415,9 +517,30 @@ form.formtastic fieldset.inputs > legend > span, form.formtastic fieldset.inputs
 td.profilecheckboxtd{
   width:45px;
 }
+ $profile-form-color:rgba(120,120,120,0.5);;
 table.profiles-form  tr.dataodd{
   background-color: $profile-form-color;
 }
-li.invisible-visible{
+li.invisible-visible, table.checkboxes{
   background-color: #dbd9df;
+}
+
+flash_notice, #flash_error, #flash_alert, #flash_success, #caps_lock_status, #flash_warning, #flash_info, #flash_error1, #flash_error2 {
+  padding: 5px 8px;
+  margin: 10px 0;
+  width:80%;
+}
+$warning-background-color: yellow;
+#flash_notice, #flash_warning{
+  background-color: $warning-background-color;/*#FFD700; /*yellow */
+  border: solid 1px #C66;
+}
+ #flash_info, #flash_success {
+  background-color: #CFC; /*green*/
+  border: solid 1px #6C6;
+}
+/* added caps_lock status so that it matches flash_alert */
+#flash_error, #flash_error1, #flash_error2, #flash_alert,#caps_lock_status {
+  background-color: #FCC; /*pink*/
+  border: solid 1px #C66;
 }

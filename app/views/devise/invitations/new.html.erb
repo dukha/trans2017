@@ -7,6 +7,7 @@
 <!-- invite key fields is set in user.rb via devise :invite_key-->
   <p><%= f.label t($ARA + "user." + field.to_s) %><br />
   <%= f.text_field field %></p>
+  
 <% end -%>
 
   <p><%= f.submit t("devise.invitations.new.submit_button") %></p>
