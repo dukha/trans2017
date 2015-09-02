@@ -23,6 +23,7 @@ class TranslationsController < ApplicationController
   end
   #This update only tested for xhr
   def update
+    #binding.pry
       if params[:editor] == Translation::TRANS_PLURAL
     
         hash  = params[:translation_plural]
@@ -35,6 +36,7 @@ class TranslationsController < ApplicationController
         @translation.assign_attributes(my_params)
         result = @translation.save!           #update(my_params)
         @translation.plural_translation_html_display = TranslationHelper.plural_translation_static_text(@translation.translation)
+        
       rescue StandardError =>sd
         # We let this proceed and take care of it with a flash only
         #@translation.errors.add(:translation, sd.message)

@@ -1,14 +1,23 @@
-<h3>A user has contacted Translator Application</h3>
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+<h3>A user has contacted Vipassana Translator</h3>
 
-Hi <%=@responder.actual_name%><br/>
-<%=@contact.user.actual_name%> has posted a contact request.
-You can go to the request and help the user by clicking
-<%=edit_contact_url(@contact.id)%>
+<p style = 'margin-bottom:5px;'>Hi <%=@responder.actual_name%></p>
+<p style = 'margin-bottom:5px;'><%=@contact.user.actual_name%> has posted a contact request.</p>
+<p>Description is as follows:</p>
+<p style = 'margin-bottom:5px; margin-left:20px;  margin-right:20px; font-style:italic;'><%=@contact.description%></p>
+<p style = 'margin-bottom:5px;'>You can go to the request and help the user by clicking</p>
+<p style = 'margin-bottom:10px;'><%=@link%></p>
 
-With metta
+<p style = 'margin-bottom:10px;'>With metta</p>
+<p style = 'margin-bottom:10px;'><%=@responder.username%></p>
+<p>Your Vipassana Translator App</p>
 
-Your Translator App
-
-
+ </body>
+</html>
 
 

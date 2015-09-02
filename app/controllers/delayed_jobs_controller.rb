@@ -10,6 +10,8 @@ class DelayedJobsController < ApplicationController
   #end
 =end
   # Comment out the next 2 lines if not using authentication and authorisation
+  extend SearchModel
+  include SearchModel
   before_action :set_delayed_job, only: [ :edit, :update, :destroy, :show]
   before_filter :authenticate_user!
   filter_access_to :all

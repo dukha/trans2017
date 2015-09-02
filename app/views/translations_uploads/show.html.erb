@@ -10,7 +10,8 @@
   <%= @translations_upload.description %>
 </p>
 
-
+<%if has_role? :translations_uploads_write%>
 <%=link_edit('edit', edit_translations_upload_path(@translations_upload)) %> |
+<%end%>
 <%= link_back(translations_uploads_path) %>
 

@@ -7,10 +7,12 @@
   <tr class="dataheader">
 
     <th class ="dataheader"><%=t($ARA+'release_status.status') %></th>
-
+    <%if has_role? :release_statuses_write%>
     <th class="linkheader"></th>
+    <%end%>
+    <%if has_role? :release_statuses_destroy%>
     <th class="linkheader"></th>
-    
+    <%end%>
   </tr>
 
   
@@ -22,11 +24,14 @@
       
       <td class="<%= cell_class %>"><%= release_status.status %></td>
 
-  
+    <%if has_role? :release_statuses_write%>
     <%=link_edit(edit_release_status_path(release_status), "release_status")%>
+    <%end%>
     <!--td class="<%= link_cell_class %>"><%= link_to  t('actions.edit'), edit_release_status_path(release_status) %></td -->
     <!--td class="<%= link_cell_class %>"><%= link_to t('actions.destroy'),  release_status , :confirm => t('messages.delete.are_you_sure', :model => t($ARM + "release_status", :count=>1)), :method => :delete %></td -->
-    <%=link_destroy(release_status, "release_status") %>
+    <%if has_role? :release_statuses_destroy%>
+      <%=link_destroy(release_status, "release_status") %>
+    <%end%>
   </tr>
 <% end %>
 </table>
@@ -34,4 +39,6 @@
 
 <br />
 <% end %>
-<%= tlink_to('new_model', new_release_status_path, :model=> 'release_status', :count=>1) %>
+<%if has_role? :release_statuses_create%>
+  <%= tlink_to('new_model', new_release_status_path, :model=> 'release_status', :count=>1) %>
+<%end%>

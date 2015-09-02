@@ -15,7 +15,8 @@
   <%= @translation_hint.description %>
 </p>
 
-
+<%if has_role? :translatiion_hints_create%>
 <%=link_edit('edit', edit_translation_hint_path(@translation_hint)) %> |
+<%end%>
 <%= link_back(translation_hints_path) %>
 

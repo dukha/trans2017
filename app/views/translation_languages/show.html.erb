@@ -10,6 +10,7 @@
   <%= @translation_language.name %>
 </p>
 
-
+<%if has_role? :translation_languages_create%>
 <%= link_to 'Edit', edit_translation_language_path(@translation_language) %> |
+<%end%>
 <%= link_to t("formtastic.actions.back"), translation_languages_path %>

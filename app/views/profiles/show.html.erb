@@ -12,6 +12,7 @@
   <%= @profile.display %>
 </p>
 
-
+<%has_role? :profiles_write do%>
 <%= link_to 'Edit', edit_profile_path(@profile) %> |
+<%end%>
 <%= link_to t("formtastic.actions.back"), profiles_path %>

@@ -161,6 +161,7 @@ $().ready(function(){
        anchor = $(this);
        containerTd = anchor.closest(containerSelector);
        children = getTdChildren(containerTd);
+       
        if(typeof children['editorName'] == 'undefined'){
          // do nothing
        }else if(children['editorName'] == 'array_order'){
@@ -184,7 +185,7 @@ $().ready(function(){
        children['cancelButton'].css("display", 'inline'); 
        children['hint'].css("display", 'inline'); 
        //if(children['editorName'] != undefined || 
-       if( children['editorName'].html() != '' ){
+       if( $('editorNameSelector').html() != '' ){
          //For non bip editors: bip already has this
          $(containerTd).find('input[type=text], textarea').keydown(function(e){  
             if(e.keyCode == 13 ){  
@@ -195,6 +196,12 @@ $().ready(function(){
        }; //end if
        
     }); //end anchor
+    $(bestInPlaceSpan).click(function(){
+      //console.log("in bip click");
+      td = $(this).closest('td');
+       okButton = $(td).find(".ok");
+       $("<br/>").insertBefore(okButton);
+    });
     /* Not called at present: Needs more testu=ing. To be called on save
      * Opens up the next editor down the page 
      */

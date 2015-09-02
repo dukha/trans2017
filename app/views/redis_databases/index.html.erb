@@ -34,31 +34,40 @@
         </td>
       
       <td class="<%= cell_class %>"><%= RedisInstance.find(redis_database.redis_instance_id).description %></td>
+    <%has_role? :redis_databases_write do%> 
       <td class="<%= cell_class %>"><%= redis_database.redis_db_index %></td>
         <%if redis_database.calmapp_version %>
           <%= link_edit( version_alterredisdb_path(redis_database.calmapp_version), "redis_database") %>
         <%end%>
         <td class="<%= link_cell_class %>">
-     
+     <%end%>     
+     <%has_role? :redis_databases_create do%>
       <%if redis_database.calmapp_version %>
         <%= tlink_to  'new_redis_for_version', version_alterredisdb_path(redis_database.calmapp_version.id) %>
       <%end%>
+     <%end%>  
     </td>
-    <td class="<%= link_cell_class %>"  ><%= tlink_to 'version_publish',redis_databases_versionpublish_path(redis_database),{
-                      :data=>{:type=>"json", :disable_with=> "Publishing...."},
-                      #:"data-tooltip" => t($FH + 'redis_database.version_publish', :version_name=>redis_database.calmapp_version.description , :db_name=> redis_database.short_name),
-                      :method=> "post", 
-                      :form=>{:id=>"publish"}, 
-                      :remote=> true, 
-                      :navigate=>false} %></td> <!--, :id=>"ajax-publish"-->
-    <%=link_destroy redis_database, "redis_database"%>
+    <%has_role? :redis_databases_versionpublish do%>
+      <td class="<%= link_cell_class %>"  ><%= tlink_to 'version_publish',redis_databases_versionpublish_path(redis_database),{
+                        :data=>{:type=>"json", :disable_with=> "Publishing...."},
+                        #:"data-tooltip" => t($FH + 'redis_database.version_publish', :version_name=>redis_database.calmapp_version.description , :db_name=> redis_database.short_name),
+                        :method=> "post", 
+                        :form=>{:id=>"publish"}, 
+                        :remote=> true, 
+                        :navigate=>false} %></td>
+    <%end%>
+    <%has_role? :redis_databases_destroy do%>                 
+       <%=link_destroy redis_database, "redis_database"%>
+    <%end%>
   </tr>
 <% end %>
 </table>
 <%= twill_paginate %>
 <%end%>
 <p>
+<%if has_role? :calmapp_versions_read%>  
 <%=tlink_to(  "redis_from_versions", calmapp_versions_path)%>
+<%end%>
 </p>  
 <br />
 

@@ -44,7 +44,17 @@
       <ol>
      
       <%if DelayedJob.searchable_attr.include?("priority") %>  
-      <li class="string optional" id="delayed_job_priority_input"><label for="criterionpriority" class="criteria-label" >
+      <li class="string optional" id="delayed_job_id_input"><label for="criterion_id" class="criteria-label" >
+        <%= tlabel("id", "delayed_job") %> </label>
+           <%=select_tag(  :operator_priority, options_for_select(operators_2_options(compare_operator), params[:operator_id]),{:include_blank=> true,:class=>'criteria-operators-select', :readonly=>true} ) %> 
+           <!-- The date pikcer here cannot reset itself: once a user chooses a date then the only way of having it not considered it to set it to, say 2000-01-01 and criterion to after
+             Not pretty but whoever makes datepicker doesn't want a reset function as part of it http://jsbin.com/ofare/edit#javascript,html may be a work around -->
+           <%=text_field_tag( :criterion_id, params[:criterion_id])%>
+      </li>
+      
+      
+      
+      <li class="string optional" id="delayed_job_priority_input"><label for="criterion_priority" class="criteria-label" >
         <%= tlabel("priority", "delayed_job") %> </label>
            <%=select_tag(  :operator_priority, options_for_select(operators_2_options(equal_operator), params[:operator_priority]),{:include_blank=> true,:class=>'criteria-operators-select', :readonly=>true} ) %> 
            <!-- The date pikcer here cannot reset itself: once a user chooses a date then the only way of having it not considered it to set it to, say 2000-01-01 and criterion to after
@@ -66,7 +76,7 @@
       <%if DelayedJob.searchable_attr.include?("failed_at") %>  
       <li class="string optional" id="delayed_job_failed_at_input"><label for="criterionfailed_at" class="criteria-label" >
         <%= tlabel("failed_at", "delayed_job") %> </label>
-           <%=select_tag(  :operator_failed_at, options_for_select(operators_2_options(equal_operator), params[:operator_failed_at]),{:include_blank=> true,:class=>'criteria-operators-select', :readonly=>true} ) %> 
+           <%=select_tag(  :operator_failed_at, options_for_select(operators_2_options(date_operators), params[:operator_failed_at]),{:include_blank=> true,:class=>'criteria-operators-select', :readonly=>true} ) %> 
            <!-- The date pikcer here cannot reset itself: once a user chooses a date then the only way of having it not considered it to set it to, say 2000-01-01 and criterion to after
              Not pretty but whoever makes datepicker doesn't want a reset function as part of it http://jsbin.com/ofare/edit#javascript,html may be a work around -->
            <%=text_field_tag( :criterion_failed_at, params[:criterion_failed_at])%>
@@ -76,7 +86,7 @@
       <%if DelayedJob.searchable_attr.include?("run_at") %>  
       <li class="string optional" id="delayed_job_run_at_input"><label for="criterionrun_at" class="criteria-label" >
         <%= tlabel("run_at", "delayed_job") %> </label>
-           <%=select_tag(  :operator_run_at, options_for_select(operators_2_options(equal_operator), params[:operator_run_at]),{:include_blank=> true,:class=>'criteria-operators-select', :readonly=>true} ) %> 
+           <%=select_tag(  :operator_run_at, options_for_select(operators_2_options(date_operators), params[:operator_run_at]),{:include_blank=> true,:class=>'criteria-operators-select', :readonly=>true} ) %> 
            <!-- The date pikcer here cannot reset itself: once a user chooses a date then the only way of having it not considered it to set it to, say 2000-01-01 and criterion to after
              Not pretty but whoever makes datepicker doesn't want a reset function as part of it http://jsbin.com/ofare/edit#javascript,html may be a work around -->
            <%=text_field_tag( :criterion_run_at, params[:criterion_run_at])%>
@@ -105,20 +115,24 @@
 
   <table class="data">
     <tr class="dataheader">
+       <th class ="dataheader"><%=sortable("id","delayed_job", sortable_cols.include?("last_error"))%></th> 
        <th class ="dataheader"><%=sortable("last_error","delayed_job", sortable_cols.include?("last_error"))%></th> 
-      
       <th class ="dataheader"><%=sortable("handler","delayed_job", sortable_cols.include?("handler"))%></th> 
      
       <th class ="dataheader"><%=sortable("attempts","delayed_job", sortable_cols.include?("attempts"))%></th> 
       <th class ="dataheader"><%=sortable("locked_at","delayed_job", sortable_cols.include?("locked_at"))%></th> 
       <th class ="dataheader"><%=sortable("run_at","delayed_job", sortable_cols.include?("run_at"))%></th> 
       <th class ="dataheader"><%=sortable("failed_at","delayed_job", sortable_cols.include?("failed_at"))%></th> 
-      <th class ="dataheader"><%=sortable("priority","delayed_job", sortable_cols.include?("priority"))%></th> 
-    
+      <%if false%>
+        <th class ="dataheader"><%=sortable("priority","delayed_job", sortable_cols.include?("priority"))%></th> 
+      <%end%>
       
-  
-        <%= link_header 2 %>
-      
+       <%has_role? :delayed_jobs_write do%>
+         <%= link_header 1%>
+       <%end%>
+       <%has_role? :delayed_jobs_destroy do%>
+         <%= link_header 1%>
+       <%end%>
     </tr>
   
     
@@ -126,19 +140,23 @@
   <% link_cell_class="link"%>  
   <% @delayed_jobs.each do |delayed_job| %>
   
-    <tr class = "<%= cycle('dataeven', 'dataodd') %>" >
-           <td class="<%= cell_class %>"><textarea cols = '40' rows = "10" disabled = 'disabled'><%= delayed_job.last_error%></textarea></td>
-           <td class="<%= cell_class %>"><textarea cols = '40' rows = "10" disabled = 'disabled'><%= delayed_job.handler %></textarea></td>
+    <tr class = "<%= cycle('dataeven', 'dataodd') %>" id = '<%= dom_id(delayed_job)%>'>
+            <td class="<%= cell_class %>"><%= delayed_job.id %></td>
+            <td class="<%= cell_class %>"><textarea cols = '40' rows = "10" disabled = 'disabled'><%= delayed_job.last_error%></textarea></td>
+            <td class="<%= cell_class %>"><textarea cols = '30' rows = "10" disabled = 'disabled'><%= delayed_job.handler %></textarea></td>
             <td class="<%= cell_class %>"><%= delayed_job.attempts %></td>
             <td class="<%= cell_class %>"><%= display_timestamp(delayed_job.locked_at) %></td>
             <td class="<%= cell_class %>"><%= display_timestamp(delayed_job.run_at)  %></td>
             <td class="<%= cell_class %>"><%= display_timestamp(delayed_job.failed_at) %></td>
-            <td class="<%= cell_class %>"><%= delayed_job.priority %></td>
-            
-  
-          <%= link_edit( edit_delayed_job_path(delayed_job), :delayed_jobs  ) %>
-          <%= link_destroy( delayed_job, :delayed_jobs ) %>
-      
+            <%if false%>
+              <td class="<%= cell_class %>"><%= delayed_job.priority %></td>
+            <%end%>
+          <%has_role? :delayed_jobs_write do%>
+            <%= link_edit( edit_delayed_job_path(delayed_job), :delayed_jobs  ) %>
+          <%end%>
+          <%has_role? :delayed_jobs_destroy do%>
+            <%= link_destroy( delayed_job, :delayed_jobs ) %>
+          <%end%>
     </tr>
   <% end #do data %>
   </table>

@@ -23,3 +23,6 @@ public/system/*
 public/uploads/*
 .idea/*
 config/secrets.yml
+.env
+.env.production
+.env.local

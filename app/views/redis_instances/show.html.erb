@@ -11,6 +11,7 @@
   <%= @redis_instance.port %>
 </p>
 
-
-<%= link_to 'Edit', edit_redis_instance_path(@redis_instance) %> |
+<%if has_role? :redis_instances_write%>
+  <%= link_to 'Edit', edit_redis_instance_path(@redis_instance) %> |
+<%end%>
 <%= link_to t("formtastic.actions.back"), redis_instances_path %>

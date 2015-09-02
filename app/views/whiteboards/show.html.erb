@@ -5,6 +5,7 @@
   <%= @whiteboard.info %>
 </p>
 
-
+<%if has_role? :whiteboards_write%>
 <%= link_to 'Edit', edit_whiteboard_path(@whiteboard) %> |
+<%end%>
 <%= link_to t("formtastic.actions.back"), whiteboards_path %>

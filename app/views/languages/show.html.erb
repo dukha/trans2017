@@ -10,6 +10,7 @@
   <%= @language.name %>
 </p>
 
-
+<%if has_role? :languages_write%>
 <%= link_to 'Edit', edit_language_path(@language) %> |
+<%end%>
 <%= link_to t("formtastic.actions.back"), languages_path %>

@@ -1,5 +1,7 @@
 <%= theading('new', :model=>'user', :count=>1)%>
 <!-- this is for a sysadmin to reset another users password -->
 <%= render 'form'%>
+<%if has_role? :user_create%>
 <br /><%= tlink_to('new_model', new_user_path, :model=> 'user', :count=>1) %> |
+<%end%>
 <%= tlink_to "back", users_path %>

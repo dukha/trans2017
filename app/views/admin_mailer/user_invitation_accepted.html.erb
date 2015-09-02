@@ -1,17 +1,26 @@
-<h3>AdminMailer#user_invitation_accepted</h3>
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+
+
 
 Hi <%= @admin_user.username%><br>,
 <p><%=@new_user.actual_name%> has accepted their invitation. </p> 
-<p>Please click the link below and give him/her the requiste privileges</p>
-<p>Please go to Translator and seach for this user on their email address : <%=@new_user.email%> so that you can give the correct privileges</p>
-<br> @edit_url
-With metta
+<p style = 'margin-bottom:10px;'>Please click the link below and give him/her the requiste privileges,<br/><%=@link%></p>
 
-Translator Admin Team 
+ 
+<p style = 'margin-bottom:5px;'>With metta</p>
+
+<p style = 'margin-bottom:5px;'><%=User.find(@new_user.invited_by_id)%>
+<p style = 'margin-bottom:5px;'>Translator Admin Team</p> 
+
+ </body>
+</html>
 
 
 
 
 
-
-app/views/admin_mailer/user_invitation_accepted.html.erb

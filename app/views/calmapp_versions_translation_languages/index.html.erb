@@ -52,10 +52,15 @@
       <tr class ="dataheader">  
         <th class ="dataheader"><%=tlabel('translation_language_id', 'calmapp_versions_translation_language') %> </th>
         <th class ="dataheader"><%=tlabel('calmapp_version_id', 'calmapp_versions_translation_language')%></th>
-        
-        <th class="linkheader"></th>
-        <th class="linkheader"></th>
-        <th class="linkheader"></th>
+        <%has_role? :calmapp_versions_translation_languages_write do%>
+          <th class="linkheader"></th>
+        <%end%>
+        <%has_role? :calmapp_versions_translation_languages_destroy do%>
+          <th class="linkheader"></th>
+        <%end%>
+        <%has_role? :calmapp_versions_translation_languages_languagepublish do%>
+          <th class="linkheader"></th>
+        <%end%>
       </tr>
     </thead>
   
@@ -66,34 +71,32 @@
           <td class="<%= cell_class %>"><%= calmapp_versions_translation_language.calmapp_version_tl.description %></td>
           
           <!--td class="<%= link_cell_class %>"><%= tlink_to  'change_uploads', edit_calmapp_versions_translation_language_path(calmapp_versions_translation_language) %></td-->
-          <%= link_edit(edit_calmapp_versions_translation_language_path(calmapp_versions_translation_language), calmapp_versions_translation_language,:edit=>'change_uploads', :category=> :action)%>
-          <td class="<%= link_cell_class %>"><%= tlink_to  'go_to_translations', translations_path + "/?criterion_iso_code=" + calmapp_versions_translation_language.translation_language.iso_code + "&criterion_cav_id=" + calmapp_versions_translation_language.calmapp_version_tl.id.to_s %></td>
-          
-          <td class="<%= link_cell_class %>">
-            <%if calmapp_versions_translation_language.redis_databases_count > 0%>
-              <button id = 'publish'><%=t($FA + "publish_language", :language=> calmapp_versions_translation_language.translation_language.name)%></button>
-              <div id ='tl-publish-flash-<%=calmapp_versions_translation_language.id.to_s%>'></div>
-              <div id = 'publishing-get-database'>
-              <%=form_tag(calmapp_versions_translation_languages_languagepublish_path(calmapp_versions_translation_language.id), 
-              :remote=> true, 
-              :id=> 'publish-language') do %> 
-                
-              <label>To Redis Db</label>
-              <%=selection_publishing_dbs(calmapp_versions_translation_language)%>
-              <br>
-              <!--
-              < %= tlink_to(, , 
-              {, 
-                :navigate=> false, :id =>'publish-language', 
-                
-                :form => }) % --> 
-                <input id = 'publish-language' type = 'submit' name ='submit' value='<%=t($FA + 'translation_language_publish',:language=> calmapp_versions_translation_language.translation_language.name )%>' >
-               <%end%> 
-                <img id = 'disappear' src = '/assets/treeview/minus.gif' alt='-' style = 'float:right;'>
-              </div>
-            <%end%>
-          </td>
-          
+          <%has_role? :calmapp_versions_translation_languages_write do%>
+            <%= link_edit(edit_calmapp_versions_translation_language_path(calmapp_versions_translation_language), calmapp_versions_translation_language,:edit=>'change_uploads', :category=> :action)%>
+          <%end%>
+          <%has_role? :calmapp_versions_translation_languages_destroy do%>
+            <td class="<%= link_cell_class %>"><%= tlink_to  'go_to_translations', translations_path + "/?criterion_iso_code=" + calmapp_versions_translation_language.translation_language.iso_code + "&criterion_cav_id=" + calmapp_versions_translation_language.calmapp_version_tl.id.to_s %></td>
+          <%end%>
+          <%has_role? :calmapp_versions_translation_languages_languagepublish do%>
+            <td class="<%= link_cell_class %>">
+              <%if calmapp_versions_translation_language.redis_databases_count > 0%>
+                <button id = 'publish'><%=t($FA + "publish_language", :language=> calmapp_versions_translation_language.translation_language.name)%></button>
+                <div id ='tl-publish-flash-<%=calmapp_versions_translation_language.id.to_s%>'></div>
+                <div id = 'publishing-get-database'>
+                <%=form_tag(calmapp_versions_translation_languages_languagepublish_path(calmapp_versions_translation_language.id), 
+                :remote=> true, 
+                :id=> 'publish-language') do %> 
+                  
+                <label>To Redis Db</label>
+                <%=selection_publishing_dbs(calmapp_versions_translation_language)%>
+                <br>
+                  <input id = 'publish-language' type = 'submit' name ='submit' value='<%=t($FA + 'translation_language_publish',:language=> calmapp_versions_translation_language.translation_language.name )%>' >
+                 <%end%> 
+                  <img id = 'disappear' src = '/assets/treeview/minus.gif' alt='-' style = 'float:right;'>
+                </div>
+              <%end #if%>
+            </td>
+          <%end #role%>
           
           <!--td class="< %= link_cell_class %>">< %= link_destroy calmapp_versions_translation_language, "calmapp_versions_translation_language" %></td -->
         </tr>
@@ -104,6 +107,8 @@
  <%end%>
 
 <p>
+  <%if has_role? :calmapp_versions_read %> 
   <span style ="font-weight:700;">Can't see your version or language here?</span>
   <%=tlink_to("translation_languages_calmapp_versions_to_new_upload", calmapp_versions_path, :title=> 'calmapp_versions_translation_language.to_new_upload')%>
+  <%end%>
 </p>

@@ -23,8 +23,12 @@
     
     <!--td class="< %= link_cell_class %>">< %= tlink_to 'edit', edit_translation_language_path(tl) %></td -->
     <!--td class="< %= link_cell_class %>">< %= tlink_to 'destroy', tl, :confirm => 'delete.are_you_sure', :model => 'translation_language', :value=>tl.name, :count=>1, :method => :delete %></td-->
+    <%if has_role? :translation_languages_write%>
     <%= link_edit edit_translation_language_path(tl), :translation_languages  %>
+    <%end%>
+    <%if has_role? :translation_languages_destroy%>
     <%= link_destroy tl, :translation_languages  %>
+    <%end%>
     
   </tr>
 	

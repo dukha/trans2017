@@ -80,9 +80,12 @@
       <th class ="dataheader"><%=sortable("heading","translation_hint", sortable_cols.include?("heading"))%></th> 
       <th class ="dataheader"><%=sortable("example","translation_hint", sortable_cols.include?("example"))%></th>     
       <th class ="dataheader"><%=sortable("description","translation_hint", sortable_cols.include?("description"))%></th> 
-  
-        <%= link_header 2 %>
-      
+      <%if has_role? :translation_hints_write%>  
+        <%= link_header 1 %>
+      <%end%>  
+      <%if has_role? :translation_hints_destroy%>  
+        <%= link_header 1 %>
+      <%end%>
     </tr>
   
     
@@ -90,17 +93,19 @@
   <% link_cell_class="link"%>  
   <% @translation_hints.each do |translation_hint| %>
   
-    <tr class = "<%= cycle('dataeven', 'dataodd') %>" >
-            <td class="<%= cell_class %>"><%= translation_hint.dot_key_code %></td>
-            <td class="<%= cell_class %>"><%= translation_hint.heading %></td>
+    <tr class = "<%= cycle('dataeven', 'dataodd') %>" id = '<%= dom_id(translation_hint)%>'>
+            <td class="<%= cell_class %>" style="word-wrap: break-word;width:8%;"><%= translation_hint.dot_key_code %></td>
+            <td class="<%= cell_class %>" style="word-wrap: break-word;width:8%;"><%= translation_hint.heading %></td>
   
-            <td class="<%= cell_class %>"><%= translation_hint.example %></td>
+            <td class="<%= cell_class %>"style="word-wrap: break-word;width:28%;"><%= translation_hint.example %></td>
   
-            <td class="<%= cell_class %>"><%= translation_hint.description %></td>
-  
-          <%= link_edit( edit_translation_hint_path(translation_hint), :translation_hints  ) %>
-      <%= link_destroy( translation_hint, :translation_hints ) %>
-      
+            <td class="<%= cell_class %>"style="word-wrap: break-word;width:28%;"><%= translation_hint.description %></td>
+            <%if has_role? :translation_hints_write%>
+               <%= link_edit( edit_translation_hint_path(translation_hint), :translation_hints, {:style=> "width:8%;"}  ) %>
+            <%end%>
+            <%if has_role? :translation_hints_destroy%>
+              <%= link_destroy( translation_hint, :translation_hints, {:style=> "width:20%;"} ) %>
+            <%end%>
     </tr>
   <% end #do data %>
   </table>
@@ -108,4 +113,7 @@
 
 <br />
 <%end # if else count %>
-<%=link_new( new_translation_hint_path, :translation_hint)  %>
+<%if has_role? :translation_hints_create%>
+<%=link_new( new_translation_hint_path, :translation_hint)  %> 
+<%end%>
+

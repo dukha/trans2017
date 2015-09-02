@@ -30,8 +30,12 @@
       <%= f.action(:submit, :button_html=> {:id=>"submit-cav-form"})  %>    
   <% end %>
 <% end %>
-<%= tlink_to( "back_to_versions", calmapp_versions_path) %> | <%= tlink_to( "back_to_redis_databases", redis_databases_path) %>
-
+<%if has_role? :calmapp_versions_read%>
+<%= tlink_to( "back_to_versions", calmapp_versions_path) %> | 
+<%end%>
+<%if has_role? :redis_databases_read%>
+<%= tlink_to( "back_to_redis_databases", redis_databases_path) %>
+<%end%>
 <script>
   /*
          * Begin getting and setting redis_db_index

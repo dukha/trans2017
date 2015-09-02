@@ -30,7 +30,7 @@ class CalmappVersionsTranslationLanguage < ActiveRecord::Base
   # once we have saved a new language then we upload the base file for that translation 
   after_create :base_locale_translations_for_new_translation_languages, :add_this_to_sysadmin_users
   after_commit :do_after_commit_on_create, :on => :create
-  before_destroy :do_before_destroy
+  #before_destroy :do_before_destroy
   
 =begin
  @deprecated 

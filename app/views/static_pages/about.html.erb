@@ -1,10 +1,16 @@
 
-<p class="pageheading"><%=t("application.about", :calm=> $APPLICATION_NAME) %></p>
+<p class="pageheading"><%=t("application.about", :app=> $APPLICATION_NAME) %></p>
 
-<div style="width:300px;background-color:#E5E5E5;left:100px;" class = "centeredText" >
-<h2 class="centeredText"><%=$APPLICATION_NAME%></h5> 
- <div class="centeredText"><%=t("application.app_sub_name")%> </div>
- <div class="centeredText"> <%=t("application.version", :version=> $APPLICATION_VERSION )%></div> 
+<div style="width:90%%;background-color:#E5E5E5;left:100px;margin:3px; padding:3px;border:solid;" class = "centred-text" >
+<h3 class="centred-text"><%=$APPLICATION_NAME%></h3> 
+ <div class="centred-text" style= "font-weight:600;"><%=t("application.app_sub_name")%> </div>
+ <div class="centred-text"style= "font-weight:400;"> <%=t("application.version", :version=> $APPLICATION_VERSION )%></div> 
+ <div class="centred-text">
+   <P>English translation and codes are pre-entered by developers. Translators can use the codes and English to do the translation in their own language.</P>
+  
+   <P>The finished translations can be published to a redis database for use in production applications.</P>
+   <P>To contact the developers or administrators <%=link_to("Click Here", new_contact_path)%>.</P> 
+ </div>  
  <div ><%=t("application.developed_using") %></div>
 
 <ul style="text-align:left;">

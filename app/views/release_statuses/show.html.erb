@@ -5,6 +5,7 @@
   <%= @release_status.status %>
 </p>
 
-
+<%if has_role? :release_statuses_create%>
 <%= link_to 'Edit', edit_release_status_path(@release_status) %> |
+<%end%>
 <%= link_to t("formtastic.actions.back"), release_statuses_path %>

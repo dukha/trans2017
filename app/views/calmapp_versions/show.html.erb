@@ -12,6 +12,7 @@
 
 
 
-
+<%if has_role? :calmapp_versions_write%>
 <%= link_to 'Edit', edit_calmapp_version_path(@calmapp_version) %> |
+<%end%>
 <%= link_to t("formtastic.actions.back"), calmapp_versions_path %>

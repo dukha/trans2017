@@ -1,7 +1,8 @@
 #class Users::InvitationsController < Devise::InvitationsController
 #This odes not work for {:controller =>  { :invitations => 'users/invitations' }} in routes
+require './app/mailers/admin_mailer'
 class InvitationsController < Devise::InvitationsController
-  
+  include ActionView::Helpers::UrlHelper
   before_filter :configure_permitted_parameters, if: :devise_controller?
   #This works for {:controller =>  { :invitations => 'invitations' }} in routes
   #before_action :authenticate_user!
@@ -20,8 +21,6 @@ class InvitationsController < Devise::InvitationsController
   end
   
   def create
-    #binding.pry
-     #invited_by_id
     self.resource = invite_resource
     resource_invited = resource.errors.empty?
 
@@ -46,25 +45,41 @@ class InvitationsController < Devise::InvitationsController
    end
   
    def update
-    #binding.pry
+    flash.clear
     self.resource = accept_resource
     invitation_accepted = resource.errors.empty?
-
+    
     yield resource if block_given?
 
     if invitation_accepted
-      #binding.pry
+      
       flash_message = resource.active_for_authentication? ? :updated : :updated_not_active
       set_flash_message :notice, flash_message if is_flashing_format?
       resource.profiles << Profile.where{name == 'guest'}.first
       flash[:warning] = "When you sign in you will only have guest privilege (you cannot do very much) until an administrator adjusts your account."
-  
+      puts "b4 signin"
+      #binding.pry
       sign_in(resource_name, resource)
-      require './app/mailers/admin_mailer'
-      url = user_edit_url(resource.invited_by_id)
-      link = link_to("user Record", url)
-      AdminMailer.user_invitation_accepted(resource, link).deliver_now
+      puts "after signin"
+      #url = user_edit_url(resource.invited_by_id)
+     # link = link_to("Update User Record", url)
+      #link.upcase!
+      #link.downcase!
+      #binding.pry
+=begin      
+      begin
+        puts "begin send user_invitation_accepted"
+        AdminMailer.user_invitation_accepted(resource).deliver_later
+        puts "successful user_invitation_accepted"
+      rescue Exception => e
+        puts "exception in user_invitation_accepted"
+        ExceptionNotifier.notify_exception(e,
+         :data=> {:message => e.message})
+      end
+=end 
+      puts "about to respond_with resource" 
       respond_with resource, :location => after_accept_path_for(resource)
+      puts "could not respond_with resource"
     else
       flash_errors(resource)
       respond_with_navigational(resource){ render :edit }
@@ -84,6 +99,10 @@ class InvitationsController < Devise::InvitationsController
   def after_invite_path_for(resource)
     users_path()
   end
+  def after_accept_path_for(resource)
+    application_help_path
+  end
+=begin  
   # @override
   def configure_permitted_parameters
     # Only add some parameters
@@ -93,17 +112,19 @@ class InvitationsController < Devise::InvitationsController
       #u.permit(:first_name, :last_name, :phone, :password, :password_confirmation,:invitation_token)
       #u.permit(:actual_name, :username, :phone, :password, :password_confirmation, :invitation_token)
   end
-=begin
+=end
   # this is called when creating invitation
   # should return an instance of resource class
   def invite_resource
     #binding.pry
-    ## skip sending emails on invite
-    resource_class.invite!(invite_params, current_inviter) do |u|
-      u.skip_invitation = true
-    end
+    ## don't skip sending emails on invite
+    new_params = invite_params
+    new_params["via_invitable"] = true
+    resource_class.invite!(new_params, current_inviter) #do |u|
+      #u.skip_invitation = true
+    #end
   end
-=end
+
   # this is called when accepting invitation
   # should return an instance of resource class
   def accept_resource
@@ -117,7 +138,7 @@ class InvitationsController < Devise::InvitationsController
   def configure_permitted_parameters
   # Only add some parameters
   #binding.pry
-  devise_parameter_sanitizer.for(:accept_invitation).concat [:actual_name, :username, :country, :phone, :invited_by_id]
+  devise_parameter_sanitizer.for(:accept_invitation).concat [:actual_name, :email, :username, :country, :phone, :invited_by_id]
   # Override accepted parameters
 =begin
   devise_parameter_sanitizer.for(:accept_invitation) do |u|

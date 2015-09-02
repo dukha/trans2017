@@ -1,4 +1,6 @@
 <%=theading("edit", :model=>"calmapp_version", :count=>1) %>
 <%= render 'form', :locals => {:state =>"edit"} %>
+<%if has_role? :calmapp_versions_create%>
 <%= tlink_to('new_model', new_calmapp_version_path, :model=> 'calmapp_version', :count=>1) %> |
+<%end%>
 <%= tlink_to( "back", calmapp_versions_path) %>

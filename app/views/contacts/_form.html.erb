@@ -6,6 +6,7 @@
 				   <%= f.input :description  %>   
 				   <% if (not f.object.new_record?) then%>
 				      <%=f.input :status, :as=>:select, :collection=> [['received', 'received'], ['open','open'], ['to_developers','to_developers'], ['answered','answered'], ['closed','closed']] %>  
+		          <li><label for "user">Contacting User Data</label><%=show_user(@contact.user)%></li>
 		       <%end%>  
 	<% end %>	
 

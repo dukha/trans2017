@@ -67,13 +67,23 @@ module TranslationHelper
   Formats the english transation on the index
 =end   
    def format_english attributes#, plural     
-     return english_date_format_example(attributes) if editor_date_time_select?(attributes)  
+     return date_format_example(attributes["en_translation"]) if editor_date_time_select?(attributes)  
      return "<i>[This plural not used in English]</i>".html_safe if attributes["en_translation"].nil?
      return "<i>[Not used in English, so left blank. It may be left blank in your language too.] </i>".html_safe if attributes["en_translation"].blank?
      en = attributes["en_translation"]
-     object = ActiveSupport::JSON.decode(en) if JSON.is_json?(en)
-     if  object.is_a?(Hash) && (attributes["special_structure"] == Translation::TRANS_PLURAL)   
+     special_structure = attributes["special_structure"]
+     return format_noneditable(en, special_structure)
+   end
    
+   def format_readonly_translation attributes
+     return date_format_example(attributes["en_translation"], attributes["iso_code"]) if editor_date_time_select?(attributes)
+     return format_noneditable(attributes["translation"], attributes["special_structure"])   
+   end
+   
+   def format_noneditable translation, special_structure
+     object = translation
+     object = ActiveSupport::JSON.decode(translation) if JSON.is_json?(translation)
+     if  object.is_a?(Hash) && (special_structure == Translation::TRANS_PLURAL)   
        html = "<table>"
        object.each{|k, v|
          html = html + "<tr><td>" + k + ": "  + v + "</td></tr>" 
@@ -81,28 +91,23 @@ module TranslationHelper
        html = html + "</table>"  
        return html.html_safe
      elsif object.is_a?(Array) && 
-            (attributes["special_structure"] == Translation::TRANS_ARRAY_13_NULL || 
-                attributes["special_structure"] == Translation::TRANS_ARRAY_7 ||
-                attributes["special_structure"] == Translation::TRANS_ORDER_ARRAY)
+            (special_structure == Translation::TRANS_ARRAY_13_NULL || 
+                special_structure == Translation::TRANS_ARRAY_7 ||
+                special_structure == Translation::TRANS_ORDER_ARRAY)
        html = "<table>"
        object.each{ |e|
          if e.nil?
            next
          end
-         #element = e
-         #if e.blank?
-           #element = 'null'
-         #end
          html = html + "<tr><td>" + e.to_s + ((e == object.last) ? "" : ", ") + "</td></tr>"
          }
          html = html + "</table>"
          return html.html_safe
-     #elsif object.is_a? Arrray && attributes["special_structure"] == Translation.TRANS_ARRAY_7  
      else
-       return attributes["en_translation"].html_safe
+       return translation.html_safe
      end #if..elsif
+     
    end
-   
 =begin
  #return the sample date for display of date and datetime formats 
 =end   
@@ -118,8 +123,13 @@ module TranslationHelper
 =begin
  @return the sample date formatted according to the Englsih translation 
 =end   
-   def english_date_format_example attrs
-     return example_date.strftime(attrs['en_translation']) 
+   def date_format_example translation, iso_code ='en'
+     return example_date.strftime(translation) if iso_code == 'en'
+     begin
+       return l(translation, iso_code)
+     rescue I18n::InvalidLocale  
+       return example_date.strftime(translation)
+     end
    end
 =begin
   

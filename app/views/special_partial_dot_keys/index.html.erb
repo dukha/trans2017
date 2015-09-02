@@ -73,9 +73,12 @@
   
     
       <th class ="dataheader"><%=sortable("cldr","special_partial_dot_key", sortable_cols.include?("cldr"))%></th> 
-  
-        <%= link_header 2 %>
-      
+       <%if has_role? :special_partial_dot_keys_write%>
+        <%= link_header 1 %>
+       <%end%>
+       <%if has_role? :special_partial_dot_keys_destroy%>
+        <%= link_header 1 %>
+       <%end%>
     </tr>
   
     
@@ -89,10 +92,12 @@
             <td class="<%= cell_class %>"><%= special_partial_dot_key.sort %></td>
   
             <td class="<%= cell_class %>"><%= special_partial_dot_key.cldr %></td>
-  
-          <%= link_edit( edit_special_partial_dot_key_path(special_partial_dot_key), :special_partial_dot_keys  ) %>
-      <%= link_destroy( special_partial_dot_key, "special_partial_dot_key" ) %>
-      
+            <%if has_role? :special_partial_dot_keys_write%>
+              <%= link_edit( edit_special_partial_dot_key_path(special_partial_dot_key), :special_partial_dot_keys  ) %>
+            <%end%>
+            <%if has_role? :special_partial_dot_keys_destroy%>
+              <%= link_destroy( special_partial_dot_key, "special_partial_dot_key" ) %>
+            <%end%> 
     </tr>
   <% end #do data %>
   </table>
@@ -100,5 +105,7 @@
 
 <br />
 <%end # if else count %>
+<%if has_role? :special_partial_dot_keys_write%>
 <%=link_new( new_special_partial_dot_key_path, :special_partial_dot_key)  %>
+<%end%>
 

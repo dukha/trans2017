@@ -123,10 +123,10 @@ class CalmappVersion < ActiveRecord::Base
  @param copy_translations  boolean indicator of what to do
 =end  
   def deep_copy old_version_id, user, copy_translation_languages=true, copy_translations =true
-    old_version = CalmappVersion.find(old_version_id)
+    #old_version = CalmappVersion.find(old_version_id)
     if save
       #new_version = new_calmapp_version_unsaved
-      CalmappVersion.finish_deep_copy(old_version, self, user, copy_translation_languages, copy_translations )
+      CalmappVersion.finish_deep_copy(old_version_id, self.id, user_id, copy_translation_languages, copy_translations ).perform_later
       return true
     else
       return false  
@@ -137,9 +137,12 @@ class CalmappVersion < ActiveRecord::Base
       
     #end# if save
   end
+   
   
-  def self.finish_deep_copy(old_version, new_version, user, copy_translation_languages, copy_translations)
+  def self.finish_deep_copy(old_version_id, new_version_id, user_id, copy_translation_languages, copy_translations)
     begin
+      old_version = CalmappVersion.find(old_version_id)
+      new_version = CalmappVersion.find(new_version_id)
       if copy_translation_languages then #&& ! copy_translations then
         new_version.translation_languages.concat(old_version.translation_languages)
         if copy_translations then
@@ -151,12 +154,12 @@ class CalmappVersion < ActiveRecord::Base
           end # each cavtl
         end #copy trans
       end #copy tl
-      UserMailer.background_process_success(user, "Version_deep_copy", old_version.description + " to " +new_version.description)
+      UserMailer.background_process_success(user, "Version_deep_copy", old_version.description + " to " + new_version.description)
     rescue StandardError => e
        Rails.logger.error "The deep copy of " + old_version.description + " has failed"
        Rails.logger.error "Deep copy exception: " +e.message
        Rails.logger.error e.backtrace.join("\n")
-       UserMailer.background_process_fail(user, "Version_deep_copy", old_version.description + " to " +new_version.description, e.message)  
+       UserMailer.background_process_fail(user, "Version_deep_copy", old_version.description + " to " + new_version.description, e.message)  
     end   #begin resuce 
   end
   def deep_destroy(user)

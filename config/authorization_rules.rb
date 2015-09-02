@@ -166,7 +166,7 @@ authorization do
   standard_roles :redis_databases
   standard_roles :redis_instances
   standard_roles :release_statuses
-  standard_roles :special_partial_dot_keys
+  standard_roles :special_partial_dot_keys, {:exclude => [:create, :write, :destroy]}
   standard_roles :translations
   standard_roles :translation_hints
   standard_roles :translation_languages

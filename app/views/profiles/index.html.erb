@@ -6,8 +6,12 @@
 
     <th class ="dataheader"><%=t($ARA+'profile.name') %></th>
 
-    <th class="linkheader"></th>
-    <th class="linkheader"></th>
+    <%has_role? :profiles_write do%>
+         <%= link_header 1 %>
+       <%end%>
+    <%has_role? :profiles_write do%>
+         <%= link_header 1 %>
+     <%end%>
     
   </tr>
 
@@ -24,9 +28,14 @@
     
     <!--td class="<%= link_cell_class %>"><%= tlink_to  'edit', edit_profile_path(profile) %></td-->
     <!--td class="< %= link_cell_class %>"><%= tlink_to('destroy',  profile ,{:confirm => 'delete.are_you_sure', :model => "profile", :count=>1, :method => :delete}) %></td -->
-    <%=link_edit(edit_profile_path(profile), "profile") %>
-    <%if not profile.protected_profile%>
-    <%=link_destroy(profile, "profile") %>
+   
+    <%has_role? :profiles_write do%>   
+      <%=link_edit(edit_profile_path(profile), "profile") %>
+    <%end%>
+    <%has_role? :profiles_write do%>
+      <%if not profile.protected_profile%>
+        <%=link_destroy(profile, "profile") %>
+      <%end%>
     <%end%>  
   </tr>
 <% end %>

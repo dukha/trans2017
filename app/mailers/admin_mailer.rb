@@ -1,48 +1,50 @@
 class AdminMailer < ApplicationMailer
-  #include ActionView::Helpers::UrlHelper
-  # Subject can be set in your I18n file at config/locales/en.yml
-  # with the following lookup:
-  #
-  #   en.admin_mailer.user_invitation_accepted.subject
-  #
-  def user_invitation_accepted new_user, link
-    #binding.pry
+  include ActionView::Helpers::UrlHelper
+  
+  def user_invitation_accepted new_user
+    puts "ACTION_MAILER"
     @new_user = new_user#User.find(new_user)
+    puts @new_user.email.to_s
     @admin_user =  User.find(@new_user.invited_by_id)
-=begin    
-    link = user_edit_url :id =>@new_user.id, :locale => locale
+    puts "ADMIN USER = " + @admin_user.email.to_s
+    url = user_edit_url(@new_user.id, :locale=>'en')
+    @link = link_to("Edit New User", url )
+    puts "INSIDE ADMIN_MAILER"
     
-    #edit_path  = link_to("Edit  #{@new_user.actual_name}", link)
-    #@edit_url = url_for(edit_path)
-    url = users_url(locale: locale) #+ "/" +  @new_user.id.to_s + "/edit"
-    #This jive is to try to work around copy on right rubbsih which gives a diagnostic....
-    url1 = url.dup
-    url1.upcase!
-    url1 << ("/" +  @new_user.id.to_s + "/edit")
-    url1.downcase!
-    url2 = url1.html_safe
-    @edit_url = url2.dup
-    #binding.pry
-=end
-   @edit_url = link.upcase!
-   @edit_url.downcase!  
+    puts url
+    puts @link
+    
+    #url.upcase!
+    #url.downcase!
+    
+    #@link = link_to("Set New User Permissions", url.dup)
+    
+   #binding.pry
     mail( 
       to: @admin_user.email,
-      subject: ("Invitation Accepted from " + @new_user.actual_name)
+      subject: ("Vipassana Translator Invitation Accepted by " + @new_user.actual_name)
       )
   end
   
-  def new_contact_from_user contact
-    puts contact.description
-    @contact = contact
-    mails = []
-    User.contact_responders.each{ |responder|
-      @responder = responder
-      mails << mail(
-        to: responder.email,
-        subject: "New user contact from translator application"
+  def new_contact_from_user contact_id, responder_id
+    #puts contact.description
+    @contact = Contact.find(contact_id)
+    #@requesting_user = User.find(@contact.user)
+    @responder = User.find(responder_id)
+    #binding.pry
+    @link = link_to("Contact", edit_contact_url(@contact.id, locale: locale)).html_safe
+    mail(
+      to: @responder.email,
+      subject: "Reply to Contact from Vipassana Translator"
       )
-      }
-    mails  
+  end
+  
+  def notify_user_permissions_assigned_after_invitation(user_id)
+    @user = User.find(user_id)
+    @admin = User.find(@user.invited_by_id)
+     mail(
+        to: @user.email,
+        subject: "Welcome to Vipassana Translator"
+      )
   end
 end

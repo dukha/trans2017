@@ -2,40 +2,17 @@ module ApplicationHelper
   include WillPaginate::ViewHelpers
   require 'translations_helper'
   include TranslationsHelper
-=begin
-  These global constants are used as partial keys in yaml translation files
-  Moved to translations_helper
-  $A="actions."
-  $AR="activerecord."
-  $ARA=$AR + "attributes."
-  $ARM= $AR + "models."
-  $F="formtastic."
-  $FL= $F+"labels."
-  $FH=$F+"hints."
-  $FA = $F + "actions."
-  $L="links."
-  $LU="lookups."
-  $M="menus."
-  $MS="messages."
-  $MSE=$MS+"errors."
-  $REDIS_PW='123456'
-  $TM="translation missing:"
-=end
-  $CALM ="CALM"
+
   
-  $APPLICATION_NAME = "Translator"#I18n.t("application.translator")
+  $APPLICATION_NAME = "Vipassana Translator"
   $APPLICATION_VERSION ="0.9.0"
   
-  #$title =  I18n.t( "application.app_title", :app_name=> $APPLICATION_NAME, :app_version=> $APPLICATION_VERSION, :calm=> $CALM  )
-
-    
-  
-  def titler
-    if @title.nil?
+def titler
+    #if @title.nil?
       $APPLICATION_NAME
-    else
-      "#{$APPLICATION_NAME} : #{@title}"
-    end
+    #else
+      #"#{$APPLICATION_NAME} : #{@title}"
+    #end
   end
 
   def logo
@@ -56,16 +33,6 @@ module ApplicationHelper
   # Use to display flash in different places if required
   # Removes flashes once they are displayed
   def display_flashes
-=begin
-  
-     <% flash.each do |name, msg| %>
-                 <%if msg.blank? || msg == true %>
-                    <%return%> 
-                 <%else%>
-                    <%= content_tag :div, msg, :id => "flash_#{name}" %>
-                <% end %> 
-              <%end%>  
-=end
     html = ''
     flash.each do |name, msg|
       if msg.blank? || msg == true
@@ -127,5 +94,13 @@ def markdown(text)
   
   Redcarpet::Markdown.new(renderer, extensions).render(text).html_safe
 end
-   
+
+
+def display_timestamp (time)
+    if time.blank?
+      return ''
+    else
+      return time.localtime.strftime("%e-%b-%y %H:%M")  
+    end
+  end   
 end

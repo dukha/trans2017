@@ -97,11 +97,11 @@ gem 'passenger' #, '~>3.0.11'
 gem 'cocoon','~>1.2.0'
 
 # web server used in pace of webrick or thin but also in production
-gem 'puma'
+gem 'puma' 
 # email notification of exceptions (if sendmail is installed)
 gem 'exception_notification' #_rails3', :require => 'exception_notifier'
 
-gem 'rails-i18n', '~>4.0.0'
+gem 'rails-i18n', '~>4.0.4'
 
 
 #gem 'log4r', :git => "git://github.com/colbygk/log4r"
@@ -112,6 +112,9 @@ gem 'logging'
 gem 'responders', '~> 2.0'
 # allows a connection pool for redis. Not sure if needed
 gem 'connection_pool'
+
+# allows storage of keys etc in ENV
+gem 'dotenv-rails'
 
 group :development, :test do
   gem 'rspec-rails'#, '2.8.0'
@@ -156,8 +159,8 @@ group :test do
   gem 'guard-rspec'
   gem 'libnotify', '0.8.0'
   gem 'spork-rails'#, '~> 0.9.0'
-  gem 'guard-spork', '1.5.0'
-  gem 'childprocess', '0.3.6'
+  #gem 'guard-spork', '1.5.0' outdated
+ # gem 'childprocess', '0.3.6'
 end
 group :development do
   gem 'capistrano', '3.2.1', require: false

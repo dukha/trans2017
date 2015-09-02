@@ -1,5 +1,7 @@
 <%=theading('new', :model=> "language", :count=>1 )%>
 
 <%= render 'form' %>
+<%if has_role? :languages_create%>
 <%= tlink_to('new_model', new_language_path, :model=>  'language') %> |
+<%end%>
 <%= tlink_to "back", languages_path %>

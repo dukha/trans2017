@@ -49,22 +49,6 @@
                params[:criterion_cavtl_id]), {:include_blank=> ((users_cavs_tls().count == 1) ? false: true)})%>
       </li>
       
-      <!--li class="string optional" id="translation_language_id_input">
-         <label for="criterion_cav_id", class="criteria-label" >< %=tlabel("calmapp_version", "translation")%></label>
-         < %=select_tag(  :operator_cav_id, options_for_select(operators_2_options(equal_operator), 
-             params[:operator_cav_id]),{:include_blank=> false,:class=>'criteria-operators-select', :readonly=>true} )%> 
-         < %=select_tag( :criterion_cav_id, options_from_collection_for_select(CalmappVersion.all, "id","description", 
-               params[:criterion_cav_id]), {:include_blank=> true})%>
-      </li>
-      
-      <li class="string optional" id="translation_language_id_input">
-         <label for="criterion_iso_code", class="criteria-label" ><%=tlabel("iso_code", "translation")%></label>
-         <%=select_tag(  :operator_iso_code, options_for_select(operators_2_options(equal_operator), 
-              params[:operator_iso_code]),{:include_blank=> false,:class=>'criteria-operators-select', :readonly=>true} )%> 
-         <%=select_tag( :criterion_iso_code, options_from_collection_for_select(TranslationLanguage.translators_language_select(current_user), "iso_code","full_name", 
-              params[:criterion_iso_code]), {:include_blank=> true})%>
-           
-      </li-->
        <li class="string optional" id="translation_dot_key_code_input">
          <label for="criterion_dot_key_code", class="criteria-label" ><%=tlabel("dot_key_code", "translation")%></label>
          <%=select_tag(  :operator_dot_key_code, options_for_select(operators_2_options(Translation.search_dot_key_code_operators), 
@@ -139,10 +123,12 @@
         <td class="<%= cell_class%>" style="<%=width_css[:en_translation]%>;word-wrap: break-word;" data-tooltip = "<%=translation_tooltip(trans.attributes)%>"> 
         <%= format_english(trans.attributes) %></td>
       <%end%>
-      
+    
+    <%if has_role? :translations_write%>  
       <!-- you cannot give this td below a class. It messes up bip -->
       <td id= '<%(best_in_place?(trans) ? "best_in_place" : "special-editor")%>' class="editor-container" style="<%=width_css[:translation]%>">
         <% if best_in_place?(trans) then%>
+          
           <!--input id= 'editor-name' type='hidden' value = 'bip' -->
           <%=editor_text_field "bip" %>   
           <%=english_text_field(trans.attributes)%>
@@ -208,6 +194,11 @@
          <%end #elsif %>
          
       </td>
+      <%elsif has_role? :translations_read%>
+        <%=format_readonly_translation(trans.attributes)%>
+      <%else%>
+        You do not have privege to see this translation  
+      <%end%>  
       <%if false %>
         <td class="<%= cell_class%>" style = "<%=width_css[:special_structure]%>">
               <%=check_box_tag("translation[plural]",(trans.attributes["special_structure"] == Translation::TRANS_PLURAL),  
@@ -222,12 +213,13 @@
         </td>
       <%end%>
       <!-- %if permitted_to_destroy?(translation, trans.attributes) % -->
+      <%if (has_role?(:translations_destroy)  && (current_user.admin?)) then%>
         <%if trans.iso_code == 'en' %>
-         <%=link_destroy(translation, :translations, {:confirm => 'delete.translation.are_you_sure',
+          <%=link_destroy(translation, :translations, {:confirm => 'delete.translation.are_you_sure',
                :dot_key_code => trans.attributes["dot_key_code"], 
                :english_translation => trans.attributes["en_translation"]}, 'td', {:style => width_css[:delete]}) %>    
-      <%end%>
-  
+        <%end%>
+      <%end%>  
   </tr>
   
   <!-- >< % i+=1%> -->

@@ -1,7 +1,7 @@
 //This will delete the line just deleted erb syntax is #{dom_id(calmapp)}
 var flash_selector = "div#flash"; 
 <% if not @delayed_job.nil? %>
-  $('#calmapp_<%=@delayed_job.id %>').remove();
+  $('#delayed_job_<%=@delayed_job.id %>').remove();
 <%end%>
 $(flash_selector).html("<%=j display_flashes%>");
 timeoutID = window.setTimeout(clearFlash,30000);

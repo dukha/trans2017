@@ -1,4 +1,6 @@
 <%=theading("edit", :model=>'translations_upload', :count=>1) %>
 <%= render 'form' %>
-<%=link_new( new_translations_upload_path, :translations_upload)  %> | 
+<%if has_role? :translations_uploads_create%>
+<%=link_new( new_translations_upload_path, :translations_upload)  %> |
+<%end%> 
 <%=link_back(translations_uploads_path) %>

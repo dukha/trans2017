@@ -1,4 +1,6 @@
 <%=theading("edit", :model=>"calmapp", :count=>1) %>
 <%= render 'form' %>
-<%= tlink_to('new_model', new_calmapp_path, :model=> 'calmapp', :count=>1) %> |
+<% if has_role?(:calmapps_create)%>
+  <%= tlink_to('new_model', new_calmapp_path, :model=> 'calmapp', :count=>1) %> |
+<%end%>
 <%= tlink_to  "back", calmapps_path %>

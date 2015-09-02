@@ -23,8 +23,8 @@
     
     <!--td class="< %= link_cell_class %>">< %= tlink_to 'edit', edit_language_path(language) %></td -->
     <!--td class="< %= link_cell_class %>">< %= tlink_to 'destroy', language, :confirm => 'delete.are_you_sure', :model => 'language', :value=>language.name, :count=>1, :method => :delete %></td -->
-    <%= link_edit   edit_language_path(language), "language" %>
-      <%=link_destroy language, "language", :name => language.name%>
+    <!--%= link_edit   edit_language_path(language), "language" %-->
+      <!--%=link_destroy language, "language", :name => language.name%-->
   </tr>
 	
 <% end %>
@@ -32,4 +32,4 @@
 <%= twill_paginate %>
 <br />
 <% end %>
-<%= tlink_to('new_model', new_language_path, :model=> 'language', :count=>1) %>
+<!--%= tlink_to('new_model', new_language_path, :model=> 'language', :count=>1) % -->

@@ -15,7 +15,8 @@
   <%= @special_partial_dot_key.cldr %>
 </p>
 
-
+<%if has_role? :special_partial_dot_keys_write%>
 <%=link_edit('edit', edit_special_partial_dot_key_path(@special_partial_dot_key)) %> |
+<%end%>
 <%= link_back(special_partial_dot_keys_path) %>
 

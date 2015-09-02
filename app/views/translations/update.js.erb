@@ -13,11 +13,11 @@ console.log("<%=@translation.plural_translation_html_display%>");
 <%if @translation.is_plural? %>
    $(anchor).html( "<%=@translation.plural_translation_html_display%>");
 <%end%>
-//$(anchor).html( 'ababab');//< %="xcxx"% >);
-//< % = plural_editing_table({"translation"=> @translation.translation, "dot_key_code" => @translation.dot_key_code}) %>
-//);
+
 var flashSelector = "div#local-flash"; //.concat(@translation.id.to_s)%>  
 var flashDiv = row.find(flashSelector);
+console.log("flashSelector" + " " + flashSelector)
+console.log("flashDiv" + " " + flashDiv);
 flashDiv.html("<%=j display_flashes%>");
 timeoutID = window.setTimeout(clearFlash,30000);
 function clearFlash(){

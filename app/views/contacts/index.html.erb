@@ -1,33 +1,3 @@
-<script type="text/javascript">
-//This script  handles showing and hiding selection criteria
-  var criteriaDiv ="#criteria";
-  var criteriaButton = "#showHideCriteria";
-  $().ready(function(){
-    //Initialise the criteria to be hidden on first display
-    $(criteriaDiv).hide(); 
-    $(criteriaButton).html(criteriaHiddenText);
-    
-    if( <%= @contacts.count==0 %>){
-      toggleCriteria();
-    }
-    
-    $(criteriaButton).click(function(){
-      toggleCriteria();
-    }); //end click
-  });//end ready
-  var   criteriaHiddenText = "<%=t($FA +'show_something', :something=>t($SC))%>";
-  var   criteriaVisibleText = "<%=t($FA +'hide_something', :something=>t($SC))%>";
-  function toggleCriteria(){
-    if($(criteriaDiv).is(':visible')){ 
-        $(criteriaButton).html(criteriaHiddenText);
-    }else{
-        $(criteriaButton).html(criteriaVisibleText);
-    }
-    // toggle has to be after setting button text otherwise is(':visible') will not work properly
-    $(criteriaDiv).slideToggle('slow');  
-  }
-  
-</script>
 <%=theading("listing", :model=>'contact', :count=>11) %>
 <%if Contact.respond_to?( :searchable_attr ) && Contact.searchable_attr.any? then %>
 <div id = 'data-empty' style = 'display:none'><%= @contacts.empty?.to_s %></div>
@@ -116,22 +86,20 @@
   <table class="data">
     <tr class="dataheader">
     
-      <th class ="dataheader"><%=sortable("problem_area","contact", sortable_cols.include?("problem_area"))%></th> 
-  
-    
-      <th class ="dataheader"><%=sortable("screen_name","contact", sortable_cols.include?("screen_name"))%></th> 
-  
-    
-      <th class ="dataheader"><%=sortable("last_menu_choice","contact", sortable_cols.include?("last_menu_choice"))%></th> 
-  
-    
+      <th class ="dataheader"><%=sortable("problem_area","contact", sortable_cols.include?("problem_area"))%></th>     
+      <th class ="dataheader"><%=sortable("screen_name","contact", sortable_cols.include?("screen_name"))%></th>     
+      <th class ="dataheader"><%=sortable("last_menu_choice","contact", sortable_cols.include?("last_menu_choice"))%></th>        
       <th class ="dataheader"><%=sortable("description","contact", sortable_cols.include?("description"))%></th> 
-  
-    
       <th class ="dataheader"><%=sortable("user_id","contact", sortable_cols.include?("user_id"))%></th> 
-  
-        <%= link_header 4  %>
+      <th class ="dataheader"><%=sortable("created_at","contact", sortable_cols.include?("created_at"))%></th>
+      <th class ="dataheader"><%=sortable("updated_at","contact", sortable_cols.include?("updated_at"))%></th>
       
+      <%has_role?(:contacts_write) do%>
+        <%= link_header 1  %>
+      <%end%>
+      <%has_role?(:contacts_destroy) do%>
+        <%= link_header 1  %>
+      <%end%>
     </tr>
   
     
@@ -139,7 +107,7 @@
   <% link_cell_class="link"%>  
   <% @contacts.each do |contact| %>
   
-    <tr class = "<%= cycle('dataeven', 'dataodd') %>" >
+    <tr class = "<%= cycle('dataeven', 'dataodd') %>" id = '<%= dom_id(contact)%>' >
             <td class="<%= cell_class %>"><%= contact.problem_area %></td>
   
             <td class="<%= cell_class %>"><%= contact.screen_name %></td>
@@ -149,12 +117,14 @@
             <td class="<%= cell_class %>"><%= contact.description %></td>
   
             <td class="<%= cell_class %>"><%= contact.user.actual_name %></td>
-            <td class="<%= cell_class %>"><%= contact.created_at %></td>
-            <td class="<%= cell_class %>"><%= contact.updated_at %></td>
-  
-          <%= link_edit( edit_contact_path(contact), :contacts  ) %>
-      <%= link_destroy( contact, :contacts ) %>
-      
+            <td class="<%= cell_class %>"><%= display_timestamp(contact.created_at) %></td>
+            <td class="<%= cell_class %>"><%= display_timestamp(contact.updated_at) %></td>
+            <%has_role?(:contacts_write) do%>
+              <%= link_edit( edit_contact_path(contact), :contacts  ) %>
+            <%end%>
+            <%has_role?(:contacts_destroy) do%>   
+              <%= link_destroy( contact, :contacts ) %>
+            <%end%>
     </tr>
   <% end #do data %>
   </table>
@@ -162,4 +132,4 @@
 
 <br />
 <%end # if else count %>
-<%=link_new( new_contact_path, :contact)  %>
+

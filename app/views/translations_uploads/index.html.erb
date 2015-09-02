@@ -72,7 +72,7 @@
   <% link_cell_class="link"%>  
   <% @translations_uploads.each do |translations_upload| %>
   
-    <tr class = "<%= cycle('dataeven', 'dataodd') %>" >
+    <tr class = "<%= cycle('dataeven', 'dataodd') %>" id = '<%= dom_id(translations_upload)%>'>
              
             <td class="<%= cell_class %>"><%= translations_upload.calmapp_versions_translation_language.calmapp_version_tl.description %></td>
             
@@ -90,4 +90,7 @@
 
 <br />
 <%end # if else count %>
-<%=link_new( new_translations_upload_path, :translations_upload)  %>
+<%has_role? :translations_uploads_create do%>
+<%=link_new( new_translations_upload_path, :translations_upload)  %> | 
+<%end%>
+<%= link_back(translations_uploads_path) %>

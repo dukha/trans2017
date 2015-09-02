@@ -78,8 +78,6 @@ GEM
       mime-types (>= 1.16)
     celluloid (0.16.0)
       timers (~> 4.0.0)
-    childprocess (0.3.6)
-      ffi (~> 1.0, >= 1.0.6)
     cocoon (1.2.6)
     coderay (1.1.0)
     coffee-rails (4.1.0)
@@ -112,6 +110,10 @@ GEM
     diff-lcs (1.2.5)
     domain_name (0.5.24)
       unf (>= 0.0.5, < 1.0.0)
+    dotenv (2.0.2)
+    dotenv-rails (2.0.2)
+      dotenv (= 2.0.2)
+      railties (~> 4.0)
     erubis (2.7.0)
     exception_notification (4.0.1)
       actionmailer (>= 3.0.4)
@@ -142,10 +144,6 @@ GEM
       guard (~> 2.1)
       guard-compat (~> 1.1)
       rspec (>= 2.99.0, < 4.0)
-    guard-spork (1.5.0)
-      childprocess (>= 0.2.3)
-      guard (>= 1.1)
-      spork (>= 0.8.4)
     hitimes (1.2.2)
     http-cookie (1.0.2)
       domain_name (~> 0.5)
@@ -369,7 +367,6 @@ DEPENDENCIES
   capistrano-rails (~> 1.1)
   capybara
   carrierwave
-  childprocess (= 0.3.6)
   cocoon (~> 1.2.0)
   connection_pool
   daemons
@@ -378,12 +375,12 @@ DEPENDENCIES
   delayed_job_active_record
   devise
   devise_invitable
+  dotenv-rails
   exception_notification
   execjs
   factory_girl_rails (~> 4.4.0)
   formtastic
   guard-rspec
-  guard-spork (= 1.5.0)
   jquery-rails
   jquery-turbolinks
   jquery-ui-rails
@@ -403,7 +400,7 @@ DEPENDENCIES
   pry-stack_explorer
   puma
   rails (~> 4.2.2)
-  rails-i18n (~> 4.0.0)
+  rails-i18n (~> 4.0.4)
   rdiscount
   redcarpet
   redis

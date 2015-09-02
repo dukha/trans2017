@@ -1,17 +1,14 @@
 class User < ActiveRecord::Base
-  # Setup accessible (or protected) attributes for your model
-  # Include default devise modules. Others available are:
-  # :token_authenticatable, :confirmable, omniauthable:, Confirmable, :rememberable, :validatable, :encryptable, :recoverable
+  extend SearchModel
+  include SearchModel
+  
   devise  :database_authenticatable, :registerable,
          :trackable, :validatable,
          :timeoutable, :lockable, :invitable, :invite_key => {:email=>'', :actual_name=>'' } #,:timeout_in => 10.minutes use value from  config/initializers/devise.rb
   
   before_validation :check_username
   after_invitation_accepted :notify_admin
-  # Setup accessible (or protected) attributes for your model
 
-  # username is unique by DB index :unique => true
-  # username is required by DB :null => false
   validates :email, :username, :uniqueness => true
   validates :email, presence: true
   validates :actual_name, :uniqueness => true
@@ -24,7 +21,7 @@ class User < ActiveRecord::Base
   # https://github.com/plataformatec/devise/wiki/How-To:-Allow-users-to-sign_in-using-their-username-or-email-address
   # Virtual attribute for authenticating by either username or email
   # This is in addition to a real persisted field like 'username'
-  attr_accessor :login
+  attr_accessor :login, :via_invitable
   #The above are being replaced by those below. Keep both for now. mfl
   has_many :user_profiles, :dependent => :destroy
   #accepts_nested_attributes_for :user_profiles, :reject_if => :all_blank, :allow_destroy => true
@@ -42,13 +39,18 @@ class User < ActiveRecord::Base
   has_many :administrator_cavs_tls, :through => :administrator_jobs, :source => :calmapp_versions_translation_language#, :class_name=>"Calmapp"
   
   after_create :add_cavs_tls, :if => Proc.new {|user| }
-
+  
+  # password must be at least 1 non- asci char (*&^) etc and at least 1 numeric unless set by devise_invitable
   def password_complexity
-    #binding.pry
-    if sign_in_count == 0 and confirmed_at.nil?
-      #confirmation_token is now not longer used
-      # a pw is now used by devise_inviter so just accept the invitation pw as valid
+    if via_invitable
       return true
+    end
+    if persisted?
+       if sign_in_count == 0 && confirmed_at.nil?
+        #confirmation_token is now not longer used
+        # a pw is now used by devise_inviter so just accept the invitation pw as valid
+        return true
+      end
     end
     if password.present? && (! password.match(/^(?=.{8,})(?=.*[\W])(?=.*\d)./))  #/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d). /
       errors.add( :password, 
@@ -56,6 +58,18 @@ class User < ActiveRecord::Base
 
     end
   end
+
+  def self.searchable_attr
+    %w(email actual_name user_name)
+  end
+  
+  def self.sortable_attr
+    %w(email actual_name user_name)
+  end
+  
+
+
+
 =begin
      for declarative auth
      Returns the role symbols of the given user for declarative_auth. 
@@ -87,15 +101,22 @@ class User < ActiveRecord::Base
   def application_administrator?
     application_administrator
   end
-
+  def sysadmin?
+    return profiles.include?(Profile.where{name == "sysadmin"}.first)
+  end
+  def admin?
+    return application_administrator? || sysadmin?
+  end
+  
   def self.create_root_user
     username = "root"
-    pw = "123456"
+    #pw = "123456"
 
     # keep the simple pw for the system test on x59.alfaservers.com, calm.dhamma-eu.org/calm4test
-    if ::Rails.env.production?
-      pw = SecureRandom.base64(6)
-    end
+    #if ::Rails.env.production?
+      #pw = SecureRandom.base64(6)
+    #end
+    pw = Rails.application.secrets.root
     u = User.find_by_username username
     if u
        result = User.update u.id, :password => pw,:password_confirmation => pw
@@ -124,9 +145,9 @@ class User < ActiveRecord::Base
  
   def self.seed
      User.create_root_user
-     pw = '123456'
-     param = {:password => pw,:password_confirmation => pw,:username => $SYSADMIN,:email => 'admin@calm.org', 
-                :actual_name=> 'admin', :country=> 'Australia', :phone => '456000'}
+     pw = Rails.application.secrets.mark#'!1234567'
+     param = {:password => pw,:password_confirmation => pw,:username => 'mark',:email => 'mplennon@gmail.com', 
+                :actual_name=> 'Mark Lennon', :country=> 'Australia', :phone => '456000', :responds_to_contacts => true}
      admin = User.create! param
      admin.profiles << Profile.sysadmin
      
@@ -211,10 +232,20 @@ CalmappVersionsTranslationLanguage.new(:translation_language_id =>TranslationLan
 =end
    end
    
-   def self.contact_responders
+  def self.contact_responders
      return User.where{responds_to_contacts == true}.load
    end
- 
+  def roles_list
+   roles = []
+   roles << "Translator" if ! translator_cavs_tls.empty?
+   roles << "Developer" if ! developer_cavs_tls.empty?
+   roles << "Administrator" if ! administrator_cavs_tls.empty?
+   return roles.join(" or ")
+  end
+  
+  def self.contact_reponders
+     responders = User.where{responds_to_contacts == true}.load
+  end
  protected
  # https://github.com/plataformatec/devise/wiki/How-To:-Allow-users-to-sign_in-using-their-username-or-email-address
  # Overwrite Devise’s find_for_database_authentication method
@@ -237,7 +268,7 @@ CalmappVersionsTranslationLanguage.new(:translation_language_id =>TranslationLan
      return where{administrator == true}
    end
 
-
+   
 
 
 
@@ -256,7 +287,8 @@ private
    
   def notify_admin
     puts "NOTIFY ADMIN"
-    AdminMailer.user_invitation_accepted id
+    #binding.pry
+    AdminMailer.user_invitation_accepted(self).deliver_now
   end 
    
 =begin 

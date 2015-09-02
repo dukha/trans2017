@@ -25,7 +25,8 @@
   <%= @contact.user_id %>
 </p>
 
-
+<%if has_role? :contacts_write%>
 <%=link_edit('edit', edit_contact_path(@contact)) %> |
+<%end%>
 <%= link_back(contacts_path) %>
 

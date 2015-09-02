@@ -5,19 +5,21 @@
 <table id="whiteboard_table"class="whiteboard">
 <!-- we don't want table headers here because of the role that whiteboards plays as Home page -->
 <% @whiteboards.each do |whiteboard| %>
-
-  
-
   <tr id= '<%= dom_id(whiteboard)%>' class = "whiteboard">
-    
     <td class="whiteboardname"><%= t($LU+"whiteboard_type." +WhiteboardType.find(whiteboard.whiteboard_type_id).translation_code) %></td>
 		<td class="whiteboard"><%= whiteboard.info %></td>
 		<!-- The next should be localised but not checked-->
     <td class="whiteboarddate"><%=t("commons.changed_ago", :change_date => time_ago_in_words(whiteboard.updated_at))%></td>
-       
-    
-    <!--td class="whiteboardlink"><%= tlink_to 'edit', edit_whiteboard_path(whiteboard) %></td-->
-    <%=link_edit(edit_whiteboard_path(whiteboard),'whiteboard')%>
+     <%if has_role? :whiteboards_write%> 
+       <%if whiteboard.whiteboard_type.name_english == "system"%>
+          <% if current_user.admin?%> 
+             <%=link_edit(edit_whiteboard_path(whiteboard),'whiteboard')%>
+          <%end%>
+       <%else%>
+         <!-- Not system whiteboard -->
+         <%=link_edit(edit_whiteboard_path(whiteboard),'whiteboard')%>
+       <%end%>       
+    <%end%>
   </tr>
   	
 <% end %>

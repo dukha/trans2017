@@ -1,6 +1,7 @@
 require File.expand_path('../boot', __FILE__)
 
 require 'rails/all'
+require 'dotenv' ; Dotenv.load ".env", ".env.local", ".env.#{Rails.env}"
 =begin
 #log4r requirements
 require 'log4r'

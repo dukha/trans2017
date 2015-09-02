@@ -1,6 +1,7 @@
 <%=theading("edit", :model=>"whiteboard_type", :count=>1) %>
 
 <%= render 'form' %>
-
+<%if has_role? :whiteboard_types_create%>
 <%= tlink_to( 'new_model', new_whiteboard_type_path, :model=> 'whiteboard_type', :count=>1) %> |
+<%end%>
 <%= tlink_to "back", whiteboard_types_path %>

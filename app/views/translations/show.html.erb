@@ -12,11 +12,12 @@
 </p>
 <p>
   <b>Translation</b>
-  <%= best_in_place @translation, :translation, :path => translation_path(@translation.id), :type=> :input, :ok_button => "ok", :cancel_button => "cancel", :nil=>"Click to edit" %><!--< %= @translation.translation%> -->
+  <%= @translation.translation%>
 </p>
 
 
 
-
+<%if has_role? :translation_write%>
 <%= link_to 'Edit', edit_translation_path(@translation) %> |
+<%end%>
 <%= link_to t("formtastic.actions.back"), translations_path %>

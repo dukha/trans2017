@@ -1,6 +1,15 @@
 /* This import contains the matching colours etc for jquery sunny them*/
 /*@import 'sunny';*/
-/*@import 'smoothness';*/
+@import 'smoothness';
+
+
+$margin:2px;
+$padding:2px; 
+$footerheight:70px;
+$menuwidth:250px; 
+
+$indexfont-weight:550;
+$indexfont-size: small;
 
 /* from applicaton.css */
 /*@import 'smoothness.css';*/
@@ -75,27 +84,8 @@ a img {
 #username{
   font-style:italic;
 }
-/* end appliaton.css */
 
 
-
-
-
-
-
-
-
-
-
-
-
-$margin:2px;
-$padding:2px; 
-$footerheight:70px;
-$menuwidth:250px; 
-
-$indexfont-weight:550;
-$indexfont-size: small;
 
 
 /*#CAEAFF;*/
@@ -120,8 +110,8 @@ img.logo{
     width:90%;
 }
 .heading, .subheading{
-    color: #14BDF7;
-    /*$headingcolor;*/
+    color: $headingcolor; 
+    /*#14BDF7;*/
     text-align:center;
     vertical-align:middle;
 }
@@ -212,8 +202,8 @@ table.data{
   /*border-collapse:collapse;*/
   
 }
-$editor-background-color: rgba( 180,180,180, 0.4);
-$nested-border-colour: rgba( 100,100,100, 0.6);
+/*$editor-background-color: rgba( 180,180,180, 0.4);
+$nested-border-colour: rgba( 100,100,100, 0.6);*/
 div#table{
   border:solid;
   border-color: $nested-border-colour;
@@ -226,8 +216,8 @@ div#table{
  */
 
 table.data{
-  border-color: rgba( 100,100,100, 0.6);
-  /*$table-border-color;*/
+  border-color: $table-border-color;/*rgba( 100,100,100, 0.6);*/
+  /**/
 }
 table.plural-editor{
   background-color : $editor-background-color;
@@ -244,19 +234,18 @@ tr.dataodd, tr.dataeven, span.file, span.web-browser{ //}, div.addChildrenLocati
   font-weight: $indexfont-weight;
 }
 tr.dataeven, div.dataeven{
-  background-color: rgba(220,220,220, 0.7);
-  /*$data-even-colour; / * #CAEAFF;*/
+  background-color: $data-even-colour;/*rgba(220,220,220, 0.7);*/
+  /* / * #CAEAFF;*/
 }
 tr.dataodd, div.dataodd{
   
 }
 div.new{
-  background-color: #e5a34f
-  /*$data-new-color*/
+  background-color: $data-new-color; /*#e5a34f*/
 }
 tr.dataheader, div#table div#header-row{
-  background-color:gainsboro;
-  /*$table-header-background-colour;*/
+  background-color: $table-header-background-colour;  /*gainsboro;*/
+  /**/
   font-weight:700;
   #font-size: 120%;
 }
@@ -424,8 +413,8 @@ button.toFrom{
 }
 */
 a, .ui-widget-color a, .ui-widget-content a {
-  color: #0000ff;
-  /*$anchorcolor;*/
+  color: $anchorcolor; /* #0000ff;*/
+  /**/
   background-color: transparent;
   //color: #0000FF;
 }
@@ -435,7 +424,7 @@ a{
 }
 //ul.menu 
 a:hover{
-  color:  #008000;
+  color:  $anchorhovercolor; /*#008000;*/
   /*$anchorhovercolor;*/
   background-color: transparent;
 }
@@ -455,8 +444,8 @@ div.criteria{
   display: block; 
   border: solid;
   border-width:1px;
-  border-color: rgba(220,220,220, 0.7);
-  /*$data-even-colour;*/ 
+  border-color: $data-even-colour; /*rgba(220,220,220, 0.7);*/
+  /**/ 
   padding: 5px;
   margin: 5px;
 }
@@ -487,7 +476,7 @@ form.formtastic fieldset > ol > li.nested-fields li{
   //background-color: green; 
   
 }
-$mid-heading-colour: rgba( 180,180,180, 1);
+/*$mid-heading-colour: rgba( 180,180,180, 1);*/
 .nesting-heading {
   font-size:15px; 
   font-weight:700;
@@ -517,7 +506,7 @@ form.formtastic fieldset.inputs > legend > span, form.formtastic fieldset.inputs
 td.profilecheckboxtd{
   width:45px;
 }
- $profile-form-color:rgba(120,120,120,0.5);;
+ /*$profile-form-color:rgba(120,120,120,0.5);;*/
 table.profiles-form  tr.dataodd{
   background-color: $profile-form-color;
 }
@@ -530,7 +519,7 @@ flash_notice, #flash_error, #flash_alert, #flash_success, #caps_lock_status, #fl
   margin: 10px 0;
   width:80%;
 }
-$warning-background-color: yellow;
+/*$warning-background-color: yellow;*/
 #flash_notice, #flash_warning{
   background-color: $warning-background-color;/*#FFD700; /*yellow */
   border: solid 1px #C66;
@@ -543,4 +532,8 @@ $warning-background-color: yellow;
 #flash_error, #flash_error1, #flash_error2, #flash_alert,#caps_lock_status {
   background-color: #FCC; /*pink*/
   border: solid 1px #C66;
+}
+.centered-text{
+  text-align:center;
+  padding-bottom: 6px;
 }

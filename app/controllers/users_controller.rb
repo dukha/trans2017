@@ -14,13 +14,31 @@ class UsersController < ApplicationController #Devise::RegistrationsController
 =end
   # users_select        /:locale/users_select(.:format)                                    {:controller=>"users", :action=>"select"}
   def index
+    per_page = 20
+    if User.respond_to? :searchable_attr  
+      searchable_attr = User.searchable_attr 
+    else 
+      searchable_attr = [] 
+    end
+    if User.respond_to? :sortable_attr  
+      sortable_attr = User.sortable_attr     
+    else   
+      sortable_attr = []   
+    end
+    #binding.pry
     @users = User.order("actual_name")
     extra_where_clauses = prepare_mode()
 
     if not extra_where_clauses.empty? then
       extra_where_clauses.each{ |c| @users = @users.where(c)}
     end
-    @users = @users.paginate :page => params[:page], :per_page => 15
+    if searchable_attr.nil? || searchable_attr.empty?  
+      @users = @users.paginate(:page => params[:page], :per_page=>per_page)
+    else
+      search_info = init_search(current_user, searchable_attr, sortable_attr)
+      @users = @users.search(current_user, search_info).paginate(:page => params[:page], :per_page=>per_page)
+    end
+    #@users = @users.paginate :page => params[:page], :per_page => 15
     respond_to do |format|
       format.html 
       format.xml  { render :xml => @translation_languages }
@@ -60,10 +78,25 @@ class UsersController < ApplicationController #Devise::RegistrationsController
   #update_password PUT /:locale/users/:id/update_password(.:format) {:controller=>"users", :action=>"update"}
   def update   
     @user.unlock_access! unless !@user.access_locked?
-    binding.pry
+    #binding.pry
+    assign_first_premissions = false
+    #binding.pry
+    if set_permission_after_invitation_accept()
+      assign_first_premissions = true     
+    end
+    #binding.pry
     respond_to do |format|
   
       if @user.update(user_params)#params[:user])
+       
+        if assign_first_premissions && (! @user.roles_list.empty?) then
+          begin
+            AdminMailer.notify_user_permissions_assigned_after_invitation(@user.id).deliver_now
+          rescue Exception => e
+            ExceptionNotifier.notify_exception(e,
+             :data=> {:message => e.message})
+          end
+        end
         format.html { redirect_to(users_path, :notice => "User #{@user.username} was successfully updated.") }
         format.xml  { head :ok }
       else
@@ -123,6 +156,15 @@ protected
 
 
 private
+  def set_permission_after_invitation_accept
+    #binding.pry
+    ret_val =  ((! @user.invited_by_id.nil?)  && 
+      (@user.profiles.count == 1) &&
+      (@user.profiles[0].name == "guest") )#&&
+      #(! @user.invitation_token.nil?)) #&& (signin_count == 1)
+      
+    return ret_val  
+  end
   # Use callbacks to share common setup or constraints between actions.
   def set_user
     @user = User.find(params[:id])

@@ -6,17 +6,16 @@
 <%= twill_paginate %>
 <table class="data">
   <tr class="dataheader">
-
-    
-
     <th class ="dataheader"><%=tlabel('host', 'redis_instance') %></th>
     <th class ="dataheader"><%=tlabel('description', 'redis_instance') %></th>
     <th class ="dataheader"><%=tlabel('port', 'redis_instance') %></th>
     <th class ="dataheader"><%=tlabel('max_databases', 'redis_instance') %></th>
-
+    <%if has_role? :redis_instances_write%>
+      <th class="linkheader"></th>
+    <%end%>
+      <%if has_role? :redis_instances_destroy%>
     <th class="linkheader"></th>
-    <th class="linkheader"></th>
-    
+    <%end%>
   </tr>
 
   
@@ -33,10 +32,13 @@
       <td class="<%= cell_class %>"><%= redis_instance.port %></td>
       <td class="<%= cell_class %>"><%= redis_instance.max_databases %></td>
 
-  
-    <%=link_edit(edit_redis_instance_path(redis_instance), "redis_instance")%>
+    <%if has_role? :redis_instances_write%>
+      <%=link_edit(edit_redis_instance_path(redis_instance), "redis_instance")%>
+    <%end%>
     <!--td class="< %= link_cell_class %>">< %= tlink_to  'edit', edit_redis_instance_path(redis_instance) %></td -->
-    <%=link_destroy redis_instance, :redis_instances %>
+    <%if has_role? :redis_instances_destroy%>
+      <%=link_destroy redis_instance, :redis_instances %>
+    <%end%>
   </tr>
 <% end %>
 </table>

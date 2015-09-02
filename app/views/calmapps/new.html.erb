@@ -1,11 +1,8 @@
-
-
-
-
-
 <%= theading('new', :model=>'calmapp', :count=>1)%>
 <%= semantic_form_for(@calmapp) do |app| %>
 	 <%= render 'form' %>
 <%end%>
-<%= tlink_to('new_model', new_calmapp_path, :model=> 'calmapp', :count=>1)  %> |
+<% if has_role?(:calmapps_create)%>
+  <%= tlink_to('new_model', new_calmapp_path, :model=> 'calmapp', :count=>1)  %> |
+<%end%>
 <%= tlink_to("back", calmapps_path) %>

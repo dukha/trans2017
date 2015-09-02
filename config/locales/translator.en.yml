@@ -2,8 +2,9 @@ en:
   application:
     #translator: "xxxxxxxxTranslat"
     app_title: "%{calm}: %{app_name}"
-    app_sub_name: Translation Module for CALM Applications
+    app_sub_name: Translation Module for Vipassana Applications
     version: Version %{version}
+    about: "About %{app}"
   formtastic:
     actions:
       apply: Apply
@@ -128,7 +129,7 @@ en:
         translator_jobs: "This translator(user) can work on translating these ticked version-language combinations."
         developer_jobs: "This developer(user) can work on doing the English translations for the following ticked applications."
         profiles: Choose the profile(s) of permissions that you want the user to have. The profile will determine which pages a user can view and which action a user can take.
-        
+        password_format: "Password must contain 1 number and 1 special character like !@#$%^&*_- and be 8 characters long"
         password_change: Only add data here if you want to change your password. If you only want to change other data(eg email address) then leave change and confirm passwords blank.
         password_current: "Security: provide your current password before you can change these values."
         password_new: Add your new password here only if you want to change it. 
@@ -236,6 +237,9 @@ en:
     contact_us: Contact Us
     current_contacts: Current Contacts
     publish_language: Publish a Language
+    whiteboard: Whiteboards
+    help: Help
+    help_files: User Help
   headings:
     application_subheading: Translator
     write_to_database:
@@ -317,6 +321,12 @@ en:
       contact:
         one: Contact
         other: Contacts 
+      whiteboard:
+        one: Whiteboard
+        other: Whiteboards 
+      whiteboard_type:
+        one: Type of Whiteboard
+        other: Types of Whiteboard 
     attributes:
       calmapp:
         new_redis_dev_db: Add Redis Developers Database
@@ -334,7 +344,8 @@ en:
         locked_at: Time Locked
         failed_at: Time Failed
         priority: Priority
-        Queue: Queue Name   
+        queue: Queue Name  
+        id: Id 
       dot_key_code_translation_editor:
         editor: Editor
         dot_key_code: Code
@@ -343,7 +354,11 @@ en:
         last_menu_choice: Last Menu Clicked 
         description: Description of Problem
         user_id: User
+        problem_area: Location(in Program) of Problem
         user_email: Users Email
+        status: Status
+        created_at: Creation Time
+        updated_at: Last Update Time
       calmapp_version:
         calmapp_id: Application
         version: Version

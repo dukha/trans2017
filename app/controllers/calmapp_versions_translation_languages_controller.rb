@@ -89,6 +89,7 @@ class CalmappVersionsTranslationLanguagesController < ApplicationController
       if @calmapp_versions_translation_language.save
     
         tflash('update', :success, {:model=>@@model, :count=>1})
+        flash[:notice] = "The contents of any uploaded translation files will be written to the database later. At the moment they await processing on a queue."
         format.html { redirect_to( :action => "index")}#, notice: 'Calmapp versions translation language was successfully updated.') }
         format.json { head :no_content }
       else

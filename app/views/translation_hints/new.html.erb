@@ -1,4 +1,6 @@
 <%=theading("new", :model=>'translation_hint', :count=>1) %>
 <%= render 'form' %>
-<%=link_new( new_translation_hint_path, :translation_hint)  %> | 
+<%if has_role? :translation_hints_create%>
+<%=link_new( new_translation_hint_path, :translation_hint)  %> |
+<%end%> 
 <%=link_back(translation_hints_path )%>

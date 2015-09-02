@@ -1,7 +1,11 @@
 <p class="pageheading"><%= t("headings.listing.heading", :model=>t($ARM + "user", :count=>2) ) %></p>
+ 
+ <div id = 'data-empty' style = 'display:none'><%= @users.empty?.to_s %></div>
+ 
+<button id="showHideCriteria" type='button'>x</button>
+<div id='criteria' class="criteria" >
 <%= form_tag users_path, :method => 'get', :class=>'formtastic' do %>
-  <!--%= semantic_form_for translations_path, :method => 'get' do |f| % -->
-    <!--%=f.inputs do%-->
+  
     <%= hidden_field_tag :direction, params[:direction] %>
     <%= hidden_field_tag :sort, params[:sort] %>
     <div id="selection_mode" class = "radio">
@@ -22,10 +26,33 @@
               </label>
               
                 
-    </div>              
+    </div> 
+    <fieldset class="inputs">
+      <ol>
+      <li class="string optional" id="user_email_input">
+         <label for="criterion_email", class="criteria-label" ><%=tlabel("email", "user")%></label>
+         <%=select_tag(  :operator_email, options_for_select(operators_2_options(easy_string_operators), 
+             params[:operator_email]),{:include_blank=> true,:class=>'criteria-operators-select', :readonly=>true} )%> 
+         <%=text_field_tag( :criterion_email, params[:criterion_email], :style=>"width : 300px;")%>   
+      </li>
+      <li class="string optional" id="user_username_input">
+         <label for="criterion_username", class="criteria-label" ><%=tlabel("username", "user")%></label>
+         <%=select_tag(  :operator_username, options_for_select(operators_2_options(easy_string_operators), 
+             params[:operator_username]),{:include_blank=> true,:class=>'criteria-operators-select', :readonly=>true} )%> 
+         <%=text_field_tag( :criterion_username, params[:criterion_username], :style=>"width : 300px;")%>   
+      </li>
+      <li class="string optional" id="user_username_input">
+         <label for="criterion_actual_name", class="criteria-label" ><%=tlabel("actual_name", "user")%></label>
+         <%=select_tag(  :operator_actual_name, options_for_select(operators_2_options(easy_string_operators), 
+             params[:operator_actual_name]),{:include_blank=> true,:class=>'criteria-operators-select', :readonly=>true} )%> 
+         <%=text_field_tag( :criterion_actual_name, params[:criterion_actual_name], :style=>"width : 300px;")%>   
+      </li>
+      </ol>
+     </fieldset>              
     <%= submit_tag "Search", :name => nil %>
     
-  <%end%>          
+  <%end%> 
+</div>           
 <%= twill_paginate %>
 <table class="data">
   <tr class="dataheader">
@@ -51,21 +78,34 @@
       <td class = '<%=cell_class%>'><%= user.email %></td>
       <td class = '<%=cell_class%>'><%= user.actual_name %></td>
       <!--td class = '<%=link_cell_class%>'>< %= tlink_to 'edit_permissions', permissions_path(user) %></td -->
-      <td class = '<%=link_cell_class%>'><%= tlink_to 'reset_password', edit_password_path(user) %></td>
+      <%if has_role? :users_destroy%>
+      <td class = '<%=link_cell_class%>'>
+        <%= tlink_to 'reset_password', edit_password_path(user) %>
+      </td>
+      <%end%>
       <!-- The unlock link will only appear in the table if the user record is locked -->
       
-      
+      <%if has_role? :users_write%>
       <%=link_edit(user_edit_path(user), :user)%>
+      <%end%>
+      <%if has_role? :users_destroy%>
       <td class = '<%=link_cell_class%>'><%= unlock_link(user) %></td>
+      <%end%>
+      <%if has_role? :users_destroy%>
       <td class = '<%=link_cell_class%>'><%= tlink_to("destroy", destroy_user_path(user), {:navigate=>false, :method=>'delete', :remote=>true, :data=>{:confirm=>tmessage( 'delete.are_you_sure', $W, {:model=>user.username}) }})%></td>
+      <%end%>
     </tr>
     <%end%>
 </table>
 <%= twill_paginate %>
 <br>
 
-<%= link_to t('headings.new.heading', :model=> t($ARM + 'user', :count=>1)), new_user_path %> | <%= tlink_to "new_invitation", new_user_invitation_path%></li>
-
+<%if has_role? :users_create%>
+<%= link_to t('headings.new.heading', :model=> t($ARM + 'user', :count=>1)), new_user_path %> |
+<%end%>
+<%if has_role? :users_invite%> 
+<%= tlink_to "new_invitation", new_user_invitation_path%></li>
+<%end%>
 <script>
 $(document).ready(function(){
   $(function(){

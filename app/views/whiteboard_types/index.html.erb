@@ -19,12 +19,12 @@
   <tr class = "<%= cycle('dataeven', 'dataodd')%>" id = '<%= dom_id(whiteboard_type)%>'  >
     <td class="<%= cell_class %>" ><%= whiteboard_type.name_english %></td>
     <td class="<%= cell_class %>" ><%= whiteboard_type.translation_code %></td>
-    
-    <!--td class="link_cell_class"><%= link_to t('actions.edit'), edit_whiteboard_type_path(whiteboard_type) %></td-->
+    <%if has_role? :whiteboard_types_write%>
     <%= link_edit(edit_whiteboard_type_path(whiteboard_type), 'whiteboard_type')%>
-    <!--td class="link_cell_class">< % = link_to t('actions.destroy'),  whiteboard_type , :confirm => t('messages.delete.are_you_sure', :model => t($ARM + "whiteboard_type", :count=>1)), :method => :delete % ></td-->
-    <!--td class="link_cell_class">< %= tlink_to 'destroy', whiteboard_type, :confirm => 'delete.are_you_sure', :model => 'whiteboard_type', :count=>1, :method => :delete %></td -->
+    <%end%>
+    <%if has_role? :whiteboard_types_destroy%>
     <%= link_destroy( whiteboard_type, :whiteboard_types ) %>
+    <%end%>
   </tr>
  	
 <% end %>
@@ -32,4 +32,6 @@
 <%= twill_paginate %>
 <br />
 <% end %>
+<%if has_role? :whiteboard_types_create%>
 <%= tlink_to('new_model', new_whiteboard_type_path, :model=> 'whiteboard_type', :count=>1) %>
+<%end%>

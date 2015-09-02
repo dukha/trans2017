@@ -1,4 +1,6 @@
 <%=theading("edit", :model=>'special_partial_dot_key', :count=>1) %>
 <%= render 'form' %>
-<%=link_new( new_special_partial_dot_key_path, :special_partial_dot_key)  %> | 
+<%if has_role? :special_partial_dot_keys_create%>
+  <%=link_new( new_special_partial_dot_key_path, :special_partial_dot_key)  %> | 
+<%end%>
 <%=link_back(special_partial_dot_keys_path) %>

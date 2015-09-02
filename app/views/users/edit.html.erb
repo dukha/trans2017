@@ -1,23 +1,7 @@
 <p class="pageheading">Reset Password for user: <%= @user.username %> -- <%= @user.email %></p>
-<!-- this is for a sysadmin to reset another users password -->
-<!--%= semantic_form_for(@user, :url => update_password_path(@user)) do |f| %>
-  < %= f.inputs do %>
-      < % = f.input :password %>
-      < %= f.input :password_confirmation %>
-  < % end %>
 
-  < %= f.actions do %>
-    < %= f.action(:submit) %>
-  < % end %>
-< % end % -->
 
   <%=render 'form' %>
 
-<!-- %= link_back users_path %  -->
+<%= link_back users_path %>
 
-<script>
-
-
-
-
-</script>
