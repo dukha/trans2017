@@ -129,7 +129,7 @@ class CalmappVersionsTranslationLanguage < ActiveRecord::Base
   
   def do_after_commit_on_create
     if translation_language.iso_code != 'en' then
-      AddEnKeysForNewLanguageJob.set(:wait=> 10.minutes).perform_later(id)
+      AddEnKeysForNewLanguageJob.set(:wait=> 2.minutes).perform_later(id)
     end
   end
   def add_all_dot_keys_from_en_for_new_translation_language #(cavtl_id)
@@ -148,8 +148,8 @@ class CalmappVersionsTranslationLanguage < ActiveRecord::Base
       en_trans.each do |en_t|
         foreign = Translation.where{dot_key_code == my{en_t.dot_key_code}}.where{cavs_translation_language_id == my{cavtl.id}}.first
         if not foreign.nil?
-          puts "dkc + tl.iso_code +  existing translation" 
-          puts foreign.dot_key_code + " " + foreign.calmapp_versions_translation_language.translation_language.iso_code + " " + foreign.translation.to_s #+ " " + f.translation.class.name
+          #puts "dkc + tl.iso_code +  existing translation" 
+          #puts foreign.dot_key_code + " " + foreign.calmapp_versions_translation_language.translation_language.iso_code + " " + foreign.translation.to_s 
         end
         test =  ActiveSupport::JSON.decode(en_t.translation)
         incomplete = false
@@ -214,6 +214,9 @@ class CalmappVersionsTranslationLanguage < ActiveRecord::Base
   end
   
   def self.find_languages_not_in_version  language_ids_array, version_id
+    # en is always in version
+    # so we add it to the array
+    language_ids_array << TranslationLanguage.TL_EN.id
     where{calmapp_version_id == version_id}.where{translation_language_id << language_ids_array}
   end
   def deep_destroy

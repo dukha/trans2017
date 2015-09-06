@@ -16,6 +16,7 @@
 * [Translators](<%=translator_help_path%>)
 * [Developers (programmers)](<%=developer_help_path%>)
 * [Administrators](<%=administrator_help_path%>)
-
-click for normal [Home](<%=whiteboards_path%>) 
+> Click here for
+>> - [Help Contents](<%=contents_path%>)
+>> - [Home](<%=whiteboards_path%>) 
 

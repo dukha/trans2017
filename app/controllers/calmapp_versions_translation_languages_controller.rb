@@ -158,11 +158,11 @@ class CalmappVersionsTranslationLanguagesController < ApplicationController
       redis_db = RedisDatabase.find(params[:redis_database_id])
       count = redis_db.version_language_ready_to_publish(calmapp_versions_translation_language.translation_language).count  
       #count = redis_db.publish_version_language(calmapp_versions_translation_language.translation_language)
-      PublishLanguageToRedisJob.perform_later(calmapp_versions_translation_language.calmapp_version_tl.id, calmapp_versions_translation_language.translation_language.id)
+      PublishLanguageToRedisJob.perform_later(calmapp_versions_translation_language.calmapp_version_tl.id, calmapp_versions_translation_language.translation_language.id, redis_db.id)
      
       if request.xhr? then
         payload = {"result" => count, "status" =>200}
-        flash[:notice] = "Queued #{count} translations to #{redis_db.description} for publishing."
+        flash[:notice] = "Queued #{count} translations to '#{redis_db.description}' to be published."
         respond_to do |format|
           format.js
         end

@@ -45,10 +45,9 @@ Translate::Application.configure do
   }
   
   config.action_mailer.mailgun_settings = {
-        api_key: "key-47120298e8c9c31b076e5245655e62c7", #'<mailgun api key>',
-        domain: "sandboxa89c6db3f73e4ad6b3377c7bb91dbeb1.mailgun.org" #'<mailgun domain>'
+        api_key: Rails.application.secrets.mailgun_api_key, 
+        domain: Rails.application.secrets.mailgun_domain
   }
-  
   config.action_mailer.smtp_settings = {
     address: "smtp.gmail.com",
     port: 587,

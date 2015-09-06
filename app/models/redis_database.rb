@@ -173,19 +173,14 @@ class RedisDatabase < ActiveRecord::Base
  publishes all translations(for all languages) for the calmapp_version of this redis_database 
 =end  
   def version_publish 
-    # 2
-    #con = nil
-    #count = 0
     begin
       translations  = Translation.join_to_cavs_tls_arr(calmapp_version.id)
-      count = translations.count
-      
+      count = translations.count     
       # This removes all key value pairs from the db
       pool.with{|con| 
         con.flushdb     
         translations.each{ |t|   
-            publish_one_translation(t)#, con)
-            #count +=1      
+            publish_one_translation(t)#, con)    
           }
         # save what you have jsut written to redis (in background)  
         con.bgsave
@@ -217,29 +212,14 @@ class RedisDatabase < ActiveRecord::Base
   def translations_ready_to_publish
     return Translation.version_ready_to_publish(calmapp_version)
   end
-=begin   
-  First removes all existing translations in the redis database
- Publishes all translations for the given translation language
- @param TranslationLanguage instance 
-#=end  
-   def version_language_publish translation_language
-     
-     RedisDatabase.version_language_publish_from_ids(calmapp_version.id, translation_language_id)
-     #PublishLanguageToRedisJob.perform_later(calmapp_version.id, translation_language.id)
-     
-   end 
-=end   
-   def self.version_language_publish_from_ids(calmapp_version_id, translation_language_id)
-    # d
-    #con = nil 
-    #count = 0
+ 
+   def self.version_language_publish_from_ids(calmapp_version_id, translation_language_id, redis_database_id)
+    rdb = RedisDatabase.find(redis_database_id)
     begin
-      translations = Translation.version_language_ready_to_publish(calmapp_version_id, translation_language_id)
-      #translations = Translation.translations_ready_to_publish(calmapp_version_id, translation_language_id)
-      #translations  = Translation.join_to_cavs_tls_arr(calmapp_version_id).joins_to_tl_arr.where{tl1.id == translation_language_id}.where{incomplete == false}
-      pool.with{|con|
+      translations = Translation.version_language_ready_to_publish_from_ids(calmapp_version_id, translation_language_id).load
+      rdb.pool.with{|con|
         translations.each{ |t|
-          publish_one_translation(t)#, con)
+          rdb.publish_one_translation(t)#, con)
           #count += 1        
         }
         con.bgsave

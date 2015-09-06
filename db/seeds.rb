@@ -1,3 +1,8 @@
+
+puts "Seeding using " + Rails.env
+#require 'dotenv'
+#Dotenv::Railtie.load
+
 log=Logger.new(STDOUT)
 DelayedJob.delete_all
 Contact.delete_all
@@ -25,6 +30,9 @@ WhiteboardType.delete_all
 
 Profile.delete_all    
 
+puts '*************'
+puts Rails.env
+puts '***********'
 SpecialPartialDotKey.delete_all
 DotKeyCodeTranslationEditor.delete_all
 #TranslationEditorParam.delete_all
@@ -47,17 +55,8 @@ log.info("Release Status data inserted successfully.")
 Whiteboard.create!(:whiteboard_type_id=> systemWBType.id, :info => 'WELCOME TO TRANSLATOR.')#:info=>"Translator application under development." )
 Whiteboard.create!(:whiteboard_type_id=> userWBType.id, :info=> 'Edit to write message here.')#"We need translators for Russian.")
 log.info("Whiteboards data inserted successfully.")
-#User.create!(  :email=> 'translator@calm.org', :password=>'123456', :confirm_password=>'123456', :actual_name=> 'joe smith', :username => "joe",:current_permission_id=>1)
 
-#en = Language.create!(:iso_code=> "en", :name=>"English")
-#nl = Language.create!(:iso_code=> "nl", :name=>"Nederlands")
-#log.info("Languages inserted")
-
-
-
-
-# delete or change below usernameonce login is added
-en = TranslationLanguage.seed#.create!(:iso_code=> "en", :name=>"English")
+en = TranslationLanguage.seed
 
 TranslationHint.seed
 
@@ -72,3 +71,5 @@ Language.create!(:iso_code=> "en", :name=>"English") #, :parent_id=>translation_
 
 User.seed
 log.info("Users inserted")
+
+puts "end of seeds"

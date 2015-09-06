@@ -16,8 +16,7 @@ class User < ActiveRecord::Base
   validates :username, :uniqueness => true
   validates :username, presence: true
   validate :password_complexity
-  validates :country, :phone, presence: true, :if => Proc.new { |record|
- not record.new_record? }
+  validates :country, :phone, presence: true, :if => Proc.new { |record| !record.new_record? }
   # https://github.com/plataformatec/devise/wiki/How-To:-Allow-users-to-sign_in-using-their-username-or-email-address
   # Virtual attribute for authenticating by either username or email
   # This is in addition to a real persisted field like 'username'
@@ -52,7 +51,8 @@ class User < ActiveRecord::Base
         return true
       end
     end
-    if password.present? && (! password.match(/^(?=.{8,})(?=.*[\W])(?=.*\d)./))  #/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d). /
+    
+    if password.present? && (! /^(?=.{8,})(?=.*[\W])(?=.*\d)./.match(password))  #/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d). /
       errors.add( :password, 
       "must be at least 8 characters long, include at least one special character like !@#\$%^&*() and one digit")  #"must include at least one lowercase letter, one uppercase letter, and one digit"
 
@@ -109,14 +109,9 @@ class User < ActiveRecord::Base
   end
   
   def self.create_root_user
-    username = "root"
-    #pw = "123456"
-
-    # keep the simple pw for the system test on x59.alfaservers.com, calm.dhamma-eu.org/calm4test
-    #if ::Rails.env.production?
-      #pw = SecureRandom.base64(6)
-    #end
-    pw = Rails.application.secrets.root
+    
+    username = "rooter"
+    pw = Rails.application.secrets.rooter #ENV[username]#
     u = User.find_by_username username
     if u
        result = User.update u.id, :password => pw,:password_confirmation => pw
@@ -144,10 +139,14 @@ class User < ActiveRecord::Base
    
  
   def self.seed
+    
+    puts '**************'
+    puts Rails.env
+    puts '***************'
      User.create_root_user
-     pw = Rails.application.secrets.mark#'!1234567'
+     pw = Rails.application.secrets.mark#ENV["mark"]#'!1234567'
      param = {:password => pw,:password_confirmation => pw,:username => 'mark',:email => 'mplennon@gmail.com', 
-                :actual_name=> 'Mark Lennon', :country=> 'Australia', :phone => '456000', :responds_to_contacts => true}
+                :actual_name=> 'Mark Lennon', :country=> 'Australia', :phone => '07 5475 1065', :responds_to_contacts => true}
      admin = User.create! param
      admin.profiles << Profile.sysadmin
      
@@ -287,7 +286,7 @@ private
    
   def notify_admin
     puts "NOTIFY ADMIN"
-    #binding.pry
+    
     AdminMailer.user_invitation_accepted(self).deliver_now
   end 
    

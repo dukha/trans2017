@@ -23,6 +23,9 @@ Translate::Application.routes.draw do
    get 'help/administrator', :to => 'help#administrator', :as => 'administrator_help'
    get 'help/role_of_english', :to => 'help#role_of_english', :as => 'role_of_english_help'
    get 'help/redis_databases', :to => 'help#redis_databases', :as => 'redis_databases_help' 
+   get 'help/getting_started', :to => 'help#getting_started', :as => 'getting_started'
+   get 'help/todo', :to => 'help#todo', :as => 'todo'
+   get 'help/contents', :to=> 'help#contents', :as => 'contents'
 =begin
    scope "/auth_user/:user_id" do
       resources :permissions

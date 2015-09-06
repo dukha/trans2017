@@ -8,9 +8,13 @@ A single translation consists of the following information
 - A translation 
 
 ##Just want to get started now?
-* Read this first [Role of English](<%=role_of_english_help_path%>)
+* Read these 2 pages first 
+>> [Role of English](<%=role_of_english_help_path%>)
+>> [Substitutions]() 
 * Then Click [Translations](../translations)
 
+##Getting Started
+Click [Getting Started](<%=getting_started_path%>)
 ##More Information about Translations
 Click [Translation Types](translator_objects)
 
@@ -19,3 +23,6 @@ Click [Translation Process](translation_process)
 
 ##To Understand Codes in the translations
 Click [Role of English](<%=role_of_english_help_path%>)
+
+## To see what needs to be completed in this application
+Click [Programmers' Todo List]()

@@ -28,16 +28,18 @@ Translate::Application.configure do
   # config.cache_store = :mem_cache_store
 
   # Disable Rails's static asset server
-  # In production, Apache or nginx will already do this
+  # In production, Apache or nginx will already do this, so set to false. True only for local testing of production
   config.serve_static_files = false
   #Compress JavaScript and CSS
   config.assets.compress = true
    # Compress JavaScripts and CSS
    config.assets.js_compressor = :uglifier
-  # Don't fallback to assets pipeline
+  # Don't fallback to assets pipeline in prod
   config.assets.compile = false
   # Generate digests for assets URLs
-config.assets.digest = true
+  config.assets.digest = true
+  # fro rails 4 apparently
+  config.assets.precompile = ['*.js', '*.js.erb','*.css', '*.css.erb']
   # Enable serving of images, stylesheets, and javascripts from an asset server
   # config.action_controller.asset_host = "http://assets.example.com"
 
@@ -56,9 +58,8 @@ config.assets.digest = true
   config.active_support.deprecation = :notify
   #rails 4.2 and higher Keep prod log level as info
   config.log_level = :info
-  
   config.action_mailer.mailgun_settings = {
-        api_key: Rails.application.secrets.mailgun_api_key,#"key-47120298e8c9c31b076e5245655e62c7", #'<mailgun api key>',
-        domain: Rails.application.secrets.mailgun_domain#"sandboxa89c6db3f73e4ad6b3377c7bb91dbeb1.mailgun.org" #'<mailgun domain>'
+        api_key: Rails.application.secrets.mailgun_api_key,
+        domain: Rails.application.secrets.mailgun_domain
   }
 end

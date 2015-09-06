@@ -21,7 +21,7 @@ class Demo
 
     #marks_redis = RedisInstance.create!(:host=>"118.211.147.135", :password => '123456', :port => '6379', :max_databases=>16, :description=> "Mark's Desktop Computer")
     
-    TranslationLanguage.demo
+    #TranslationLanguage.demo
     
     TranslationsUpload.demo
 =begin

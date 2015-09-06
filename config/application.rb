@@ -1,7 +1,19 @@
 require File.expand_path('../boot', __FILE__)
 
 require 'rails/all'
+=begin
+if Rails.env == "production"
+  FileUtils.cp("config/prod", ".env") 
+else
+  FileUtils.cp("config/dev", ".env") 
+end
+puts "Dotenv loading using " + Rails.env
 require 'dotenv' ; Dotenv.load ".env", ".env.local", ".env.#{Rails.env}"
+puts ENV["rooter"]
+puts ENV["mark"]
+=end
+#puts Rails.application.secrets.rooter
+#puts Rails.application.secrets.mark
 =begin
 #log4r requirements
 require 'log4r'

@@ -29,8 +29,11 @@ module TranslationHelper
     return (:input  ==  input_control(attrs))
   end
   def html_attrs(object_attrs)
-     if input_control(object_attrs) == :select then
+    input = input_control(object_attrs)
+     if  input == :select  
        size = '8'
+     elsif input == :boolean then
+       size = 2  
      else
        size = '40'
      end
@@ -49,6 +52,16 @@ module TranslationHelper
          return :select
        elsif attrs["editor"] == "datetime_format" then  
          return :select
+       else
+         #boolean
+         if JSON.is_json? attrs["en_translation"]
+           en = ActiveSupport::JSON.decode(attrs["en_translation"])
+         else
+           en =   attrs["en_translation"]
+         end
+         if en == 't' || en == 'f'
+           return :boolean
+         end  
        end
        return :input
    end
@@ -66,7 +79,7 @@ module TranslationHelper
 =begin
   Formats the english transation on the index
 =end   
-   def format_english attributes#, plural     
+   def format_english attributes#, plural   
      return date_format_example(attributes["en_translation"]) if editor_date_time_select?(attributes)  
      return "<i>[This plural not used in English]</i>".html_safe if attributes["en_translation"].nil?
      return "<i>[Not used in English, so left blank. It may be left blank in your language too.] </i>".html_safe if attributes["en_translation"].blank?
@@ -104,6 +117,10 @@ module TranslationHelper
          html = html + "</table>"
          return html.html_safe
      else
+      #binding.pry   
+         #v= ActiveSupport::JSON.decode(v) if JSON.is_json?(v)
+         translation = true.to_s if object == 't' 
+         translation = false.to_s if object == 'f' 
        return translation.html_safe
      end #if..elsif
      
@@ -332,7 +349,7 @@ module TranslationHelper
    end   
    private
 =begin
- Contains all the short date formats for a drop down 
+ Contains all the    date formats for a drop down 
 =end
      def short_date_collection date, iso_code, version_id
        language_hash = translated_full_abbrev_day_month(date, iso_code, version_id)

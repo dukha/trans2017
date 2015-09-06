@@ -142,8 +142,8 @@
   
     <tr class = "<%= cycle('dataeven', 'dataodd') %>" id = '<%= dom_id(delayed_job)%>'>
             <td class="<%= cell_class %>"><%= delayed_job.id %></td>
-            <td class="<%= cell_class %>"><textarea cols = '40' rows = "10" disabled = 'disabled'><%= delayed_job.last_error%></textarea></td>
-            <td class="<%= cell_class %>"><textarea cols = '30' rows = "10" disabled = 'disabled'><%= delayed_job.handler %></textarea></td>
+            <td class="<%= cell_class %>"><textarea cols = '40' rows = "10" readonly><%= delayed_job.last_error%></textarea></td>
+            <td class="<%= cell_class %>"><textarea cols = '30' rows = "10" readonly = 'disabled'><%= delayed_job.handler %></textarea></td>
             <td class="<%= cell_class %>"><%= delayed_job.attempts %></td>
             <td class="<%= cell_class %>"><%= display_timestamp(delayed_job.locked_at) %></td>
             <td class="<%= cell_class %>"><%= display_timestamp(delayed_job.run_at)  %></td>

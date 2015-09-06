@@ -25,10 +25,8 @@ class TranslationLanguage < ActiveRecord::Base
   end
 
  def self.seed
-  return TranslationLanguage.create!(:plural_sort=>"one_other", :iso_code=> "en", :name=>"English" )
- end
+  en =  TranslationLanguage.create!(:plural_sort=>"one_other", :iso_code=> "en", :name=>"English" )
  
- def self.demo
    TranslationLanguage.create!(:iso_code=> "nl", :name=>"Dutch", :plural_sort => "one_other")
    TranslationLanguage.create!(:iso_code=> "es", :name=>"Spanish", :plural_sort => "one_other")
    TranslationLanguage.create!(:iso_code=> "fr", :name=>"French", :plural_sort => "one_upto_two_other")
@@ -66,12 +64,13 @@ class TranslationLanguage < ActiveRecord::Base
    TranslationLanguage.create!(:iso_code=> "my", :name=>"Burmese", :plural_sort => "other")
    TranslationLanguage.create!(:iso_code=> "mk", :name=>"Macedonian", :plural_sort => "one_other")
    TranslationLanguage.create!(:iso_code=> "af", :name=>"Afrikaans", :plural_sort => "one_other")
-   TranslationLanguage.create!(:iso_code=> "zh-MY", :name=>"Chinese(Malaysia)", :plural_sort => "other")
+   #TranslationLanguage.create!(:iso_code=> "zh-MY", :name=>"Chinese(Malaysia)", :plural_sort => "other")
    TranslationLanguage.create!(:iso_code=> "ru", :name=>"Russian", :plural_sort =>"east_slavic")
    TranslationLanguage.create!(:iso_code=> "uk", :name=>"Ukrainian", :plural_sort =>"east_slavic")
    TranslationLanguage.create!(:iso_code=> "mn", :name=>"Mongolian", :plural_sort => "one_other")
    
    puts "Translation Languages inserted"
+   return en
  end
 =begin
  @todo modify this so that it only selects those translation languages of the current user 

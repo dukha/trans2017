@@ -204,26 +204,30 @@ class CalmappVersionsController < ApplicationController
       # from the UI there may be an extra '' in the array
       translation_language_ids.delete ""
       attr_hash = {}
+      
       if not calmapp_version_id.nil? then
         # a new version
         index = 0
         # Do deletes first
         languages_to_be_deleted = CalmappVersionsTranslationLanguage.find_languages_not_in_version(translation_language_ids ,calmapp_version_id).all
         
-        if  not languages_to_be_deleted.count == 0 then
+        if  ! languages_to_be_deleted.empty? == 0 then
           languages_to_be_deleted.each do |l|
             attr_hash[index.to_s] = {"translation_language_id"=>l.translation_language_id, "calmapp_version_id"=>l.calmapp_version_id, "_destroy"=>"1", "id" =>l.id}
             index += 1  
           end
         end 
       end # calmapp_version not nil  
+    
       # now the inserts and updates
       puts "in prepare_params_with_translation_language"
+=begin      
       # Wemust insert en here.. It does not seem to be possible in model before create
       en_id = TranslationLanguage.TL_EN.id
       if not translation_language_ids.include?(en_id) then
         translation_language_ids.unshift(en_id)
-      end 
+      end
+=end 
       translation_language_ids.each do |tlid|
         tl_id = tlid.to_i
         cvtl = CalmappVersionsTranslationLanguage.find_by_language_and_version(tl_id,calmapp_version_id )#.first

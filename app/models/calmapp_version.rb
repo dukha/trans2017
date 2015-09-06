@@ -97,7 +97,7 @@ class CalmappVersion < ActiveRecord::Base
     elsif  calmapp_versions_translation_languages.first.translation_language.iso_code == english.iso_code
       en_first = true 
     end
-    if not en_first then
+    if ! en_first then
         arr = []
         calmapp_versions_translation_languages.each do |cavtl|
           arr<< cavtl
@@ -106,7 +106,6 @@ class CalmappVersion < ActiveRecord::Base
         arr.delete_if {|cavtl| cavtl.translation_language_id == english_id}
         arr.insert(0, CalmappVersionsTranslationLanguage.new(:translation_language_id => english_id))
         arr.each{ |cavtl|
-      
           calmapp_versions_translation_languages << cavtl
         } 
     

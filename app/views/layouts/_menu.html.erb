@@ -106,7 +106,10 @@
         <%end%>  
         <%has_role? :calmapp_versions_read do%> 
           <li><%= tlink_to("calmapp_versions", calmapp_versions_path, :category=>:menu)%></li>
-        <%end%>  
+        <%end%> 
+        <%has_role? :calmapp_versions_write do%> 
+          <li><%= tlink_to("calmapp_versions_change_languages", calmapp_versions_path, :category=>:menu)%></li>
+        <%end%> 
         <%has_role? :redis_instances_read do%> 
           <li><%= tlink_to("redis_instances", redis_instances_path, :category=>:menu) %></li>
         <%end%>  

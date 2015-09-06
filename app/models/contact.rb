@@ -10,7 +10,7 @@ class Contact < ActiveRecord::Base
   
   def mail_to_admins()
     responders = User.contact_responders
-    #binding.pry
+    
     responders.each{|r|
       AdminMailer.new_contact_from_user(id, r.id).deliver_now      
     }

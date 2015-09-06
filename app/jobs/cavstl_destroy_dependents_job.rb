@@ -1,4 +1,4 @@
-class CavstlDestroyDependentsJob < ActiveJob::Base
+class CavstlDestroyDependentsJob < BaseJob #ActiveJob::Base
   queue_as :default
 
   def perform(cavs_translation_language_id)
@@ -9,12 +9,11 @@ class CavstlDestroyDependentsJob < ActiveJob::Base
     rescue => exception
   
       ExceptionNotifier.notify_exception(exception,
-      :data=> {:class=> CalmappVersionsTranslationLanguage, :id => cavs_translation_language_id})
-        #:data => {:worker => worker.to_s, :queue => queue, :payload => payload})
-        #:data => { :queue => queue, :payload => payload})
-        puts "Exception in deep_destroy()"
+      {:data=> {:class=> CalmappVersionsTranslationLanguage, :id => cavs_translation_language_id}})
+        
+        info "Exception in deep_destroy() " + exception.message 
+        exception_raised
         raise
     end
-    # Do something later
   end
 end

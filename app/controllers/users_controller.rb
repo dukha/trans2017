@@ -25,7 +25,7 @@ class UsersController < ApplicationController #Devise::RegistrationsController
     else   
       sortable_attr = []   
     end
-    #binding.pry
+    
     @users = User.order("actual_name")
     extra_where_clauses = prepare_mode()
 
@@ -78,13 +78,13 @@ class UsersController < ApplicationController #Devise::RegistrationsController
   #update_password PUT /:locale/users/:id/update_password(.:format) {:controller=>"users", :action=>"update"}
   def update   
     @user.unlock_access! unless !@user.access_locked?
-    #binding.pry
+    
     assign_first_premissions = false
-    #binding.pry
+    
     if set_permission_after_invitation_accept()
       assign_first_premissions = true     
     end
-    #binding.pry
+    
     respond_to do |format|
   
       if @user.update(user_params)#params[:user])
@@ -157,7 +157,7 @@ protected
 
 private
   def set_permission_after_invitation_accept
-    #binding.pry
+    
     ret_val =  ((! @user.invited_by_id.nil?)  && 
       (@user.profiles.count == 1) &&
       (@user.profiles[0].name == "guest") )#&&

@@ -23,7 +23,7 @@ class TranslationsController < ApplicationController
   end
   #This update only tested for xhr
   def update
-    #binding.pry
+    
       if params[:editor] == Translation::TRANS_PLURAL
     
         hash  = params[:translation_plural]

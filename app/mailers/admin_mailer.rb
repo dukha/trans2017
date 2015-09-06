@@ -19,7 +19,7 @@ class AdminMailer < ApplicationMailer
     
     #@link = link_to("Set New User Permissions", url.dup)
     
-   #binding.pry
+   
     mail( 
       to: @admin_user.email,
       subject: ("Vipassana Translator Invitation Accepted by " + @new_user.actual_name)
@@ -31,7 +31,7 @@ class AdminMailer < ApplicationMailer
     @contact = Contact.find(contact_id)
     #@requesting_user = User.find(@contact.user)
     @responder = User.find(responder_id)
-    #binding.pry
+    
     @link = link_to("Contact", edit_contact_url(@contact.id, locale: locale)).html_safe
     mail(
       to: @responder.email,

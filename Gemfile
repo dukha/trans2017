@@ -138,20 +138,20 @@ group :development, :test do
 
 
   # =============  debugging tools
+  
+  # generate test data
+  gem 'factory_girl_rails', '~> 4.4.0'
+
+end # end group dev, test
   gem 'pry-rails'
   gem 'pry-doc'
   gem 'pry-nav'
   # Use show-stack to see stack. use up and down to traverse the stack
   gem 'pry-stack_explorer'
-  # generate test data
-  gem 'factory_girl_rails', '~> 4.4.0'
-
-end # end group dev, test
-
 
   gem 'sass-rails', '~>5.0.3' #:git=> "git://github.com/rails/sass-rails"#, " ~> 3.2.5"
   #gem 'coffee-rails', '~>4.0.0'#, "~> 3.2.1"
-  gem 'uglifier','~>2.2.1'
+  gem 'uglifier','~>2.7'
   
 
 group :test do

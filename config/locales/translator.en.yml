@@ -212,6 +212,7 @@ en:
     calmapps: Applications
     calmapp_all_in_one_new: "New App, Version, Database"
     calmapp_versions: Application Versions
+    calmapp_versions_change_languages: Change Version Languages
     translation_uploads: Translation Uploads
     redis_databases: Redis Databases
     redis_instances: Redis Instances

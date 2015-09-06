@@ -26,12 +26,12 @@ class HelpController < ApplicationController
   
   def role_of_english
     @markdown_file = true
-      render $APPLICATION_HELP_VIEW_DIR + 'administrator/role_of_english_in_translations.html.md'
+      render $APPLICATION_HELP_VIEW_DIR + 'developer/role_of_english_in_translations.html.md'
   end
   
   def interpolations
     @markdown_file = true
-    render $APPLICATION_HELP_VIEW_DIR + 'translator/interplations.html.md'
+    render $APPLICATION_HELP_VIEW_DIR + 'translator/interpolations.html.md'
   end
   def administrator
     @markdown_file = true
@@ -40,5 +40,20 @@ class HelpController < ApplicationController
   def redis_databases
     @markdown_file = true
     render $APPLICATION_HELP_VIEW_DIR + 'administrator/redis_databases/help.html'
+  end
+  
+  def getting_started
+     @markdown_file = true
+    render $APPLICATION_HELP_VIEW_DIR + 'translator/getting_started_with_translations.html'
+  end
+  
+  def todo
+     @markdown_file = true
+    render $APPLICATION_HELP_VIEW_DIR + '/todo_list.html'
+  end
+  
+  def contents
+     @markdown_file = true
+    render $APPLICATION_HELP_VIEW_DIR + '/help_contents.html'
   end
 end

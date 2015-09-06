@@ -44,12 +44,12 @@ class Translation < ActiveRecord::Base
   end
   
   def do_after_create
-    AddOtherLanguageRecordsToVersionJob.set(:wait=> 10.minutes).perform_later(id)
+    AddOtherLanguageRecordsToVersionJob.set(:wait=> 2.minutes).perform_later(id)
     
   end
   
   def do_before_validation
-    
+   #binding.pry if dot_key_code.include?('significant')  #&& language =='en'
    english = english_translation_object()
    if language.iso_code == 'en'
     if new_record? && special_structure.blank?
@@ -62,8 +62,8 @@ class Translation < ActiveRecord::Base
   end
 
 =begin
- Mat be @deprecated 
-=end
+ @deprecated 
+
   def do_overwrite(english)
     persisted_ob = persisted_object
     persisted_has_data = has_persisted_object_data?(persisted_ob, english.special_structure)
@@ -81,7 +81,8 @@ class Translation < ActiveRecord::Base
         overwrite =false  
       end
     end      
-  end    
+  end  
+=end    
   def do_special_structure
     trans= remove_json()
     if language.iso_code == "en"    
@@ -139,7 +140,7 @@ class Translation < ActiveRecord::Base
 =begin
  This method should put the unpersisted data into empty records only
  @todo put the write and completion stuff in  
-=end  
+@deprecated 
   def has_persisted_object_data?(persisted, special_structure)
     persisted = persisted_object()
     trans = persisted.remove_json
@@ -172,9 +173,9 @@ class Translation < ActiveRecord::Base
          end 
        end #when  
     return has_data
-  end  
+  end 
+=end   
   def do_incomplete(english)
-   # binding.pry
    trans = remove_json
    en_t = english.remove_json
    record_en = false
@@ -193,7 +194,7 @@ class Translation < ActiveRecord::Base
              # this is ok. Leave the single string there as other  
            end
          else
-           errors.add_to_base(:translation, "#{dot_key_code} is a #{trans.class.name}, not a hash for #{tl.name}. This is an error. Check the translation: #{trans}")
+           errors.add(:base, "#{dot_key_code} is a #{trans.class.name}, not a hash for #{tl.name}. This is an error. Check the translation: #{trans}")
          end # str
        end # not hash
        # check that we don't have a blnk for one of the keys
@@ -323,15 +324,13 @@ class Translation < ActiveRecord::Base
   def interpolations_correct
     #This checks if en matches other translations. en always satisfies this validation
     return true if CalmappVersionsTranslationLanguage.find(cavs_translation_language_id).translation_language.iso_code  == 'en'
-    trans  = translation #ActiveSupport::JSON.decode(translation)
+    trans  = translation
     en = english_translation_object().translation
     regex = /%{\w{1,}}/
     en_interpolations =  en.scan(regex)
     en_interpolations.uniq!
     trans_interpolations = trans.scan(regex)
     trans_interpolations.uniq!
-    #errors = []
-    #warnings = []
     pre_supplied_by_ar = ["%{model}", "%{count}", "%{attribute}", "%{value}", "%{record}"]
     reserved_interpolations = ["%{default}", "%{scope}"] # should not be in any messge
     unchecked_interpolations = pre_supplied_by_ar + reserved_interpolations
@@ -359,13 +358,10 @@ class Translation < ActiveRecord::Base
   end
   
   def self.version_language_ready_to_publish(calamapp_version, translation_language)
-
-    #join_to_cavs_tls_arr(calmapp_version.id).joins_to_tl_arr.where{tl1.id == translation_language_id}.where{incomplete == false}
     Translation.version_language_ready_to_publish_from_ids(calamapp_version.id, translation_language.id)
   end
   
   def self.version_language_ready_to_publish_from_ids(calmapp_version_id, translation_language_id)
-
     Translation.join_to_cavs_tls_arr(calmapp_version_id).joins_to_tl_arr.where{tl1.id == translation_language_id}.where{incomplete == false}
   end
   
@@ -491,10 +487,11 @@ class Translation < ActiveRecord::Base
        # check that the record does not aleady exist
        exists = Translation.joins{:calmapp_versions_translation_language}.
           where{calmapp_versions_translation_languages.calmapp_version_id  == my{calmapp_version.id}}.
-          where{calmapp_versions_translation_languages.translation_language_id == my{calmapp_versions_translation_language.translation_language_id}}
+          where{calmapp_versions_translation_languages.translation_language_id == my{tl.id}}. #my{calmapp_versions_translation_language.translation_language_id}}
+          where{dot_key_code == my{dot_key_code}}.exists?
        if not exists
          cavtl=  CalmappVersionsTranslationLanguage.where{calmapp_version_id  == my{calmapp_version.id}}.where{translation_language_id == my{tl.id}}.first        
-         t = Translation.new(:dot_key_code => dot_key_code, :cavs_translation_language_id => cavtl.id, :incomplete => (not self.special_structure.blank?))
+         t = Translation.new(:dot_key_code => dot_key_code, :cavs_translation_language_id => cavtl.id, :incomplete => (! self.special_structure.blank?))
          t.save!
        end  
      end  # not en
@@ -669,14 +666,14 @@ class Translation < ActiveRecord::Base
     # We use ActiveSupport::JSON.decode/encode here rather than JSON.parse/to_json as they seems to work with Strings 
     # and things like "%{attribute} %{value}"
     begin
-      #binding.pry
+
       if not JSON.is_json? translation then
-        #binding.pry
+        
         self.translation = ActiveSupport::JSON.encode(translation)
       end
     rescue Exception => e
       #puts e
-      #binding.pry
+      
       puts e.to_s
     end  
   end
@@ -839,10 +836,32 @@ class Translation < ActiveRecord::Base
     where("cldr = ?", true)
   }
 =begin
-  Dertermines which enlgish translations are not matched in another language
+  The code below does not work
+  Correct sql is
+  select * from translations t
+   inner join calmapp_versions_translation_languages cavtl1 
+           on t.cavs_translation_language_id = cavtl1.id 
+              and cavtl1.calmapp_version_id = 1
+   inner join translation_languages tl1 
+           on cavtl1.translation_language_id = tl1.id 
+           and "tl1"."iso_code" = 'en'
+           and cavtl1.calmapp_version_id = 1
+   where t.dot_key_code not in (select dot_key_code from translations t2  
+      inner join calmapp_versions_translation_languages cavtl2 
+           on t2.cavs_translation_language_id = cavtl2.id 
+              and cavtl2.calmapp_version_id = 1
+      inner join translation_languages tl2 
+           on cavtl2.translation_language_id = tl2.id 
+           and "tl2"."iso_code" = 'da'
+           and cavtl2.calmapp_version_id = 1)    
+  The code needed below could be soemthing like that in 
+  add_other_language_records_to_version()
+  
+  Determines which enlgish translations are not matched in another language
   @return activemodel_relation of result
 =end   
    scope :translations_not_in_english, ->(calmapp_version_id, language_iso_code){
+=begin     
     join_to_cavs_tls_arr(calmapp_version_id).
     joins_to_tl_arr.
     where{ tl1.iso_code == 'en' }.
@@ -852,6 +871,7 @@ class Translation < ActiveRecord::Base
       joins_to_tl_arr.    
       where{ tl1.iso_code == my{language_iso_code} }.
       select{ "dot_key_code" }.all)}
+=end
   }
 end
 

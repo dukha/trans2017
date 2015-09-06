@@ -1,5 +1,5 @@
 ##Substitutions for Computer Codes in Translations
-Soemtimes translations need extra information provided at the last minute by the computer.
+Sometimes translations need extra information provided at the last minute by the computer.
 
 In the translation this is inedicated by a code in the English translation. 
 > For example "_You are about to delete %{count} courses. Are you sure that you want to do this?_"

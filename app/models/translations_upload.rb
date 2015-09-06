@@ -21,9 +21,6 @@ class TranslationsUpload < ActiveRecord::Base
  @return a hash in dot_key => string_data format, suitable for writing to the db  
 =end
   def write_yaml_file_to_db #overwrite  
-    
-    puts "db2"
-    puts CalmappVersion.find(calmapp_versions_translation_language.calmapp_version_id).description
     if duplicates_behavior == "overwrite"
         duplicates_behavior2 =   Translation.Overwrite[:all]
     elsif duplicates_behavior ==  "skip" 
@@ -91,6 +88,7 @@ class TranslationsUpload < ActiveRecord::Base
  @param dot_key_values_map contains aall the dot_keys and translations for this file in a hash      
 =end  
   def  self.traverse_ruby( node, plurals, version_id, dot_key_stack=Array.new, dot_key_values_map = Hash.new)#,  container=Hash.new, anchors = Hash.new, in_sequence=nil )     
+    
     if node.is_a? Hash then
 #as it was on 28 June      
       if Translation.plural_hash? node
@@ -151,7 +149,10 @@ As it was on 2 Aug June
       store_dot_key_value(dot_key_stack, node, dot_key_values_map, plurals)
 
     elsif (node.is_a? TrueClass ) || (node.is_a? FalseClass) then
-      store_dot_key_value(dot_key_stack, node.to_s, dot_key_values_map, plurals)
+      node = true if node.is_a? TrueClass
+      node = false if node.is_a? FalseClass
+      #store_dot_key_value(dot_key_stack, node.to_s, dot_key_values_map, plurals)
+      store_dot_key_value(dot_key_stack, node, dot_key_values_map, plurals)
     elsif node.is_a? Integer then
        store_dot_key_value(dot_key_stack, node.to_s, dot_key_values_map, plurals)
     elsif node.is_a? Float then

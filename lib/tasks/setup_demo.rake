@@ -19,8 +19,12 @@ namespace :trans do
   #task :start_again => [:environment, 'db:drop', 'db:create', :complete_demo]
   task :start_again => [:environment, 'db:drop', 'db:create', 'db:migrate', 'db:seed', 'demo', 'standard_letter_templates:auto_create' , 'pform_app:students_to_courses','pform_queue:receive']
 =end 
- 
-  task :full_seed => [:environment, 'db:migrate:reset', 'db:seed'] do
+  task :load_dotenv =>[:environment ] do
+    # config/application.rb
+    Bundler.require(*Rails.groups)
+    Dotenv::Railtie.load
+  end
+  task :full_seed => [:environment, 'trans:load_dotenv', 'db:setup'] do#'db:migrate:reset', 'db:seed'] do
     puts "Seeded"
   end
   

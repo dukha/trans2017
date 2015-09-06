@@ -133,13 +133,19 @@
           <%=editor_text_field "bip" %>   
           <%=english_text_field(trans.attributes)%>
            <div id = 'local-flash'></div>
-           <%options = {:url => translation_path(trans.id),:as=> input_control(trans.attributes),:ok_button=>"Save", 
+            <%type = input_control(trans.attributes)%>
+            <%bip_type = ((type == :boolean) ? :select : type)%>
+           <%options = {:url => translation_path(trans.id),:as=> bip_type, :ok_button=>"Save", 
              :ok_button_class=> "ok", 
              :cancel_button=>"Cancel", :cancel_button_class => "cancel",
              :place_holder=>"Click to edit", :html_attrs=> html_attrs(trans.attributes)}%>
-            <% if input_control(trans.attributes)==:select then 
-               options[:collection]= collection?(trans.attributes)
+            <% if type == :select then 
+
+               options[:collection] = collection?(trans.attributes)
                end%>   
+               <% if type == :boolean then 
+                options[:collection] = {"t" =>true.to_s, "f" =>false.to_s}
+               end%>
             <%= best_in_place(trans, :translation, options) %>
          
          <%elsif not trans.attributes["editor"] == nil then%>

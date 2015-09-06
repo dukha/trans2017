@@ -70,13 +70,14 @@ class BulkTranslations2
   In the case of plurals, there must be a PARTIAL dot_key_code in en
 =end
   def self.translation_to_db_from_file(key, translation,translations_upload_id, calmapp_versions_translation_language, plural_same_as_en, overwrite)
+    binding.pry if key.include? "significant"
     split_hash= split_full_dot_key_code key
     language = calmapp_versions_translation_language.translation_language.iso_code
     dkc = split_hash[:dot_key_code]
     is_plural = "unknown"
     #is_plural = Translation.translation_plural(translation)
     #is_array = Translation.translation_array(translation)
-    msg_data = trans_msg_data(translation, language, dkc )
+    msg_data = trans_msg_data(((translation.is_a? String) ? translation : translation.to_s), language, dkc )
     #is_plural = false
     #is_partially_written_plural = false
 =begin    
@@ -98,7 +99,7 @@ class BulkTranslations2
     end
     en_translation_exists = nil
     if language != 'en' then 
-      puts "lang is not en"
+      #puts "lang is not en"
       en_translation_exists = Translation.english_translation_exists(calmapp_versions_translation_language, dkc)
       
       if en_translation_exists 
@@ -143,10 +144,10 @@ class BulkTranslations2
         end #check plurals 
       end # en exists 
     end #lang is not en
-      puts "langu is en OR plural is in dkc " 
+      #puts "langu is en OR plural is in dkc " 
       object = nil  
       object = record_arr.first if not is_new_record
-      msg_data = trans_msg_data(translation, language, dkc)
+      msg_data = trans_msg_data(((translation.is_a? String) ? translation : translation.to_s), language, dkc)
       if not object.nil? then
         msg  = "Calling overwrite : " + msg_data
         Rails.logger.debug msg
@@ -174,7 +175,7 @@ class BulkTranslations2
       :dot_key_code=> dkc, 
       :translation=>translation, 
       :translations_upload_id => translations_upload_id)
-    ret_val.errors.add_to_base(msg)
+    ret_val.errors.add(:base, msg)
     return ret_val
   end
   

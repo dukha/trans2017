@@ -1,4 +1,4 @@
-class PublishVersionToRedisJob < ActiveJob::Base
+class PublishVersionToRedisJob < BaseJob #ActiveJob::Base
   queue_as :default
 
   def perform(redis_database_id)
@@ -11,10 +11,12 @@ class PublishVersionToRedisJob < ActiveJob::Base
       #RedisDatabase.version_language_publish(calmapp_version_id, translation_language_id)  
     rescue => exception
       ExceptionNotifier.notify_exception(exception,
-      :data=> {:class=> RedisDatabase, :version => CalmappVersion.find(calmapp_version_id).show_me, :language => TranslationLanguage.find(translation_language_id).name })
+      {:data=> {:class=> RedisDatabase, :version => CalmappVersion.find(calmapp_version_id).show_me, 
+        :language => TranslationLanguage.find(translation_language_id).name }})
         #:data => {:worker => worker.to_s, :queue => queue, :payload => payload})
         #:data => { :queue => queue, :payload => payload})
-        puts "Exception in version_language_publish()"
+        puts "Exception in version_language_publish() " +exception.message
+        exception_raised
         raise
     end
     # Do something later

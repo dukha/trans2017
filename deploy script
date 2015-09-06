@@ -1,0 +1,22 @@
+Test prod locally: 
+  in production.rb
+     config.serve_static_files = true
+With nginx must be set to false
+  in production.rb
+  	config.serve_static_files = false
+(config.serve_static_assets is deprecated)
+
+# drops, create, loads the schema and a some data
+$ RAILS_ENV=production rake trans:full_seed
+
+# Set the assets in public directory fro quick use
+$ RAILS_ENV=production bundle exec rake assets:precompile
+Starts the queue for background processes
+$ RAILS_ENV=production bin/delayed_job start
+
+$ RAILS_ENV=production rails s 
+
+When you start loading up a new version and uploading the english files, a lot of the jobs will be run with timing
+to avoid the 300 mails per hour limit(on mailgun) if something fails. You will have to be patient and wait for these to complete
+
+Use the menu/Application Admin/Delayed Jobs to check when the loading is complete

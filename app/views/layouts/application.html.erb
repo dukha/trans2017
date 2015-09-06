@@ -2,15 +2,11 @@
 <html>
 <head>
   <title>Translator</title>
-  <!--%= include_gon(:init=>true) %>
-  < %= Gon::Base.render_data({}) % -->
+
   <%=  javascript_include_tag 'application', "data-turbolinks-track" => true %>
-  
-   
-  
+
   <%= favicon_link_tag "/favicon.ico" %>
-  <%= stylesheet_link_tag  'application', media: "all", "data-turbolinks-track" => true %> <!--, 'formtastic.css', 'formtastic_changes.css', "ui-lightness/jquery-ui-1.8.6.custom.css",
-           'jquery.treeview.css',  'donotedit/trans.css',  'google.docs.css' %> -->
+  <%= stylesheet_link_tag  'application', media: "all", "data-turbolinks-track" => true %> 
   <%= csrf_meta_tag %>
 </head>
 <body>
@@ -28,9 +24,7 @@
             <%= render  'layouts/menu' %>
           <%end%>
         </td>
-        <!-- td id="appmaintd" class="maindisplay"  -->
 
-        <!-- /td -->
 				<td id="appmaintd"  class="maindisplay">
 					<div id="container" class = <%= @markdown_file ? "markdown-body" : "x"%>>
 					  

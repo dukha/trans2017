@@ -58,14 +58,14 @@ class InvitationsController < Devise::InvitationsController
       resource.profiles << Profile.where{name == 'guest'}.first
       flash[:warning] = "When you sign in you will only have guest privilege (you cannot do very much) until an administrator adjusts your account."
       puts "b4 signin"
-      #binding.pry
+      
       sign_in(resource_name, resource)
       puts "after signin"
       #url = user_edit_url(resource.invited_by_id)
      # link = link_to("Update User Record", url)
       #link.upcase!
       #link.downcase!
-      #binding.pry
+      
 =begin      
       begin
         puts "begin send user_invitation_accepted"
@@ -116,7 +116,7 @@ class InvitationsController < Devise::InvitationsController
   # this is called when creating invitation
   # should return an instance of resource class
   def invite_resource
-    #binding.pry
+    
     ## don't skip sending emails on invite
     new_params = invite_params
     new_params["via_invitable"] = true
@@ -128,7 +128,7 @@ class InvitationsController < Devise::InvitationsController
   # this is called when accepting invitation
   # should return an instance of resource class
   def accept_resource
-     #binding.pry
+     
     resource = resource_class.accept_invitation!(update_resource_params)
     ## Report accepting invitation to analytics
     #Analytics.report('invite.accept', resource.id)
@@ -137,7 +137,7 @@ class InvitationsController < Devise::InvitationsController
   
   def configure_permitted_parameters
   # Only add some parameters
-  #binding.pry
+  
   devise_parameter_sanitizer.for(:accept_invitation).concat [:actual_name, :email, :username, :country, :phone, :invited_by_id]
   # Override accepted parameters
 =begin
