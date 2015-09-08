@@ -126,7 +126,7 @@ namespace :deploy do
     end
   end
 
-  before 'deploy', 'rvm1:install:rvm' # install/update RVM
+  #before 'deploy', 'rvm1:install:rvm' # install/update RVM
   after :publishing, 'rvm1:install:gems' # install/update gems from Gemfile into gemset
 
   after :publishing, :restart
