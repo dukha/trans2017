@@ -164,8 +164,8 @@ group :test do
 end
 group :development do
   gem 'capistrano', '3.2.1', require: false
-  gem 'capistrano-rails', '~> 1.1', require: false
-  gem 'capistrano-bundler', '~> 1.1', require: false
+  gem 'capistrano-rails', '~> 1.1.3', require: false
+  gem 'capistrano-bundler', '~> 1.1.4', require: false
   gem 'rvm1-capistrano3', require: false
   gem 'web-console', '~> 2.0'
 end

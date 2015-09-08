@@ -48,6 +48,14 @@ set :linked_dirs, %w{bin log tmp/pids tmp/cache tmp/sockets vendor/bundle public
 # set :keep_releases, 5
 
 namespace :deploy do
+#  namespace :assets do
+#    task :precompile, :roles => assets_role, :except => { :no_release => true } do
+#      run <<-CMD.compact
+#        cd -- #{latest_release.shellescape} &&
+#        #{rake} RAILS_ENV=#{rails_env.to_s.shellescape} #{asset_env} assets:precompile
+#      CMD
+#    end
+#  end
 
   desc 'Restart application'
   task :restart do
