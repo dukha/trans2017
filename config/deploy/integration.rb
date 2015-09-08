@@ -34,7 +34,7 @@ server 'calm-int-trans2.dhamma.org.au', user: 'calm', roles: %w{web app}, my_pro
 #  }
 set :ssh_options, {
     forward_agent: true,
-    port: 8022
+    port: 22
 }
 
 
