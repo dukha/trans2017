@@ -10,7 +10,6 @@ class PublishLanguageToRedisJob < BaseJob #ActiveJob::Base
       #redis_db = RedisDatabase.find(redis_db_id)
       RedisDatabase.version_language_publish_from_ids(calmapp_version_id, translation_language_id, redis_db_id)  
     rescue => exception
-      #binding.pry
       ExceptionNotifier.notify_exception(exception,
       {:data=> {:class=> RedisDatabase, :version => CalmappVersion.find(calmapp_version_id).show_me, 
         :language => TranslationLanguage.find(translation_language_id).name }})

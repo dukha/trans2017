@@ -49,7 +49,6 @@ class Translation < ActiveRecord::Base
   end
   
   def do_before_validation
-   #binding.pry if dot_key_code.include?('significant')  #&& language =='en'
    english = english_translation_object()
    if language.iso_code == 'en'
     if new_record? && special_structure.blank?
