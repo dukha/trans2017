@@ -5,7 +5,7 @@ set :application, 'translator'
 #set :repo_url, "ssh://gitrepo@git.dhamma.org.au:8022/home/gitrepo/repositories/#{fetch(:application)}"
 set :repo_url, "ssh://gitrepo@git.dhamma.org.au:22/home/gitrepo/repositories/#{fetch(:application)}"
 #set :rvm1_ruby_version, "rbx-2.2.10"
-set :rvm1_ruby_version, "ruby-2.2.1" #"ruby-2.1.3" #"ruby-2.2.1" #
+set :rvm1_ruby_version, "ruby-2.2.1p85" #"ruby-2.1.3" #"ruby-2.2.1" #
 # Default branch is :master
 # ask :branch, proc { `git rev-parse --abbrev-ref HEAD`.chomp }.call
 
