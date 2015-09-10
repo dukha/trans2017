@@ -95,7 +95,7 @@ class ApplicationController < ActionController::Base
       #render :action => "new", :controller => "calmapps"
   end 
 =end
-  rescue_from Exception, :with => :rescue_all_exceptions  if Rails.env == 'production'
+  #rescue_from Exception, :with => :rescue_all_exceptions  if Rails.env == 'production'
 
   
   @markdown_file = false

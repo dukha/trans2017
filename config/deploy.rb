@@ -12,10 +12,12 @@ set :rvm1_ruby_version, "ruby-2.2.3" #"ruby-2.1.3" #"ruby-2.2.1" #
 # Default deploy_to directory is /var/www/my_app
 set :deploy_to, "/home/calm/apps/#{fetch(:application)}"
 
+
 # for all stages
 set :rails_env, "production"
 set :whenever_environment, 'production'
 
+set :rake, "#{fetch(:rake)} --trace"
 #set :rvm_type, :system    # :user is the default
 set :rake, "#{fetch(:rake)} --trace" # debug when rake errors
 #support/dependencies.rb:317:in `rescue in depend_on': No such file to load -- iconv (LoadError)

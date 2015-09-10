@@ -92,7 +92,10 @@ module Translate
     config.assets.version = '1.0'
 =end
     #Put in to take are of a "stack too deep bug introduced in rails 3.1.5"Put in to take are of a "stack too deep bug introduced in rails 3.1.5"
-    config.assets.initialize_on_precompile = false
+    #config.assets.initialize_on_precompile = false
+    config.assets.paths << Rails.root.join("vendor", "assets")
+    config.assets.paths << Rails.root.join("vendor", "assets", "smoothness")
+    config.assets.paths << Rails.root.join("app", "assets")
     # rails logger
     # config.logger = ActiveSupport::Logger.new('your_app.log')
     config.logger = ActiveSupport::TaggedLogging.new(Logger.new("log/#{Rails.env}.log"))
