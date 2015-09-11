@@ -121,6 +121,7 @@ This function, together with the scope in routes.rb allows the setting of urls l
     if Rails.env.production?
       options[:host] = "trans.calm-int-trans.dhamma.org.au.com"
     end
+    options
   end
 
   def set_locale
