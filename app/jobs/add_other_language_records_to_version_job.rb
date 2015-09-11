@@ -8,7 +8,7 @@ class AddOtherLanguageRecordsToVersionJob < BaseJob #ActiveJob::Base
     rescue => exception
       #puts "Exception in add_other_language_records_to_version()"
       ExceptionNotifier.notify_exception(exception,
-      {:data=> {:class=> CalmappVersionsTranslationLanguage, :id => cavs_translation_language_id}})
+      {:data=> {:class=> Translation, :id => translation_id}})
         #:data => {:worker => worker.to_s, :queue => queue, :payload => payload})
       info "Exception in add_other_language_records_to_version() " + exception.message
       exception_raised

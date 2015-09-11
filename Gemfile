@@ -113,6 +113,7 @@ gem 'responders', '~> 2.0'
 # allows a connection pool for redis. Not sure if needed
 gem 'connection_pool'
 
+gem 'whenever'
 # allows storage of keys etc in ENV
 gem 'dotenv-rails'
 

@@ -117,7 +117,10 @@ This function, together with the scope in routes.rb allows the setting of urls l
 =end
   def default_url_options(options={})
     logger.debug "default_url_options is passed options: #{options.inspect}\n"
-    { :locale => I18n.locale }
+    options[:locale] = I18n.locale 
+    if Rails.env.production?
+      options[:host] = "trans.calm-int-trans.dhamma.org.au.com"
+    end
   end
 
   def set_locale

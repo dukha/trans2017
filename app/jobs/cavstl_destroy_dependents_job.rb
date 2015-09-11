@@ -9,7 +9,8 @@ class CavstlDestroyDependentsJob < BaseJob #ActiveJob::Base
     rescue => exception
   
       ExceptionNotifier.notify_exception(exception,
-      {:data=> {:class=> CalmappVersionsTranslationLanguage, :id => cavs_translation_language_id}})
+      {:data=> {:class=> CalmappVersionsTranslationLanguage, 
+        :id => cavs_translation_language_id, :method=>"destroy_dependents"}})
         
         info "Exception in deep_destroy() " + exception.message 
         exception_raised

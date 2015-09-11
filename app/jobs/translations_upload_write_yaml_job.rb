@@ -8,7 +8,8 @@ class TranslationsUploadWriteYamlJob < BaseJob #ActiveJob::Base
     TranslationsUpload.write_yaml(translations_upload_id)  
     rescue => exception
       ExceptionNotifier.notify_exception(exception,
-      {:data=> {:class=> TranslationsUpload, :id => translations_upload_id}})
+      {:data=> {:class=> TranslationsUpload, :id => translations_upload_id,
+        :method =>"write_yaml"}})
         #:data => {:worker => worker.to_s, :queue => queue, :payload => payload})
         #:data => { :queue => queue, :payload => payload})
         info "Exception in write_yaml() " + exception.message

@@ -88,7 +88,6 @@ class TranslationsUpload < ActiveRecord::Base
  @param dot_key_values_map contains aall the dot_keys and translations for this file in a hash      
 =end  
   def  self.traverse_ruby( node, plurals, version_id, dot_key_stack=Array.new, dot_key_values_map = Hash.new)#,  container=Hash.new, anchors = Hash.new, in_sequence=nil )     
-    
     if node.is_a? Hash then
 #as it was on 28 June      
       if Translation.plural_hash? node

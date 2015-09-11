@@ -115,6 +115,20 @@ class Translation < ActiveRecord::Base
      else
         # the Transaltion is not a special structure
      end
+=begin
+   else
+     # not english: we need to ensure that if the translation is a special structure( in en)
+     # then it gets a proper structure
+     #if english.special_structure
+     case english.special_structure
+     when TRANS_ARRAY_7
+     when TRANS_ARRAY_13_NULL 
+     when TRANS_ORDER_ARRAY
+     when TRANS_HASH
+     when TRANS_ARRAY
+     when TRANS_PLURAL        
+     end
+=end 
    end # english
   end  
 =begin
@@ -183,7 +197,10 @@ class Translation < ActiveRecord::Base
    case english.special_structure
      when TRANS_PLURAL
        pl = tl.plurals
-       if not trans.is_a? Hash     
+       if trans.nil?
+         trans = {}
+         blank = true
+       elsif not trans.is_a? Hash     
          if trans.is_a? String
            # translation can be single string: this will be take an an "other" translation and will work
            if trans.blank?
@@ -438,7 +455,7 @@ class Translation < ActiveRecord::Base
  When a new English translation is added then this method adds the same dot key codes for every 
  other language (for the same version)
 =end  
-  def is_plural? 
+  def is_plural?
     return true  if (not(calmapp_versions_translation_language.nil?)) && language().iso_code == 'en' && special_structure == TRANS_PLURAL
     dkc = dot_key_code   
     english = english_translation_object #english_translations.where{dot_key_code == my{dkc}}
