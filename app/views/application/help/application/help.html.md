@@ -14,7 +14,7 @@
 > As you can see Translator has 3 types of users
 
 * [Translators](<%=translator_help_path%>)
-* [Developers (programmers)](<%=developer_help_path%>)
+* [Developers](<%=developer_help_path%>)
 * [Administrators](<%=administrator_help_path%>)
 > Click here for
 >> - [Help Contents](<%=contents_path%>)
