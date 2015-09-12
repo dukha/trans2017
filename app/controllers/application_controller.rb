@@ -21,7 +21,7 @@ class ApplicationController < ActionController::Base
   before_filter  :set_locale
   
   before_action :configure_permitted_parameters, if: :devise_controller?
-
+  before_filter :set_host_from_request
   
   #after_filter :prepare_unobtrusive_flash
   #rescue_from ActiveRecord::RecordInvalid, :with => :record_invalid
@@ -123,6 +123,15 @@ This function, together with the scope in routes.rb allows the setting of urls l
     end
     options
   end
+  def url_options()
+    options = {}
+    logger.debug "default_url_options is passed options: #{options.inspect}\n"
+    options[:locale] = I18n.locale 
+    if Rails.env.production?
+      options[:host] = "trans.calm-int-trans.dhamma.org.au.com"
+    end
+    options
+  end
 
   def set_locale
     logger.debug "Param locale = " + (params[:locale]==nil ? "nil" : params[:locale].to_s)
@@ -203,4 +212,10 @@ protected
     devise_parameter_sanitizer.for(:account_update) << [:username, :actual_name, :country, :phone, :email]
     devise_parameter_sanitizer.for(:account_update).flatten
   end
+  
+ private
+
+    def set_host_from_request
+        ActionMailer::Base.default_url_options = { host: request.host_with_port }
+    end 
 end
