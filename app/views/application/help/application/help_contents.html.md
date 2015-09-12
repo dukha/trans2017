@@ -10,4 +10,7 @@
 - [Redis Databases ](<%=redis_databases_help_path%>) 
 - [Getting Started ](<%=getting_started_path%>)
 - [To Do ](<%=todo_path%>)
+- [Administration: Getting Started](<%=admin_getting_started_path%>)
+- [Administration: Users ](<%=user_admin_path%>)
+- [Administration: Applications, Versions, Languages](<%=admin_applications_versions_languages_path%>)
  

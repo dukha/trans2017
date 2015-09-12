@@ -14,7 +14,7 @@ Hi <%= @admin_user.username%><br>,
  
 <p style = 'margin-bottom:5px;'>With metta</p>
 
-<p style = 'margin-bottom:5px;'><%=User.find(@new_user.invited_by_id)%>
+<p style = 'margin-bottom:5px;'><%=User.find(@new_user.invited_by_id.actual_name%>
 <p style = 'margin-bottom:5px;'>Translator Admin Team</p> 
 
  </body>

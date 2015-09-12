@@ -42,6 +42,7 @@ class AdminMailer < ApplicationMailer
   def notify_user_permissions_assigned_after_invitation(user_id)
     @user = User.find(user_id)
     @admin = User.find(@user.invited_by_id)
+    @signin_url = new_user_session_url
      mail(
         to: @user.email,
         subject: "Welcome to Vipassana Translator"

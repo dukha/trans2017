@@ -24,6 +24,9 @@ Translate::Application.routes.draw do
    get 'help/role_of_english', :to => 'help#role_of_english', :as => 'role_of_english_help'
    get 'help/redis_databases', :to => 'help#redis_databases', :as => 'redis_databases_help' 
    get 'help/getting_started', :to => 'help#getting_started', :as => 'getting_started'
+   get 'help/admin_getting_started', :to => 'help#admin_getting_started', :as => 'admin_getting_started'
+   get 'help/admin_users', :to => 'help#user_admin', :as => 'user_admin'
+   get 'help/admin_applications_versions_languages', :to => 'help#admin_applications_versions_languages', :as => 'admin_applications_versions_languages'
    get 'help/todo', :to => 'help#todo', :as => 'todo'
    get 'help/contents', :to=> 'help#contents', :as => 'contents'
 =begin

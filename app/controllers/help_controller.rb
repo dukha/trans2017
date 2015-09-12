@@ -52,6 +52,21 @@ class HelpController < ApplicationController
     render $APPLICATION_HELP_VIEW_DIR + '/todo_list.html'
   end
   
+  def user_admin
+     @markdown_file = true
+    render $APPLICATION_HELP_VIEW_DIR + 'administrator/user_admin.html'
+  end
+  
+  def admin_getting_started
+    @markdown_file = true
+    render $APPLICATION_HELP_VIEW_DIR + 'administrator/admin_getting_started.html'
+  end
+  
+  def admin_applications_versions_languages
+    @markdown_file = true
+    render $APPLICATION_HELP_VIEW_DIR + 'administrator/applications_versions_languages.html'
+  end
+  
   def contents
      @markdown_file = true
     render $APPLICATION_HELP_VIEW_DIR + '/help_contents.html'
