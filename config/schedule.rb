@@ -39,9 +39,10 @@
 # running this script in production
 # =======================================
 # In production it will be done by capistrano according to deploy.rb
-
+puts "In schedule"
+#binding.pry
 set :output, "#{path}/log/cron.log"
-
+puts "In schedule with path = " + output
 # example 1
 # every 15.minutes do
 #   command "rm '#{path}/tmp/cache/foo.txt'"

@@ -1,5 +1,6 @@
 # config valid only for Capistrano 3.1
 lock '3.2.1'
+require "whenever/capistrano"
 
 set :application, 'translator'
 #set :repo_url, "ssh://gitrepo@git.dhamma.org.au:8022/home/gitrepo/repositories/#{fetch(:application)}"
@@ -16,6 +17,8 @@ set :deploy_to, "/home/calm/apps/#{fetch(:application)}"
 # for all stages
 set :rails_env, "production"
 set :whenever_environment, 'production'
+# added mpl
+set :whenever_command, 'bundle exec whenever'
 
 set :rake, "#{fetch(:rake)} --trace"
 #set :rvm_type, :system    # :user is the default
