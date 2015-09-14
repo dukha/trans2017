@@ -86,7 +86,7 @@ class LanguagesController < ApplicationController
       @language.destroy
        tflash('delete', :success, {:model=>@@model, :count=>1})
       respond_to do |format|
-        format.html { redirect_to(languages_url) }
+        format.html { redirect_to(languages_path) }
         format.js {}
       end
     rescue StandardError => e

@@ -1,5 +1,5 @@
 //This will delete the line just deleted erb syntax is #{dom_id(redis_instance)}
-var = flash_selector = "div#flash";
+var flash_selector = "div#flash";
 <% if not @redis_instance.nil? %>
   $('#redis_instance_<%=@redis_instance.id %>').remove();
 <%end%>

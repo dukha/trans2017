@@ -53,7 +53,7 @@ class RedisInstancesController < ApplicationController
         #debugger
         if @redis_instance.save
           tflash('create', :success, {:model=>@@model, :count=>1})
-          format.html { redirect_to(:action=>:index) }
+          format.html { redirect_to(redis_instances_path) }
           format.xml  { render :xml => @redis_instance, :status => :created, :location => @redis_instance }
         else
           format.html { render :action => "new" }
@@ -88,8 +88,8 @@ class RedisInstancesController < ApplicationController
       @redis_instance.destroy
       tflash('delete', :success, {:model=>@@model, :count=>1})
       respond_to do |format|
-    
-        format.html { redirect_to(redis_instances_url) }
+        binding.pry
+        format.html { redirect_to(redis_instances_path) }
         format.js {}
       end
     rescue StandardError => e

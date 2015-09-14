@@ -121,7 +121,7 @@ class CalmappVersionsTranslationLanguagesController < ApplicationController
     begin 
       @calmapp_versions_translation_language.destroy
       respond_to do |format|
-        format.html { redirect_to calmapp_versions_translation_languages_url }
+        format.html { redirect_to calmapp_versions_translation_languages_path }
         format.json { head :no_content }
         format.js {}
       end  

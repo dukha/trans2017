@@ -43,7 +43,7 @@ class CalmappsController < ApplicationController
 
     respond_to do |format|
       if @calmapp.save( )
-        format.html { redirect_to calmapps_url, notice: 'Calmapp was successfully created.' }
+        format.html { redirect_to calmapps_path, notice: 'Calmapp was successfully created.' }
         format.json { render action: 'show', status: :created, location: @calmapp }
       else
     
@@ -86,7 +86,7 @@ class CalmappsController < ApplicationController
       tflash('delete', :success, {:model=>@@model, :count=>1})
       respond_to do |format|
         tflash('delete', :success, {:model=>@@model, :count=>1})
-        format.html { redirect_to(calmapps_url) }
+        format.html { redirect_to(calmapps_path) }
         format.js {}
       end 
     rescue StandardError => e

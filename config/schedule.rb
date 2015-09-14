@@ -69,7 +69,7 @@ puts "In schedule with path = " + output
 # This method ensures the task gets restarted at the latest 1 minute after it failed for some reason
 #
 if environment == 'production'
-  every 1.minutes do
+  every 1.minutes, :roles => [:db] do
     command "cd #{path} && /usr/local/bin/lockrun --idempotent --lockfile=/tmp/delayed_jobs.lockrun -- nice --adjustment=10 bundle exec rake jobs:work RAILS_ENV=production"
   end
 end

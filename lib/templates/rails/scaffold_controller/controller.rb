@@ -125,12 +125,12 @@ end
   def destroy
     @<%= orm_instance.destroy %>
     
-    redirect_to <%= index_helper %>_url, notice: <%= "'#{human_name} was successfully destroyed.'" %>
+    redirect_to <%= index_helper %>_path, notice: <%= "'#{human_name} was successfully destroyed.'" %>
     begin
       @<%= orm_instance.destroy %>.destroy
       respond_to do |format|
         tflash('delete', :success, {:model=>@@model, :count=>1})
-        format.html { redirect_to(<%= plural_table_name %>_url) }
+        format.html { redirect_to(<%= plural_table_name %>_path) }
         format.js {}
       end 
     rescue StandardError => e

@@ -150,7 +150,7 @@ end
     @<%= orm_instance.destroy %>
     tflash('delete', :success, {:model=>@@model, :count=>1})
     respond_to do |format|
-      format.html { redirect_to(<%= index_helper %>_url) }
+      format.html { redirect_to(<%= index_helper %>_path) }
       format.xml  { head :ok }
       format.json { head :ok }
     end

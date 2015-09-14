@@ -130,7 +130,7 @@ end
       tflash('delete', :success, {:model=>@@model, :count=>1})
       respond_to do |format|
     
-        format.html { redirect_to(delayed_jobs_url) }
+        format.html { redirect_to(delayed_jobs_path) }
         format.js {}
       end
     rescue StandardError => e

@@ -108,7 +108,7 @@ class CalmappVersionsController < ApplicationController
       @calmapp_version.destroy
       respond_to do |format|
         tflash('delete', :success, {:model=>@@model, :count=>1})
-        format.html { redirect_to(calmapp_versions_url) }
+        format.html { redirect_to(calmapp_versions_path) }
         format.js {}
       end
     rescue StandardError => e

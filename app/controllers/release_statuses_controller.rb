@@ -85,7 +85,7 @@ class ReleaseStatusesController < ApplicationController
     @release_status.destroy
     tflash('delete', :success, {:model=>@@model})
     respond_to do |format|
-      format.html { redirect_to(release_statuses_url) }
+      format.html { redirect_to(release_statuses_path) }
       format.js {}
     end
     rescue StandardError => e

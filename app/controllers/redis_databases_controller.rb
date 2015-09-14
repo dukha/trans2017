@@ -115,7 +115,7 @@ class RedisDatabasesController < ApplicationController
       @redis_database.destroy
       tflash('delete', :success, {:model=>@@model, :count=>1})
       respond_to do |format|
-        format.html { redirect_to(redis_databases_url) }
+        format.html { redirect_to(redis_databases_path) }
         format.js {}
       end
     rescue StandardError => e

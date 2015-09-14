@@ -107,7 +107,7 @@ class ApplicationController < ActionController::Base
   def permission_denied
     
   flash[:notice] = tmessage("declarative_authorization.unauthorised",  $W )
-  redirect_to root_url
+  redirect_to root_path
 end
 #=end
   # Is Authorization.current_user the same as current_user???

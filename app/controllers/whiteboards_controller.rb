@@ -93,7 +93,7 @@ class WhiteboardsController < ApplicationController
       @whiteboard.destroy
       tflash('delete', :success, {:model=>@@model, :count=>1})
       respond_to do |format|
-        format.html { redirect_to(whiteboards_url) }
+        format.html { redirect_to(whiteboards_path) }
         format.xml  { head :ok }
         format.js {}
       end

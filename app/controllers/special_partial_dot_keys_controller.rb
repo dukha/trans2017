@@ -121,7 +121,7 @@ end
     begin
       @special_partial_dot_key.destroy
       respond_to do |format|
-        format.html {redirect_to special_partial_dot_keys_url, notice: 'Special partial dot key was successfully destroyed.'}
+        format.html {redirect_to special_partial_dot_keys_path, notice: 'Special partial dot key was successfully destroyed.'}
         format.js {}
       end
     rescue StandardError => e

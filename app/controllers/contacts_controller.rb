@@ -124,7 +124,7 @@ end
       @contact.destroy
       respond_to do |format|
         tflash('delete', :success, {:model=>@@model, :count=>1})
-        format.html { redirect_to(contacts_url) }
+        format.html { redirect_to(contacts_path) }
         format.js {}
       end 
     rescue StandardError => e
