@@ -14,7 +14,7 @@ class TranslationsUpload < ActiveRecord::Base
   end 
   
   def self.uploaded_to_folder
-    return "public/"
+    return "public"
   end   
 =begin
  Takes a yaml translation file, parses it, writes it as a tree and then converts the tree to a dot_key format
@@ -31,7 +31,7 @@ class TranslationsUpload < ActiveRecord::Base
       duplicates_behavior2 = Translation.Overwrite[:continue_unless_blank]
     end     
     begin       
-      data  = YAML.load_file(TranslationsUpload.uploaded_to_folder + yaml_upload.url)
+      data  = YAML.load_file(File.join(TranslationsUpload.uploaded_to_folder, yaml_upload.url))
   
       plurals= Hash.new
       key_value_pairs = TranslationsUpload.traverse_ruby(data, plurals, calmapp_versions_translation_language.calmapp_version_tl.id )
@@ -355,6 +355,9 @@ As it was on 2 Aug June
     
     #write_yaml_file_to_db()
     #DELAYED JOB
+    Rails.logger.info "In TranslationsUpload.do_after_commit"
+    Rails.logger.info "Self = " +  self.to_s
+    Rails.logger.info "id = " + self.id.to_s
     TranslationsUploadWriteYamlJob.perform_later(id)
 =begin #   
     Translation.check_translations_match_english2(
@@ -366,6 +369,11 @@ As it was on 2 Aug June
   
   def self.write_yaml(id)
     tu = TranslationsUpload.find(id)
+    if tu.nil?
+      Rails.logger.info "Could not find translation upload with id : "  + id.to_s
+    else
+      Rails.logger.info "Found translation upload " + tu.to_s + " with id " + id.to_s        
+    end 
     tu.write_yaml_file_to_db()
   end
 =begin  
