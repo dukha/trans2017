@@ -88,7 +88,6 @@ class RedisInstancesController < ApplicationController
       @redis_instance.destroy
       tflash('delete', :success, {:model=>@@model, :count=>1})
       respond_to do |format|
-        #binding.pry
         format.html { redirect_to(redis_instances_path) }
         format.js {}
       end

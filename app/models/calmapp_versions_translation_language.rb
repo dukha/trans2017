@@ -65,7 +65,6 @@ class CalmappVersionsTranslationLanguage < ActiveRecord::Base
     return redis_databases.count
   end
   def description
-    #return (CalmappVersion.find(calmapp_version_id).description + " " + TranslationLanguage.find(translation_language_id).name).titlecase
     return (calmapp_version_tl.description + " " + translation_language.name).titlecase
   end
   def show_me
