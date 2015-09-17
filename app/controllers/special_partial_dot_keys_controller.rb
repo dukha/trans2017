@@ -100,7 +100,7 @@ end
 
     if @special_partial_dot_key.save
       tflash('create', :success, {:model=>@@model, :count=>1})  
-      redirect_to( :action => "index",notice: 'Special partial dot key was successfully updated.')
+      redirect_to( special_partial_dot_keys_path, notice: 'Special partial dot key was successfully updated.')
     else
       render action: 'new'
     end
@@ -110,7 +110,7 @@ end
   def update
     if @special_partial_dot_key.update(special_partial_dot_key_params)
        tflash('update', :success, {:model=>@@model, :count=>1})
-      redirect_to( :action => "index",notice: 'Special partial dot key was successfully updated.')
+      redirect_to(special_partial_dot_keys_path, notice: 'Special partial dot key was successfully updated.')
     else
       render action: 'edit'
     end

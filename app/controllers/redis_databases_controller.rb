@@ -79,7 +79,7 @@ class RedisDatabasesController < ApplicationController
       #if @redis_database.create_redis_db
         if @redis_database.save then
           tflash('create', :success, {:model=>@@model, :count=>1})
-          format.html { redirect_to(:action=>:index) }
+          format.html { redirect_to(redis_databases_path) }
           format.xml  { render :xml => @redis_database, :status => :created, :location => @redis_database }
         else
           format.html { render :action => "new" }
@@ -94,12 +94,10 @@ class RedisDatabasesController < ApplicationController
   # PUT /redis_databases/1
   # PUT /redis_databases/1.xml
   def update
-    #@redis_database = RedisDatabase.find(params[:id])
-
     respond_to do |format|
       if @redis_database.update_attributes(params[:redis_database])
         tflash('update', :success, {:model=>@@model, :count=>1})
-        format.html { redirect_to(:action=>:index) }
+        format.html { redirect_to(redis_databases_path) }
         format.xml  { head :ok }
       else
         format.html { render :action => "edit" }

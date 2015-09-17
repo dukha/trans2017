@@ -112,7 +112,7 @@ end
   def update
     if @contact.update(contact_params)
        tflash('update', :success, {:model=>@@model, :count=>1})
-       redirect_to( :action => "index")
+       redirect_to( contacts_path)
     else
       render action: 'edit'
     end

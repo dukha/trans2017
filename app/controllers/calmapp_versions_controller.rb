@@ -63,7 +63,7 @@ class CalmappVersionsController < ApplicationController
       if @calmapp_version.save
         
           tflash('valid_version_on_queue', :success, {:model=>@@model, :count=>1})
-          format.html { redirect_to( :action => "index")} #(@calmapp_version #, :notice => 'Application version was successfully created.') }
+          format.html { redirect_to(calmapp_versions_path )} #(@calmapp_version #, :notice => 'Application version was successfully created.') }
           format.xml  { render :xml => @calmapp_version, :status => :created, :location => @calmapp_version }
      else
        format.html { render :action => "new" }
@@ -83,7 +83,7 @@ class CalmappVersionsController < ApplicationController
           
           flash[:warning] = @calmapp_version.warnings.messages[:base] if @calmapp_version.warnings 
           
-          format.html { redirect_to( :action => "index")} #(@calmapp_version, :notice => 'Application version was successfully updated.') }
+          format.html { redirect_to( calmapp_versions_path)} #(@calmapp_version, :notice => 'Application version was successfully updated.') }
           format.xml  { head :ok }
         else
           # @todo get the errors from the after_save parts of the transaction and put them up
@@ -153,7 +153,7 @@ class CalmappVersionsController < ApplicationController
       #CalmappVersion.deep_copy(params[:calmapp_version][:previous_id], params[:calmapp_version][:version] )
       if @calmapp_version.deep_copy(params[:calmapp_version][:previous_id], current_user )
         flash[:success] = "Application Version copied. All the languages and translations are in a background process. You will get a mail to let you know the result"
-        redirect_to action: "index"
+        redirect_to calmapp_versions_path
       else
      
          flash[:error] = @calmapp_version.errors.messages[:version]

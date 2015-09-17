@@ -52,7 +52,7 @@ class ReleaseStatusesController < ApplicationController
     respond_to do |format|
       if @release_status.save
         tflash('create', :success, {:model=>@@model, :count=>1})
-        format.html { redirect_to( :action => "index")} #(@release_status #, :notice => 'version status was successfully created.') }
+        format.html { redirect_to( release_statuses_path)} #(@release_status #, :notice => 'version status was successfully created.') }
         format.xml  { render :xml => @release_status, :status => :created, :location => @release_status }
       else
         format.html { render :action => "new" }
@@ -64,12 +64,10 @@ class ReleaseStatusesController < ApplicationController
   # PUT /release_statuses/1
   # PUT /release_statuses/1.xml
   def update
-    #@release_status = ReleaseStatus.find(params[:id])
-
     respond_to do |format|
       if @release_status.update_attributes(release_status_params)
         tflash('update', :success, {:model=>@@model, :count=>1})
-        format.html { redirect_to( :action => "index")} #(@release_status, :notice => 'version status was successfully updated.') }
+        format.html { redirect_to( release_statuses_path)} #(@release_status, :notice => 'version status was successfully updated.') }
         format.xml  { head :ok }
       else
         format.html { render :action => "edit" }

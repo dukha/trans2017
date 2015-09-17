@@ -71,7 +71,7 @@ class RedisInstancesController < ApplicationController
     respond_to do |format|
       if @redis_instance.update(redis_instance_params)
         tflash('update', :success, {:model=>@@model, :count=>1})
-        format.html { redirect_to(:action=>:index) }
+        format.html { redirect_to(redis_instances_path) }
         format.xml  { head :ok }
       else
         format.html { render :action => "edit" }

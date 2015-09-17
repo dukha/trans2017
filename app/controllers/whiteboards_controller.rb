@@ -53,12 +53,11 @@ class WhiteboardsController < ApplicationController
   # POST /whiteboards
   # POST /whiteboards.xml
   def create
-    @whiteboard = Whiteboard.new(whiteboard_params)#params[:whiteboard])
-
+    @whiteboard = Whiteboard.new(whiteboard_params)
     respond_to do |format|
       if @whiteboard.save
         tflash('create', :success, {:model=>@@model})
-        format.html { redirect_to(:action=>"index")} #, :notice => t('messages.create.success', :model=>@@model)) }
+        format.html { redirect_to(whiteboards_path)} 
         format.xml  { render :xml => @whiteboard, :status => :created, :location => @whiteboard }
       else
         flash.now[:error] = t('messages.create.failure', :model=>t(@@model))
@@ -71,12 +70,10 @@ class WhiteboardsController < ApplicationController
   # PUT /whiteboards/1
   # PUT /whiteboards/1.xml
   def update
-    #@whiteboard = Whiteboard.find(params[:id])
-    #rescue ActiveRecord::RecordNotFound, :with => :record_not_found
     respond_to do |format|
-      if @whiteboard.update(whiteboard_params)#params[:whiteboard])
+      if @whiteboard.update(whiteboard_params)
         tflash('update', :success, {:model=>@@model})
-        format.html { redirect_to(:action=>"index")} #, :notice => t('messages.update.success', :model=>@@model)) }
+        format.html { redirect_to(whiteboards_path)} 
         format.xml  { head :ok }
       else
         flash.now[:error] = t('messages.update.failure', :model=>t(@@model))

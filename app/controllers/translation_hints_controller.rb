@@ -49,14 +49,12 @@ class TranslationHintsController < ApplicationController
   def update
     @translation_hint.update(translation_hint_params)
     #respond_with(@translation_hint, :location=> translation_hints_path)
-    redirect_to(:action=>:index)
+    redirect_to(translation_hints_path)
   end
 
   def destroy
     begin
       @translation_hint.destroy
-      #respond_with(@translation_hint)
-      #redirect_to(:action=>:index)
     rescue StandardError => e
       @calmapp_version = nil
       flash[:error] = e.message

@@ -68,7 +68,7 @@ class CalmappVersionsTranslationLanguagesController < ApplicationController
     respond_to do |format|
       if @calmapp_versions_translation_language.save
         tflash('create', :success, {:model=>@@model, :count=>1})
-        format.html { redirect_to( :action => "index", notice: 'Calmapp versions translation language was successfully created.') }
+        format.html { redirect_to( calmapp_versions_translation_languages_path, notice: 'Calmapp versions translation language was successfully created.') }
         format.json { render action: 'show', status: :created, location: @calmapp_versions_translation_language }
       else
         format.html { render action: 'new' }
@@ -90,7 +90,7 @@ class CalmappVersionsTranslationLanguagesController < ApplicationController
     
         tflash('update', :success, {:model=>@@model, :count=>1})
         flash[:notice] = "The contents of any uploaded translation files will be written to the database later. At the moment they await processing on a queue."
-        format.html { redirect_to( :action => "index")}#, notice: 'Calmapp versions translation language was successfully updated.') }
+        format.html { redirect_to( calmapp_version_tranlation_languages_path)}#, notice: 'Calmapp versions translation language was successfully updated.') }
         format.json { head :no_content }
       else
     
@@ -100,17 +100,12 @@ class CalmappVersionsTranslationLanguagesController < ApplicationController
       rescue PsychSyntaxErrorWrapper => psew
         flash[:error]= "Format of file : " + psew.file_name + " is bad. Copy the following error message and contact tech support with the file. Error message : " + psew.message
         #flash[:notice] = "Failed to write file : " + pse.file_name + ". The syntax in the file was wrong. Ask for technical help. No upload done."
-        format.html { redirect_to action: 'edit' }
+        format.html { render action: 'edit' }
       rescue UploadTranslationError => ute
     
         flash[:error]= ute.message
         flash[:notice] = "Failed to write file : " + ute.file_name + ". No upload done."
-        format.html { redirect_to action: 'edit' } 
-      #rescue StandardError => e
-    
-        #flash[:error]= e.message 
-        #flash[:notice] = "Failed to write file : " + e.file_name + ". No upload done."
-        #format.html { redirect_to action: 'edit' } 
+        format.html { render action: 'edit' } 
       end  
     end
   end

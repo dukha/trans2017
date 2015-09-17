@@ -48,37 +48,19 @@ class WhiteboardTypesController < ApplicationController
   # POST /whiteboard_types
   # POST /whiteboard_types.xml
   def create
-    #puts "aa:"
     @whiteboard_type = WhiteboardType.new(whiteboard_type_params)#params[:whiteboard_type])
-    #puts "xx:" #+ @whiteboard_type.to_s
     @whiteboard_type.save
     flash[:notice] = "successfully created " + @whiteboard_type.name_english
-    #tflash('create', :success, {:model=>@@model, :count=>1})
-    redirect_to(:action=>'index')
-
-=begin
-    respond_to do |format|
-      if @whiteboard_type.save
-        tflash('create', :success, {:model=>@@model))
-        format.html { redirect_to(:action=>'index')} #, :notice => t('messages.create.success', :model=>@@model)) }
-        format.xml  { render :xml => @whiteboard_type, :status => :created, :location => @whiteboard_type }
-      else
-        format.html { render :action => "new" }
-        format.xml  { render :xml => @whiteboard_type.errors, :status => :unprocessable_entity }
-      end
-    end
-=end
+    redirect_to(whiteboard_types_path)
   end
 
   # PUT /whiteboard_types/1
   # PUT /whiteboard_types/1.xml
   def update
-    #@whiteboard_type = WhiteboardType.find(params[:id])
-
     respond_to do |format|
       if @whiteboard_type.update(whiteboard_type_params)#params[:whiteboard_type])
         tflash('update', :success, {:model=>@@model, :count=>1})
-        format.html { redirect_to(:action=>'index')} #, :notice => t('messages.update.success', :model=>@@model)) }
+        format.html { redirect_to(whiteboard_types_path)} #, :notice => t('messages.update.success', :model=>@@model)) }
         format.xml  { head :ok }
       else
         format.html { render :action => "edit" }

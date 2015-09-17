@@ -53,7 +53,7 @@ class LanguagesController < ApplicationController
     respond_to do |format|
       if @language.save
         tflash('create', :success, {:model=>@@model, :count=>1})
-        format.html { redirect_to(:action=>"index")} # , :notice => t('messages.create.success', :model=>@@model)) }
+        format.html { redirect_to(languages_path)} # , :notice => t('messages.create.success', :model=>@@model)) }
         format.xml  { render :xml => @language, :status => :created, :location => @language }
       else
         format.html { render :action => "new" }
@@ -65,12 +65,10 @@ class LanguagesController < ApplicationController
   # PUT /languages/1
   # PUT /languages/1.xml
   def update
-    #@language = Language.find(params[:id])
-    #set_language
     respond_to do |format|
       if @language.update(language_params)
         tflash('update', :success, {:model=>@@model, :count=>1})
-        format.html { redirect_to(:action=>'index')} #, :notice => t('messages.update.success', :model=>@@model)) }
+        format.html { redirect_to(languages_path)} #, :notice => t('messages.update.success', :model=>@@model)) }
         format.xml  { head :ok }
       else
         format.html { render :action => "edit" }
