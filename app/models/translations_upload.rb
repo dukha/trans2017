@@ -32,7 +32,8 @@ class TranslationsUpload < ActiveRecord::Base
     else
       duplicates_behavior2 = Translation.Overwrite[:continue_unless_blank]
     end     
-    begin       
+    begin 
+            
       data  = YAML.load_file(File.join(TranslationsUpload.uploaded_to_folder, yaml_upload.url))
   
       plurals= Hash.new

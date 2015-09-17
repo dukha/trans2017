@@ -69,7 +69,7 @@ class CalmappsController < ApplicationController
       if @calmapp.update(calmapp_params) #params[:calmapp], without_protection: true)
         
         tflash('update', :success, {:model=>@@model, :count=>1})
-        format.html { redirect_to(:action=>:index) }
+        format.html { redirect_to(calmapps_path) }
         format.xml  { head :ok }
       else
         format.html { render :action => "edit" }
