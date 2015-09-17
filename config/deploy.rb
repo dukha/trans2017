@@ -136,7 +136,16 @@ namespace :deploy do
       end
     end
   end
-
+  desc "write upload dirs for CarrierWave"
+  task :create_carrierwave_dirs do
+    on roles :app
+      begin
+        FileUtils.mkdir_p("home/calm/apps/translator/current/public/uploads/translations_upload/yaml_upload")
+      rescue Exception=> e
+        puts e.message
+        puts e.backtrace  
+      end
+  end
   desc 'Trust MPAPIS so we can install rvm in the next step - see https://github.com/wayneeseguin/rvm/issues/3110'
   before 'deploy', :trust_rvm_install do
     on roles :app, in: :sequence, wait: 1 do
@@ -145,9 +154,9 @@ namespace :deploy do
   end
 
   before 'deploy', 'rvm1:install:rvm' # install/update RVM
-  
+  after :publishing, :create_carrierwave_dirs 
   after :publishing, 'rvm1:install:gems' # install/update gems from Gemfile into gemset
-
+  #after :publishing, "FileUtils.mkdir("home/calm/apps/translator/current/public/uploads/translations_upload/yaml_upload")
   after :publishing, :restart
 
 

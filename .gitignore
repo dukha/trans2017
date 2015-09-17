@@ -20,7 +20,7 @@ log/*.log.0
 config/database.yml
 config/puma.rb
 public/system/*
-public/uploads/*
+public/uploads/translations_upload/yaml_upload*
 .idea/*
 config/secrets.yml
 .env.development

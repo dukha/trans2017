@@ -7,8 +7,9 @@ class TranslationsUpload < ActiveRecord::Base
   
   validates :description,  :presence=>true
   validate :upload_matches_translation_language_validation
-  
+  #after_create :do_after_create
   after_commit :do_after_commit, :on => :create
+  
   def self.base_locales_folder
     File.join(Rails.root, "base_locales")
   end 
@@ -20,6 +21,7 @@ class TranslationsUpload < ActiveRecord::Base
  Takes a yaml translation file, parses it, writes it as a tree and then converts the tree to a dot_key format
  @return a hash in dot_key => string_data format, suitable for writing to the db  
 =end
+  
   def write_yaml_file_to_db #overwrite  
     if duplicates_behavior == "overwrite"
         duplicates_behavior2 =   Translation.Overwrite[:all]
