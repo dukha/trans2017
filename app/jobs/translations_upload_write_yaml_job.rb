@@ -3,8 +3,6 @@ class TranslationsUploadWriteYamlJob < BaseJob #ActiveJob::Base
 
   def perform(translations_upload_id)
     begin
-      #tu = TranslationsUpload.find(translations_upload_id)
-      #tu.write_yaml()
     TranslationsUpload.write_yaml(translations_upload_id)  
     rescue => exception
       ExceptionNotifier.notify_exception(exception,

@@ -32,10 +32,8 @@ class TranslationsUpload < ActiveRecord::Base
     else
       duplicates_behavior2 = Translation.Overwrite[:continue_unless_blank]
     end     
-    begin 
-            
-      data  = YAML.load_file(File.join(TranslationsUpload.uploaded_to_folder, yaml_upload.url))
-  
+    begin        
+      data  = YAML.load_file(File.join(Rails.application.config.root, TranslationsUpload.uploaded_to_folder, yaml_upload.url))
       plurals= Hash.new
       key_value_pairs = TranslationsUpload.traverse_ruby(data, plurals, calmapp_versions_translation_language.calmapp_version_tl.id )
     rescue Psych::SyntaxError => pse
@@ -355,9 +353,6 @@ As it was on 2 Aug June
  Call back to write the translations after a file is uploaded 
 =end
   def do_after_commit
-    
-    #write_yaml_file_to_db()
-    #DELAYED JOB
     Rails.logger.info "In TranslationsUpload.do_after_commit"
     Rails.logger.info "Self = " +  self.to_s
     Rails.logger.info "id = " + self.id.to_s

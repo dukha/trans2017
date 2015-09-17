@@ -80,17 +80,14 @@ class CalmappVersionsTranslationLanguagesController < ApplicationController
   # PATCH/PUT /calmapp_versions_translation_languages/1
   # PATCH/PUT /calmapp_versions_translation_languages/1.json
   def update
-
-    #@calmapp_versions_translation_language = CalmappVersionsTranslationLanguage.find(params[:id])
-    @calmapp_versions_translation_language.assign_attributes(calmapp_versions_translation_language_params)
-    
+    @calmapp_versions_translation_language.assign_attributes(calmapp_versions_translation_language_params)  
     respond_to do |format|
       begin
       if @calmapp_versions_translation_language.save
     
         tflash('update', :success, {:model=>@@model, :count=>1})
         flash[:notice] = "The contents of any uploaded translation files will be written to the database later. At the moment they await processing on a queue."
-        format.html { redirect_to( calmapp_version_tranlation_languages_path)}#, notice: 'Calmapp versions translation language was successfully updated.') }
+        format.html { redirect_to( calmapp_versions_translation_languages_path)}
         format.json { head :no_content }
       else
     
@@ -99,7 +96,6 @@ class CalmappVersionsTranslationLanguagesController < ApplicationController
       end # save
       rescue PsychSyntaxErrorWrapper => psew
         flash[:error]= "Format of file : " + psew.file_name + " is bad. Copy the following error message and contact tech support with the file. Error message : " + psew.message
-        #flash[:notice] = "Failed to write file : " + pse.file_name + ". The syntax in the file was wrong. Ask for technical help. No upload done."
         format.html { render action: 'edit' }
       rescue UploadTranslationError => ute
     
