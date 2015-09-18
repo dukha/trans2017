@@ -20,3 +20,5 @@ When you start loading up a new version and uploading the english files, a lot o
 to avoid the 300 mails per hour limit(on mailgun) if something fails. You will have to be patient and wait for these to complete
 
 Use the menu/Application Admin/Delayed Jobs to check when the loading is complete
+
+Ensure all file paths work with Rails.root, not relative path   (*_path calls are ok for routes)

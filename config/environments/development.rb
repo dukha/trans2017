@@ -14,22 +14,18 @@ Translate::Application.configure do
   #config.action_view.debug_rjs             = true
   config.action_controller.perform_caching = false
 
-  # Don't care if the mailer can't send
-  config.action_mailer.raise_delivery_errors = true
+  
   # devise wants this
   #config.action_mailer.default_url_options = { :host => 'localhost:3000' }  
-  #config.middleware.use ExceptionNotifier,
+  # config ExceptionNotifier
   config.middleware.use ExceptionNotification::Rack,
-#     :email_prefix => "[Exception] ",
-#     :sender_address => %{trans_app@internode.in.net},
-#     :exception_recipients => %w{mplennon@gmail.com}
       :email =>{
-      :email_prefix => "[Exception] ",
-      :sender_address => %{"translator-notifier" <mplennon@optusnet.com.au>},
-    :exception_recipients => %w{mplennon@gmail.com}
+        :email_prefix => Rails.env.humanize + ": Exception] ",
+        :sender_address => %{"translator-notifier-dev" <mplennon@optusnet.com.au>},
+        :exception_recipients => %w{mplennon@gmail.com}
     }
   # sendmail users the sendmail_settings below
-  config.action_mailer.default_url_options = {:host => 'localhost:3000'} # 'dhamma.org.au'} # }
+  config.action_mailer.default_url_options = {:host => 'localhost:3000'} 
   #config.action_mailer.delivery_method = :sendmail
   config.action_mailer.delivery_method = :mailgun
   # to use google then uncomment the4 line below (It will sue the smtp_settings below)

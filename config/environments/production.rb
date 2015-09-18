@@ -40,15 +40,12 @@ Translate::Application.configure do
   config.assets.digest = true
   # fro rails 4 apparently
   config.assets.precompile = ['*.js', '*.js.erb','*.css', '*.css.erb']
-  # Enable serving of images, stylesheets, and javascripts from an asset server
-  # config.action_controller.asset_host = "http://assets.example.com"
 
-  # Disable delivery errors, bad email addresses will be ignored
-  # config.action_mailer.raise_delivery_errors = false
+  config.action_mailer.delivery_method = :mailgun
   # this is foir devise. Must be edited for production
-  config.action_mailer.default_url_options = { :host => 'localhost:3000' }
-  # Enable threaded mode
-  # config.threadsafe!
+  config.action_mailer.default_url_options = { :host => 'trans.calm-int-trans.dhamma.org.au' }
+  config.action_mailer.default :charset => "utf-8" 
+  config.action_mailer.raise_delivery_errors = true 
 
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
   # the I18n.default_locale when a translation can not be found)
@@ -62,4 +59,14 @@ Translate::Application.configure do
         api_key: Rails.application.secrets.mailgun_api_key,
         domain: Rails.application.secrets.mailgun_domain
   }
+  
+  #config ExceptionNotifier
+  config.middleware.use ExceptionNotification::Rack,
+      :ignore_crawlers => %w{Googlebot bingbot},
+      :email =>{
+        :email_prefix => Rails.env.humanize + ": Exception: ",
+        :sender_address => %{"translator-notifier-prod" <mplennon@optusnet.com.au>},
+        :exception_recipients => %w{mplennon@gmail.com ryan2johnson9@hotmail.com},
+        :email_format => :html
+    }
 end

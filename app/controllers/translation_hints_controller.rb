@@ -49,7 +49,7 @@ class TranslationHintsController < ApplicationController
   def update
     @translation_hint.update(translation_hint_params)
     #respond_with(@translation_hint, :location=> translation_hints_path)
-    redirect_to(translation_hints_path)
+    redirect_to(action: :index)
   end
 
   def destroy
