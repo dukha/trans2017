@@ -1,4 +1,4 @@
 class ApplicationMailer < ActionMailer::Base
-  default from: "vipassana_translator_no_reply@internode.on.net"
+  default from: "#{'No Reply Vipassana Translator'}  <#{'no-reply-vipassana-translator@translator.org'}>"
   layout 'mailer'
 end
