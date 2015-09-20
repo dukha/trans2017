@@ -10,19 +10,12 @@ class AdminMailer < ApplicationMailer
     url = user_edit_url(@new_user.id, :locale=>'en')
     @link = link_to("Edit New User", url )
     puts "INSIDE ADMIN_MAILER"
-    
     puts url
     puts @link
-    
-    #url.upcase!
-    #url.downcase!
-    
-    #@link = link_to("Set New User Permissions", url.dup)
-    
    
     mail( 
       to: @admin_user.email,
-      subject: ("Vipassana Translator Invitation Accepted by " + @new_user.actual_name)
+      subject: "Vipassana Translator Invitation Accepted by #{@new_user.actual_name}"
       )
   end
   
