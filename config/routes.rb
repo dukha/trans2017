@@ -29,6 +29,8 @@ Translate::Application.routes.draw do
    get 'help/admin_applications_versions_languages', :to => 'help#admin_applications_versions_languages', :as => 'admin_applications_versions_languages'
    get 'help/todo', :to => 'help#todo', :as => 'todo'
    get 'help/contents', :to=> 'help#contents', :as => 'contents'
+   get 'help/admin_publishing', :to=> 'help#publishing', :as => 'publishing'
+   get 'help/admin_uploading', :to=> 'help#uploading', :as => 'uploading'
 =begin
    scope "/auth_user/:user_id" do
       resources :permissions
@@ -87,6 +89,8 @@ Translate::Application.routes.draw do
    post "calmapp_versions/deep_copy"=> "calmapp_versions#deep_copy", :as=>"version_deep_copy"
    get "calmapp_versions/deep_copy_params/:id"=> "calmapp_versions#deep_copy_params", :as=>"version_deep_copy_params"
    get "calmapp_versions_translation_languages/deep_copy"=> "calmapp_versions_translation_languages#deep_copy", :as=>"version_translation_language_deep_copy"
+   delete "calmapp_versions_translation_languages/deep_destroy/:id" => "calmapp_versions_translation_languages#deepdestroy", :as => "versions_language_deepdestroy"
+   delete "calmapp_versions/deep_destroy/:id" => "calmapp_versions#deepdestroy", :as => "version_deepdestroy"
    
    resources :release_statuses
    resources :redis_databases, :only=>[:index, :destroy, :edit]

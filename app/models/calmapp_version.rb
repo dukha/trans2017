@@ -161,19 +161,21 @@ class CalmappVersion < ActiveRecord::Base
        UserMailer.background_process_fail(user, "Version_deep_copy", old_version.description + " to " + new_version.description, e.message)  
     end   #begin resuce 
   end
-  def deep_destroy(user)
+  def deep_destroy#(user)
     #if user.role_symbols.include?(:calmapp_versions_deepdestroy)
      begin
        transaction do
          redis_databases.find_each { |db| db.destroy }
          calmapp_versions_translation_languages.find_each { |cavtl|
+
            cavtl.deep_destroy
            }
-          
+         
          destroy  
        end #transaction
      rescue StandardError => e
        puts e.message
+       raise  
      end #beginrescue
    # else
       

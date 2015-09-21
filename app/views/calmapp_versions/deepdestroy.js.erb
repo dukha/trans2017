@@ -1,7 +1,7 @@
-//This will delete the line just deleted erb syntax is #{dom_id(user)}
+//This will delete the line just deleted erb syntax is #{dom_id(calmapp_version)}
 var flash_selector = "div#flash";
-<% if not @translation_hint.nil? %>
-  $('#translation_hint_<%=@translation_hint.id %>').remove();
+<% if not @calmapp_version.nil? %>
+  $('#calmapp_version_<%=@calmapp_version.id %>').remove();
 <%end%>
 $(flash_selector).html("<%=j display_flashes%>");
 timeoutID = window.setTimeout(clearFlash,20000);

@@ -7,7 +7,7 @@ class AdminMailer < ApplicationMailer
     puts @new_user.email.to_s
     @admin_user =  User.find(@new_user.invited_by_id)
     puts "ADMIN USER = " + @admin_user.email.to_s
-    url = user_edit_url(@new_user.id, :locale=>'en')
+    url = user_edit_url(@new_user.id, :locale=> locale)
     @link = link_to("Edit New User", url )
     puts "INSIDE ADMIN_MAILER"
     puts url
@@ -35,7 +35,7 @@ class AdminMailer < ApplicationMailer
   def notify_user_permissions_assigned_after_invitation(user_id)
     @user = User.find(user_id)
     @admin = User.find(@user.invited_by_id)
-    @signin_url = new_user_session_url
+    @signin_url = new_user_session_url(:locale => locale)
      mail(
         to: @user.email,
         subject: "Welcome to Vipassana Translator"

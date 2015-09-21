@@ -6,7 +6,7 @@ class CalmappVersionsController < ApplicationController
   
   before_action :authenticate_user!
   before_action :set_calmapp_version, only: [ :edit, :update, :destroy, :show, :redisdbalter, 
-      :deep_copy_params ]
+      :deep_copy_params, :deepdestroy ]
   filter_access_to :all
   @@model="calmapp_version"
   
@@ -120,6 +120,23 @@ class CalmappVersionsController < ApplicationController
     end #rescue  
   end
 
+  def deepdestroy
+    description = @calmapp_version.description          
+    begin
+      @calmapp_version.deep_destroy
+      respond_to do |format|
+          tflash('deep_destroy', :success, {:model=>"#{@@model}: #{description}", :count=>1})
+          format.html { redirect_to(calmapp_versions_path) }
+          format.js {}
+        end
+    rescue StandardError => e
+      @calmapp_version = nil
+      flash[:error] = e.message
+      respond_to do |format|
+        format.js
+      end
+    end #rescue 
+  end
 
 
 

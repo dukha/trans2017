@@ -91,7 +91,7 @@ class UsersController < ApplicationController #Devise::RegistrationsController
        
         if assign_first_premissions && (! @user.roles_list.empty?) then
           begin
-            AdminMailer.notify_user_permissions_assigned_after_invitation(@user.id).deliver_now
+            AdminMailer.notify_user_permissions_assigned_after_invitation(@user.id).deliver_later
           rescue Exception => e
             ExceptionNotifier.notify_exception(e,
              :data=> {:message => e.message})

@@ -153,7 +153,7 @@ class User < ActiveRecord::Base
   end
   
   def self.demo
-    pw = '123456'
+    pw = '!123456!'
     param = {:password => pw,:password_confirmation => pw,:username => 'albert',:email => 'albert@calm.org', 
               :actual_name=> 'albert', :country=> 'Australia', :phone => '213000'}
     
@@ -287,7 +287,7 @@ private
   def notify_admin
     puts "NOTIFY ADMIN"
     
-    AdminMailer.user_invitation_accepted(self).deliver_now
+    AdminMailer.user_invitation_accepted(self).deliver_later
   end 
    
 =begin 

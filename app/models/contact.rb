@@ -12,7 +12,7 @@ class Contact < ActiveRecord::Base
     responders = User.contact_responders
     
     responders.each{|r|
-      AdminMailer.new_contact_from_user(id, r.id).deliver_now      
+      AdminMailer.new_contact_from_user(id, r.id).deliver_later      
     }
   end
   

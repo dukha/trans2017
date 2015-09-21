@@ -1,7 +1,7 @@
 ##Substitutions for Computer Codes in Translations
 Sometimes translations need extra information provided at the last minute by the computer.
 
-In the translation this is inedicated by a code in the English translation. 
+In the translation this is indicated by a code in the English translation. 
 > For example "_You are about to delete %{count} courses. Are you sure that you want to do this?_"
 > %{count} is a special code. 
 > Computer codes must be copied exactly to your translation. Computer codes always start with '_%{_' and end with '_}_'.
@@ -14,5 +14,5 @@ It is important to make sure that you copy the codes exactly (Copy and Paste fro
 
 * Do not add any codes: this will cause an error.
 * It is also better not to leave out any codes that are in English.
-* Do not change the spelling of any codes including the %{ and }. This will cause an error.
+* Do not change the spelling of any codes including the "%{" and "}". This will cause an error.
 

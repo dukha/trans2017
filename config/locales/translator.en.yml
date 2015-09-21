@@ -76,7 +76,7 @@ en:
       version:
         deepcopy: Deep Copy to New Version
       deepcopyparams: Start Deep Copy
-      deepdelete: Deep Delete
+      deepdestroy: Deep Delete
     labels:
       status: Status
       translation: Translation
@@ -181,6 +181,8 @@ en:
       deepdestroy: Deep Destroy
       translate: Translate
       develop: Develop
+      languagepublish: Publish Language
+      versionpublish: Publish Version
       administor: Administor
     miscellaneous: Miscellaneous
     redis_instances: Redis Instances

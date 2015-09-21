@@ -66,7 +66,16 @@ class HelpController < ApplicationController
     @markdown_file = true
     render $APPLICATION_HELP_VIEW_DIR + 'administrator/applications_versions_languages.html'
   end
+
+  def uploading
+    @markdown_file = true
+    render $APPLICATION_HELP_VIEW_DIR + 'administrator/uploading.html'
+  end
   
+  def publishing
+    @markdown_file = true
+    render $APPLICATION_HELP_VIEW_DIR + 'administrator/publishing.html'
+  end  
   def contents
      @markdown_file = true
     render $APPLICATION_HELP_VIEW_DIR + '/help_contents.html'

@@ -13,4 +13,6 @@
 - [Administration: Getting Started](<%=admin_getting_started_path%>)
 - [Administration: Users ](<%=user_admin_path%>)
 - [Administration: Applications, Versions, Languages](<%=admin_applications_versions_languages_path%>)
+- [Administration: Publishing](<%=publishing_path%>)
+- [Administration: Uploading](<%=uploading_path%>)
  

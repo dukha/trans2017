@@ -120,10 +120,10 @@ authorization do
     has_permission_on [:calmapp_versions], :to => [:redisdbalter]
   end
   role :calmapp_versions_translation_languages_deepdestroy do
-    has_permission_on [:calmapp_versions_translation_language], :to=> [:deep_destroy]
+    has_permission_on [:calmapp_versions_translation_languages], :to=> [:deepdestroy]
   end
   role :calmapp_versions_deepdestroy do
-    has_permission_on [:calmapp_versions], :to=> [:deep_destroy]
+    has_permission_on [:calmapp_versions], :to=> [:deepdestroy]
   end
   role :calmapp_versions_deepcopy do
     has_permission_on [:calmapp_versions], :to=> [:deep_copy]

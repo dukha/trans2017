@@ -61,6 +61,9 @@
         <%has_role? :calmapp_versions_translation_languages_languagepublish do%>
           <th class="linkheader"></th>
         <%end%>
+        <% if has_role?(:calmapp_versions_translation_languages_deepdestroy)%>
+          <th class="linkheader"></th>
+        <%end%>
       </tr>
     </thead>
   
@@ -74,12 +77,13 @@
           <%has_role? :calmapp_versions_translation_languages_write do%>
             <%= link_edit(edit_calmapp_versions_translation_language_path(calmapp_versions_translation_language), calmapp_versions_translation_language,:edit=>'change_uploads', :category=> :action)%>
           <%end%>
-          <%has_role? :calmapp_versions_translation_languages_destroy do%>
-            <td class="<%= link_cell_class %>"><%= tlink_to  'go_to_translations', translations_path + "/?criterion_iso_code=" + calmapp_versions_translation_language.translation_language.iso_code + "&criterion_cav_id=" + calmapp_versions_translation_language.calmapp_version_tl.id.to_s %></td>
+          <%has_role? :translations_read do%>
+            <td class="<%= link_cell_class %>"><%= tlink_to  'go_to_translations', translations_path + "/?criterion_cavtl_id=" + calmapp_versions_translation_language.id.to_s + "&operator_cavtl_id=eq"%></td>
           <%end%>
           <%has_role? :calmapp_versions_translation_languages_languagepublish do%>
-            <td class="<%= link_cell_class %>">
+            <td class="<%= link_cell_class %>" style='width:200px;'>
               <%if calmapp_versions_translation_language.redis_databases_count > 0%>
+                <!--%has_role? :calmapp_versions_translation_languages_languagepublish do%-->
                 <button id = 'publish'><%=t($FA + "publish_language", :language=> calmapp_versions_translation_language.translation_language.name)%></button>
                 <div id ='tl-publish-flash-<%=calmapp_versions_translation_language.id.to_s%>'></div>
                 <div id = 'publishing-get-database'>
@@ -91,14 +95,29 @@
                 <%=selection_publishing_dbs(calmapp_versions_translation_language)%>
                 <br>
                   <input id = 'publish-language' type = 'submit' name ='submit' value='<%=t($FA + 'translation_language_publish',:language=> calmapp_versions_translation_language.translation_language.name )%>' >
-                 <%end%> 
+                 <%end #form%> 
                   <img id = 'disappear' src = '/assets/treeview/minus.gif' alt='-' style = 'float:right;'>
                 </div>
+              <%else%>
+                 <%=link_to "Before you can publish, Add a Redis_database", calmapp_versions_path %>    
               <%end #if%>
+              <!--% end #do role%-->
             </td>
           <%end #role%>
+
+          <% if has_role?(:calmapp_versions_translation_languages_deepdestroy)%>
+              <td class="<%= link_cell_class %>" style='width:200px;' >
+              <%if calmapp_versions_translation_language.translation_language == TranslationLanguage.TL_EN%>
+                 Cannot delete English translations here as all translations for all languages would be deleted. Do <i>Deep Delete</i> on <i>Application Versions</i> if you want this result. 
+              <%else%>
+                <%=button_to(t($FA + "deepdestroy"), versions_language_deepdestroy_path(calmapp_versions_translation_language.id), 
+                  :method => :delete, :remote=> true, 
+                  :data=>{:confirm=>t($MS + "delete.destroy_translation_data_1_language." + $W, :app_version => calmapp_versions_translation_language.description, :language => calmapp_versions_translation_language.translation_language.name)},
+                          )%>
+              <%end%> 
+              </td>         
+         <%end%>
           
-          <!--td class="< %= link_cell_class %>">< %= link_destroy calmapp_versions_translation_language, "calmapp_versions_translation_language" %></td -->
         </tr>
       <% end %>
     </tbody>

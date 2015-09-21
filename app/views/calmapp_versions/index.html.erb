@@ -8,15 +8,17 @@
       
       <th class ="dataheader"><%=tlabel('calmapp_id',  'calmapp_version') %></th>
       <th class ="dataheader"><%=tlabel('version','calmapp_version') %></th>
-      <th class="linkheader"></th>
+      <%if has_role? :calmapp_versions_write%>
+        <th class="linkheader"></th>
+      <%end%>
       <%if has_role? :calmapp_versions_redisdbalter%>
         <th class="linkheader"></th>
       <%end%>
       <%if has_role?  :calmapp_versions_deepcopy%>
         <th class="linkheader"></th> 
       <%end%>
-      <% if has_role?( :calamapp_versions_deepdestroy)%>
-      <th class="linkheader"></th>
+      <% if has_role?(:calmapp_versions_deepdestroy)%>
+        <th class="linkheader"></th>
       <%end%>  
     </tr>
   
@@ -37,18 +39,12 @@
       <%if has_role?  :calmapp_versions_deepcopy%>
         <td class="<%= link_cell_class %>"><%= tlink_to "deepcopyparams", version_deep_copy_params_path(calmapp_version)%> </td>
       <%end%>
-      <!--td class="< %= link_cell_class %>">< %= tlink_to "version_redis", redis_databases_path %></td -->
-      <!--td class="< %= link_cell_class %>">< %= tlink_to "version_redis", calmapp_versions_redis_databases_path + "?criterion_calmapp_version_id=" + calmapp_version.id.to_s + "&operator_calmapp_version_id=eq"%></td -->
       
-      <!--td class="< %= link_cell_class %>"
-       < %if not calmapp_version.redis_databases.empty?%> 
-        < %= tlink_to "version_redis", calmapp_version_publish_path(calmapp_version.id.to_s)%>
-      < %else%>
-        <div>No publication databases setup</div> 
-      < %end% >
-      </td -->
-      <% if has_role?(:calamapp_versions_deepdestroy)%>
-        <%=link_destroy calmapp_version, "calmapp_version", {:data=>{:confirm=>"delete.destroy_translation_data"}, :app=>name, :version=>version}%>
+      <% if has_role?(:calmapp_versions_deepdestroy)%>
+        <td class="<%= link_cell_class %>"><%=button_to(t($FA + "deepdestroy"), version_deepdestroy_path(calmapp_version.id), 
+                :method => :delete, :remote=> true, 
+                :data=>{:confirm=>t($MS + "delete.destroy_translation_data." + $W, :app_version => calmapp_version.description)},
+                        )%></td>
       <%end%>
   </tr>
 <% end %>

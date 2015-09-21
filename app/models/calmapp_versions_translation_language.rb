@@ -223,15 +223,11 @@ class CalmappVersionsTranslationLanguage < ActiveRecord::Base
      delete
   end
   def self.destroy_dependents(id)
-    #if current_user.role_symbols.include?(:calmapp_versions_translation_languages_deepdestroy)
-      cavtl = CalmappVersionTranslationLanguage.find(id)
       transaction do
+         cavtl = CalmappVersionsTranslationLanguage.find(id)
          cavtl.translations.find_each {|t| t.delete}
          cavtl.translations_uploads.find_each{|tl| tl.delete}
          cavtl.translators.find_each { |tor| tor.delete}
       end # transaction
-    #else
-      #raise Exceptions::NoLanguageDeleteAuthorisation.new({version: calmapp_version_tl.name, language: translation_language.full_name})
-    #end # if user  
   end # def
 end #class

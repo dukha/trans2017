@@ -1,7 +1,7 @@
 class CalmappVersionsTranslationLanguagesController < ApplicationController
   before_action :authenticate_user!
   filter_access_to :all
-  before_action :set_calmapp_versions_translation_language, only: [:show, :edit, :update, :destroy]
+  before_action :set_calmapp_versions_translation_language, only: [:show, :edit, :update, :destroy, :deepdestroy]
   require 'translations_helper'
   include TranslationsHelper
   require 'will_paginate/array'
@@ -125,13 +125,23 @@ class CalmappVersionsTranslationLanguagesController < ApplicationController
     end #rescue  
   end
   
-  def deep_destroy
-    @calmapp_versions_translation_language.deep_destroy(current_user)
-    respond_to do |format|
-      format.html { redirect_to calmapp_versions_translation_languages_url }
-      format.json { head :no_content }
-      format.js {}
-    end  
+  def deepdestroy
+     description = @calmapp_versions_translation_language.description
+     binding.pry
+     begin
+      @calmapp_versions_translation_language.deep_destroy
+      respond_to do |format|
+          tflash('deep_destroy', :success, {:model=>"#{@@model}: #{description}", :count=>1})
+          format.html { redirect_to(calmapp_versions_path) }
+          format.js {}
+        end
+    rescue StandardError => e
+      @calmapp_version = nil
+      flash[:error] = e.message
+      respond_to do |format|
+        format.js
+      end
+    end #rescue  
   end
 
 =begin
