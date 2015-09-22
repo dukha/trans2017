@@ -5,7 +5,7 @@ class UserMailer < ApplicationMailer
     @process_name = process_name
     @error_message = error_message
     @object_name = object_name
-    mail(:to => "#{user.username} <#{user.email}>", :subject => "Background Process Fail")
+    mail(:to => "#{@user.username} <#{@user.email}>", :subject => "Background Process Fail")
   end
   
   def background_process_success(user_id, process_name, object_name)

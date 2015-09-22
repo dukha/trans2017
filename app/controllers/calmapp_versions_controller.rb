@@ -125,7 +125,7 @@ class CalmappVersionsController < ApplicationController
     begin
       @calmapp_version.deep_destroy
       respond_to do |format|
-          tflash('deep_destroy', :success, {:model=>"#{@@model}: #{description}", :count=>1})
+          tflash('deep_destroy', :success, {:model=>@@model, :description => description, :count=>1})
           format.html { redirect_to(calmapp_versions_path) }
           format.js {}
         end

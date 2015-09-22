@@ -78,6 +78,8 @@ class BulkTranslations2
     record_arr =   Translation.where{dot_key_code == my{dkc}}.where{cavs_translation_language_id == my{calmapp_versions_translation_language.id}}
     is_new_record = (not record_arr.exists?)
     existing_translation_attr = nil
+    #binding.pry if key.include? "date.abbr_day_names"
+    
     if not is_new_record
       existing_translation_attr = record_arr.select(translation)
     end
@@ -85,7 +87,9 @@ class BulkTranslations2
     if language != 'en' then 
       #puts "lang is not en"
       en_translation_exists = Translation.english_translation_exists(calmapp_versions_translation_language, dkc)
-      
+      if key.include? "date.abbr_day_names" 
+        Rails.logger.info("date.abbr_day_names" + en_translation_exists.to_s)
+      end
       if en_translation_exists 
         msg = "English translation exists for " + msg_data
       else # no en trans
@@ -103,6 +107,9 @@ class BulkTranslations2
         if en_translation_exists
            msg_data = trans_msg_data(translation, language, test_dkc)
            msg = "English translation exists for " + msg_data
+        end
+        if key.include? "date.abbr_day_names" 
+          Rails.logger.info("date.abbr_day_names now " + en_translation_exists.to_s)
         end
         
         if plurals.include?(split_dkc.last) # en_translation_exists
@@ -123,8 +130,11 @@ class BulkTranslations2
             translation = ActiveSupport::JSON.encode(hash)
           end 
         else # plurals don't include last so there is no valid en key
-          msg = "Dot key Code does not exist. Checked for accidental plural " + msg_data
-          return unsaved_record(dkc, calmapp_versions_translation_language, translation, translations_upload_id, msg_data, msg)
+          msg = "English Dot key Code does not exist. Checked for accidental plural " + msg_data
+          Rails.logger.error("Data Error in English " + msg)
+          #We will continue processing here so return nil
+          return nil
+          #return unsaved_record(dkc, calmapp_versions_translation_language, translation, translations_upload_id, msg_data, msg)
         end #check plurals 
       end # en exists 
     end #lang is not en

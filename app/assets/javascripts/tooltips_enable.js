@@ -4,9 +4,11 @@
   $(function() {
     $( document ).tooltip({
       position: {
-        //my: "center bottom-20",
+        
+        // my gives the position on the TT to do the aligning
         my: "center bottom",
-        at: "center top-5",
+        // at gives the posn on the target element (eg ubtton text field)
+        at: "center top + 5",
         using: function( position, feedback ) {
           $( this ).css( position );
           $( "<div>" )

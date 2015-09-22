@@ -32,8 +32,28 @@ class TranslationsUpload < ActiveRecord::Base
     else
       duplicates_behavior2 = Translation.Overwrite[:continue_unless_blank]
     end     
-    begin        
-      data  = YAML.load_file(File.join(Rails.application.config.root, TranslationsUpload.uploaded_to_folder, yaml_upload.url))
+    begin
+      path = Rails.root
+      Rails.logger.info path + " " + Dir.entries(path).to_s
+      path = File.join(Rails.root, TranslationsUpload.uploaded_to_folder) 
+      Rails.logger.info path + " " + Dir.entries(path).to_s
+      arr = yaml_upload.url.split("/")
+      arr.each { |dir| 
+        path = File.join(path, dir)
+        if ! Dir.exist?(path)
+          if !File.exist?(path)
+            #binding.pry
+            Rails.logger path + " does not exist. Big Problem for writing upload."  
+          else
+            Rails.logger.info(path + " does exist" )  
+          end
+        else 
+          Rails.logger.info path + " " + Dir.entries(path).to_s 
+        end
+        
+        }       
+      File.join(Rails.root.to_path, TranslationsUpload.uploaded_to_folder,yaml_upload.url )
+      data  = YAML.load_file(File.join(Rails.root.to_path, TranslationsUpload.uploaded_to_folder, yaml_upload.url))
       plurals= Hash.new
       key_value_pairs = TranslationsUpload.traverse_ruby(data, plurals, calmapp_versions_translation_language.calmapp_version_tl.id )
     rescue Psych::SyntaxError => pse
@@ -56,7 +76,9 @@ class TranslationsUpload < ActiveRecord::Base
           messages = ""           
           t.errors.full_messages.each { |msg| messages = messages + msg + " " }
           logger.error(messages)
-         raise  UploadTranslationError.new(messages, yaml_upload_identifier)
+          if not messages.include? "Dot key Code does not exist"
+            raise  UploadTranslationError.new(messages, yaml_upload_identifier)
+          end  
         end #errors.count
       end #trans 
       rescue UploadTranslationError => error

@@ -50,7 +50,7 @@
     <%has_role? :redis_databases_versionpublish do%>
       <td class="<%= link_cell_class %>"  ><%= tlink_to 'version_publish',redis_databases_versionpublish_path(redis_database),{
                         :data=>{:type=>"json", :disable_with=> "Publishing...."},
-                        #:"data-tooltip" => t($FH + 'redis_database.version_publish', :version_name=>redis_database.calmapp_version.description , :db_name=> redis_database.short_name),
+                        :"data-tooltip" => t($FH + 'redis_database.version_publish', :version_name=>redis_database.calmapp_version.description , :db_name=> redis_database.short_name),
                         :method=> "post", 
                         :form=>{:id=>"publish"}, 
                         :remote=> true, 
@@ -98,25 +98,6 @@
 });
 
 
-
-/*  
-  $(function() {
-    $( document ).tooltip({
-      position: {
-        my: "center bottom-20",
-        at: "center top",
-        using: function( position, feedback ) {
-          $( this ).css( position );
-          $( "<div>" )
-            .addClass( "arrow" )
-            .addClass( feedback.vertical )
-            .addClass( feedback.horizontal )
-            .appendTo( this );
-        }
-      }
-    });
-  });
-*/
 $(document).ready(function(){
 //  $("#has-tt").tooltip({content:function(){return "Some <b>great</b> HTML tooltip text!";}});  
   $('form#publish').on("click", "div.tt" , function(){

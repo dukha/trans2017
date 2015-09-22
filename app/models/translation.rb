@@ -237,7 +237,7 @@ class Translation < ActiveRecord::Base
              end #unless
            end #not trans.keys      
          } 
-         if trans.length == 1 && trans.keys[0] == "other" && (not trans[keys[0]].blank?)
+         if trans.length == 1 && trans.keys[0] == "other" #&& (not trans.keys[0].blank?)
            trans = trans[keys[0]]
            blank = false
          end

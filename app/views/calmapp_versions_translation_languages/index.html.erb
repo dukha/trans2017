@@ -84,7 +84,9 @@
             <td class="<%= link_cell_class %>" style='width:200px;'>
               <%if calmapp_versions_translation_language.redis_databases_count > 0%>
                 <!--%has_role? :calmapp_versions_translation_languages_languagepublish do%-->
-                <button id = 'publish'><%=t($FA + "publish_language", :language=> calmapp_versions_translation_language.translation_language.name)%></button>
+                <button id = 'publish' data-tooltip = '<%=t($FH + 'calmapp_versions_translation_language.language_publish', :language=>calmapp_versions_translation_language.translation_language.name)%>'>
+                  <%=t($FA + "publish_language", :language=> calmapp_versions_translation_language.translation_language.name)%>
+                </button>
                 <div id ='tl-publish-flash-<%=calmapp_versions_translation_language.id.to_s%>'></div>
                 <div id = 'publishing-get-database'>
                 <%=form_tag(calmapp_versions_translation_languages_languagepublish_path(calmapp_versions_translation_language.id), 
@@ -94,7 +96,9 @@
                 <label>To Redis Db</label>
                 <%=selection_publishing_dbs(calmapp_versions_translation_language)%>
                 <br>
-                  <input id = 'publish-language' type = 'submit' name ='submit' value='<%=t($FA + 'translation_language_publish',:language=> calmapp_versions_translation_language.translation_language.name )%>' >
+                  <input id = 'publish-language' type = 'submit' name ='submit' value='<%=t($FA + 'translation_language_publish',
+                        :language=> calmapp_versions_translation_language.translation_language.name )%>'
+                         >
                  <%end #form%> 
                   <img id = 'disappear' src = '/assets/treeview/minus.gif' alt='-' style = 'float:right;'>
                 </div>
@@ -112,8 +116,9 @@
               <%else%>
                 <%=button_to(t($FA + "deepdestroy"), versions_language_deepdestroy_path(calmapp_versions_translation_language.id), 
                   :method => :delete, :remote=> true, 
-                  :data=>{:confirm=>t($MS + "delete.destroy_translation_data_1_language." + $W, :app_version => calmapp_versions_translation_language.description, :language => calmapp_versions_translation_language.translation_language.name)},
-                          )%>
+                  :data=>{:confirm=>t($MS + "delete.destroy_translation_data_1_language." + $W, :app_version => calmapp_versions_translation_language.description, :language => calmapp_versions_translation_language.translation_language.name),
+                               :"tooltip" => t($FH + 'calmapp_versions_translation_language.deepdestroy', :language=>calmapp_versions_translation_language.translation_language.name)},
+                   :id=> 'deepdestroy'       )%>
               <%end%> 
               </td>         
          <%end%>
@@ -131,3 +136,25 @@
   <%=tlink_to("translation_languages_calmapp_versions_to_new_upload", calmapp_versions_path, :title=> 'calmapp_versions_translation_language.to_new_upload')%>
   <%end%>
 </p>
+
+<script>
+  //this script does jquery ui tooltips
+  $("[data-tooltip]").each(function(i, e) {
+    var tag = $(e);
+    if (tag.is("[title]") === false) {
+        tag.attr("title", "");
+    }
+});
+
+
+$(document).ready(function(){
+//  $("#has-tt").tooltip({content:function(){return "Some <b>great</b> HTML tooltip text!";}});  
+  $('input#deepdestroy').on("click", "div.tt" , function(){
+    $(this).remove();
+  });
+  $('button#publish').on("click", "div.tt" , function(){
+    $(this).remove();
+  });
+});
+
+</script>

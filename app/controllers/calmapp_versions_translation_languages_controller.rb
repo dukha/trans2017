@@ -127,11 +127,11 @@ class CalmappVersionsTranslationLanguagesController < ApplicationController
   
   def deepdestroy
      description = @calmapp_versions_translation_language.description
-     binding.pry
+     #binding.pry
      begin
       @calmapp_versions_translation_language.deep_destroy
       respond_to do |format|
-          tflash('deep_destroy', :success, {:model=>"#{@@model}: #{description}", :count=>1})
+          tflash('deep_destroy', :success, {:model=>@@model, :description=> description, :count=>1})
           format.html { redirect_to(calmapp_versions_path) }
           format.js {}
         end

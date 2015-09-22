@@ -124,8 +124,7 @@ class CalmappVersion < ActiveRecord::Base
   def deep_copy old_version_id, user, copy_translation_languages=true, copy_translations =true
     #old_version = CalmappVersion.find(old_version_id)
     if save
-      #new_version = new_calmapp_version_unsaved
-      CalmappVersion.finish_deep_copy(old_version_id, self.id, user_id, copy_translation_languages, copy_translations ).perform_later
+      FinishVersionDeepCopyJob.perform_later(old_version_id, self.id, user.id, copy_translation_languages, copy_translations )
       return true
     else
       return false  
@@ -148,7 +147,8 @@ class CalmappVersion < ActiveRecord::Base
           old_version.calmapp_versions_translation_languages.find_each do |cavtl|
             CalmappVersionsTranslationLanguage.create!(:calmapp_version_id => version.id, :translation_language_id => cavtl.translation_language_id )
             Translation.where{cavs_translation_language_id == my{cavtl.id}}.find_each do |t|
-              Translation.new(:translation => t.translation, :dot_key_code => t.dot_key_code, :cavs_translation_language_id => cavtl.id) 
+              Translation.create!(:translation => t.translation, :dot_key_code => t.dot_key_code, :cavs_translation_language_id => cavtl.id) 
+              
             end # each translation  
           end # each cavtl
         end #copy trans
@@ -158,7 +158,7 @@ class CalmappVersion < ActiveRecord::Base
        Rails.logger.error "The deep copy of " + old_version.description + " has failed"
        Rails.logger.error "Deep copy exception: " +e.message
        Rails.logger.error e.backtrace.join("\n")
-       UserMailer.background_process_fail(user, "Version_deep_copy", old_version.description + " to " + new_version.description, e.message)  
+       UserMailer.background_process_fail(user_id, "Version_deep_copy", old_version.description + " to " + new_version.description, e.message)  
     end   #begin resuce 
   end
   def deep_destroy#(user)

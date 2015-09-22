@@ -116,7 +116,7 @@ en:
       destroy_translation_data_1_language: 
         warning: "You will destroy all translations for: %{language} in this application version: %{app_version}. Are you sure???? THIS VERY DANGEROUS. THINK."
     deep_destroy:
-      success: The %{model} with all translations were deleted.
+      success: "The %{model}: %{description} with all translations were deleted."
     create:
       success: The %{model} was successfully created.
       error:: The %{model} was not created

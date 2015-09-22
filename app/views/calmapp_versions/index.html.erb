@@ -43,7 +43,8 @@
       <% if has_role?(:calmapp_versions_deepdestroy)%>
         <td class="<%= link_cell_class %>"><%=button_to(t($FA + "deepdestroy"), version_deepdestroy_path(calmapp_version.id), 
                 :method => :delete, :remote=> true, 
-                :data=>{:confirm=>t($MS + "delete.destroy_translation_data." + $W, :app_version => calmapp_version.description)},
+                :data=>{:confirm=>t($MS + "delete.destroy_translation_data." + $W, :app_version => calmapp_version.description),
+                            :"tooltip" => t($FH + 'calmapp_version.deepdestroy', :version_name=>calmapp_version.description) }
                         )%></td>
       <%end%>
   </tr>

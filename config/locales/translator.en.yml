@@ -91,6 +91,7 @@ en:
         version: "Enter the version here. Format can be numbers, decimals or words."
         add_languages: If this checkbox is not checked then no language will be written to the database
         translation_languages: English(en) is required in all versions so you can  neither add nor remove English(en) here.
+        deepdestroy: "If you delete this version then all translations(months of work for translators) will be deleted. Only do this if you are absolutely sure that this version: '<i>%{version_name}</i>' is not needed or used any more."
       calmapp:
         name: Enter the application name.
         new_version: If this checkbox is not checked then no version will be written to the database
@@ -148,6 +149,8 @@ en:
       calmapp_versions_translation_language:
         to_new_upload: To add a New Upload, First Either add the Language to a Version, Or add a new Version, then Upload
         uploads: When a YAML file with translations is uploaded, its translations are immediately written to the database.
+        deepdestroy: "Clicking this will delete all translations for language: %{language}. Make sure that these %{language} will not be needed in future."
+        language_publish: "Clicking will publish all the translations for %{language} to a redis database to be immediately used by the main application." 
       calmapp_versions_redis_databases: Redis databases are where the translations are actually read by the application.
       #translation:
         #dot_key_codes: 
@@ -343,7 +346,7 @@ en:
         handler: Job Handler
         last_error: Last Error
         attempts: Attempts
-        run_at: Time Run
+        run_at: Time Scheduled
         locked_at: Time Locked
         failed_at: Time Failed
         priority: Priority
