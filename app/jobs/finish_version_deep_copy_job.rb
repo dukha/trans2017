@@ -10,7 +10,7 @@ class FinishVersionDeepCopyJob< BaseJob
         :old_version_id => old_version_id, :new_version_id=> new_version_id, :method=>"finish_deep_copy"}})
         
         info "Exception in deep_destroy() " + exception.message 
-        exception_raised
+        exception_raised  info
         raise
     end  
   end  

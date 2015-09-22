@@ -91,7 +91,7 @@ en:
         version: "Enter the version here. Format can be numbers, decimals or words."
         add_languages: If this checkbox is not checked then no language will be written to the database
         translation_languages: English(en) is required in all versions so you can  neither add nor remove English(en) here.
-        deepdestroy: "If you delete this version then all translations(months of work for translators) will be deleted. Only do this if you are absolutely sure that this version: '<i>%{version_name}</i>' is not needed or used any more."
+        deepdestroy: "If you delete this version then all translations in all languages will be deleted(months of work for translators). Only do this if you are absolutely sure that this version: '<i>%{version_name}</i>' is not needed or used any more."
       calmapp:
         name: Enter the application name.
         new_version: If this checkbox is not checked then no version will be written to the database

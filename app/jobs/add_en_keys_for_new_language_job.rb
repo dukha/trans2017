@@ -12,7 +12,7 @@ class AddEnKeysForNewLanguageJob < BaseJob #ActiveJob::Base
         :method => "add_all_dot_keys_from_en_for_new_translation_language"}})
         #:data => {:worker => worker.to_s, :queue => queue, :payload => payload})
       info "Exception in add_all_dot_keys_from_en_for_new_translation_language() " + exception.message  
-      exception_raised
+      exception_raised info
       raise  
     end
     # Do something later

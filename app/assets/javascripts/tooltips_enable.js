@@ -6,15 +6,17 @@
       position: {
         
         // my gives the position on the TT to do the aligning
-        my: "center bottom",
+        //my: "center bottom",
+        my: "right center",
         // at gives the posn on the target element (eg ubtton text field)
-        at: "center top + 5",
+        //at: "center top",
+        at: "left center",
         using: function( position, feedback ) {
           $( this ).css( position );
           $( "<div>" )
-            .addClass( "arrow" )
-            .addClass( feedback.vertical )
-            .addClass( feedback.horizontal )
+            //.addClass( "arrow" )
+            //.addClass( feedback.vertical )
+            //.addClass( feedback.horizontal )
             .appendTo( this );
         }
       },

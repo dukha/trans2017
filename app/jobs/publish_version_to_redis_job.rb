@@ -16,8 +16,8 @@ class PublishVersionToRedisJob < BaseJob #ActiveJob::Base
         #:data => {:worker => worker.to_s, :queue => queue, :payload => payload})
         #:data => { :queue => queue, :payload => payload})
        puts "Exception in version_language_publish() " +exception.message
-        exception_raised
-        raise
+        exception_raised  info
+        raise 
     end
     # Do something later
   end

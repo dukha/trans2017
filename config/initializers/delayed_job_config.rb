@@ -16,3 +16,6 @@ Delayed::Worker.class_eval do
     alias_method_chain :handle_failed_job, :notification
 
 end
+
+# rotating between 2 log files rotation when 1 > 100MB 
+Delayed::Worker.logger = Logger.new(Rails.root.join('log', 'delayed_job.log'), 5, 10000000)

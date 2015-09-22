@@ -13,7 +13,7 @@ class CavstlDestroyDependentsJob < BaseJob #ActiveJob::Base
         :id => cavs_translation_language_id, :method=>"destroy_dependents"}})
         
         info "Exception in deep_destroy() " + exception.message 
-        exception_raised
+        exception_raised  info
         raise
     end
   end

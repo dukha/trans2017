@@ -11,7 +11,7 @@ class AddOtherLanguageRecordsToVersionJob < BaseJob #ActiveJob::Base
       {:data=> {:class=> Translation, :id => translation_id}})
         #:data => {:worker => worker.to_s, :queue => queue, :payload => payload})
       info "Exception in add_other_language_records_to_version() " + exception.message
-      exception_raised
+      exception_raised info
       raise  
     end
   end

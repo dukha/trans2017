@@ -378,6 +378,7 @@ As it was on 2 Aug June
     Rails.logger.info "In TranslationsUpload.do_after_commit"
     Rails.logger.info "Self = " +  self.to_s
     Rails.logger.info "id = " + self.id.to_s
+    Rails.logger.error "1. do_after_commit  rrr " + Rails.root.to_path
     TranslationsUploadWriteYamlJob.perform_later(id)
 =begin #   
     Translation.check_translations_match_english2(
@@ -388,6 +389,7 @@ As it was on 2 Aug June
   end
   
   def self.write_yaml(id)
+    Rails.logger.info "3. self.write_yaml rrr " + Rails.root.to_path
     tu = TranslationsUpload.find(id)
     if tu.nil?
       Rails.logger.info "Could not find translation upload with id : "  + id.to_s

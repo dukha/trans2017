@@ -100,6 +100,8 @@ def display_timestamp (time)
     if time.blank?
       return ''
     else
+      #binding.pry
+      #return time.localtime.in_time_zone(current_user.time_zone).strftime("%e-%b-%y %H:%M") if current_user && current_user.time_zone
       return time.localtime.strftime("%e-%b-%y %H:%M")  
     end
   end   

@@ -98,7 +98,8 @@ module Translate
     config.assets.paths << Rails.root.join("app", "assets")
     # rails logger
     # config.logger = ActiveSupport::Logger.new('your_app.log')
-    config.logger = ActiveSupport::TaggedLogging.new(Logger.new("log/#{Rails.env}.log"))
+    # rotating between 2 log files rotation when 1 > 100MB 
+    config.logger = ActiveSupport::TaggedLogging.new(Logger.new("log/#{Rails.env}.log", 5, 10000000))
     #config.log_tags = [ lambda { |req| user = req.env['warden'].user; user && user.name || 'Unknown'; }]
     
     #rails 4.2 and higher active job with delayed_job

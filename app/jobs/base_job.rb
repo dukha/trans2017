@@ -41,8 +41,10 @@ class BaseJob < ActiveJob::Base
     info msg
   end  
   
-  def exception_raised
+  def exception_raised message = ''
     #@@time_last_job_failure = Time.now
+    msg = "Exception thrown " + message 
+    info msg
     @@failures_in_hour = (@@failures_in_hour + 1)
     if @@failures_in_hour >= 290
       wait = (Time.now + 300.seconds - @@time_last_job_failure)
@@ -57,5 +59,6 @@ class BaseJob < ActiveJob::Base
   def info msg
     puts msg
     Rails.logger.info msg
+    Delayed::Worker.logger.info msg
   end
 end

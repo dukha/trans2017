@@ -2,6 +2,7 @@ class TranslationsUploadWriteYamlJob < BaseJob #ActiveJob::Base
   queue_as :default
 
   def perform(translations_upload_id)
+    Rails.logger.error "2. TranslationsUploadWriteYamlJob rrr " + Rails.root.to_path
     begin
     TranslationsUpload.write_yaml(translations_upload_id)  
     rescue => exception
@@ -11,7 +12,7 @@ class TranslationsUploadWriteYamlJob < BaseJob #ActiveJob::Base
         #:data => {:worker => worker.to_s, :queue => queue, :payload => payload})
         #:data => { :queue => queue, :payload => payload})
         info "Exception in write_yaml() " + exception.message
-        exception_raised
+        exception_raised  info
         raise
     end
     # Do something later
