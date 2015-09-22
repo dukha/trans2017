@@ -5,30 +5,51 @@ puts "Seeding using " + Rails.env
 
 log=Logger.new(STDOUT)
 DelayedJob.delete_all
+ActiveRecord::Base.connection.reset_pk_sequence!('delayed_jobs')
 Contact.delete_all
+ActiveRecord::Base.connection.reset_pk_sequence!('contacts')
 UserProfile.delete_all
+ActiveRecord::Base.connection.reset_pk_sequence!('user_profiles')
 CavsTlTranslator.delete_all
+ActiveRecord::Base.connection.reset_pk_sequence!('cavs_tl_translators')
 CavsTlDeveloper.delete_all
+ActiveRecord::Base.connection.reset_pk_sequence!('cavs_tl_developers')
 CavsTlAdministrator.delete_all
+ActiveRecord::Base.connection.reset_pk_sequence!('cavs_tl_administrators')
 
 User.delete_all
+ActiveRecord::Base.connection.reset_pk_sequence!('users')
 Profile.delete_all
+ActiveRecord::Base.connection.reset_pk_sequence!('profiles')
 
 RedisDatabase.delete_all
+ActiveRecord::Base.connection.reset_pk_sequence!('redis_databases')
 RedisInstance.delete_all
+ActiveRecord::Base.connection.reset_pk_sequence!('redis_instances')
 CalmappVersionsTranslationLanguage.delete_all
+ActiveRecord::Base.connection.reset_pk_sequence!('calmapp_versions_translation_languages')
 CalmappVersion.delete_all
+ActiveRecord::Base.connection.reset_pk_sequence!('calmapp_versions')
 Calmapp.delete_all
+ActiveRecord::Base.connection.reset_pk_sequence!('calmapps')
 
 Language.delete_all
+ActiveRecord::Base.connection.reset_pk_sequence!('languages')
 TranslationLanguage.delete_all
+ActiveRecord::Base.connection.reset_pk_sequence!('translation_languages')
 TranslationHint.delete_all
+ActiveRecord::Base.connection.reset_pk_sequence!('translation_hints')
 TranslationsUpload.delete_all
+ActiveRecord::Base.connection.reset_pk_sequence!('translations_uploads')
 Whiteboard.delete_all
+ActiveRecord::Base.connection.reset_pk_sequence!('whiteboards')
 ReleaseStatus.delete_all
+ActiveRecord::Base.connection.reset_pk_sequence!('release_statuses')
 WhiteboardType.delete_all
+ActiveRecord::Base.connection.reset_pk_sequence!('whiteboard_types')
 
-Profile.delete_all    
+#Profile.delete_all    
+#ActiveRecord::Base.connection.reset_pk_sequence!('Profile')
 
 puts '*************'
 puts Rails.env
