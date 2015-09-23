@@ -1,5 +1,4 @@
 /*
-*= require smoothness.css
 *= require cocoon
 *= require formtastic
 *=require formtastic_changes
@@ -20,4 +19,3 @@
 
 * require_tree .
 */
-/*@import 'smoothness.css';x*
