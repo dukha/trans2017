@@ -587,8 +587,8 @@ module TranslationHelper
          tt = tooltip_hint(code)
          #return display_tooltip(tt)
        elsif code.start_with? "formtastic.actions." then
-         #tt = tooltip_action(code)  
-         return display_tooltip(tt) 
+         tt = tooltip_action(code)  
+         #return display_tooltip(tt) 
        elsif code.start_with? "menus."
          tt = TranslationHint.new(:dot_key_code => code, :heading=> "Menu Choice" + tooltip_general_help , :description=> "The user can often go to another page by clicking on a menu item" )
          #return display_tooltip(tt)
