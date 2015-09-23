@@ -389,13 +389,12 @@ As it was on 2 Aug June
   end
   
   def self.write_yaml(id)
-    l = Logger.new("log/upload.log")
-    l.info "3. self.write_yaml rrr " + Rails.root.to_path
+    Logger.new("log/upload.log").info "3. self.write_yaml rrr " + Rails.root.to_path
     tu = TranslationsUpload.find(id)
     if tu.nil?
-      l.info "Could not find translation upload with id : "  + id.to_s
+      Logger.new("log/upload.log").info "Could not find translation upload with id : "  + id.to_s
     else
-      l.info "Found translation upload " + tu.to_s + " with id " + id.to_s        
+      Logger.new("log/upload.log").info "Found translation upload " + tu.to_s + " with id " + id.to_s        
     end 
     tu.write_yaml_file_to_db()
   end
