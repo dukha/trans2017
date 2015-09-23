@@ -10,8 +10,8 @@ class AddOtherLanguageRecordsToVersionJob < BaseJob #ActiveJob::Base
       ExceptionNotifier.notify_exception(exception,
       {:data=> {:class=> Translation, :id => translation_id}})
         #:data => {:worker => worker.to_s, :queue => queue, :payload => payload})
-      info "Exception in add_other_language_records_to_version() " + exception.message
-      exception_raised info
+      #info "Exception in add_other_language_records_to_version() " + exception.message, exception.backtrace
+      exception_raised("Exception in add_other_language_records_to_version() " + exception.message, exception.backtrace)
       raise  
     end
   end

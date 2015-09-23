@@ -22,16 +22,7 @@ class BaseJob < ActiveJob::Base
  end
 =end
  
-  before_perform do |job|
-    # mailgun only allows 300 jobs per hour so in the case of a lot of generated tasks which go wrong, we space them out  
-=begin    
-    time_interval = @@last_job - Time.now
-    if time_interval < 10
-      puts "Waiting to start job: " + job.class.name + " in #{time_interval.to_s} secs."
-      @@last_job = @@last_job + 10.seconds
-      sleep 10       
-    end 
-=end     
+  before_perform do |job|  
     msg =  "Starting job: " + job.class.name
     info msg
   end
@@ -41,10 +32,10 @@ class BaseJob < ActiveJob::Base
     info msg
   end  
   
-  def exception_raised message = ''
+  def exception_raised message = '', backtrace=nil
     #@@time_last_job_failure = Time.now
     msg = "Exception thrown " + message 
-    info msg
+    info msg, bactrace
     @@failures_in_hour = (@@failures_in_hour + 1)
     if @@failures_in_hour >= 290
       wait = (Time.now + 300.seconds - @@time_last_job_failure)
@@ -56,9 +47,12 @@ class BaseJob < ActiveJob::Base
     end
   end
   
-  def info msg
+  def info msg, backtrace = nil
     puts msg
     Rails.logger.info msg
+    Rails.logger.info backtrace.join{ "\n"} if backtrace
     Delayed::Worker.logger.info msg
+    Delayed::Worker.logger.info backtrace.join{ "\n"} if backtrace
+    
   end
 end

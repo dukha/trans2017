@@ -14,7 +14,7 @@ class Translation < ActiveRecord::Base
   
   before_validation :do_before_validation#, :if => "not language_en?"
   #before_save :ensure_translation_valid_json
-  after_create :do_after_create, :if => :language_en? #Proc.new { |translation| translation.language.iso_code=='en'}
+  after_commit :do_after_commit, :if => :language_en? #Proc.new { |translation| translation.language.iso_code=='en'}
   after_destroy :delete_similar_dot_keys_not_english, :if => :language_en? # => Proc.new { |translation| translation.language.iso_code=='en'}
   #after_commit :do_after_commit
   attr_accessor  :english, :criterion_iso_code, :criterion_cav_id, :criterion_cavtl_id, :written, :plural_translation_html_display#, :selection_mode 
@@ -43,9 +43,9 @@ class Translation < ActiveRecord::Base
     %w(dot_key_code translation translation special_structure)
   end
   
-  def do_after_create
+  def do_after_commit
+    binding.pry if ! id
     AddOtherLanguageRecordsToVersionJob.set(:wait=> 2.minutes).perform_later(id)
-    
   end
   
   def do_before_validation
@@ -236,9 +236,10 @@ class Translation < ActiveRecord::Base
                blank = true  
              end #unless
            end #not trans.keys      
-         } 
+         }
+         puts trans.class.name + " trans hash?"
          if trans.length == 1 && trans.keys[0] == "other" #&& (not trans.keys[0].blank?)
-           trans = trans[keys[0]]
+           trans = trans.keys[0]
            blank = false
          end
        end #hash  
