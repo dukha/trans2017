@@ -16,14 +16,20 @@
 * Note that the the selection cirteria are automatically hidden
 * These translations can be edited by clicking on the blue links in the Czech translation column
 * Note that there are 6 pages. These can be navigated by clicking the next link (or one of the page numbers) just under the Show Criteria button.
+******
 ###Editing a Translation(Japanese)
 <%=image_tag('help_editing.png')%>
 * By clicking on the blue text an editing area will appear. Change the text and click Save or Cancel.
   >> The editing area will disappear and if you clicked Save a success or error message will appear.
   >> The message may not come immediately but it is ok to go straight to your next edit.
-###Editing a plural
+******
+###Editing a plural(Dutch)
 <%=image_tag('help_editing_plural')%>
-####If just starting with tranlations, but sure to read
+
+* For plurals there are 1 or more slots to edit for different languages. These slots have references to count like *one, other* or *one, few, other* or *other* depending on the language.
+>> Make sure that you add something for every slot in your language, even if you think that it is not necessary. The translation cannot be published unless all plural types have a translation.
+******
+####If just starting with translations, but sure to read
   - [Substitutions](<%=translation_interpolations_help_path%>)
   - [Role of English](<%=role_of_english_help_path%>)
 

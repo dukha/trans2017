@@ -20,5 +20,10 @@
 >>> Chinese is zh. 
 >> Sometimes there can be variations in a language depending on where it is spoken. 
 >>> These can be taken care of by a regional code added to the language iso code. 
->>> For example the french spoken in France can be given the code fr_FR to distinguish it from French spoken in Canada which is fr_CA.  
+>>> For example the french spoken in France can be given the code fr_FR to distinguish it from French spoken in Canada which is fr_CA. 
+
+###Make sure that you read 
+  - [Role of English](<%=role_of_english_help_path%>)
+  - [Substitutions](<%=translation_interpolations_help_path%>)
+  - [Translation User Interface](<%=translator_ui_path%>) 
         

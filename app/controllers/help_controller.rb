@@ -85,7 +85,7 @@ class HelpController < ApplicationController
      @markdown_file = true
     render $APPLICATION_HELP_VIEW_DIR + 'translator/translator_ui.html'
   end
-  def translator_ui
+  def developers_english
    @markdown_file = true
   render $APPLICATION_HELP_VIEW_DIR + 'developer/developers_english.html'
   end
