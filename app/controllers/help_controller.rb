@@ -80,4 +80,13 @@ class HelpController < ApplicationController
      @markdown_file = true
     render $APPLICATION_HELP_VIEW_DIR + '/help_contents.html'
   end
+  
+  def translator_ui
+     @markdown_file = true
+    render $APPLICATION_HELP_VIEW_DIR + 'translator/translator_ui.html'
+  end
+  def translator_ui
+   @markdown_file = true
+  render $APPLICATION_HELP_VIEW_DIR + 'developer/developers_english.html'
+  end
 end

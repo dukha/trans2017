@@ -1,33 +1,3 @@
-<script type="text/javascript">
-//This script  handles showing and hiding selection criteria
-  var criteriaDiv ="#criteria";
-  var criteriaButton = "#showHideCriteria";
-  $().ready(function(){
-    //Initialise the criteria to be hidden on first display
-    $(criteriaDiv).hide(); 
-    $(criteriaButton).html(criteriaHiddenText);
-    
-    if( <%= @delayed_jobs.count==0 %>){
-      toggleCriteria();
-    }
-    
-    $(criteriaButton).click(function(){
-      toggleCriteria();
-    }); //end click
-  });//end ready
-  var   criteriaHiddenText = "<%=t($FA +'show_something', :something=>t($SC))%>";
-  var   criteriaVisibleText = "<%=t($FA +'hide_something', :something=>t($SC))%>";
-  function toggleCriteria(){
-    if($(criteriaDiv).is(':visible')){ 
-        $(criteriaButton).html(criteriaHiddenText);
-    }else{
-        $(criteriaButton).html(criteriaVisibleText);
-    }
-    // toggle has to be after setting button text otherwise is(':visible') will not work properly
-    $(criteriaDiv).slideToggle('slow');  
-  }
-  
-</script>
 <%=theading("listing", :model=>'delayed_job', :count=>11) %>
 <%if DelayedJob.respond_to?( :searchable_attr ) && DelayedJob.searchable_attr.any? then %>
 <div id = 'data-empty' style = 'display:none'><%= @delayed_jobs.empty?.to_s %></div>

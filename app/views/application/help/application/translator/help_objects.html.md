@@ -1,4 +1,5 @@
 ##Things That Need a Translation
+<%=raw(render :partial =>"application/help/application/shared/horizontal_menu") %>
 In a computer program there are broadly 2 things that you have to be aware of:
 
 * **Objects**

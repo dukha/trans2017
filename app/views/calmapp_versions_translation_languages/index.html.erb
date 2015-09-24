@@ -84,10 +84,11 @@
             <td class="<%= link_cell_class %>" style='width:200px;'>
               <%if calmapp_versions_translation_language.redis_databases_count > 0%>
                 <!--%has_role? :calmapp_versions_translation_languages_languagepublish do%-->
+                <div id ='tl-publish-flash-<%=calmapp_versions_translation_language.id.to_s%>'></div>
                 <button id = 'publish' data-tooltip = '<%=t($FH + 'calmapp_versions_translation_language.language_publish', :language=>calmapp_versions_translation_language.translation_language.name)%>'>
                   <%=t($FA + "publish_language", :language=> calmapp_versions_translation_language.translation_language.name)%>
                 </button>
-                <div id ='tl-publish-flash-<%=calmapp_versions_translation_language.id.to_s%>'></div>
+                
                 <div id = 'publishing-get-database'>
                 <%=form_tag(calmapp_versions_translation_languages_languagepublish_path(calmapp_versions_translation_language.id), 
                 :remote=> true, 
@@ -114,6 +115,7 @@
               <%if calmapp_versions_translation_language.translation_language == TranslationLanguage.TL_EN%>
                  Cannot delete English translations here as all translations for all languages would be deleted. Do <i>Deep Delete</i> on <i>Application Versions</i> if you want this result. 
               <%else%>
+                <div id = 'local-flash-deepdelete'></div>
                 <%=button_to(t($FA + "deepdestroy"), versions_language_deepdestroy_path(calmapp_versions_translation_language.id), 
                   :method => :delete, :remote=> true, 
                   :data=>{:confirm=>t($MS + "delete.destroy_translation_data_1_language." + $W, :app_version => calmapp_versions_translation_language.description, :language => calmapp_versions_translation_language.translation_language.name),

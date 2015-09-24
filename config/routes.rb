@@ -31,6 +31,8 @@ Translate::Application.routes.draw do
    get 'help/contents', :to=> 'help#contents', :as => 'contents'
    get 'help/admin_publishing', :to=> 'help#publishing', :as => 'publishing'
    get 'help/admin_uploading', :to=> 'help#uploading', :as => 'uploading'
+   get 'help/translator_ui', :to => 'help#translator_ui', :as => 'translator_ui'
+   get 'help/developers_english', :to => 'help#developers_english', :as => 'developers_english'
 =begin
    scope "/auth_user/:user_id" do
       resources :permissions

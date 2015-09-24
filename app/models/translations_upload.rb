@@ -42,7 +42,6 @@ class TranslationsUpload < ActiveRecord::Base
         path = File.join(path, dir)
         if ! Dir.exist?(path)
           if !File.exist?(path)
-            #binding.pry
             Rails.logger path + " does not exist. Big Problem for writing upload."  
           else
             Rails.logger.info(path + " does exist" )  

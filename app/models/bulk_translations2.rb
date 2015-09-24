@@ -78,7 +78,6 @@ class BulkTranslations2
     record_arr =   Translation.where{dot_key_code == my{dkc}}.where{cavs_translation_language_id == my{calmapp_versions_translation_language.id}}
     is_new_record = (not record_arr.exists?)
     existing_translation_attr = nil
-    #binding.pry if key.include? "date.abbr_day_names"
     
     if not is_new_record
       existing_translation_attr = record_arr.select(translation)

@@ -1,4 +1,4 @@
-# User Administration
+##User Administration
 > Generally users are invited by an administrator to become a user of Vipassana Translator(VT).
 > You can inivte a new user by going to menu/User Admin/New User Invitation
 > Warn the user inadvance that their invitation may end up in spam and that they should check their spam folder for mail from vipassana_translator.

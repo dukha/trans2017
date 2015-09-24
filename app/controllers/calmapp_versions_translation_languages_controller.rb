@@ -12,33 +12,33 @@ class CalmappVersionsTranslationLanguagesController < ApplicationController
   # GET /calmapp_versions_translation_languages
   # GET /calmapp_versions_translation_languages.json
   def index
+    if CalmappVersionsTranslationLanguage.respond_to? :searchable_attr  
+      searchable_attr = CalmappVersionsTranslationLanguage.searchable_attr 
+    else 
+      searchable_attr = [] 
+    end
 
-    #@calmapp_versions_translation_languages = CalmappVersionsTranslationLanguage.paginate(:page => params[:page], :per_page=>15)
+    criteria=criterion_list(searchable_attr)
+    operators=operator_list( searchable_attr, criteria)
+
+    if CalmappVersionsTranslationLanguage.respond_to? :sortable_attr  
+      sortable_attr = CalmappVersionsTranslationLanguage.sortable_attr     
+    else   
+      sortable_attr = []   
+    end
+
+    sorting=sort_list(sortable_attr)
     search_info = init_search(current_user, CalmappVersionsTranslationLanguage.searchable_attr, CalmappVersionsTranslationLanguage.sortable_attr)
-      #if Translation.valid_criteria?(search_info) then
-        @calmapp_versions_translation_languages = CalmappVersionsTranslationLanguage.search(current_user, search_info)
+    if searchable_attr.nil? || searchable_attr.empty?  
+      @calmapp_versions_translation_languages = CalmappVersionsTranslationLanguage.paginate(:page => params[:page], :per_page=>20)
+    else
+      search_info = init_search(current_user, searchable_attr, sortable_attr)#init_search(criterion_list(searchable_attr), operator_list( searchable_attr, criterion_list(searchable_attr)),sort_list(sortable_attr))
+      #@delayed_jobs = DelayedJob.search(current_user, criterion_list(searchable_attr), operator_list( searchable_attr, criterion_list(searchable_attr)),sort_list(sortable_attr)).paginate(:page => params[:page], :per_page=>15)
+      @calmapp_versions_translation_languages = CalmappVersionsTranslationLanguage.search(current_user, search_info).paginate(:page => params[:page], :per_page=>20)
+    end
     
-      #else  
-        #msg = 'Criteria: '
-        #flash_now= false
-    
-        #search_info[:messages].each do |m|
-         # m.keys.each{ |k,v| 
-        
-          #  flash_now = true
-           # msg.concat( "#{m[k] + '. '}") 
-          #}
-        #end
-        #flash.now[:error] = msg if flash_now
-        #flash.now[:error] = ("Search criteria for both language and application version must be given. Given version = " + (params["criterion_cav_id"].nil?? "nil":["criterion_cav_id"].to_s)  + ". Given language = " + (params["criterion_ciso_code"].nil?? "nil":["criterion_iso_code"].to_s))
-        # in this case we make an ActivRecord Relation with 0 records so that we can redisplay
-        #@translations =  Translation.where{id == -1}
-      #end
-  
-      #end
-   
-
-    @calmapp_versions_translation_languages = @calmapp_versions_translation_languages.paginate(:page => params[:page], :per_page => 30)
+    #@calmapp_versions_translation_languages = CalmappVersionsTranslationLanguage.search(current_user, search_info)
+    #@calmapp_versions_translation_languages = @calmapp_versions_translation_languages.paginate(:page => params[:page], :per_page => 20)
 
     respond_to do |format|
       format.html # index.html.erb
@@ -127,7 +127,6 @@ class CalmappVersionsTranslationLanguagesController < ApplicationController
   
   def deepdestroy
      description = @calmapp_versions_translation_language.description
-     #binding.pry
      begin
       @calmapp_versions_translation_language.deep_destroy
       respond_to do |format|

@@ -1,5 +1,6 @@
-#Translator Role Help
-###Introduction
+##Translator Role Help
+<%=raw(render :partial =>"application/help/application/shared/horizontal_menu") %>
+#####Introduction
 A single translation consists of the following information
 
 * An application version language
@@ -9,22 +10,23 @@ A single translation consists of the following information
   - It is the key to this translation in all languages
 * The translation itself 
 
-###Just want to get started now?
+#####Just want to get started now?
 * Read these 2 pages first 
   - [Role of English](<%=role_of_english_help_path%>)
-  - [Substitutions](<%=translation_interpolations_help_path%>) 
-* Then Click [Translations](../translations)
+  - [Substitutions](<%=translation_interpolations_help_path%>)
+  - [Translation User Interface](<%=translator_ui_path%>) 
+* Then Click 
+  - [Translations](<%=translations_path%>)
 
-###Getting Started
+#####Getting Started
 Click [Getting Started](<%=getting_started_path%>)
-###More Information about Translations
+#####Translators' User Interface
+Click [Translations UI](<%translator_ui_path%>)
+#####More Information about Translations
 Click [Translation Types](translator_objects)
-
-###To Understand How the Translation Process Works
+#####To Understand How the Translation Process Works
 Click [Translation Process](translation_process)
-
-###To Understand Codes in the translations
+#####To Understand Codes in the translations
 Click [Role of English](<%=role_of_english_help_path%>)
-
-###To see what needs to be completed in this application
+#####To see what needs to be completed in this application
 Click [Programmers' Todo List](<%=todo_path%>)

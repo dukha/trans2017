@@ -44,7 +44,6 @@ class Translation < ActiveRecord::Base
   end
   
   def do_after_commit
-    binding.pry if ! id
     AddOtherLanguageRecordsToVersionJob.set(:wait=> 2.minutes).perform_later(id)
   end
   

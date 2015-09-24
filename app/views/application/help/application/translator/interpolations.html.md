@@ -1,4 +1,5 @@
 ##Substitutions for Computer Codes in Translations
+<%=raw(render :partial =>"application/help/application/shared/horizontal_menu") %>
 Sometimes translations need extra information provided at the last minute by the computer.
 
 In the translation this is indicated by a substituion code in the English translation. 
@@ -16,8 +17,14 @@ It is important to make sure that you copy the codes exactly (Copy and Paste fro
 * Please ensure that all the substituion codes from English are in your translation.
 * Do not change the spelling of any codes. This will cause an error.
 * Make sure all your substitions are surrounded by "%{" and "}" (no extra spaces)
-  -  English %{count}
+  - English %{count}
   - correct in translation  %{count}
-  - __Incorrect in translation *{count}*__
-  - __Incorrect in translation *%{ count}*__
-  - __Incorrect in translation *%{Count}*__
+  - __Incorrect in translation *{count}*__ left out % as first character
+  - __Incorrect in translation *%{ count}*__ Put a space in after { 
+  - __Incorrect in translation *%{Count}*__ Put a capital C for count
+  - __Incorrect in translation *%{cont}*__ Typo: left out u
+
+#####If just starting with tranlations, be sure to read
+  - [Translation User Interface](<%=translator_ui_path%>) 
+  - [Role of English](<%=role_of_english_help_path%>)
+  - [Translation User Interface](<%=translator_ui_path%>) 

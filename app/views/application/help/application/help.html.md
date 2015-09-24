@@ -1,5 +1,6 @@
-#Translator Application Help
-##Introduction
+##Translator Application Help
+<%=raw(render :partial =>"application/help/application/shared/horizontal_menu") %>
+###Introduction
 > Translator is meant to help you translate a software application into your own language by accessing the programmers codes and the English translation. The English translation has been added by the programmers as well.
 
 > Translator works with 2 databases. When a translator makes a translation then the translation is written to a traditional (relational)database. 
