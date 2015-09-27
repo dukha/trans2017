@@ -81,59 +81,64 @@
       <div>
          <%= taccordion_header("user_admin") %>
          <ul class="menu">
-          <%has_role? :profiles_read do%>
-             <%=link_menu(:profiles)%>
-           <%end%>
-           <%has_role?  :users_read do%> 
-              <li><%= tlink_to "users", users_path, :category=>:menu %></li>
-          <%end%>
-          <%has_role? :users_invite do%>
-          <li><%= tlink_to "new_invitation", new_user_invitation_path, :category=>:menu %></li>
-          <%end%>
-          <%has_role? :contacts_read do%>
-          <li><%= tlink_to "current_contacts", contacts_path, :category=>:menu %></li>
-          <%end%>
+            <%has_role? :profiles_read do%>
+               <%=link_menu(:profiles)%>
+             <%end%>
+             <%has_role?  :users_read do%> 
+                <li><%= tlink_to "users", users_path, :category=>:menu %></li>
+            <%end%>
+            <%has_role? :users_invite do%>
+            <li><%= tlink_to "new_invitation", new_user_invitation_path, :category=>:menu %></li>
+            <%end%>
+            <%has_role? :contacts_read do%>
+            <li><%= tlink_to "current_contacts", contacts_path, :category=>:menu %></li>
+            <%end%>
          </ul>  
         </div>
         <div> 
-        <%= taccordion_header("translation_admin") %>
-        <ul class="menu"> 
-        <%has_role? :translation_languages_read do%>   
-          <li><%= tlink_to("translation_languages", translation_languages_path, :category=>:menu) %></li>
-         <%end%> 
-        <%has_role? :calmapps_read do%> 
-          <li><%= tlink_to("calmapps", calmapps_path, :category=>:menu) %></li>
-        <%end%>  
-        <%has_role? :calmapp_versions_read do%> 
-          <li><%= tlink_to("calmapp_versions", calmapp_versions_path, :category=>:menu)%></li>
-        <%end%> 
-        <%has_role? :calmapp_versions_translation_languages_read do%>   
-          <li><%= tlink_to("versions_languages", calmapp_versions_translation_languages_path, :category=>:menu) %></li>
-        <%end%>
-        <%has_role? :calmapp_versions_write do%> 
-          <li><%= tlink_to("calmapp_versions_change_languages", calmapp_versions_path, :category=>:menu)%></li>
-        <%end%> 
-        <%has_role? :redis_instances_read do%> 
-          <li><%= tlink_to("redis_instances", redis_instances_path, :category=>:menu) %></li>
-        <%end%>  
-        <%has_role?  :redis_databases_read do%>   
-          <li><%= tlink_to("redis_databases", redis_databases_path, :category=>:menu) %></li>
-        <%end%>  
-        <%has_role?  :calmapp_versions_versionpublish do%>   
-          <li><%= tlink_to("version_publish", redis_databases_path, :category=>:menu) %></li>
-        <%end%>  
-        <%has_role? :translations_uploads_read do%>   
-          <li><%= tlink_to("translations_uploads", calmapp_versions_translation_languages_path, :category=>:menu) %></li>
-        <%end%>  
-          
-          
-        <%has_role?  :calmapp_versions_translation_languages_languagepublish do%>   
-          <li><%= tlink_to("publish_language", calmapp_versions_translation_languages_path, :category=>:menu) %></li>
-        <%end%>
-        <% if false then %>
-          <li><%= tlink_to("redis_admins", redis_admins_path, :category=>:menu) %></li>
-        <%end%>
-          
+          <%= taccordion_header("translation_admin") %>
+          <ul class="menu"> 
+            <%has_role? :translation_languages_read do%>   
+              <li><%= tlink_to("translation_languages", translation_languages_path, :category=>:menu) %></li>
+             <%end%> 
+            <%has_role? :calmapps_read do%> 
+              <li><%= tlink_to("calmapps", calmapps_path, :category=>:menu) %></li>
+            <%end%>  
+            <%has_role? :calmapp_versions_read do%> 
+              <li><%= tlink_to("calmapp_versions", calmapp_versions_path, :category=>:menu)%></li>
+            <%end%> 
+            <%has_role? :calmapp_versions_translation_languages_read do%>   
+              <li><%= tlink_to("versions_languages", calmapp_versions_translation_languages_path, :category=>:menu) %></li>
+            <%end%>
+            <%has_role? :calmapp_versions_write do%> 
+              <li><%= tlink_to("calmapp_versions_change_languages", calmapp_versions_path, :category=>:menu)%></li>
+            <%end%> 
+            <%has_role? :redis_instances_read do%> 
+              <li><%= tlink_to("redis_instances", redis_instances_path, :category=>:menu) %></li>
+            <%end%>  
+            <%has_role?  :redis_databases_read do%>   
+              <li><%= tlink_to("redis_databases", redis_databases_path, :category=>:menu) %></li>
+            <%end%>  
+            <%has_role?  :calmapp_versions_versionpublish do%>   
+              <li><%= tlink_to("version_publish", redis_databases_path, :category=>:menu) %></li>
+            <%end%>  
+            <%has_role? :translations_uploads_read do%>   
+              <li><%= tlink_to("translations_uploads", calmapp_versions_translation_languages_path, :category=>:menu) %></li>
+            <%end%>  
+            <% if false then %>
+              <li><%= tlink_to("redis_admins", redis_admins_path, :category=>:menu) %></li>
+            <%end%>
+          </ul>  
+        </div>
+        <div>   
+        <%= taccordion_header("publishing") %>
+         <ul class="menu">  
+            <%has_role?  :redis_databases_versionpublish do%>   
+              <li><%= tlink_to("version_publish", redis_databases_path, :category=>:menu) %></li>
+            <%end%>  
+            <%has_role?  :calmapp_versions_translation_languages_languagepublish do%>   
+              <li><%= tlink_to("publish_language", calmapp_versions_translation_languages_path, :category=>:menu) %></li>
+            <%end%> 
         </ul>
       </div>
       <div>
@@ -170,6 +175,7 @@
         <%if ! current_user.nil?%>
           <li><%= tlink_to "contact_us", new_contact_path, :category=>:menu %></li>
         <%end%> 
+        <li><%= tlink_to "help_contents", contents_path, :category=>:menu %></li>
         <li><%= tlink_to "help_files", application_help_path, :category=>:menu %></li>
         <li><%= tlink_to "about", about_path, :category=>:menu, :app_name=> $APPLICATION_NAME %></li>
       </ul>

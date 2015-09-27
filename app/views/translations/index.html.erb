@@ -16,29 +16,32 @@
     <!--%=f.inputs do%-->
     <%= hidden_field_tag :direction, params[:direction] %>
     <%= hidden_field_tag :sort, params[:sort] %>
-    <div id="selection_mode" class = "radio">
-        
-       <input id="translation_selection_mode_all" name="selection_mode" type="radio" value="all" 
+    
+    <div id="selection_mode" class = "radios" style='margin-left:25%; margin-bottom: 3px;'>
+         <fieldset class ='radios' style='border-style:solid; border-color:gray; border-width:1px; padding:2px;'>
+            <legend><span>Type of Search</span></legend>
+              <input id="translation_selection_mode_all" name="selection_mode" type="radio" value="all" 
                  <%=initialise_selection_mode_radio_buttons("all", params["selection_mode"])%>/>
               <label for="translation_selection_mode_all"><%=tlabel("selection_mode_all", "translation")%>
               </label>
          
-                <input id="translation_selection_mode_untranslated" name="selection_mode" type="radio" value="untranslated"  
+              <input id="translation_selection_mode_untranslated" name="selection_mode" type="radio" value="untranslated"  
                   <%=initialise_selection_mode_radio_buttons("untranslated", params["selection_mode"])%>/>
                 <label for="translation_selection_mode_untranslated"><%=tlabel("selection_mode_untranslated", "translation")%>
               </label>
          
-                <input id="translation_selection_mode_en_newer" name="selection_mode" type="radio" value="en_newer"  
+              <input id="translation_selection_mode_en_newer" name="selection_mode" type="radio" value="en_newer"  
                     <%=initialise_selection_mode_radio_buttons("en_newer", params["selection_mode"])%>/>
                  <label for="translation_selection_mode_en_newer"><%=tlabel("selection_mode_en_newer", "translation")%>
               </label>
               
-                <input id="translation_selection_mode_both_untranslated_and_en_newer" name="selection_mode" type="radio" value="both_untranslated_and_en_newer" 
+              <input id="translation_selection_mode_both_untranslated_and_en_newer" name="selection_mode" type="radio" value="both_untranslated_and_en_newer" 
                    <%=initialise_selection_mode_radio_buttons("both_untranslated_and_en_newer", params["selection_mode"])%>/>
-                <label for="translation_selection_mode_both_untranslated_and_en_newer">   <%=tlabel("selection_mode_untranslated_and_en_newer", "translation")%>
-                
+                <label for="translation_selection_mode_both_untranslated_and_en_newer">   <%=tlabel("selection_mode_untranslated_and_en_newer", "translation")%>  
               </label>
+            </fieldset>
     </div>  
+    
     <fieldset class="inputs">
       <ol>
       <li class="string optional" id="translation_language_id_input">
@@ -74,17 +77,21 @@
 
 <%= twill_paginate %>
 <table class="data" style="table-layout: fixed; width: 100%; ">
-  <thead class="ui-widget-header" style = "color:black">
+  <!--thead class="ui-widget-header" style = "color:black"-->
   <tr class="dataheader">
-
+    <% if Translation.respond_to? :sortable_attr
+      sortable_cols = Translation.sortable_attr
+    else
+      sortable_cols = []
+    end %>
     <%header_style = "font-size:1.1em;"%>
     <%width_css = @translations.empty? ? width_style : width_style(@translations[0].attributes["iso_code"])%>
 
     <!--th class ="dataheader" style="display:< %=full_key_display%>;"> <%=tlabel('dot_key_code', 'translation') %></th-->
-    <th class ="dataheader" style="display:<%=wrapped_key_display%>;<%=width_css[:dot_key_code]%><%=header_style%>"><%=tlabel('dot_key_code', 'translation') %></th>
+    <th class ="dataheader" style="display:<%=wrapped_key_display%>;<%=width_css[:dot_key_code]%><%=header_style%>"><%=sortable('dot_key_code', 'translation', sortable_cols.include?("dot_key_code"))%></th>
     <%if not @translations.empty?%>
       <%if @translations[0].attributes['iso_code'] != 'en' %>
-        <th class ="dataheader"  style= '<%=header_style%><%=width_css[:en_translation]%>'><%=tlabel('en_translation', 'translation') %></th>
+        <th class ="dataheader"  style= '<%=header_style%><%=width_css[:en_translation]%>'><%=sortable("lower(english.translation)", 'translation', sortable_cols.include?("lower(english.translation)"), "en_translation")%></th> <!--%=tlabel('en_translation', 'translation') % -->
       <%end%>
       
     <%end%>
@@ -106,7 +113,7 @@
     <!--th class="linkheader"></th-->
     
   </tr>
-</thead>
+<!--/thead -->
   
 <% cell_class = "data" %>
 <% link_cell_class="link"%>  

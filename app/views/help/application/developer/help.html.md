@@ -1,5 +1,5 @@
 ##Developer Role Help
-<%=raw(render :partial =>"application/help/application/shared/horizontal_menu") %>
+<%=raw(render :partial => $APPLICATION_HELP_VIEW_DIR + "shared/horizontal_menu") %>
 ###Introduction
 
 -  [Role of English](<%=role_of_english_help_path%>)

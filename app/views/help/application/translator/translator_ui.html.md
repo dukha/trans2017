@@ -1,5 +1,5 @@
 ##Translator User Interface
-<%=raw(render :partial =>"application/help/application/shared/horizontal_menu") %>
+<%=raw(render :partial => $APPLICATION_HELP_VIEW_DIR + "shared/horizontal_menu") %>
 ### Selection Criteria 
 <%=image_tag('help_criteria.png')%>
 * Translation is always done on the translations index screen. When you click on the [Translations](<%=translations_path%>) menu you see the criteria choices below.
@@ -24,7 +24,7 @@
   >> The message may not come immediately but it is ok to go straight to your next edit.
 ******
 ###Editing a plural(Dutch)
-<%=image_tag('help_editing_plural.png')%>
+<%=image_tag('help_editing_plural.png', :style=>"margin:2px;padding:5px;border:solid;")%>
 
 * For plurals there are 1 or more slots to edit for different languages. These slots have references to count like *one, other* or *one, few, other* or *other* depending on the language.
 >> Make sure that you add something for every slot in your language, even if you think that it is not necessary. The translation cannot be published unless all plural types have a translation.

@@ -1,5 +1,5 @@
 ##Contents (All Help Files Listed Here)
-<%=raw(render :partial =>"application/help/application/shared/horizontal_menu") %>
+<%=raw(render :partial => $APPLICATION_HELP_VIEW_DIR + "shared/horizontal_menu") %>
 - [Application](<%=application_help_path%>)
 - [Role of English](<%=role_of_english_help_path%>)
 - [Substitutions](<%=translation_interpolations_help_path%>)
@@ -12,7 +12,7 @@
 - [Substitutions](<%=translation_interpolations_help_path%>) 
 ####Developer
 - [Getting Started](<%=developer_help_path%>)
-- [Deveopers English](<%developers_english_path%>)
+- [Developers English](<%developers_english_path%>)
 ####Administrator
 - [Administrator](<%=administrator_help_path%>)
 - [Getting Started](<%=admin_getting_started_path%>)

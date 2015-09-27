@@ -3,10 +3,10 @@ class DelayedJob < ActiveRecord::Base
   include SearchModel
 
   def self.searchable_attr 
-     %w(id  run_at attempts failed_aat  )
+     %w(id  run_at attempts failed_at )
   end
   def self.sortable_attr
-      DelayedJob.searchable_attr
+      %w(id  run_at attempts failed_at )
   end
   
 end

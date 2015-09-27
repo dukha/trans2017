@@ -1,5 +1,5 @@
 ###Process of Translation
-<%=raw(render :partial =>"application/help/application/shared/horizontal_menu") %>
+<%=raw(render :partial =>$APPLICATION_HELP_VIEW_DIR + "shared/horizontal_menu") %>
 * When coding an application a programmer will leave codes instead of text. Each code is an indication that there needs to be a translation performed.
 * The programmer will give an English translation of the code. This will be used for English users.
 * For users of other languages, a native speaker must add the translation ofr each language needed.

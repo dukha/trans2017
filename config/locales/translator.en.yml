@@ -246,6 +246,8 @@ en:
     whiteboard: Whiteboards
     help: Help
     help_files: User Help
+    publishing: Publishing
+    help_contents: Help Contents
   headings:
     application_subheading: Translator
     write_to_database:
@@ -409,8 +411,9 @@ en:
         selection_mode: Selection Mode
         selection_mode_all: All translations
         selection_mode_untranslated: Untranslated
-        selection_mode_en_newer: Newer English Translation
-        selection_mode_untranslated_and_en_newer: Untranslated and Newer English Translation
+        selection_mode_en_newer: Newer English
+        selection_mode_untranslated_and_en_newer: Untranslated and Newer English
+        en_translation: English
       translation_language:
         name: Language Name
         iso_code: ISO Code

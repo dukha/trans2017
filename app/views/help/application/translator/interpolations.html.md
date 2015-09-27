@@ -1,5 +1,5 @@
 ##Substitutions for Computer Codes in Translations
-<%=raw(render :partial =>"application/help/application/shared/horizontal_menu") %>
+<%=raw(render :partial => $APPLICATION_HELP_VIEW_DIR + "shared/horizontal_menu") %>
 Sometimes translations need extra information provided at the last minute by the computer.
 
 In the translation this is indicated by a substituion code in the English translation. 

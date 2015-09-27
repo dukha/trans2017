@@ -33,6 +33,7 @@ class TranslationsUpload < ActiveRecord::Base
       duplicates_behavior2 = Translation.Overwrite[:continue_unless_blank]
     end     
     begin
+=begin      
       path = Rails.root
       Rails.logger.info path + " " + Dir.entries(path).to_s
       path = File.join(Rails.root, TranslationsUpload.uploaded_to_folder) 
@@ -42,7 +43,7 @@ class TranslationsUpload < ActiveRecord::Base
         path = File.join(path, dir)
         if ! Dir.exist?(path)
           if !File.exist?(path)
-            Rails.logger path + " does not exist. Big Problem for writing upload."  
+            Rails.logger.info(path + " does not exist. Big Problem for writing upload.")  
           else
             Rails.logger.info(path + " does exist" )  
           end
@@ -50,7 +51,8 @@ class TranslationsUpload < ActiveRecord::Base
           Rails.logger.info path + " " + Dir.entries(path).to_s 
         end
         
-        }       
+        }
+=end       
       File.join(Rails.root.to_path, TranslationsUpload.uploaded_to_folder,yaml_upload.url )
       data  = YAML.load_file(File.join(Rails.root.to_path, TranslationsUpload.uploaded_to_folder, yaml_upload.url))
       plurals= Hash.new

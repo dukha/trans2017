@@ -1,5 +1,5 @@
 ##Administration of Applications, Versions and Languages
-<%=raw(render :partial =>"application/help/application/shared/horizontal_menu") %>
+<%=raw(render :partial => $APPLICATION_HELP_VIEW_DIR + "shared/horizontal_menu") %>
 ###Applications
 > An application is a piece of software e.g Vipassana Translator, Calm
 > In the Translation Admin menu, you can add a new applicaton by clicking on [Applications](<%=calmapps_path%>), then [Add Applicaton](<%=new_calmapp_version_path%>)</i>.

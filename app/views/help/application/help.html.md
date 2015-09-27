@@ -1,5 +1,5 @@
 ##Translator Application Help
-<%=raw(render :partial =>"application/help/application/shared/horizontal_menu") %>
+<%=raw(render :partial => $APPLICATION_HELP_VIEW_DIR + "shared/horizontal_menu") %>
 ###Introduction
 > Translator is meant to help you translate a software application into your own language by accessing the programmers codes and the English translation. The English translation has been added by the programmers as well.
 

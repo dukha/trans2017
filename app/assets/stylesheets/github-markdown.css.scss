@@ -35,7 +35,10 @@
 }
 
 .markdown-body img {
-  border: 0;
+  /* mpl border: 0;*/
+ border: solid;
+ margin: 2px;
+ padding:2px;
 }
 
 .markdown-body hr {

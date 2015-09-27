@@ -1,5 +1,5 @@
 ##Getting Started as an Admin
-<%=raw(render :partial =>"application/help/application/shared/horizontal_menu") %>
+<%=raw(render :partial => $APPLICATION_HELP_VIEW_DIR + "shared/horizontal_menu") %>
 ###You have several jobs as an administrator
 
 * [Managing Users](<%=user_admin_path%>)

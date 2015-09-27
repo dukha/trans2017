@@ -1,5 +1,5 @@
 ##Translator Role Help
-<%=raw(render :partial =>"application/help/application/shared/horizontal_menu") %>
+<%=raw(render :partial => $APPLICATION_HELP_VIEW_DIR + "shared/horizontal_menu") %>
 #####Introduction
 A single translation consists of the following information
 

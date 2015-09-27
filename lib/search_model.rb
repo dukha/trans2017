@@ -85,18 +85,33 @@ module SearchModel
   end
     
   
-  def build_lazy_loader ar_relation, criteria ={},  operators= {}
+  def build_lazy_loader ar_relation, criteria ={},  operators= {}, coded_in_json = {}
     ops = Operators.new
     criteria.each { |k,v|
-   
        attr= 'squeel.' + k.to_s
       if operators[k]== ops.equal  then
-        ar_relation= ar_relation.where{|squeel| eval(attr) == v }
-      elsif operators[k] == ops.not_equal then       
-        ar_relation= ar_relation.where{|squeel| eval(attr) != v }
+        query_value = v
+        if coded_in_json[k]
+          query_value = '_' + query_value + '_'
+        end   
+        ar_relation= ar_relation.where{|squeel| eval(attr) =~ query_value }
+      elsif operators[k] == ops.not_equal then 
+        query_value = v
+         if coded_in_json[k]
+          query_value = '_' + query_value + '_'
+        end     
+        ar_relation= ar_relation.where{|squeel| eval(attr) !~ query_value }
       elsif operators[k]== ops.equal_case_insenstive  then
         # Note that we use the matches operator (without wildcards) here so that we get a case insensitive equals
-        ar_relation= ar_relation.where{|squeel| eval(attr) =~ v }
+        query_value = v
+        if coded_in_json[k]
+          query_value = '_' + query_value + '_'
+        end 
+         query_value = v
+        if coded_in_json[k]
+          query_value = '_' + query_value + '_'
+        end
+        ar_relation= ar_relation.where{|squeel| eval(attr) =~ query_value }
       elsif operators[k] == ops.not_equal_case_insensitive  then 
         # Note that we use the does_not_match operator (without wildcards) here so that we get a case insensitive not equals      
         ar_relation= ar_relation.where{|squeel| eval(attr) !~ v }  
@@ -114,10 +129,20 @@ module SearchModel
         ar_relation= ar_relation.where{|squeel| eval(attr) =~ '%' + v + '%' } 
       elsif operators[k]  == ops.does_not_match then
         ar_relation= ar_relation.where{|squeel| eval(attr) !~ '%' + v + '%' }
-      elsif operators[k] == ops.starts_with  then   
-        ar_relation= ar_relation.where{|squeel| eval(attr) =~ v + '%' }
+      elsif operators[k] == ops.starts_with  then
+        query_value = v + '%'
+        if coded_in_json[k]
+          query_value = '_' + query_value
+        end   
+        ar_relation= ar_relation.where{|squeel| eval(attr) =~ query_value }
+            
       elsif operators[k] == ops.ends_with  then 
-        ar_relation= ar_relation.where{|squeel| eval(attr) =~ '%' + v }
+        query_value = '%' + v
+        if coded_in_json[k]
+          #first value in json str is '"', so we wild card it
+          query_value =  query_value + '_'
+        end 
+        ar_relation= ar_relation.where{|squeel| eval(attr) =~ query_value }
       elsif operators[k] == ops.empty_str  then 
         ar_relation= ar_relation.where{|squeel| eval(attr) ==  '' }
       elsif operators[k] == ops.is_null  then        
@@ -154,7 +179,6 @@ module SearchModel
      else
        lazy_loader = activerecord_relation  
      end
- 
      lazy_loader = build_lazy_loader(lazy_loader, search_info[:criteria], search_info[:operators])
      lazy_loader =  build_lazy_loading_sorter(lazy_loader, search_info[:sorting])
      return lazy_loader

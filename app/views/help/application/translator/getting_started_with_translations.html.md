@@ -1,5 +1,5 @@
 ##Getting Started with Translation
-<%=raw(render :partial =>"application/help/application/shared/horizontal_menu") %>
+<%=raw(render :partial => $APPLICATION_HELP_VIEW_DIR + "shared/horizontal_menu") %>
 ###What Translation Involves
 > **Whenever an application is needed for an international group of users, everything that the user can see should be available in their own language, apart from data that is entered by another user in another language.**
 > The headings on a page should be translatable.

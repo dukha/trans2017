@@ -40,7 +40,7 @@ class Translation < ActiveRecord::Base
   end
   
   def self.sortable_attr
-    %w(dot_key_code translation translation special_structure)
+    %w(dot_key_code translation translation special_structure lower(english.translation))
   end
   
   def do_after_commit
@@ -621,6 +621,7 @@ class Translation < ActiveRecord::Base
         operators.delete("cav_id")
       end
     end
+    
     # We need to do this for dot key code otherwise it will split on '.'
     # in and not_in are a bit shakey. They come to the controller as lists as a string. So we try to split
     # using space, or comma
@@ -639,7 +640,9 @@ class Translation < ActiveRecord::Base
         end # size
       end
     end # dot_key_code
-    translations = build_lazy_loader(translations, criteria, operators)
+    
+    # translations are in json: we must let the wild card generator know about that witht he last param
+    translations = build_lazy_loader(translations, criteria, operators, {"translation" => true})
     #Now we have an extra condition involving a joined table
 
     if not conditions_between_joined_tables.empty? then
@@ -647,6 +650,7 @@ class Translation < ActiveRecord::Base
         translations = translations.where(str)
       end #do
     end #if
+    translations = build_lazy_loading_sorter(translations, sorting)
     return translations
   end
   
@@ -829,8 +833,8 @@ class Translation < ActiveRecord::Base
           translations.updated_at as updated_at, special.cldr as cldr, cavtl1.calmapp_version_id as version_id, 
           english.special_structure as special_structure, translations.incomplete as incomplete").
     where( "cavtl1.calmapp_version_id = ?",calmapp_version_id).
-    where("tl1.iso_code = ?", language).
-    order("translations.dot_key_code asc")
+    where("tl1.iso_code = ?", language)#.
+    #order("translations.dot_key_code asc")
   }
   
   scope :joins_to_cavs_and_tl, ->(calmapp_version_id){

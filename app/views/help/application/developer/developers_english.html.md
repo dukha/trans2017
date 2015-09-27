@@ -1,5 +1,5 @@
 ##English
-<%=raw(render :partial =>"application/help/application/shared/horizontal_menu") %>
+<%=raw(render :partial => $APPLICATION_HELP_VIEW_DIR + "shared/horizontal_menu") %>
  > * English(code '_en_') has a special role in the Translator app. It is the base language.
  >> * Developers use this language to create the initial translations from which everyone else works.
  >> Translations with code '_en_' cannot be edited or deleted other than by developers(or system administrators).

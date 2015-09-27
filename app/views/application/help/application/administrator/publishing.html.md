@@ -1,3 +1,0 @@
-##Publishing Translations
-<%=raw(render :partial =>"application/help/application/shared/horizontal_menu") %>
-#####Under Construction...

@@ -1,5 +1,5 @@
 class HelpController < ApplicationController
-  $APPLICATION_HELP_VIEW_DIR = 'application/help/application/'
+  $APPLICATION_HELP_VIEW_DIR = 'help/application/'
    
   def application
     @markdown_file = true
@@ -85,6 +85,16 @@ class HelpController < ApplicationController
      @markdown_file = true
     render $APPLICATION_HELP_VIEW_DIR + 'translator/translator_ui.html'
   end
+  
+  def deep_delete
+     @markdown_file = true
+    render $APPLICATION_HELP_VIEW_DIR + 'administrator/deep_delete.html'
+  end
+  def deep_copy
+     @markdown_file = true
+    render $APPLICATION_HELP_VIEW_DIR + 'administrator/deep_copy.html'
+  end
+  
   def developers_english
     
    @markdown_file = true

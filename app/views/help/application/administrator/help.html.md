@@ -1,5 +1,5 @@
 ##Administrator Role Help
-<%=raw(render :partial =>"application/help/application/shared/horizontal_menu") %>
+<%=raw(render :partial => $APPLICATION_HELP_VIEW_DIR + "shared/horizontal_menu") %>
 ####Introduction
 
 - [Redis Databases](<%=redis_databases_help_path%>)

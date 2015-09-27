@@ -231,6 +231,7 @@ class TranslationsController < ApplicationController
     else   
       sortable_attr = []   
     end
+      #binding.pry
      return search_info = init_search(current_user, searchable_attr, sortable_attr)
     
   end

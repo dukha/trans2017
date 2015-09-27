@@ -35,12 +35,12 @@ class BaseJob < ActiveJob::Base
   def exception_raised message = '', backtrace=nil
     #@@time_last_job_failure = Time.now
     msg = "Exception thrown " + message 
-    info msg, bactrace
+    info msg, backtrace
     @@failures_in_hour = (@@failures_in_hour + 1)
     if @@failures_in_hour >= 290
       wait = (Time.now + 300.seconds - @@time_last_job_failure)
       msg =  "Sleeping for #{(wait/60).to_s} minutes because of too many failures............"
-      info msg
+      info msg#, backtrace
       sleep wait
       @@time_last_job_failure =  0
       @@time_last_job_failure = Time.now
