@@ -3,6 +3,7 @@
 - [Application](<%=application_help_path%>)
 - [Role of English](<%=role_of_english_help_path%>)
 - [Substitutions](<%=translation_interpolations_help_path%>)
+- [Background Processes](<%=background_processes_path%>)
 ####Translator
 - [Getting Started](<%=getting_started_path%>)
 - [User Interface](<%=translator_ui_path%>)
@@ -20,6 +21,8 @@
 - [Setting Up Translations](<%=admin_applications_versions_languages_path%>)
 - [Publishing](<%=publishing_path%>)
 - [Uploading](<%=uploading_path%>)
+- [Deep Copy](<%=help_deepcopy_path%>)
+- [Deep Delete](<%=help_deepdelete_path%>)
 ####User Administrator
 - [Users ](<%=user_admin_path%>)
 ####Extra

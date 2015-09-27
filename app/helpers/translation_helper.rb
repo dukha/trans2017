@@ -152,12 +152,15 @@ module TranslationHelper
 =end   
    def translated_full_abbrev_day_month(date, iso_code, version_id)
      dow = date.wday
-     month = date.month  
-     day_abbrev = JSON.parse(Translation.single_lang_translations_arr(iso_code,version_id).where{dot_key_code ==  "date.abbr_day_names"}.first.translation)[dow]
-     day_full = JSON.parse(Translation.single_lang_translations_arr(iso_code,version_id).where{dot_key_code ==  "date.day_names"}.first.translation)[dow]
- 
-     month_abbrev = JSON.parse(Translation.single_lang_translations_arr(iso_code,version_id).where{dot_key_code ==  "date.abbr_month_names"}.first.translation)[month]
-     month_full = JSON.parse(Translation.single_lang_translations_arr(iso_code,version_id).where{dot_key_code ==  "date.month_names"}.first.translation)[month]
+     month = date.month
+     days_abbrev = Translation.single_lang_translations_arr(iso_code,version_id).where{dot_key_code ==  "date.abbr_day_names"}.first.translation  
+     day_abbrev = ActiveSupport::JSON.decode(days_abbrev)[dow]
+     days_full = Translation.single_lang_translations_arr(iso_code,version_id).where{dot_key_code ==  "date.day_names"}.first.translation
+     day_full = ActiveSupport::JSON.decode(days_full)[dow]
+     months_abbrev = Translation.single_lang_translations_arr(iso_code,version_id).where{dot_key_code ==  "date.abbr_month_names"}.first.translation
+     month_abbrev = ActiveSupport::JSON.decode(months_abbrev)[month]
+     months_full = Translation.single_lang_translations_arr(iso_code,version_id).where{dot_key_code ==  "date.month_names"}.first.translation
+     month_full = ActiveSupport::JSON.decode(months_full)[month]
      result = {month_full: month_full, month_abbrev: month_abbrev, day_full: day_full, day_abbrev: day_abbrev}.with_indifferent_access  
    end
 
@@ -166,22 +169,25 @@ module TranslationHelper
 =end   
    def collection? attrs 
      if input_control(attrs) == :select then
+       iso_code = attrs["iso_code"]
        if attrs["editor"] == "date_format" then
          date = example_date
-         iso_code = attrs["iso_code"]
          return short_date_collection(date, iso_code, attrs["version_id"]) if attrs["dot_key_code"] == 'date.formats.short'
          return default_date_collection(date, iso_code, attrs["version_id"]) if attrs["dot_key_code"] == 'date.formats.default'
          return long_date_collection(date, iso_code, attrs["version_id"]) if attrs["dot_key_code"] == 'date.formats.long'
        elsif  attrs["editor"] == "datetime_format" then  
-         datetime =  example_date                     
-         return datetime_collection(datetime, iso_code, attrs["version_id"])  if attrs["dot_key_code"] == 'datetime.formats.course_form'
+         datetime =  example_date                    
+         ret_val =  datetime_collection(datetime, iso_code, attrs["version_id"])  if attrs["dot_key_code"] == 'datetime.formats.course_form'
+         return ret_val
        elsif attrs["editor"] == "time_format" then
          time = example_time
          return short_time_collection(time) if attrs["dot_key_code"] == 'time.formats.short'
          return default_time_collection(time) if attrs["dot_key_code"] == 'time.formats.default'
          return long_time_collection(time) if attrs["dot_key_code"] == 'time.formats.long'  
-       end    
-     end  
+       end
+     else
+       return {}      
+     end  # input select
    end #def     
 
 =begin
@@ -424,12 +430,18 @@ module TranslationHelper
 =begin
    Contains all the default datetime formats for a drop down 
 =end   
-     def datetime_collection date, datetime, version_id
-       language_hash = translated_full_abbrev_day_month(date, iso_code, version_id)
-       en_hash =  translated_full_abbrev_day_month(date, 'en', version_id)            
-       return {"%a %b-%e-%Y" => datetime.strftime("%a %b-%e-%Y", date, language_hash, en_hash),
-               "%a %b/%e/%Y" => datetime.strftime("%a %b/%e/%Y", date, language_hash, en_hash),
-               "%a %e-%b-%Y" => datetime.strftime("%a %e-%b-%Y", date, language_hash, en_hash)}        
+     def datetime_collection datetime, iso_code, version_id
+       language_hash = translated_full_abbrev_day_month(datetime, iso_code, version_id)
+       en_hash =  translated_full_abbrev_day_month(datetime, 'en', version_id)            
+=begin
+       return {"%a %b-%e-%Y" => datetime.strftime("%a %b-%e-%Y", datetime, language_hash, en_hash),
+               "%a %b/%e/%Y" => datetime.strftime("%a %b/%e/%Y", datetime, language_hash, en_hash),
+               "%a %e-%b-%Y" => datetime.strftime("%a %e-%b-%Y", datetime, language_hash, en_hash)}
+=end       
+       return {"%a %b-%e-%Y" => localised_date("%a %b-%e-%Y", datetime, language_hash, en_hash),
+               "%a %b/%e/%Y" => localised_date("%a %b/%e/%Y", datetime, language_hash, en_hash),
+               "%a %e-%b-%Y" => localised_date("%a %e-%b-%Y", datetime, language_hash, en_hash)}
+  
      end 
 =begin
    Contains all the short datetime formats for a drop down 

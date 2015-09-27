@@ -91,26 +91,22 @@ module SearchModel
        attr= 'squeel.' + k.to_s
       if operators[k]== ops.equal  then
         query_value = v
-        if coded_in_json[k]
-          query_value = '_' + query_value + '_'
-        end   
-        ar_relation= ar_relation.where{|squeel| eval(attr) =~ query_value }
+        #if coded_in_json[k]
+         # query_value = '_' + query_value + '_'
+        #end   
+        ar_relation= ar_relation.where{|squeel| eval(attr) == query_value }
       elsif operators[k] == ops.not_equal then 
         query_value = v
-         if coded_in_json[k]
-          query_value = '_' + query_value + '_'
-        end     
-        ar_relation= ar_relation.where{|squeel| eval(attr) !~ query_value }
+        # if coded_in_json[k]
+         # query_value = '_' + query_value + '_'
+        #end     
+        ar_relation= ar_relation.where{|squeel| eval(attr) != query_value }
       elsif operators[k]== ops.equal_case_insenstive  then
         # Note that we use the matches operator (without wildcards) here so that we get a case insensitive equals
         query_value = v
         if coded_in_json[k]
           query_value = '_' + query_value + '_'
         end 
-         query_value = v
-        if coded_in_json[k]
-          query_value = '_' + query_value + '_'
-        end
         ar_relation= ar_relation.where{|squeel| eval(attr) =~ query_value }
       elsif operators[k] == ops.not_equal_case_insensitive  then 
         # Note that we use the does_not_match operator (without wildcards) here so that we get a case insensitive not equals      
@@ -134,8 +130,7 @@ module SearchModel
         if coded_in_json[k]
           query_value = '_' + query_value
         end   
-        ar_relation= ar_relation.where{|squeel| eval(attr) =~ query_value }
-            
+        ar_relation= ar_relation.where{|squeel| eval(attr) =~ query_value }            
       elsif operators[k] == ops.ends_with  then 
         query_value = '%' + v
         if coded_in_json[k]

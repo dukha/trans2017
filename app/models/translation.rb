@@ -820,8 +820,6 @@ class Translation < ActiveRecord::Base
 =end 
   scope :single_lang_translations_arr, ->(language, calmapp_version_id) {
     language  = translation_language_from_param(language)
-#    join_to_cavs_tls_arr(calmapp_version_id).
-#    joins_to_tl_arr.
     joins_to_cavs_and_tl(calmapp_version_id).
     outer_join_to_english_arr(calmapp_version_id).
     outer_joins_editor_arr.
@@ -833,8 +831,8 @@ class Translation < ActiveRecord::Base
           translations.updated_at as updated_at, special.cldr as cldr, cavtl1.calmapp_version_id as version_id, 
           english.special_structure as special_structure, translations.incomplete as incomplete").
     where( "cavtl1.calmapp_version_id = ?",calmapp_version_id).
-    where("tl1.iso_code = ?", language)#.
-    #order("translations.dot_key_code asc")
+    where("tl1.iso_code = ?", language).
+    order("translations.dot_key_code asc")
   }
   
   scope :joins_to_cavs_and_tl, ->(calmapp_version_id){

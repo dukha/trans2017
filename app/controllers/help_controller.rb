@@ -94,7 +94,10 @@ class HelpController < ApplicationController
      @markdown_file = true
     render $APPLICATION_HELP_VIEW_DIR + 'administrator/deep_copy.html'
   end
-  
+  def background_processes
+     @markdown_file = true
+    render $APPLICATION_HELP_VIEW_DIR + 'background_processes.html'
+  end
   def developers_english
     
    @markdown_file = true

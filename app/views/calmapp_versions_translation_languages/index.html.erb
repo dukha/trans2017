@@ -4,6 +4,7 @@
 
 <%if CalmappVersionsTranslationLanguage.respond_to?( :searchable_attr ) && CalmappVersionsTranslationLanguage.searchable_attr.any? then %>
 <button id="showHideCriteria" type='button'>x</button>
+
 <div id = 'data-empty' style = 'display:none'><%= @calmapp_versions_translation_languages.empty?.to_s %></div>
 <div id='criteria' class="criteria" >
   <!-- Use form_tag here because we are not going to work with a new AR model. form_tag doesn't work with formtastic either -->
