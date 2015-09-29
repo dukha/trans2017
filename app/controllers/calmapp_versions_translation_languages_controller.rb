@@ -81,19 +81,30 @@ class CalmappVersionsTranslationLanguagesController < ApplicationController
   # PATCH/PUT /calmapp_versions_translation_languages/1.json
   def update
     @calmapp_versions_translation_language.assign_attributes(calmapp_versions_translation_language_params)  
+=begin    
+    uploads_attrs = params["calmapp_versions_translation_language"]["translations_uploads_attributes"]
+    uploads_attrs.keys.each{ |k| 
+      if uploads_attrs[k]["_destroy"] != "false"
+        binding.pry
+        cavtl = TranslationsUpload.find(uploads_attrs[k]["id"]) 
+        cavtl.remove_yaml_upload! if cavtl
+      end
+    }
+=end
+    binding.pry
     respond_to do |format|
       begin
-      if @calmapp_versions_translation_language.save
-    
-        tflash('update', :success, {:model=>@@model, :count=>1})
-        flash[:notice] = "The contents of any uploaded translation files will be written to the database later. At the moment they await processing on a queue."
-        format.html { redirect_to( calmapp_versions_translation_languages_path)}
-        format.json { head :no_content }
-      else
-    
-        format.html { render action: 'edit' }
-        format.json { render json: @calmapp_versions_translation_language.errors, status: :unprocessable_entity }
-      end # save
+        if @calmapp_versions_translation_language.save
+      
+          tflash('update', :success, {:model=>@@model, :count=>1})
+          flash[:notice] = "The contents of any uploaded translation files will be written to the database later. At the moment they await processing on a queue."
+          format.html { redirect_to( calmapp_versions_translation_languages_path)}
+          format.json { head :no_content }
+        else
+      
+          format.html { render action: 'edit' }
+          format.json { render json: @calmapp_versions_translation_language.errors, status: :unprocessable_entity }
+        end # save
       rescue PsychSyntaxErrorWrapper => psew
         flash[:error]= "Format of file : " + psew.file_name + " is bad. Copy the following error message and contact tech support with the file. Error message : " + psew.message
         format.html { render action: 'edit' }

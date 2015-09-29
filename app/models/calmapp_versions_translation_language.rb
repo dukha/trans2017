@@ -12,9 +12,10 @@ class CalmappVersionsTranslationLanguage < ActiveRecord::Base
   belongs_to :calmapp_version_tl, :inverse_of=>:calmapp_versions_translation_languages, :class_name => "CalmappVersion", :foreign_key =>"calmapp_version_id"
   belongs_to :translation_language
   has_many :translations, :foreign_key=> "cavs_translation_language_id"
-  has_many :translations_uploads
+
   validates :translation_language_id, :uniqueness => {:scope=> :calmapp_version_id}
   validates :calmapp_version_id, :uniqueness => {:scope=> :translation_language_id}
+  
   has_many :translations_uploads, :foreign_key=> "cavs_translation_language_id"
   accepts_nested_attributes_for :translations_uploads, :reject_if => :all_blank, :allow_destroy => true
   
@@ -29,7 +30,7 @@ class CalmappVersionsTranslationLanguage < ActiveRecord::Base
   
   # once we have saved a new language then we upload the base file for that translation 
   after_create :base_locale_translations_for_new_translation_languages, :add_this_to_sysadmin_users
-  after_commit :do_after_commit_on_create, :on => :create
+  after_commit :do_after_commit_on_create#, :on => :create
   #before_destroy :do_before_destroy
   
 =begin

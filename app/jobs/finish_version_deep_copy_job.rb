@@ -9,8 +9,8 @@ class FinishVersionDeepCopyJob< BaseJob
       {:data=> {:class=> CalmappVersion, 
         :old_version_id => old_version_id, :new_version_id=> new_version_id, :method=>"finish_deep_copy"}})
         
-        info "Exception in deep_destroy() " + exception.message 
-        exception_raised  info
+        
+        exception_raised(("Exception in deep_copy() " + exception.message),exception.backtrace)
         raise
     end  
   end  

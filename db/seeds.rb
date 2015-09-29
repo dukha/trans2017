@@ -59,6 +59,11 @@ DotKeyCodeTranslationEditor.delete_all
 #TranslationEditorParam.delete_all
 Translation.delete_all
 
+#Remove old upload files
+upload_path = File.join(Rails.root, TranslationsUpload.uploaded_to_folder, "uploads/translations_upload/yaml_upload/")
+#dir = Dir.new(upload_path)
+FileUtils.rm_rf(upload_path) if Dir.exist?(upload_path)
+
 systemWBType = WhiteboardType.create(:name_english=>"system", :translation_code=>"system")
 regionalWBType =WhiteboardType.create(:name_english=>"regional admin", :translation_code=>"regionaladmin")
 localWBType = WhiteboardType.create(:name_english=>"local admin", :translation_code=>"localadmin")

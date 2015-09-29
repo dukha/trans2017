@@ -8,7 +8,9 @@ class TranslationsUpload < ActiveRecord::Base
   validates :description,  :presence=>true
   validate :upload_matches_translation_language_validation
   #after_create :do_after_create
-  after_commit :do_after_commit, :on => :create
+  after_create :do_after_create#, :on => :create
+  
+  before_destroy :do_before_destroy
   
   def self.base_locales_folder
     File.join(Rails.root, "base_locales")
@@ -54,6 +56,12 @@ class TranslationsUpload < ActiveRecord::Base
         }
 =end       
       File.join(Rails.root.to_path, TranslationsUpload.uploaded_to_folder,yaml_upload.url )
+      Rails.logger.info Rails.root.to_path
+      Rails.logger.info TranslationsUpload.uploaded_to_folder
+      Rails.logger.info yaml_upload.url
+      path = File.join(Rails.root.to_path, TranslationsUpload.uploaded_to_folder, yaml_upload.url)
+      Rails.logger.info path
+      Rails.logger.info("Trying to open: " + File.exist?(path).to_s )
       data  = YAML.load_file(File.join(Rails.root.to_path, TranslationsUpload.uploaded_to_folder, yaml_upload.url))
       plurals= Hash.new
       key_value_pairs = TranslationsUpload.traverse_ruby(data, plurals, calmapp_versions_translation_language.calmapp_version_tl.id )
@@ -125,47 +133,7 @@ class TranslationsUpload < ActiveRecord::Base
           traverse_ruby(node[k], plurals, version_id, dot_key_stack, dot_key_values_map)    
         end
         dot_key_stack.pop
-      end 
-      
-=begin
-As it was on 2 Aug June  
-
-       if dot_key_stack.length > 1 and dot_key_stack[0] == 'en' and Translation.plural_hash? node
-        store_dot_key_value(dot_key_stack, node.to_json, dot_key_values_map, plurals, true)
-      elsif dot_key_stack.length > 1 and dot_key_stack[0] != 'en' and Translation.dot_key_code_plural?(dot_key_stack[1..dot_key_stack.length-1].join('.'), version_id)  
-        # we only store a dot key as a plural if the dot_key is an 'en' langauge
-        store_dot_key_value(dot_key_stack, node.to_json, dot_key_values_map, plurals) 
-      else
-        node.keys.each do |k|
-          dot_key_stack.push(k)
-          traverse_ruby(node[k], plurals, version_id, dot_key_stack, dot_key_values_map)    
-        end
-        dot_key_stack.pop
-
-      end  
-=end
-=begin 
- As it was on 8 Aug 
-     
-  
-      plural = Translation.plural_hash? node
-  
-      if dot_key_stack.length > 1 and dot_key_stack[0] == 'en' and plural
-        # we have an en plural
-        store_dot_key_value(dot_key_stack, node.to_json, dot_key_values_map, plurals, true)
-      elsif dot_key_stack.length > 1 and dot_key_stack[0] != 'en' and Translation.dot_key_code_plural?(dot_key_stack[1..dot_key_stack.length-1].join('.'), version_id)  
-        # we only store a dot key as a plural if the dot_key is an 'en' langauge
-        store_dot_key_value(dot_key_stack, node.to_json, dot_key_values_map, plurals, false) 
-      if dot_key_stack.length > 1
-        store_dot_key_value(dot_key_stack, node.to_json, dot_key_values_map, plurals, plural)
-      else
-        node.keys.each do |k|
-          dot_key_stack.push(k)
-          traverse_ruby(node[k], plurals, version_id, dot_key_stack, dot_key_values_map)    
-        end
-        dot_key_stack.pop
-      end
-=end    
+      end    
     elsif node.is_a? Array then
       store_dot_key_value(dot_key_stack, node.to_json, dot_key_values_map, plurals)   
     elsif node.is_a? String then
@@ -229,154 +197,18 @@ As it was on 2 Aug June
     #return '*.yml' if yaml_upload.url == default_url
     return yaml_upload.url.split('/').last
   end
-=begin
-  def start_background_process
-    puts "sbp"
-    ApplicationController.start_delayed_jobs_queue
-  end
-=end
-=begin  
- 
+
   
-=begin
- Traverses the AST tree from the psych parser handler root, building a map of dot_keys and translations
- e.g. {"en.formtastic.labels.name" =>"Name", "en.formtastic.labels.dob"=>"Date of Birth"}
- from the yaml file parsed into a tree.
- Writes the dot_key and translation together with anchors and aliases to Translations objects and then to db.
- @param node takes a parser.handler.root in node
- @param dot_key_stack is an array of each partial key, removed as map etc is finished
- @param dot_key_values_map If given then this will provide a way of recreating the yaml file
- @param in_sequence is used as a boolean (=nil) and as a count of members of array
- @param container can be a map, array, however to initiate the recursive calls give a hash
- @param anchors Hash containing the keys and value for any anchors in the yaml file. Used for translating aliases.
- @param dot_key_values_map is a hash of dot_keys with values (including anchors and aliases)
-
-
- Note that in a translation file it is not possible to have a hash nested in an array (no dot_key possible), although this would be possible in yaml
- This method will not deal with that possibility
- Use like this
- > listener= Psych::TreeBuilder.new
- > parser   = Psych::Parser.new  listener
- > parser.parse File.new "test/fixtures/yaml_file_parsing/yaml_test.yml"                 # default.en.yml"                 #{}tree_print.yml"   #{}yaml_test.yml"          #{}
- > tree = parser.handler.root
- > container = Hash.new
- > dot_key_values_map = Hash.new
- > traverse language_id, tree, Array.new,  dot_key_values_map, container, nil
- > puts dot_key_values_map.to_s
-=end
-
-=begin
- @deprecated 
-  def  traverse_yaml( node, dot_key_stack=Array.new, dot_key_values_map = nil,  container=Hash.new, anchors = Hash.new, in_sequence=nil )
-    puts node.to_s
-   
-    scalar_content =false
-    node.children.each { |child|
-      
-      if child.is_a? Psych::Nodes::Stream then
-        map = Hash.new
-        traverse_yaml( child, dot_key_stack, dot_key_values_map )
-      elsif child.is_a? Psych::Nodes::Document then
-        map = Hash.new
-        puts child
-        traverse_yaml(  child, dot_key_stack, dot_key_values_map, map, anchors, nil)
-      elsif child.is_a? Psych::Nodes::Mapping then
-        map= Hash.new
-        scalar_content = false
-        in_sequence = nil
-        traverse_yaml( child, dot_key_stack, dot_key_values_map, map, anchors, in_sequence)
-        if container.is_a? Hash then
-          if dot_key_stack.length > 0 then
-            key = dot_key_stack.pop
-          else
-            key= "document"
-          end
-          container.store(key, map)
-        else
-          raise Exception.new( "Error in parsing file. Trying to insert into " + container.class + ". Only Array and Map are allowed by Calm. Problem data is " + map.to_s)
-        end
-      elsif child.is_a? Psych::Nodes::Scalar then
-        scalar_content = true if in_sequence
-        unless scalar_content then
-          dot_key_stack.push child.value
-        end
-        if scalar_content then
-          dot_key = dot_key_stack.join "."
-          if dot_key_values_map then
-            dot_key_values_map.store(dot_key, ((scalar_content and child.anchor) ? ("&" + child.anchor + " ") : "") + child.value)
-          end
-          if child.anchor then
-            anchors.store(child.anchor, child.value)
-          end
-          if container.is_a? Hash then
-            # case of content into hash
-            container.store(dot_key_stack.pop, child.value)
-            write_translation_to_hash(  dot_key, child.value) #, true, child.anchor)
-          end
-        end unless in_sequence
-        if container.is_a? Array then
-          # case of sequence
-          container.push child.value
-          dot_key = dot_key_stack.join(".") << "." + format_leading_zeros( container.length-1)
-          if dot_key_values_map then
-            dot_key_values_map.store(dot_key, ((scalar_content and child.anchor) ? ("&" + child.anchor + " ") : "") + child.value)
-          end
-          if child.anchor then
-            anchors.store(child.anchor, child.value)
-          end
-          if in_sequence then
-            in_sequence =+ 1
-          else
-            in_sequence = 0
-          end
-        end
-        scalar_content = !scalar_content unless in_sequence
-      elsif child.is_a? Psych::Nodes::Alias
-        if container.is_a? Array then
-          # case of sequence
-          container.push child.anchor
-          dot_key = dot_key_stack.join(".") << "." + format_leading_zeros( container.length-1)
-          if dot_key_values_map then
-            dot_key_values_map.store(dot_key, "*" + child.anchor )
-          end
-          if in_sequence then
-            in_sequence =+ 1
-          else
-            in_sequence = 0
-          end
-        else
-          # must be a hash
-          dot_key = dot_key_stack.join "."
-          puts dot_key
-          if dot_key_values_map then
-            dot_key_values_map.store(dot_key, "*" + child.anchor)
-          end
-          container.store(dot_key_stack.pop, child.anchor)
-          write_translation_to_hash(  dot_key, anchors[child.anchor]) #, false, child.anchor)
-          scalar_content= false
-        end
-      elsif child.is_a? Psych::Nodes::Sequence
-        dot_key = dot_key_stack.join "."
-        array = Array.new
-        in_sequence = 0
-        traverse_yaml( child, dot_key_stack,  dot_key_values_map, array, anchors,  in_sequence)
-        in_sequence =nil
-        scalar_content=false
-        container.store(dot_key_stack.pop, array)
-        write_translation_to_hash(dot_key, array.to_s) #, false, child.anchor)
-      else
-        puts "Error!!! " + child.class  
-      end
-    }
-    return container
+  def do_before_destroy
+    #"This does not work when you go through the calmapp_versions_translation_language_controller.   So it is also done in the controller! Apparently Cocoon does a delete rather than destroy!!"
+    puts "Before delete uploader : removing file"
+    remove_yaml_upload!
   end
-=end
-
 =begin
  Call back to write the translations after a file is uploaded 
 =end
-  def do_after_commit
-    Rails.logger.info "In TranslationsUpload.do_after_commit"
+  def do_after_create
+    Rails.logger.info "In TranslationsUpload.do_after_save"
     Rails.logger.info "Self = " +  self.to_s
     Rails.logger.info "id = " + self.id.to_s
     Rails.logger.error "1. do_after_commit  rrr " + Rails.root.to_path
@@ -399,18 +231,12 @@ As it was on 2 Aug June
     end 
     tu.write_yaml_file_to_db()
   end
-=begin  
-  def self.check_translations(id)
-    cavtl = TranslationsUpload.find(id).calmapp_versions_translation_language
-    Translation.check_translations_match_english2(cavtl)
-  end
-=end  
+ 
   
 =begin
  Adds Czech to Calmapp version. (Works via callbacks in calmapp_version) 
 =end
-  def self.demo
-      
+  def self.demo     
       version = CalmappVersion.joins{calmapp}.where{calmapp.name =~ 'calm%'}.where{version == 4}.first     
       cs = TranslationLanguage.where{iso_code == 'cs'}.first
       #this will also upload cs.yml
