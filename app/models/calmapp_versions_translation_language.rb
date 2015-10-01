@@ -228,7 +228,10 @@ class CalmappVersionsTranslationLanguage < ActiveRecord::Base
          cavtl = CalmappVersionsTranslationLanguage.find(id)
          cavtl.translations.find_each {|t| t.delete}
          cavtl.translations_uploads.find_each{|tl| tl.delete}
-         cavtl.translators.find_each { |tor| tor.delete}
+         #cavtl.translators.find_each { |tor| tor.delete}
+         cavtl.cavs_tl_translators.find_each{ |cttl| cttl.delete}
+         cavtl.developer_jobs.find_each{ |dj| dj.delete}
+         cavtl.administrator_jobs.find_each{ |aj| aj.delete}
       end # transaction
   end # def
 end #class
