@@ -35,6 +35,7 @@ Translate::Application.routes.draw do
    get 'help/developers_english', :to => 'help#developers_english', :as => 'developers_english'
    get 'help/deep_copy', :to => 'help#deep_copy', :as => 'help_deepcopy'
    get 'help/deep_delete', :to => 'help#deep_delete', :as => 'help_deepdelete'
+   get 'help/background_processes', :to => 'help#background_processes', :as => 'background_processes'
 =begin
    scope "/auth_user/:user_id" do
       resources :permissions
