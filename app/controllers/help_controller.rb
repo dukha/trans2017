@@ -98,8 +98,21 @@ class HelpController < ApplicationController
      @markdown_file = true
     render $APPLICATION_HELP_VIEW_DIR + 'background_processes.html'
   end
+  def prerequisites
+     @markdown_file = true
+    render $APPLICATION_HELP_VIEW_DIR + 'prerequisites.html'
+  end
+  def admin_workflow
+     @markdown_file = true
+    render $APPLICATION_HELP_VIEW_DIR + 'administrator/workflow.html'
+  end
+  
+  def redis_instances
+     @markdown_file = true
+    render $APPLICATION_HELP_VIEW_DIR + 'administrator/redis_instances.html'
+  end
+  
   def developers_english
-    
    @markdown_file = true
   render $APPLICATION_HELP_VIEW_DIR + 'developer/developers_english.html'
   end

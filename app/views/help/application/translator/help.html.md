@@ -11,7 +11,8 @@ A single translation consists of the following information
 * The translation itself 
 
 #####Just want to get started now?
-* Read these 2 pages first 
+* Read these 2 pages first
+  - [Prerequisites](<%=prerequisites_path%>) 
   - [Role of English](<%=role_of_english_help_path%>)
   - [Substitutions](<%=translation_interpolations_help_path%>)
   - [Translation User Interface](<%=translator_ui_path%>) 

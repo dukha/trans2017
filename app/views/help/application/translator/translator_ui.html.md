@@ -30,6 +30,7 @@
 >> Make sure that you add something for every slot in your language, even if you think that it is not necessary. The translation cannot be published unless all plural types have a translation.
 ******
 ####If just starting with translations, be sure to read
+  - [Prerequisites](<%=prerequisites_path%>)
   - [Substitutions](<%=translation_interpolations_help_path%>)
   - [Role of English](<%=role_of_english_help_path%>)
 

@@ -23,6 +23,7 @@ Translate::Application.routes.draw do
    get 'help/administrator', :to => 'help#administrator', :as => 'administrator_help'
    get 'help/role_of_english', :to => 'help#role_of_english', :as => 'role_of_english_help'
    get 'help/redis_databases', :to => 'help#redis_databases', :as => 'redis_databases_help' 
+   get 'help/redis_instances', :to => 'help#redis_instances', :as => 'redis_instances_help'
    get 'help/getting_started', :to => 'help#getting_started', :as => 'getting_started'
    get 'help/admin_getting_started', :to => 'help#admin_getting_started', :as => 'admin_getting_started'
    get 'help/admin_users', :to => 'help#user_admin', :as => 'user_admin'
@@ -36,6 +37,8 @@ Translate::Application.routes.draw do
    get 'help/deep_copy', :to => 'help#deep_copy', :as => 'help_deepcopy'
    get 'help/deep_delete', :to => 'help#deep_delete', :as => 'help_deepdelete'
    get 'help/background_processes', :to => 'help#background_processes', :as => 'background_processes'
+   get 'help/prerequisites', :to => 'help#prerequisites', :as => 'prerequisites'
+   get 'help/workflow', :to => 'help#admin_workflow', :as => 'admin_workflow'
 =begin
    scope "/auth_user/:user_id" do
       resources :permissions
