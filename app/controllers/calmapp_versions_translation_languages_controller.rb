@@ -85,13 +85,11 @@ class CalmappVersionsTranslationLanguagesController < ApplicationController
     uploads_attrs = params["calmapp_versions_translation_language"]["translations_uploads_attributes"]
     uploads_attrs.keys.each{ |k| 
       if uploads_attrs[k]["_destroy"] != "false"
-        binding.pry
         cavtl = TranslationsUpload.find(uploads_attrs[k]["id"]) 
         cavtl.remove_yaml_upload! if cavtl
       end
     }
 =end
-    binding.pry
     respond_to do |format|
       begin
         if @calmapp_versions_translation_language.save

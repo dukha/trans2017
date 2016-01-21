@@ -86,9 +86,9 @@ class BulkTranslations2
     if language != 'en' then 
       #puts "lang is not en"
       en_translation_exists = Translation.english_translation_exists(calmapp_versions_translation_language, dkc)
-      if key.include? "date.abbr_day_names" 
-        Rails.logger.info("date.abbr_day_names" + en_translation_exists.to_s)
-      end
+      #if key.include? "date.abbr_day_names" 
+        #Rails.logger.info("date.abbr_day_names" + en_translation_exists.to_s)
+      #end
       if en_translation_exists 
         msg = "English translation exists for " + msg_data
       else # no en trans
@@ -107,9 +107,9 @@ class BulkTranslations2
            msg_data = trans_msg_data(translation, language, test_dkc)
            msg = "English translation exists for " + msg_data
         end
-        if key.include? "date.abbr_day_names" 
-          Rails.logger.info("date.abbr_day_names now " + en_translation_exists.to_s)
-        end
+        #if key.include? "date.abbr_day_names" 
+          #Rails.logger.info("date.abbr_day_names now " + en_translation_exists.to_s)
+        #end
         
         if plurals.include?(split_dkc.last) # en_translation_exists
           #We have a plural that has nothing written to the db yet
@@ -180,20 +180,32 @@ class BulkTranslations2
     return {:language=> code_array[0], :dot_key_code=> code_array[1..(code_array.length-1)].join(".")}
   end
   
-   
+=begin
+ object is already persisted object 
+=end   
   def self.do_overwrite_condition(dkc, translation, calmapp_versions_translation_language, translations_upload_id, overwrite, object,  msg_data, plurals)
     #plural_key = Translation.full_key(calmapp_versions_translation_language, dkc)
     #if dkc.include? ".header"
   
     #end
+    if JSON.is_json?(translation)
+      t_json = translation
+    else
+      t_json = ActiveSupport::JSON.encode(translation)
+    end
+    if JSON.is_json?(object.translation)
+      tester = ActiveSupport::JSON.decode(object.translation)
+    else
+      tester = object.translation
+    end
     if overwrite == Translation.Overwrite[:all] then
-            if object.translation != translation then
+            if tester != translation then
               b = object.update_attributes!(
-                         :translation=> translation, 
+                         :translation=> t_json, 
                          :cavs_translation_language_id => calmapp_versions_translation_language.id, 
                          :translations_upload_id=> translations_upload_id,   
                          )
-              translation = translation.to_json
+              #translation = translation.to_json
               msg = "Object persisted: old translation: " + object.translation + " replaced with new translation: " + msg_data             
             else
                msg = "Object to be persisted is the same as already stored: " + msg_data
@@ -203,10 +215,12 @@ class BulkTranslations2
             object.written = true
             return object
         elsif overwrite == Translation.Overwrite[:continue_unless_blank] then
-          if object.translation.nil? then 
+          #if object.translation.nil? then 
+          
+          if tester.blank?  
             #We update where the translation is nil anyway
             b = object.update_attributes!(
-                     :translation=> translation, 
+                     :translation=> t_json, 
                      :cavs_translation_language_id => calmapp_versions_translation_language.id, 
                      :translations_upload_id=> translations_upload_id, 
                      )
@@ -225,10 +239,10 @@ class BulkTranslations2
         elsif overwrite == Translation.Overwrite[:cancel]
           # object is already in db
           # We write it anyway if translation is null
-          if object.translation.nil? then 
+          if tester.nil? blank? 
             #We update where the translation is nil anyway
             object.update_attributes!(
-                    :translation=> translation, 
+                    :translation=> t_json, 
                     :cavs_translation_language_id => calmapp_versions_translation_language.id, 
                     :translations_upload_id=> translations_upload_id, 
                     #plural: plural_value(plurals, plural_key)
@@ -267,10 +281,15 @@ class BulkTranslations2
     msg = "Write new translation: " + msg_data
     puts msg
     Rails.logger.info msg
+    if JSON.is_json?(translation)
+      t_json = translation
+    else
+      t_json = ActiveSupport::JSON.decode(translation)
+    end
     ret_val = Translation.new(
          :cavs_translation_language_id => calmapp_versions_translation_language.id, 
          :dot_key_code=> dkc, 
-         :translation=>translation, 
+         :translation=>t_json, 
          :translations_upload_id => translations_upload_id, 
          )  
     ret_val.save!       

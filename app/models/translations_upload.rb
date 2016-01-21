@@ -55,10 +55,10 @@ class TranslationsUpload < ActiveRecord::Base
         
         }
 =end       
-      File.join(Rails.root.to_path, TranslationsUpload.uploaded_to_folder,yaml_upload.url )
-      Rails.logger.info Rails.root.to_path
-      Rails.logger.info TranslationsUpload.uploaded_to_folder
-      Rails.logger.info yaml_upload.url
+      #File.join(Rails.root.to_path, TranslationsUpload.uploaded_to_folder,yaml_upload.url )
+      #Rails.logger.info Rails.root.to_path
+      #Rails.logger.info TranslationsUpload.uploaded_to_folder
+      #Rails.logger.info yaml_upload.url
       path = File.join(Rails.root.to_path, TranslationsUpload.uploaded_to_folder, yaml_upload.url)
       Rails.logger.info path
       Rails.logger.info("Trying to open: " + File.exist?(path).to_s )
@@ -66,8 +66,6 @@ class TranslationsUpload < ActiveRecord::Base
       plurals= Hash.new
       key_value_pairs = TranslationsUpload.traverse_ruby(data, plurals, calmapp_versions_translation_language.calmapp_version_tl.id )
     rescue Psych::SyntaxError => pse
-      #logger.error( yaml_upload_identifier() + " has produced the following error: " + pse + " Have a technical person check the syntax of the file")
-  
       error =  PsychSyntaxErrorWrapper.new(pse, yaml_upload_identifier)
       puts error
       logger.error(error)
@@ -211,7 +209,7 @@ class TranslationsUpload < ActiveRecord::Base
     Rails.logger.info "In TranslationsUpload.do_after_save"
     Rails.logger.info "Self = " +  self.to_s
     Rails.logger.info "id = " + self.id.to_s
-    Rails.logger.error "1. do_after_commit  rrr " + Rails.root.to_path
+    #Rails.logger.error "1. do_after_commit  rrr " + Rails.root.to_path
     TranslationsUploadWriteYamlJob.perform_later(id)
 =begin #   
     Translation.check_translations_match_english2(

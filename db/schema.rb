@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150621235055) do
+ActiveRecord::Schema.define(version: 20160121020019) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -22,9 +22,11 @@ ActiveRecord::Schema.define(version: 20150621235055) do
     t.datetime "updated_at"
     t.string   "version"
     t.string   "copied_from_version"
+    t.integer  "redis_databases_id"
   end
 
   add_index "calmapp_versions", ["calmapp_id"], name: "i_calmapp_versions_appliction_id", using: :btree
+  add_index "calmapp_versions", ["redis_databases_id"], name: "index_calmapp_versions_on_redis_databases_id", using: :btree
 
   create_table "calmapp_versions_translation_languages", force: :cascade do |t|
     t.integer  "calmapp_version_id",      null: false

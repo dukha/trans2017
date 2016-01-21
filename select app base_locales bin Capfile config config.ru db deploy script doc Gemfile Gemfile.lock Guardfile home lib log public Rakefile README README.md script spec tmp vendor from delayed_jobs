@@ -1,0 +1,52 @@
+                             List of relations
+ Schema |                     Name                      |   Type   | Owner 
+--------+-----------------------------------------------+----------+-------
+ public | calmapp_versions                              | table    | mark
+ public | calmapp_versions_id_seq                       | sequence | mark
+ public | calmapp_versions_translation_languages        | table    | mark
+ public | calmapp_versions_translation_languages_id_seq | sequence | mark
+ public | calmapps                                      | table    | mark
+ public | calmapps_id_seq                               | sequence | mark
+ public | cavs_tl_administrators                        | table    | mark
+ public | cavs_tl_administrators_id_seq                 | sequence | mark
+ public | cavs_tl_developers                            | table    | mark
+ public | cavs_tl_developers_id_seq                     | sequence | mark
+ public | cavs_tl_translators                           | table    | mark
+ public | cavs_tl_translators_id_seq                    | sequence | mark
+ public | contacts                                      | table    | mark
+ public | contacts_id_seq                               | sequence | mark
+ public | delayed_jobs                                  | table    | mark
+ public | delayed_jobs_id_seq                           | sequence | mark
+ public | dot_key_code_translation_editors              | table    | mark
+ public | dot_key_code_translation_editors_id_seq       | sequence | mark
+ public | languages                                     | table    | mark
+ public | languages_id_seq                              | sequence | mark
+ public | profiles                                      | table    | mark
+ public | profiles_id_seq                               | sequence | mark
+ public | redis_databases                               | table    | mark
+ public | redis_databases_id_seq                        | sequence | mark
+ public | redis_instances                               | table    | mark
+ public | redis_instances_id_seq                        | sequence | mark
+ public | release_statuses                              | table    | mark
+ public | release_statuses_id_seq                       | sequence | mark
+ public | schema_migrations                             | table    | mark
+ public | special_partial_dot_keys                      | table    | mark
+ public | special_partial_dot_keys_id_seq               | sequence | mark
+ public | translation_hints                             | table    | mark
+ public | translation_hints_id_seq                      | sequence | mark
+ public | translation_languages                         | table    | mark
+ public | translation_languages_id_seq                  | sequence | mark
+ public | translations                                  | table    | mark
+ public | translations_id_seq                           | sequence | mark
+ public | translations_uploads                          | table    | mark
+ public | translations_uploads_id_seq                   | sequence | mark
+ public | user_profiles                                 | table    | mark
+ public | user_profiles_id_seq                          | sequence | mark
+ public | users                                         | table    | mark
+ public | users_id_seq                                  | sequence | mark
+ public | whiteboard_types                              | table    | mark
+ public | whiteboard_types_id_seq                       | sequence | mark
+ public | whiteboards                                   | table    | mark
+ public | whiteboards_id_seq                            | sequence | mark
+(47 rows)
+
