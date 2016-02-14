@@ -10,14 +10,20 @@
 
     <th class ="dataheader"><%=tlabel('calmapp_version_id', 'redis_database' ) %></th>
     <th class ="dataheader"><%=tlabel('redis_instance_id', 'redis_database') %></th>
-    <th class ="dataheader"><%=tlabel('redis_db_index', 'redis_database') %></th>
+    <%has_role? :redis_databases_write do%> 
+      <th class ="dataheader"><%=tlabel('redis_db_index', 'redis_database') %></th>
+    <%end%>
     <!--th class ="dataheader"><%=tlabel('calmapp_version', 'redis_database') %></th-->
     
-    
+    <%has_role? :redis_databases_create do%>
     <th class="linkheader"></th> 
+    <%end%>
+    <%has_role? :redis_databases_versionpublish do%>
     <th class="linkheader"></th>
+    <%end%>
+    <%has_role? :redis_databases_destroy do%> 
     <th class="linkheader"></th>
-    <th class="linkheader"></th>
+    <%end%>
     
   </tr>
 
@@ -48,7 +54,8 @@
      <%end%>  
     </td>
     <%has_role? :redis_databases_versionpublish do%>
-      <td class="<%= link_cell_class %>"  ><%= tlink_to 'version_publish',redis_databases_versionpublish_path(redis_database),{
+      <td class="<%= link_cell_class %>"  ><%= tlink_to 'version_publish',redis_databases_versionpublish_path(redis_database),
+                        {
                         :data=>{:type=>"json", :disable_with=> "Publishing...."},
                         :"data-tooltip" => t($FH + 'redis_database.version_publish', :version_name=>redis_database.calmapp_version.description , :db_name=> redis_database.short_name),
                         :method=> "post", 
@@ -65,7 +72,7 @@
 <%= twill_paginate %>
 <%end%>
 <p>
-<%if has_role? :calmapp_versions_read%>  
+<%if has_role? :calmapp_versions_create%>  
 <%=tlink_to(  "redis_from_versions", calmapp_versions_path)%>
 <%end%>
 </p>  

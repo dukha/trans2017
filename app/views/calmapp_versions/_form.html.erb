@@ -3,6 +3,8 @@
 	<%= f.inputs do %>
 				   <%= f.input :calmapp_id, :as=>:select,:collection=> Calmapp.all.collect {|p| [ p.name, p.id ]}      %>
 				   <%= f.input :version  %>
+				   <%= f.input :translators_redis_database_id, :wrapper_html=>{style: "display:none;"} %>
+				   <!--%= f.input :redis_databaase_id. :as=> :select, :collection => RedisDatabase.where{} % -->
 				   <!-- release_status_id moved to RedisDatabase-->
 				   <!--%= f.input :release_status_id, :as=>:select,:collection=> ReleaseStatus.all.collect {|p| [ p.status, p.id ]}    % -->
 

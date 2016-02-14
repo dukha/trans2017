@@ -19,31 +19,41 @@ class BulkTranslations2
     language = calmapp_versions_translation_language.translation_language.iso_code
     plural_same_as_en = calmapp_versions_translation_language.translation_language.plurals_same_as_en?()
     previous_translation = nil
-
-    keys.each do |k|  
-      translation = translation_to_db_from_file(k, hash[k], translation_upload_id, calmapp_versions_translation_language, plural_same_as_en, overwrite)#, plurals)    
-      if translation.nil? then  
-        #this is the situation where the translation language is not en and the english translation for the saem dot key does not exist
-        next if k != keys.last
-        return previous_translation
-      end  
-      if  translation.errors.count > 0 then
-        return translation
-      end
-      if translation.written then
-        previous_translation = translation
-        count += 1
-      end   
-    end # do
+    unless keys.empty?
+      keys.each do |k|  
+        translation = translation_to_db_from_file(k, hash[k], translation_upload_id, calmapp_versions_translation_language, plural_same_as_en, overwrite)#, plurals)    
+        if translation.nil? then  
+          #this is the situation where the translation language is not en and the english translation for the saem dot key does not exist
+          next if k != keys.last
+          return previous_translation unless previous_translation.nil?
+          return  create_new_translation_for_error_return("Processing keys: one was nil: not the last, but previous translaton was also nil", calmapp_versions_translation_language.translation_language.name )
+        end  
+        if  translation.errors.count > 0 then
+          return translation
+        end
+        if translation.written then
+          previous_translation = translation
+          count += 1
+        end   
+      end # do
+    else
+      return create_new_translation_for_error_return("No keys present to write to database", calmapp_versions_translation_language.translation_language.name )
+    end #keys empty  
     msg = "keys written to db >= " + count.to_s
     puts msg
     Rails.logger.info msg
     msg =  "Different types of plurals in different langauges mean that the above number is not exact"
     puts msg
     Rails.logger.info msg
-    return translation
+    return translation unless translation.nil?
+    return create_new_translation_for_error_return("Something has gone wrong with writing keys to the database. At the end of " + "translations_to_db_from_file." +  " All keys are processed but still continued to the bottom.", calmapp_versions_translation_language.translation_language.name )
   end
   
+  def self.create_new_translation_for_error_return message, language_name
+    newie = Translation.new
+    newie.errors[:base] << ( message + " for upoload of " + language_name) 
+    return newie
+  end
 =begin
  returns and loggable line for what data is being processed 
 =end  
@@ -122,7 +132,7 @@ class BulkTranslations2
             plurals.each{|p| plurals_hash[p] = '' }
             translation = ActiveSupport::JSON.encode(plurals_hash)
           else
-            if JSON.is_json?
+            if JSON.is_json? existing_translation_attr
               hash = ActiveSupport::JSON.decode(existing_translation_attr)
             end
             hash[split_dkc.last] = translation 
@@ -284,7 +294,7 @@ class BulkTranslations2
     if JSON.is_json?(translation)
       t_json = translation
     else
-      t_json = ActiveSupport::JSON.decode(translation)
+      t_json = ActiveSupport::JSON.encode(translation)
     end
     ret_val = Translation.new(
          :cavs_translation_language_id => calmapp_versions_translation_language.id, 

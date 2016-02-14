@@ -21,6 +21,7 @@ config/database.yml
 config/puma.rb
 public/system/*
 public/uploads/translations_upload/yaml_upload*
+public/uploads/tmp/*
 .idea/*
 config/secrets.yml
 .env.development

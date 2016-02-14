@@ -145,7 +145,12 @@ class RedisDatabasesController < ApplicationController
       redis_db = RedisDatabase.find(params[:id])
       count = redis_db.translations_ready_to_publish().count 
       #result = redis_db.version_publish()
-      PublishVersionToRedisJob.perform_later(redis_db.id)
+      if Rails.env.development? || Rails.env.test?
+        PublishVersionToRedisJob.perform_now(redis_db.id)
+      else  
+        PublishVersionToRedisJob.perform_later(redis_db.id)
+      end
+      
       
       if request.xhr? then
         payload = {"result" => count, "status" =>200}

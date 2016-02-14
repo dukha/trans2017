@@ -97,12 +97,12 @@ class LanguagesController < ApplicationController
   end
 =begin
   From anywhere in the application the user can change language
-=end
+ =end
   def change_calmapp_language
     #check that the iso_code is valid
 =begin rails 4
     @language =Language.find_by_iso_code(params[:iso_code])
-=end
+ =end
     @language =Language.find_by( :iso_code => params[:iso_code])
     #debugger
     
@@ -114,6 +114,7 @@ class LanguagesController < ApplicationController
         render :json => @language
     end
   end
+=end  
 private
       def set_language
       @language = Language.find(params[:id])

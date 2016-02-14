@@ -1,5 +1,6 @@
 class AddTranslatorsRedisDatabaseIdToCalmappVersion < ActiveRecord::Migration
   def change
-    add_reference :calmapp_versions, :redis_databases, index: true
+    add_column :calmapp_versions, :translators_redis_database_id, :integer
+    add_index :calmapp_versions, :translators_redis_database_id
   end
 end

@@ -1,0 +1,20 @@
+//console.log("b4 flash");
+var flashDivSelector = 'div#tl-_translator-publish-flash-<%=@calmapp_versions_translation_language_id.to_s%>';
+<% flash.each do |name, msg| %>
+  //console.log(" in flash");
+  $(flashDivSelector).html("<div id = 'flash_<%=name%>'><%= msg.html_safe %></div>")
+  //console.log(" in finished flash");
+  delayedAlert();
+<%end%>
+//console.log("end flash");
+
+//var timeoutID;
+
+function delayedAlert() {
+  timeoutID = window.setTimeout(function(){
+    $(flashDivSelector).slideUp(800);
+    //console.log("in timeout")
+  }, 5000);
+ // console.log("In timeout setup");
+}
+  

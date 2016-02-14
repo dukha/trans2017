@@ -210,7 +210,13 @@ class TranslationsUpload < ActiveRecord::Base
     Rails.logger.info "Self = " +  self.to_s
     Rails.logger.info "id = " + self.id.to_s
     #Rails.logger.error "1. do_after_commit  rrr " + Rails.root.to_path
-    TranslationsUploadWriteYamlJob.perform_later(id)
+    if Rails.env.development? || Rails.env.test?
+      #Needs time to finish uploading file
+      TranslationsUploadWriteYamlJob.perform_later(id) 
+    else  
+      TranslationsUploadWriteYamlJob.perform_later(id)  
+    end
+    
 =begin #   
     Translation.check_translations_match_english2(
       #calmapp_versions_translation_language.calmapp_version_id, 

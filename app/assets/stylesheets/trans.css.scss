@@ -203,7 +203,7 @@ table.data{
 }
 /*$editor-background-color: rgba( 180,180,180, 0.4);
 $nested-border-colour: rgba( 100,100,100, 0.6);*/
-div#table{
+div#table, div#rdb-table{
   border:solid;
   border-color: $nested-border-colour;
   /**/
@@ -242,7 +242,7 @@ tr.dataodd, div.dataodd{
 div.new{
   background-color: $data-new-color; /*#e5a34f*/
 }
-tr.dataheader, div#table div#header-row{
+tr.dataheader, div#table div#header-row, div#rdb-table div#header-row{
   background-color: $table-header-background-colour;  /*gainsboro;*/
   /**/
   font-weight:700;

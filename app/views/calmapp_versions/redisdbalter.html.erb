@@ -4,22 +4,24 @@
 	<%= f.inputs do %>
 				   <li style="color:red;font-size:150%"><%=@calmapp_version.description.titlecase%> </li>
         <li>
-        <div id = "table" style="display:table">
-           <div id= "header-row" style="display:table-row"> 
+          <%= f.input :translators_redis_database_id, :wrapper_html=>{:style => "display: none;"} %>
+        <div id = "rdb-table" style="display:table">
+          <div id= "header-row" style="display:table-row"> 
              <div style="display:table-cell">Release Status</div>
              <div style="display:table-cell">Redis Instance</div>
              <div style="display:table-cell">Redis db index</div>
+             <div style="display:table-cell">Used by Publishing Translators </div>
              <div style="display:table-cell"></div>
-           </div>
+           </div> 
           <%=f.semantic_fields_for :redis_databases do |rd| %> 
-                 <%=render :partial => 'shared/calmapp_versions_redis_database_form2', :locals=>{:f=>rd}%>          
+                 <%=render :partial => 'shared/calmapp_versions_redis_database_form2', :locals=>{:f=>rd, :cav_redis_db_id => @calmapp_version.translators_redis_database_id}%>          
           <%end%> 
           </div>
           <p class="inline-hints"><%=t($FH + "calmapp_versions_redis_databases") %></p>
-                 
                 <%= link_to_add_association t($FA + 'add_redis_database'), f, :redis_databases,
                 {:partial =>  'shared/calmapp_versions_redis_database_form2',
-                  data: {'association-insertion-method' => "append", "association-insertion-node" => 'div#table'}
+                  :render_options=> {:locals=>{:cav_redis_db_id => @calmapp_version.translators_redis_database_id}},
+                  data: {'association-insertion-method' => "append", "association-insertion-node" => 'div#rdb-table'}
                  }
                 %>       
            </li>
@@ -156,10 +158,12 @@
               }
             });
           }); //end bind/on
+          redisdbalter();
           /*$('a.add_fields').click(function(){
             $(this).text("testtest");
             console.log("adding...");
             return true;
           });*/
-        });  
+        }); //ready  
+        
 </script>

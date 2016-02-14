@@ -114,6 +114,7 @@ class CalmappVersionsTranslationLanguage < ActiveRecord::Base
                :yaml_upload=> File.open(file_to_upload) , :description=> "Automatic base locale upload " + base_locale_file_name())
           
           tu.save
+          #binding.pry
           #if tu.save then
             #tu.write_file_to_db2 #Translation.Overwrite[:continue_unless_blank]
           #end #upload saved
@@ -129,7 +130,12 @@ class CalmappVersionsTranslationLanguage < ActiveRecord::Base
   
   def do_after_commit_on_create
     if translation_language.iso_code != 'en' then
-      AddEnKeysForNewLanguageJob.set(:wait=> 2.minutes).perform_later(id)
+      if Rails.env.development? || Rails.env.test?
+        AddEnKeysForNewLanguageJob.set(:wait=> 2.minutes).perform_now(id)
+      else  
+        AddEnKeysForNewLanguageJob.set(:wait=> 2.minutes).perform_later(id)
+      end
+      
     end
   end
   def add_all_dot_keys_from_en_for_new_translation_language #(cavtl_id)
@@ -161,7 +167,7 @@ class CalmappVersionsTranslationLanguage < ActiveRecord::Base
           blank = {}
           if en_t.special_structure == "plural"
             plurals = translation_language.plurals
-            plurals.each{ |pl| blank[pl] = ''}
+            plurals.each{ |pl| blank[pl] = nil} #pnils
             #foreign.calmapp_versions_translation_language.translation_language.plurals.each{ |pl| blank[pl]= ''}  
           else
             test.keys.each{ |k| blank[k] = '' }
@@ -169,8 +175,12 @@ class CalmappVersionsTranslationLanguage < ActiveRecord::Base
           foreign_blank = ActiveSupport::JSON.encode(blank)
           incomplete = true
         else
-          foreign_blank =  ActiveSupport::JSON.encode(foreign_blank)  
-        end    
+          if Translation.valid_empty_string_dot_key_code.include?(en_t.dot_key_code) #pnils
+            foreign_blank = '' #pnils
+          else #pnils
+            foreign_blank =  nil # pnils #ActiveSupport::JSON.encode(foreign_blank)
+          end  #pnils
+        end #test is   
         if foreign.nil?
           new_t = Translation.create!(
              :dot_key_code => en_t.dot_key_code, 
@@ -184,7 +194,7 @@ class CalmappVersionsTranslationLanguage < ActiveRecord::Base
          else
            #en_t.tran blank
          end     
-         puts "New translation added for dot_key: " + en_t.dot_key_code + " language: " + translation_language.name + " translation: '" + foreign_blank unless new_t.nil?
+         puts "New translation added for dot_key: " + en_t.dot_key_code + " language: " + translation_language.name + " translation: '" + (foreign_blank.nil? ? "Nil": foreign_blank) #unless foreign_blank.nil? #pnil new_t.nil?
          #puts "Updated translation for dot_key: " + t.dot_key_code + " language: " + translation_language.name + " translation: '" + t.translation + "'" unless updated_t.nil?
          puts ""
         count = count + 1

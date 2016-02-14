@@ -94,14 +94,14 @@ class TranslationsController < ApplicationController
         if JSON.is_json?(t.translation) then
             decoded = ActiveSupport::JSON.decode(t.translation) #unless t.translation.start_with? '{', '['
         elsif t.translation.nil?
-          decoded = "" 
+          decoded = "" #pnilq
         else
           msg =  t.translation + " IS NOT JSON: bad data. Translation id = " + t.to_s
           puts msg
           Rails.logger.error( msg)
           decoded = t.translation
         end  
-        if not (decoded.is_a? Array or decoded.is_a? Hash) then
+        unless  decoded.is_a?(Array) || decoded.is_a?(Hash) then
           t.translation = decoded
         end
 =begin         this didn't work for attribute 'en_translation'

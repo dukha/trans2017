@@ -97,12 +97,12 @@ class TranslationLanguagesController < ApplicationController
   
 =begin
   From anywhere in the application the user can change translation_language
-=end
+ =end
   def change_calmapp_translation_language
     #check that the iso_code is valid
 =begin rails 4
     @language =Language.find_by_iso_code(params[:iso_code])
-=end
+ =end
     @translation_language =TranslationLanguage.find_by( :iso_code => params[:iso_code])
     #debugger
     
@@ -114,6 +114,8 @@ class TranslationLanguagesController < ApplicationController
         render :json => @translation_language
     end
   end
+=end
+
 =begin
   def upload_yaml_translation_file
   end

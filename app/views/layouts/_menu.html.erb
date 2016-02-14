@@ -48,24 +48,26 @@
       </div>
       
     <%end%>
-     <div>    
-      <%=taccordion_header("developers") %>
-        <ul class="menu">
-          
-          <%has_role?(  :translations_create) do%>          
-            <li><%= tlink_to('new_model', new_translation_path, :model=> 'translation', :count=>1, :category=>:menu) %></li>
-          <%end%>
-          <!--li>< %= tlink_to("developers_new_translations", dev_new_translation_path, :category=>:menu) %></li-->
-           <!-- This should url should become edit_user_preference_path(current_user.id) when we get the login working -->
-           <!--li>< %= tlink_to("translation_parameters", edit_user_work_path(1), :category=>:menu) %></li -->
-           <% has_role?(:translation_hints_read) do%>
-             <li><%= tlink_to("translation_hints", translation_hints_path, :category=>:menu) %></li>
-           <%end%>
-           <%has_role? :calamapp_versions_translation_languages_languagepublish do%>   
-             <li><%= tlink_to("publish_language", calmapp_versions_translation_languages_path, :category=>:menu) %></li>
-           <%end%>
-        </ul>
-      </div>
+    <%if current_user.developer?%> 
+       <div> 
+        <%=taccordion_header("developers") %>
+          <ul class="menu">
+            
+            <%has_role?(  :translations_create) do%>          
+              <li><%= tlink_to('new_model', new_translation_path, :model=> 'translation', :count=>1, :category=>:menu) %></li>
+            <%end%>
+            <!--li>< %= tlink_to("developers_new_translations", dev_new_translation_path, :category=>:menu) %></li-->
+             <!-- This should url should become edit_user_preference_path(current_user.id) when we get the login working -->
+             <!--li>< %= tlink_to("translation_parameters", edit_user_work_path(1), :category=>:menu) %></li -->
+             <% has_role?(:translation_hints_read) do%>
+               <li><%= tlink_to("translation_hints", translation_hints_path, :category=>:menu) %></li>
+             <%end%>
+             <%has_role? :calamapp_versions_translation_languages_languagepublish do%>   
+               <li><%= tlink_to("publish_language", calmapp_versions_translation_languages_path, :category=>:menu) %></li>
+             <%end%>
+          </ul>
+        </div>
+      <%end%>
       <div>
         <%=taccordion_header("lookups") %>
         <ul class="menu">
@@ -78,23 +80,26 @@
 				    
 				</ul>
       </div>
-      <div>
-         <%= taccordion_header("user_admin") %>
-         <ul class="menu">
-            <%has_role? :profiles_read do%>
-               <%=link_menu(:profiles)%>
-             <%end%>
-             <%has_role?  :users_read do%> 
-                <li><%= tlink_to "users", users_path, :category=>:menu %></li>
-            <%end%>
-            <%has_role? :users_invite do%>
-            <li><%= tlink_to "new_invitation", new_user_invitation_path, :category=>:menu %></li>
-            <%end%>
-            <%has_role? :contacts_read do%>
-            <li><%= tlink_to "current_contacts", contacts_path, :category=>:menu %></li>
-            <%end%>
-         </ul>  
-        </div>
+      <%if (has_role?(:profiles_read) || has_role?(:users_read) || has_role?(:users_invite)  || has_role?(:contacts_read))%>
+        <div>
+           <%= taccordion_header("user_admin") %>
+           <ul class="menu">
+              <%has_role? :profiles_read do%>
+                 <%=link_menu(:profiles)%>
+               <%end%>
+               <%has_role?  :users_read do%> 
+                  <li><%= tlink_to "users", users_path, :category=>:menu %></li>
+              <%end%>
+              <%has_role? :users_invite do%>
+              <li><%= tlink_to "new_invitation", new_user_invitation_path, :category=>:menu %></li>
+              <%end%>
+              <%has_role? :contacts_read do%>
+              <li><%= tlink_to "current_contacts", contacts_path, :category=>:menu %></li>
+              <%end%>
+           </ul>  
+          </div>
+        <%end%>
+        
         <div> 
           <%= taccordion_header("translation_admin") %>
           <ul class="menu"> 
@@ -139,6 +144,9 @@
             <%has_role?  :calmapp_versions_translation_languages_languagepublish do%>   
               <li><%= tlink_to("publish_language", calmapp_versions_translation_languages_path, :category=>:menu) %></li>
             <%end%> 
+            <%has_role?  :calmapp_versions_translation_languages_translatorpublish do%>   
+              <li><%= tlink_to("translator_publish_language", calmapp_versions_translation_languages_path, :category=>:menu) %></li>
+            <%end%>
         </ul>
       </div>
       <div>

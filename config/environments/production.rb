@@ -59,7 +59,7 @@ Translate::Application.configure do
         api_key: Rails.application.secrets.mailgun_api_key,
         domain: Rails.application.secrets.mailgun_domain
   }
-  
+  #config.i18n.available_locales = [:en, :nl] #fallback2016
   #config ExceptionNotifier
   config.middleware.use ExceptionNotification::Rack,
       :ignore_crawlers => %w{Googlebot bingbot},

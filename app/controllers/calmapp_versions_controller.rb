@@ -20,6 +20,9 @@ class CalmappVersionsController < ApplicationController
     end
   end
 
+  def redisdbalter
+    #puts "redis db alter 123"
+  end
   # GET /calmapp_versions/1
   # GET /calmapp_versions/1.xml
   def show
@@ -53,10 +56,12 @@ class CalmappVersionsController < ApplicationController
   # POST /calmapp_versions
   # POST /calmapp_versions.xml
   def create
+    
     prepare_params
     #new_calmapp_versions_translations_languages = new_languages()
     #We are going to create just the basic version with none of the assoications
     # We then use a delayed update to add all the associations
+    
     @calmapp_version = CalmappVersion.new(calmapp_version_params)#{:version=>params[:calmapp_version][:version], :calmapp_id=>params[:calmapp_version][:calmapp_id] })
     
     respond_to do |format|
@@ -77,8 +82,7 @@ class CalmappVersionsController < ApplicationController
   def update
     prepare_params
     respond_to do |format|
-        if @calmapp_version.update(calmapp_version_params)#params[:calmapp_version])
-          #system "RAILS_ENV=#{Rails.env} bin/delayed_job start --exit-on-complete"
+        if @calmapp_version.update(calmapp_version_params)
           tflash('update', :success, {:model=>@@model, :count=>1})
           
           flash[:warning] = @calmapp_version.warnings.messages[:base] if @calmapp_version.warnings 
@@ -156,7 +160,9 @@ class CalmappVersionsController < ApplicationController
 
     set_calmapp_version
     @previous_calmapp_version = @calmapp_version
-    @calmapp_version = CalmappVersion.new(:calmapp_id => @previous_calmapp_version.calmapp_id, :previous_id =>@previous_calmapp_version.id, :copied_from_version => @previous_calmapp_version.version)
+    @calmapp_version = CalmappVersion.new(:calmapp_id => @previous_calmapp_version.calmapp_id,
+           :previous_id =>@previous_calmapp_version.id, 
+           :copied_from_version => @previous_calmapp_version.version)
     
   end
   
@@ -202,11 +208,66 @@ class CalmappVersionsController < ApplicationController
        return params[:calmapp_version][:calmapp_versions_translation_language_ids] == nil
      end
      
-   
-
-    def prepare_params
+     def prepare_params
        return if not params[:calmapp_version]
-   
+       if params[:calmapp_version]["redis_databases_attributes"]
+         params[:calmapp_version]["redis_databases_attributes"].each{|k,v|
+            next if v["_destroy"] == "true"
+            #change to integers
+            v["used_by_publishing_translators"] = 1 if v["used_by_publishing_translators"] == "1"
+            v["used_by_publishing_translators"] = 0 if v["used_by_publishing_translators"] == "0"
+            v["used_by_publishing_translators"] = -1 if v["used_by_publishing_translators"] == "-1"
+            if params[:calmapp_version]["translators_redis_database_id"].blank?
+              v["used_by_publishing_translators"] = -1 if v["used_by_publishing_translators"] == 0
+            else
+              if v["used_by_publishing_translators"] == "1"
+                if v["id"] ==  params[:calmapp_version]["translators_redis_database_id"]
+                  v["used_by_publishing_translators"] = -1
+                end
+              end
+            end
+         }  
+       end
+=begin       
+       if (params[:calmapp_version] && params[:calmapp_version]["redis_databases_attributes"])  
+         params[:calmapp_version]["redis_databases_attributes"].each{|k,v|
+            if v.is_a? Hash
+                next if v["_destroy"] == "true"
+                # We can't do this for a new record
+                if v["id"].nil?
+                  #v is a new record
+                  if v["used_by_publishing_translators"] == "1"
+                  # v is a translators publishing db
+                  # We have to wait until after save to sort this
+                  
+                  else
+                    
+                  end  
+                  #params["calmapp_version"]["redis_databases_attributes"].each{ |k,v| 
+                  #if v["id"].nil?
+                   #new = @calmapp_version.redis_databases.where{redis_db_index == my{v["redis_db_index"]}}.where{redis_instance_id == my{v["redis_instance_id"].to_i}}.load
+                   #puts new
+                   #end
+                   #}
+                else
+                  if v["used_by_publishing_translators"] == "1"
+                    # v is a translators publishing db
+                     params[:calmapp_version][:translators_redis_database_id] = v["id"]
+                     #count_translators_dbs += count_translators_dbs
+                     #we could stop the each method here but we leave it to validate in the model that there is only 1
+                  else
+                    if v["id"]  == params[:calmapp_version][:translators_redis_database_id] then
+                      params[:calmapp_version][:translators_redis_database_id]  = nil
+                    end                   
+                  end
+                end #v["id"].nil? (ie redis is new record)
+            else
+              next    
+            end # is_a?
+            #return count_translators_dbs
+          }   #each
+       end
+=end       
        if not redis_db_update? then
          # This puts the params in the correct format for accepts_nested_attributes_for() 
          attr_hash = prepare_params_with_translation_language(params[:id], params[:calmapp_version][:calmapp_versions_translation_language_ids])
@@ -263,15 +324,15 @@ class CalmappVersionsController < ApplicationController
     return attr_hash
    end
 
-    # Use callbacks to share common setup or constraints between actions.
-    def set_calmapp_version
+     # Use callbacks to share common setup or constraints between actions.
+     def set_calmapp_version
       @calmapp_version = CalmappVersion.find(params[:id])
-    end
-
+     end
    
-    def calmapp_version_params
+     def calmapp_version_params
       params.require(:calmapp_version).permit(:calmapp_id, 
          :version,  
+         :translators_redis_database_id,
          :redis_databases, 
          :translation_languages, 
          :translation_languages_available, 
@@ -281,9 +342,9 @@ class CalmappVersionsController < ApplicationController
          #:calmapp_versions_redis_database_attributes=>[:redis_database_id, :calmapp_version_id, :release_status_id, :_destroy, :id, :redis_database_attributes=>[:redis_instance_id, :redis_db_index]],
          :calmapp_versions_translation_languages_attributes=>[:translation_language_id, :calmapp_version_id, :_destroy, :id ], 
          #:calmapp_versions_redis_database => [:redis_database_id], 
-         :redis_databases_attributes=>[:redis_db_index, :release_status_id, :redis_instance_id, :_destroy, :id],
+         :redis_databases_attributes=>[:redis_db_index, :release_status_id, :redis_instance_id, :_destroy, :id, :used_by_publishing_translators],
          :calmapp_versions_translation_language_ids=>[]#,
          #:calmapp_versions_redis_database_ids=>[]
          )
-    end
+     end
 end

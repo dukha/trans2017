@@ -5,6 +5,7 @@ class RedisDatabase < ActiveRecord::Base
   require 'connection_pool'
   
   attr_reader :pool_connection
+  #attr_accessor :used_by_publishing_translators # now an attribute
   #validates :with => RedisDbValidator2
   #belongs_to :calmapp_version
   belongs_to :redis_instance#, :dependent => :restrict_with_exception
@@ -30,7 +31,7 @@ class RedisDatabase < ActiveRecord::Base
   validates :calmapp_version_id,:presence=>true
   #validates :host,:presence=>true
   #validates :port, :presence => true
-  
+  validates :used_by_publishing_translators, :inclusion => { :in => [1, 0,-1] }
   #This validation checks whether the redis_db_index is one permitted by the installation.
   #Returns false if not. Default redis setup is for databases 0-15 to be available.
   #This can be increased in the redis config file (not via rails)
@@ -40,14 +41,44 @@ class RedisDatabase < ActiveRecord::Base
   #after_save :name_database
   #before_delete -> (model) {model.calmapp_versions_redis_database.destroy}, :unless => model.calmapp_versions_redis_database.nil?}#:delete_calmapp_versions_redis_database
   #before_destroy :delete_calmapp_versions_redis_database
+  
   after_create :after_create_method
+  #after_update :after_update_method
+  after_commit :after_commit_method, :on => [:create, :update]
+  before_destroy :before_destroy_method
+  
+=begin
+  used_by_publishing_translators is only an attribute used to adjust calmapp_version.translators_redis_database_id in all circumstances. 
+    After the adjustment it is immediately set to its default value(-1).
+    Otherwise its value is 1 indicating that the current id is set in calmapp_version
+    Or 0 indicting that that translators_redis_database_id is nulled.
+    This way is necessary(rather than say a virtual attribute) because id is not available until after save.
+=end  
+  def after_commit_method
+    # We use update_columns here as we don't want to run these this method again!
+    if used_by_publishing_translators == 1
+      calmapp_version.update_columns(:translators_redis_database_id => id)
+      update_columns(:used_by_publishing_translators => -1)
+    elsif used_by_publishing_translators == 0  
+      calmapp_version.update_columns(:translators_redis_database_id => nil)
+      update_columns(:used_by_publishing_translators => -1)
+    end
+  end
+
+=begin
+ See  after_save_method() for explanation.
+=end  
+  def before_destroy_method
+    calmapp_version.update_columns(:translators_redis_database_id => nil)
+  end
 =begin  
   executed after create. Creates a connection pool for redis db and deleted everything from redis database
 =end  
-  def after_create_method
-    #pool()
+  def after_create_method   
     flush_redis()
   end
+  
+  
   def show_me
     redis_instance.show_me + ":" + "RDB index" + redis_db_index.to_s + " " + " rdb-id=" + id.to_s + " " + calmapp_version.show_me
   end
@@ -83,7 +114,22 @@ class RedisDatabase < ActiveRecord::Base
     db_name = redis_instance.description + 
     ": DB Index: " + redis_db_index.to_s
   end
-
+  
+=begin
+  With a new record we cannot directly set calmapp_version.translators_redis_database_id from params 
+  as the id is not known until after create. Thus we do it here.
+  @todo  Probably should do it for update here as well.
+=end
+=begin  
+def set_translators_rdb_in_version
+    if ! used_by_publishing_translators.nil?
+      if Time.now - created_at < 1.minute
+        calmapp_version.translators_redis_database_id = id
+      end  
+    end
+    used_by_publishing_translators = nil
+  end
+=end
 =begin 
   def connect
 
@@ -215,6 +261,7 @@ class RedisDatabase < ActiveRecord::Base
  
    def self.version_language_publish_from_ids(calmapp_version_id, translation_language_id, redis_database_id)
     rdb = RedisDatabase.find(redis_database_id)
+    #binding.pry
     begin
       translations = Translation.version_language_ready_to_publish_from_ids(calmapp_version_id, translation_language_id).load
       rdb.pool.with{|con|
@@ -229,7 +276,7 @@ class RedisDatabase < ActiveRecord::Base
     ensure
       #con.quit
     end  
-    return count  
+    #return count  
   end  
 
   def self.demo
@@ -238,10 +285,10 @@ class RedisDatabase < ActiveRecord::Base
     calm = Calmapp.where(:name=>"calm_registrar").first
     #index = marks_redis.next_index
     RedisDatabase.create!(:redis_instance_id => marks_redis.id, release_status_id: ReleaseStatus.where{status == 'Development' }.first.id, calmapp_version_id: CalmappVersion.where(:calmapp_id => Calmapp.where(:name=>"translator").first.id, :version=>1).first.id, 
-    :redis_db_index =>  0)
+    :redis_db_index =>  0, :used_by_publishing_translators => 1)
     #index = marks_redis.next_index(index)
     RedisDatabase.create!(:redis_instance_id => marks_redis.id, release_status_id: ReleaseStatus.where{status == 'Development' }.first.id, calmapp_version_id: CalmappVersion.where(:calmapp_id => calm.id, :version=>4).first.id, 
-    :redis_db_index =>  1)
+    :redis_db_index =>  1, :used_by_publishing_translators => 1)
     
     RedisDatabase.create!(:redis_instance_id => ri_integration.id, release_status_id: ReleaseStatus.where{status == 'Integration' }.first.id, calmapp_version_id: CalmappVersion.where(:calmapp_id => Calmapp.where(:name=>"translator").first.id, :version=>1).first.id, 
     :redis_db_index =>  0)#ri_integration.next_index)

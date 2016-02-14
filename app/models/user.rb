@@ -137,7 +137,9 @@ class User < ActiveRecord::Base
     end
   end
    
- 
+=begin
+ Creates root,mark 
+=end
   def self.seed
     
     puts '**************'
@@ -151,7 +153,9 @@ class User < ActiveRecord::Base
      admin.profiles << Profile.sysadmin
      
   end
-  
+=begin
+ Creates albert (sysadm), devvie, addy, trannie
+=end  
   def self.demo
     pw = '!123456!'
     param = {:password => pw,:password_confirmation => pw,:username => 'albert',:email => 'albert@calm.org', 
@@ -214,6 +218,9 @@ class User < ActiveRecord::Base
     translator.translator_cavs_tls << 
        CalmappVersionsTranslationLanguage.new(:translation_language_id =>TranslationLanguage.where{iso_code == 'ja'}.first.id,
       :calmapp_version_id => CalmappVersion.where {calmapp_id == Calmapp.where {name == 'calm_registrar'}.first.id}.first.id)
+
+   #reg4 = CalmappVersion.where {calmapp_id == Calmapp.where {name == 'calm_registrar'}.first.id}.first
+   
 =begin      
   
 CalmappVersionsTranslationLanguage.new(:translation_language_id =>TranslationLanguage.where{name == 'Czech'}.first.id,

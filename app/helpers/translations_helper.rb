@@ -61,7 +61,7 @@ module TranslationsHelper
     tlink_to 'destroy', course_type, :confirm => 'delete.are_you_sure', :model => 'course_type', :value => course_type.translation_code  :count => 1, :method => :delete
 =end
 
-   def tlink_to(translation_code, url, options = {})
+   def tlink_to(translation_code,  url, options = {})
      if translation_code == 'new_model'
  
      end
@@ -71,6 +71,9 @@ module TranslationsHelper
        # kludge for backward compatibility: won't work all the time
        if ! model.index(' ') then
          tr_model = I18n.t($ARM + model, options)
+         if tr_model.index("translation missing") && options[:navigate] == false
+           tr_model = I18n.t($FA + model, options)
+         end
        end
        if !(tr_model) || tr_model.index("translation missing") then
          tr_model = model 

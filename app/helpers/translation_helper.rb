@@ -117,7 +117,6 @@ module TranslationHelper
          html = html + "</table>"
          return html.html_safe
      else
-         #v= ActiveSupport::JSON.decode(v) if JSON.is_json?(v)
          translation = true.to_s if object == 't' 
          translation = false.to_s if object == 'f' 
        return translation.html_safe

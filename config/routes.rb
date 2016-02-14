@@ -100,6 +100,7 @@ Translate::Application.routes.draw do
    delete "calmapp_versions_translation_languages/deep_destroy/:id" => "calmapp_versions_translation_languages#deepdestroy", :as => "versions_language_deepdestroy"
    delete "calmapp_versions/deep_destroy/:id" => "calmapp_versions#deepdestroy", :as => "version_deepdestroy"
    
+   
    resources :release_statuses
    resources :redis_databases, :only=>[:index, :destroy, :edit]
    resources :redis_instances
@@ -127,6 +128,7 @@ Translate::Application.routes.draw do
    #get "calmapp_versions_redis_database/version_alterwithredisdb/:calmapp_versions_redis_database_id" => "calmapp_versions_redis_databases#version_alterwithredisdb", :as => "version_alterredisdb"#, via: :all
    post "calmapp_version/version_publish/:id" => "redis_databases#versionpublish", :as =>"redis_databases_versionpublish" #, :via => :all
    post "calmapp_versions_translation_language/publish/:id" => "calmapp_versions_translation_languages#languagepublish", :as =>"calmapp_versions_translation_languages_languagepublish"
+   get "calmapp_versions_translation_language/translatorpublish/:id" => "calmapp_versions_translation_languages#translatorpublish", :as => "translator_publish", :defaults => { :format => 'js' }
    resources :translation_editor_params
    resources :special_partial_dot_keys
    resources :dot_key_code_translation_editors, :only=> [:index, :edit, :show] 

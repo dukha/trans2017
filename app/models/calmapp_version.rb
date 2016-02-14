@@ -10,8 +10,12 @@ class CalmappVersion < ActiveRecord::Base
   
   has_many :redis_databases, inverse_of: :calmapp_version#, :through =>:calmapp_versions_redis_database#, :source=>:calmapp_version_rd
   accepts_nested_attributes_for :redis_databases, :reject_if => :all_blank, :allow_destroy => true
- 
+  
+  belongs_to :translators_redis_database, foreign_key: "translators_redis_database_id", class_name: "RedisDatabase"
+  
   validates  :version,  :presence=>true, :uniqueness=>{:scope =>:calmapp_id}
+  
+  #validate :only_1_translator_database
   has_many :calmapp_versions_translation_languages, :dependent => :restrict_with_exception, 
             :inverse_of => :calmapp_version_tl,
             :foreign_key=> "calmapp_version_id"
@@ -21,6 +25,14 @@ class CalmappVersion < ActiveRecord::Base
   # should be after_save, however we can't do this
   #after_update :add_english
   before_create :do_before_create,   :if => Proc.new { |cav| cav.copied_from_version.blank? }
+
+  #def only_1_translator_database
+    #count = 0
+    #redis_databases.each{ |rdb| 
+      #count += count if rdb.translators_   
+    #}
+  #end
+
 =begin
 @return a collection of all calmapp names with versions
 =end
@@ -78,6 +90,10 @@ class CalmappVersion < ActiveRecord::Base
     description
   end
   
+  def translators_redis_db
+    return RedisDatabase.find(translators_redis_database_id)
+  end
+  
   def self.version_select
     joins("join calmapps on calmapp_id = calmapps.id ").order( "calmapps.name asc")
   end
@@ -124,7 +140,12 @@ class CalmappVersion < ActiveRecord::Base
   def deep_copy old_version_id, user, copy_translation_languages=true, copy_translations =true
     #old_version = CalmappVersion.find(old_version_id)
     if save
-      FinishVersionDeepCopyJob.perform_later(old_version_id, self.id, user.id, copy_translation_languages, copy_translations )
+      if Rails.env.development? || Rails.env.test?
+        FinishVersionDeepCopyJob.perform_now(old_version_id, self.id, user.id, copy_translation_languages, copy_translations )
+      else  
+        FinishVersionDeepCopyJob.perform_later(old_version_id, self.id, user.id, copy_translation_languages, copy_translations )
+      end
+      
       return true
     else
       return false  

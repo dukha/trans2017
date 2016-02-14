@@ -10,6 +10,7 @@ end
 
 And now I can have my roles and permissions stored in the database and updated after_save roles. 
 =end
+
 authorization do
 
   # list all roles which are defiend here by:
@@ -137,7 +138,9 @@ authorization do
   role :calmapp_versions_translation_languages_languagepublish do
     has_permission_on [:calmapp_versions_translation_languages], :to => [:languagepublish]
   end
-  
+  role :calmapp_versions_translation_languages_translatorpublish do
+    has_permission_on [:calmapp_versions_translation_languages], :to => [:translatorpublish]
+  end
   role :users_invite do
     has_permission_on [:users], :to => [:invite_user]
     has_permission_on [:invitations], :to => [ :create, :new, :update, :edit]

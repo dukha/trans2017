@@ -56,8 +56,14 @@
         <%has_role? :calmapp_versions_translation_languages_write do%>
           <th class="linkheader"></th>
         <%end%>
+        <%has_role? :translations_read do%>
+          <th class="linkheader"></th>
+        <%end%>
         <%has_role? :calmapp_versions_translation_languages_destroy do%>
           <th class="linkheader"></th>
+        <%end%>
+        <%has_role? :calmapp_versions_translation_languages_translatorpublish  do%>
+          <th class="linkheader">Translator Test Publishing</th>
         <%end%>
         <%has_role? :calmapp_versions_translation_languages_languagepublish do%>
           <th class="linkheader"></th>
@@ -81,10 +87,67 @@
           <%has_role? :translations_read do%>
             <td class="<%= link_cell_class %>"><%= tlink_to  'go_to_translations', translations_path + "/?criterion_cavtl_id=" + calmapp_versions_translation_language.id.to_s + "&operator_cavtl_id=eq"%></td>
           <%end%>
-          <%has_role? :calmapp_versions_translation_languages_languagepublish do%>
+          
+          <%no_role_permission, no_language_permission, no_redis, is_english = false%>
+          <td class="<%= link_cell_class %>" style='width:200px;'>
+          <%if calmapp_versions_translation_language.translation_language != TranslationLanguage.TL_EN%> 
+           
+            <%if has_role? :calmapp_versions_translation_languages_translatorpublish %>
+                <div id ='tl-_translator-publish-flash-<%=calmapp_versions_translation_language.id.to_s%>'></div>
+                <%if ! calmapp_versions_translation_language.calmapp_version_tl.translators_redis_database.nil?%>
+                  <%if  current_user.translator_cavs_tls.include?(calmapp_versions_translation_language)%>
+                    <!--button id = 'translator-publish' data-tooltip = '< %=t($FH + 'calmapp_versions_translation_language.translator_publish', :language=>calmapp_versions_translation_language.translation_language.name, 
+                    :redis_database=>calmapp_versions_translation_language.calmapp_version_tl.translators_redis_database.description)%>'>
+                    < %=t($FA + "translator_publish", :language=> calmapp_versions_translation_language.translation_language.name, :redis_database => calmapp_versions_translation_language.calmapp_version_tl.translators_redis_database.description)%>
+                  </button -->
+                  
+                  <!--%= button_to(t($FA + "translator_publish", :language=> calmapp_versions_translation_language.translation_language.name, :redis_database => calmapp_versions_translation_language.calmapp_version_tl.translators_redis_database),
+                       { :action => translator_publish_path(calmapp_versions_translation_language.id),
+                        :method=> "get",
+                        :remote=> true#,
+                       }
+                      
+                       ) %-->
+                       <%=tlink_to "translator_publish", 
+                       translator_publish_path(calmapp_versions_translation_language.id),
+                       { :method=> "get",
+                         :remote => true,
+                         :navigate=> false,
+                         :language=> calmapp_versions_translation_language.translation_language.name, 
+                         :redis_database => calmapp_versions_translation_language.calmapp_version_tl.translators_redis_database.description,
+                         :data=>{:"tooltip" => t($FH + 'calmapp_versions_translation_language.translator_publish', :language=>calmapp_versions_translation_language.translation_language.name, 
+                                  :redis_database=>calmapp_versions_translation_language.calmapp_version_tl.translators_redis_database.description)
+                                  },
+                         :id => 'translator-publish'         
+                         }
+                         %>
+                   <%else%> 
+                       <%no_language_permission = true%>
+                  <%end #no language permission%>
+                <%else%>  
+                  <%no_redis = true%>
+                <%end #redis db not nil%>
+            <%else%>
+              <%no_role_permission = true%>  
+            <%end #role%>
+           <%else%>
+             <%is_english = true%>
+           <%end%> 
+           <% if no_role_permission%>
+             You have no permission to perform translator publish. Contact your system admin.
+           <%elsif no_language_permission%>
+             You have no permission to publish <%=calmapp_versions_translation_language.translation_language.name%>. Contact your system admin.
+           <%elsif no_redis%>
+             There is no translator's redis database setup for you to publish <%=calmapp_versions_translation_language.calmapp_version_tl.description%>. Contact your system admin.
+           <%elsif is_english%>
+             Translators cannot publish English. 
+           <%end%>  
+           </td> 
+          <% if has_role? :calmapp_versions_translation_languages_languagepublish %>
+            <%if  current_user.translator_cavs_tls.include?(calmapp_versions_translation_language)%>
             <td class="<%= link_cell_class %>" style='width:200px;'>
-              <%if calmapp_versions_translation_language.redis_databases_count > 0%>
-                <!--%has_role? :calmapp_versions_translation_languages_languagepublish do%-->
+              <%if calmapp_versions_translation_language.redis_databases_count > 0%>                
+                <!--This div is for error messages-->
                 <div id ='tl-publish-flash-<%=calmapp_versions_translation_language.id.to_s%>'></div>
                 <button id = 'publish' data-tooltip = '<%=t($FH + 'calmapp_versions_translation_language.language_publish', :language=>calmapp_versions_translation_language.translation_language.name)%>'>
                   <%=t($FA + "publish_language", :language=> calmapp_versions_translation_language.translation_language.name)%>
@@ -109,6 +172,9 @@
               <%end #if%>
               <!--% end #do role%-->
             </td>
+            <%end # incldue language %>
+          <%else%>
+          
           <%end #role%>
 
           <% if has_role?(:calmapp_versions_translation_languages_deepdestroy)%>
@@ -117,11 +183,14 @@
                  Cannot delete English translations here as all translations for all languages would be deleted. Do <i>Deep Delete</i> on <i>Application Versions</i> if you want this result. 
               <%else%>
                 <div id = 'local-flash-deepdelete'></div>
-                <%=button_to(t($FA + "deepdestroy"), versions_language_deepdestroy_path(calmapp_versions_translation_language.id), 
-                  :method => :delete, :remote=> true, 
-                  :data=>{:confirm=>t($MS + "delete.destroy_translation_data_1_language." + $W, :app_version => calmapp_versions_translation_language.description, :language => calmapp_versions_translation_language.translation_language.name),
-                               :"tooltip" => t($FH + 'calmapp_versions_translation_language.deepdestroy', :language=>calmapp_versions_translation_language.translation_language.name)},
-                   :id=> 'deepdestroy'       )%>
+                <%=button_to(t($FA + "deepdestroy"), versions_language_deepdestroy_path(calmapp_versions_translation_language.id),
+                  :method => :delete, 
+                  :remote=> true, 
+                  :data=>{:confirm=>t($MS + "delete.destroy_translation_data_1_language." + $W, 
+                          :app_version => calmapp_versions_translation_language.description, 
+                          :language => calmapp_versions_translation_language.translation_language.name),
+                          :"tooltip" => t($FH + 'calmapp_versions_translation_language.deepdestroy', :language=>calmapp_versions_translation_language.translation_language.name)},
+                          :id=> 'deepdestroy'       )%>
               <%end%> 
               </td>         
          <%end%>

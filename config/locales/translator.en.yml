@@ -42,6 +42,7 @@ en:
       publish: Publish
       publish_language: Publish %{language} 
       translation_language_publish: Publish %{language} Translations
+      translator_publish: Publish %{language} to %{redis_database} for Translator
       no_delete: Undeletable
       #
       create_and_upload: Create and Upload
@@ -151,6 +152,7 @@ en:
         uploads: When a YAML file with translations is uploaded, its translations are immediately written to the database.
         deepdestroy: "Clicking this will delete all translations for language: %{language}. Make sure that these %{language} will not be needed in future."
         language_publish: "Clicking will publish all the translations for %{language} to a redis database to be immediately used by the main application." 
+        translator_publish: "Clicking will publish all the translations for %{language} to a %{redis_database} for a translator to check what they have done. The published data is only for a translator to test."
       calmapp_versions_redis_databases: Redis databases are where the translations are actually read by the application.
       #translation:
         #dot_key_codes: 
@@ -186,6 +188,7 @@ en:
       develop: Develop
       languagepublish: Publish Language
       versionpublish: Publish Version
+      translatorpublish: Publish Language to Translator's Db
       administor: Administor
     miscellaneous: Miscellaneous
     redis_instances: Redis Instances
@@ -243,6 +246,7 @@ en:
     contact_us: Contact Us
     current_contacts: Current Contacts
     publish_language: Publish a Language
+    translator_publish_language: Translator Publish a Language(testing)
     whiteboard: Whiteboards
     help: Help
     help_files: User Help

@@ -80,14 +80,16 @@ class Profile < ActiveRecord::Base
     Profile.create :name => reserved_profile, :roles => [:guest_visit, :whiteboards_read], :protected_profile => true unless self.guest
     
     roles= [:translations_read, :translations_write, :contacts_create, :calmapp_versions_translation_languages_read, 
-      :calmapp_versions_translation_languages_languagepublish, :redis_databases_read, :redis_instances_read,
+       :redis_databases_read, :redis_instances_read,
       :release_statuses_read, :translation_languages_read, :whiteboards_read, :whiteboards_write,:whiteboards_read, :whiteboards_write,
-      :calmapps_read, :calmapp_versions_read,  :delayed_jobs_read]
+      :calmapps_read, :calmapp_versions_read,  :delayed_jobs_read, :calmapp_versions_translation_languages_translatorpublish]
     Profile.create(:name=>'translator', :roles => roles, :protected_profile => true) 
     
     roles= [:translations_read, :translations_write, :translations_destroy, :contacts_create, :contacts_read, 
       :contacts_write, :contacts_destroy, :translation_hints_read, :transaltion_hints_write, :translation_hints_destroy, 
-      :translation_hints_create, :calmapp_versions_translation_languages_languagepublish, :redis_databases_read, :redis_databases_write,
+      :translation_hints_create, 
+      #:calmapp_versions_translation_languages_languagepublish, 
+      :redis_databases_read, :redis_databases_write,
       :redis_databases_create, :calmapps_read, :calm_apps_create, :calmapps_write, :delayed_jobs_read,  :delayed_jobs_write, 
       :delayed_jobs_destroy,
       :redis_databases_destroy, :redis_instances_read, :redis_instances_write,
@@ -110,6 +112,7 @@ class Profile < ActiveRecord::Base
    :calmapp_versions_deepcopyparams,
    :calmapp_versions_publish,
    :calmapp_versions_translation_languages_languagepublish,
+   :calmapp_versions_translation_languages_translatorpublish,
    :calmapp_versions_translation_languages_read,
    :calmapp_versions_translation_languages_write,
    :calmapp_versions_translation_languages_create,

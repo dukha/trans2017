@@ -34,7 +34,25 @@ class Translation < ActiveRecord::Base
     @@selection_mode
   end
   
-  
+  def self.valid_empty_string_dot_key_code
+    return [ 
+#from en
+       "number.precision.format.delimiter",
+       "number.percentage.format.delimiter",
+       "number.human.format.delimiter",
+       "number.human.decimal_units.units.unit",
+       "number.format.strip_insignificant_zeros",
+       "number.format.significant",
+       "number.currency.format.strip_insignificant_zeros",
+       "number.currency.format.significant", 
+#cs       
+       "number.currency.format.delimiter",
+       "number.human.format.significant",
+       "number.human.format.strip_insignificant_zeros",
+#fr
+       "number.percentage.format.format"
+       ]
+  end
   def self.searchable_attr
     %w(iso_code dot_key_code cav_id translation updated_at special_structure cavtl_id)
   end
@@ -44,19 +62,47 @@ class Translation < ActiveRecord::Base
   end
   
   def do_after_commit
-    AddOtherLanguageRecordsToVersionJob.set(:wait=> 2.minutes).perform_later(id)
+    if Rails.env.development? || Rails.env.test?
+      AddOtherLanguageRecordsToVersionJob.set(:wait=> 2.minutes).perform_now(id) 
+    else  
+      AddOtherLanguageRecordsToVersionJob.set(:wait=> 2.minutes).perform_later(id)  
+    end
+    
   end
   
   def do_before_validation
+=begin
+    if translation.nil? || translation == '""' then
+      puts "Before do val "
+      
+      puts "abcnil " + (translation.nil?).to_s
+      puts 'abc"" ' + (translation == "").to_s 
+    end
+=end
+   #binding.pry if translation.nil? && dot_key_code.include?('other_than') 
    english = english_translation_object()
    if language.iso_code == 'en'
     if new_record? && special_structure.blank?
       do_special_structure()
     end
    end
+=begin   
+   if translation.nil? || translation == '""' then
+   puts "Before do complete "
+    puts "defnil " + (translation.nil?).to_s
+    puts '"" ' + (translation == "").to_s 
+   end
+=end
+   #binding.pry if translation.nil?
+   #binding.pry if translation == '""'    
    do_incomplete(english)
    #do_overwrite(english)
    ensure_translation_valid_json()
+  if translation.nil? || translation == '""' then 
+   puts "after do val "
+    puts "ghinil " + (translation.nil?).to_s
+    puts '"" ' + (translation == "").to_s 
+  end  
   end
 
 =begin
@@ -231,7 +277,7 @@ class Translation < ActiveRecord::Base
               many_insteadof_other = true
              end 
              unless p == "other" && many_insteadof_other 
-               trans[p] = '' 
+               trans[p] = nil#pnils #'' 
                blank = true  
              end #unless
            end #not trans.keys      
@@ -268,7 +314,7 @@ class Translation < ActiveRecord::Base
        self.incomplete = blank
      when TRANS_ORDER_ARRAY
        if not trans.is_a? Array         
-         trans = ent.dup
+         trans = en_t.dup
        end
         blank = false
        trans.each{ |el|
@@ -309,15 +355,24 @@ class Translation < ActiveRecord::Base
     else
       # not a speccial structure
       # however we take care of nulls and "nulls"
-      if trans == "null" || trans.nil? || trans.blank?
+      #pnils if trans == "null" || trans.nil? || trans.blank?
+      blank_ok = Translation.valid_empty_string_dot_key_code.include?(dot_key_code)
+      blank_not_ok = !(blank_ok)
+       if trans.blank? && blank_ok  
         trans = ''
+        self.incomplete = false
+      elsif trans.blank?  && blank_not_ok
+        trans = nil
         self.incomplete = true
       else
         #There is something in the translation, so we assume it is complete
         self.incomplete = false
       end    
     end # when  
-    if JSON.is_json?(trans)
+    #Now back to json
+    if trans.nil?
+      self.translation = nil
+    elsif  JSON.is_json?(trans)
       self.translation = trans
     else
       self.translation = ActiveSupport::JSON.encode(trans) #if (not JSON.is_json?(trans))
@@ -329,6 +384,7 @@ class Translation < ActiveRecord::Base
  Validation 
 =end
   def valid_json
+    return if translation.nil?
     if not JSON.is_json? translation
       errors.add(:translation, "must be json")  
     end
@@ -340,6 +396,7 @@ class Translation < ActiveRecord::Base
   def interpolations_correct
     #This checks if en matches other translations. en always satisfies this validation
     return true if CalmappVersionsTranslationLanguage.find(cavs_translation_language_id).translation_language.iso_code  == 'en'
+    return true if translation.nil?
     trans  = translation
     en = english_translation_object().translation
     regex = /%{\w{1,}}/
@@ -686,7 +743,7 @@ class Translation < ActiveRecord::Base
     # We use ActiveSupport::JSON.decode/encode here rather than JSON.parse/to_json as they seems to work with Strings 
     # and things like "%{attribute} %{value}"
     begin
-
+      return if translation.nil? 
       if not JSON.is_json? translation then
         
         self.translation = ActiveSupport::JSON.encode(translation)
