@@ -5,16 +5,6 @@ class UsersController < ApplicationController #Devise::RegistrationsController
   filter_access_to :all
   @@model ="user"
   
-
-=begin @deprecated  
-  def invite_user
-    
-    @user = User.invite!(:email => params[:user][:email], :name => params[:user][:name])
-    render :html => @user
-  end
-=end
-
-  # users_select        /:locale/users_select(.:format)                                    {:controller=>"users", :action=>"select"}
   def index
     per_page = 20
     if User.respond_to? :searchable_attr  
@@ -45,13 +35,6 @@ class UsersController < ApplicationController #Devise::RegistrationsController
       format.html 
       format.xml  { render :xml => @translation_languages }
     end
- 
-=begin    
-    respond_to do |format|
-      format.html  
-      format.xml  { render :xml => @users }
-    end
-=end
   end
   
   def new
@@ -110,7 +93,6 @@ class UsersController < ApplicationController #Devise::RegistrationsController
  
   #unlock_user PUT /:locale/users/:id/unlock_user(.:format) {:controller=>"users", :action=>"unlock_user"}
   def unlock_user
-    #@user = User.find(params[:id])
     @user.unlock_access! unless !@user.access_locked?
     respond_to do |format|
       if @user.save
@@ -141,7 +123,6 @@ class UsersController < ApplicationController #Devise::RegistrationsController
   end
   
   def translatorpublishing
-    #binding.pry
     begin
       result = User.what_translations_can_user_publish(@user)
       view_none = "You cannot publish to any redis database." if  result.empty?
@@ -191,11 +172,6 @@ private
   # Use callbacks to share common setup or constraints between actions.
   def set_user
     @user = User.find(params[:id])
-=begin   
-  if not @user.new_record? then
-      @user.password = ''
-    end
-=end
   end  
   def  user_params
     standard_attr = [:email,  :remember_me,
@@ -214,11 +190,3 @@ private
   
   end
 end
-=begin
- <%= f.collection_check_boxes :venue_ids, Venue.all, :id, :name, checked: Venue.all.map(&:id) do |b| %>
-  <span>
-    <%= b.check_box %>
-    <%= b.label %>
-  </span>
-<% end %> 
-=end

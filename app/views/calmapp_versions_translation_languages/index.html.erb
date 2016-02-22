@@ -83,8 +83,6 @@
         <tr class = "<%= cycle('dataeven', 'dataodd') %>" id = '<%= dom_id(calmapp_versions_translation_language)%>'>
           <td class="<%= cell_class %>"><%= calmapp_versions_translation_language.translation_language.name %></td>
           <td class="<%= cell_class %>"><%= calmapp_versions_translation_language.calmapp_version_tl.description %></td>
-          
-          <!--td class="<%= link_cell_class %>"><%= tlink_to  'change_uploads', edit_calmapp_versions_translation_language_path(calmapp_versions_translation_language) %></td-->
           <%has_role? :calmapp_versions_translation_languages_write do%>
             <%= link_edit(edit_calmapp_versions_translation_language_path(calmapp_versions_translation_language), calmapp_versions_translation_language,:edit=>'change_uploads', :category=> :action)%>
           <%end%>
@@ -94,28 +92,11 @@
           
           <%role_permission, no_language_permission, no_redis, is_english = false%>
           <td class="<%= link_cell_class %>" style='width:200px;'>
-          <!--%if calmapp_versions_translation_language.translation_language != TranslationLanguage.TL_EN% --> 
-          <%binding.pry%>
           <%if not_en?(calmapp_versions_translation_language) || permission_ok_for_en?(calmapp_versions_translation_language)%> 
-            <!--%if has_role? :calmapp_versions_translation_languages_translatorpublish % -->
             <%if has_translatorpublish_role?%>
                 <div id ='tl-_translator-publish-flash-<%=calmapp_versions_translation_language.id.to_s%>'></div>
-                <!--%if ! calmapp_versions_translation_language.calmapp_version_tl.translators_redis_database.nil?%-->
                 <%if redis?(calmapp_versions_translation_language)%>
-                  <!--%if  current_user.translator_cavs_tls.include?(calmapp_versions_translation_language)%-->
                   <%if user_has_language?(calmapp_versions_translation_language) || current_user.sysadmin? || permission_ok_for_en?(calmapp_versions_translation_language)%> 
-                    <!--button id = 'translator-publish' data-tooltip = '< %=t($FH + 'calmapp_versions_translation_language.translator_publish', :language=>calmapp_versions_translation_language.translation_language.name, 
-                    :redis_database=>calmapp_versions_translation_language.calmapp_version_tl.translators_redis_database.description)%>'>
-                    < %=t($FA + "translator_publish", :language=> calmapp_versions_translation_language.translation_language.name, :redis_database => calmapp_versions_translation_language.calmapp_version_tl.translators_redis_database.description)%>
-                  </button -->
-                  
-                  <!--%= button_to(t($FA + "translator_publish", :language=> calmapp_versions_translation_language.translation_language.name, :redis_database => calmapp_versions_translation_language.calmapp_version_tl.translators_redis_database),
-                       { :action => translator_publish_path(calmapp_versions_translation_language.id),
-                        :method=> "get",
-                        :remote=> true#,
-                       }
-                      
-                       ) %-->
                        <%=tlink_to "translator_publish", 
                        translator_publish_path(calmapp_versions_translation_language.id),
                        { :method=> "get",
@@ -228,8 +209,7 @@
 });
 
 
-$(document).ready(function(){
-//  $("#has-tt").tooltip({content:function(){return "Some <b>great</b> HTML tooltip text!";}});  
+$(document).ready(function(){ 
   $('input#deepdestroy').on("click", "div.tt" , function(){
     $(this).remove();
   });
