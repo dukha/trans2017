@@ -74,14 +74,15 @@ bg=yellow</panel_attributes>
     <type>com.umlet.element.Class</type>
     <coordinates>
       <x>530</x>
-      <y>200</y>
-      <w>200</w>
-      <h>80</h>
+      <y>190</y>
+      <w>270</w>
+      <h>90</h>
     </coordinates>
     <panel_attributes>*CalmappVersion*
 id:integer
 version:string
 calmapp_id:integer
+translators_redis_database_id:integer
 bg=orange</panel_attributes>
     <additional_attributes/>
   </element>
@@ -103,9 +104,9 @@ bg=orange</panel_attributes>
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>780</x>
+      <x>830</x>
       <y>170</y>
-      <w>180</w>
+      <w>160</w>
       <h>120</h>
     </coordinates>
     <panel_attributes>*RedisInstance*
@@ -120,7 +121,7 @@ bg=orange</panel_attributes>
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>720</x>
+      <x>760</x>
       <y>440</y>
       <w>240</w>
       <h>110</h>
@@ -142,32 +143,21 @@ bg=orange</panel_attributes>
       <x>610</x>
       <y>100</y>
       <w>70</w>
-      <h>120</h>
+      <h>110</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>30;30;50;100</additional_attributes>
+    <additional_attributes>30;30;50;90</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>710</x>
-      <y>90</y>
-      <w>180</w>
-      <h>380</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>160;30;30;60;50;360</additional_attributes>
-  </element>
-  <element>
-    <type>com.umlet.element.Relation</type>
-    <coordinates>
-      <x>460</x>
+      <x>530</x>
       <y>250</y>
-      <w>130</w>
-      <h>230</h>
+      <w>60</w>
+      <h>240</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>110;30;30;210</additional_attributes>
+    <additional_attributes>40;30;30;220</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Class</type>
@@ -271,13 +261,13 @@ fg=white</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>850</x>
+      <x>880</x>
       <y>260</y>
-      <w>50</w>
+      <w>60</w>
       <h>200</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>30;30;30;180</additional_attributes>
+    <additional_attributes>30;30;40;180</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Relation</type>
@@ -388,10 +378,10 @@ bg=orange</panel_attributes>
       <x>510</x>
       <y>40</y>
       <w>50</w>
-      <h>180</h>
+      <h>170</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>30;160;30;30</additional_attributes>
+    <additional_attributes>30;150;30;30</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Relation</type>
@@ -407,10 +397,10 @@ bg=orange</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>500</x>
+      <x>630</x>
       <y>250</y>
       <w>246</w>
-      <h>250</h>
+      <h>210</h>
     </coordinates>
     <panel_attributes>&lt;&lt;RedisDatabase has one
 CalmappVersion&gt;&gt;
@@ -418,7 +408,7 @@ CalmappVersion&gt;&gt;
 &lt;&lt;CalmappVersion has
 many RedisDatabases&gt;&gt;
 lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>200;30;130;110;220;230</additional_attributes>
+    <additional_attributes>110;30;140;190</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Relation</type>
@@ -434,13 +424,13 @@ lt=&lt;&lt;-</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>360</x>
+      <x>470</x>
       <y>320</y>
-      <w>160</w>
+      <w>50</w>
       <h>170</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>30;150;140;30</additional_attributes>
+    <additional_attributes>30;150;30;30</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Note</type>
@@ -545,5 +535,29 @@ bg=yellow
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
     <additional_attributes>330;80;260;80;260;30;30;30</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>780</x>
+      <y>90</y>
+      <w>130</w>
+      <h>370</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>110;30;30;80;70;350</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>450</x>
+      <y>250</y>
+      <w>330</w>
+      <h>270</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;CalmappVersion has
+one Translators RedisDatabase&gt;&gt;
+lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>200;30;150;130;310;250</additional_attributes>
   </element>
 </diagram>

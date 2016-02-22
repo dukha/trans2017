@@ -42,7 +42,7 @@ en:
       publish: Publish
       publish_language: Publish %{language} 
       translation_language_publish: Publish %{language} Translations
-      translator_publish: Publish %{language} to %{redis_database} for Translator
+      translator_publish: Publish %{language} to %{redis_database} for Testing
       no_delete: Undeletable
       #
       create_and_upload: Create and Upload
@@ -190,6 +190,7 @@ en:
       versionpublish: Publish Version
       translatorpublish: Publish Language to Translator's Db
       administor: Administor
+      translatorpublishing: Translator Publishing
     miscellaneous: Miscellaneous
     redis_instances: Redis Instances
     redis_databases: Redis Databases
@@ -233,6 +234,7 @@ en:
     developers_new_translations: Developers Translation
     #redis_admins: Redis Administration
     translations_uploads: Translation Uploads
+    translators_redis: What Redis Databases Can I Publish To?
     special_partial_dot_keys: Special Keys
     dot_key_code_translation_editors: Editors
     users: Users
@@ -246,7 +248,7 @@ en:
     contact_us: Contact Us
     current_contacts: Current Contacts
     publish_language: Publish a Language
-    translator_publish_language: Translator Publish a Language(testing)
+    translator_publish_language: Publish a Language(for translator testing)
     whiteboard: Whiteboards
     help: Help
     help_files: User Help
@@ -273,7 +275,7 @@ en:
         heading: Version Deep Copy Information 
     redis_database:
       and_version_publish:
-        heading: "View and publish %{model}(Application Versions)"   
+        heading: "View and Publish to %{model}(Application Versions)"   
   activerecord:
     models:
       calmapp:

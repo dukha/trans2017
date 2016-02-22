@@ -1,0 +1,8 @@
+$('div#show-current-user-translator-redis').html('It worked')
+var flash_selector = "div#flash";
+console.log($(flash_selector));
+$(flash_selector).html("<%=j display_flashes%>");
+timeoutID = window.setTimeout(clearFlash,20000);
+function clearFlash(){
+  $(flash_selector).empty();
+}

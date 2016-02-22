@@ -1,7 +1,7 @@
 module ProfilesHelper
   STANDARD_ACTIONS = %w(read write create destroy)
   # These must all be in the translation file as roles.<action>
-NONSTANDARD_ACTIONS = %w(lookup confirm search import change invite getunused getnextindex publish languagepublish versionpublish translatorpublish invite unlock redisdbalter translate develop deepcopy deepdestroy  visit deepcopyparams start stop restart)
+NONSTANDARD_ACTIONS = %w(lookup confirm search import change invite getunused getnextindex publish languagepublish versionpublish translatorpublish translatorpublishing invite unlock redisdbalter translate develop deepcopy deepdestroy  visit deepcopyparams start stop restart)
   def layout_check_boxes profile
     html =''
     rows_data_hashes_array= collect_roles_in_groups

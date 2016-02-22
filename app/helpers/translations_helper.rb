@@ -173,7 +173,8 @@ This code will facilitate i18n in will_paginate
 just substitute twill_paginate for will_paginate
 =end
   def twill_paginate(collection = nil, options = {})
-      will_paginate collection, {:previous_label => I18n.t('commons.previous'), :next_label => I18n.t('commons.next')}.merge(options)
+    #require 'will_paginate/array'
+    will_paginate collection, {:previous_label => I18n.t('commons.previous'), :next_label => I18n.t('commons.next')}.merge(options)
   end
   # Translates the text of labels for attributes
   def tlabel attribute_name, model_name=nil    

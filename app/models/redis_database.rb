@@ -279,6 +279,9 @@ def set_translators_rdb_in_version
     #return count  
   end  
 
+=begin
+ Below are all methods for doing demo's etc 
+=end
   def self.demo
     marks_redis = RedisInstance.where { description =="Mark's Desktop Computer"}.first
     ri_integration = integration_instance

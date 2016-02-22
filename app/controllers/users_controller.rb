@@ -1,10 +1,11 @@
 class UsersController < ApplicationController #Devise::RegistrationsController
 
   before_action :authenticate_user!
-  before_action :set_user, only: [ :edit, :update, :destroy, :unlock_user]
+  before_action :set_user, only: [ :edit, :update, :destroy, :unlock_user, :translatorpublishing]
   filter_access_to :all
   @@model ="user"
   
+
 =begin @deprecated  
   def invite_user
     
@@ -12,6 +13,7 @@ class UsersController < ApplicationController #Devise::RegistrationsController
     render :html => @user
   end
 =end
+
   # users_select        /:locale/users_select(.:format)                                    {:controller=>"users", :action=>"select"}
   def index
     per_page = 20
@@ -137,7 +139,28 @@ class UsersController < ApplicationController #Devise::RegistrationsController
       end
     end #rescue  
   end
- 
+  
+  def translatorpublishing
+    #binding.pry
+    begin
+      result = User.what_translations_can_user_publish(@user)
+      view_none = "You cannot publish to any redis database." if  result.empty?
+      @view = ''
+      
+      if result.is_a? Array
+        result.each{ |rdb|
+          @view = @view + "\n" + rdb.description
+        }
+      end
+      @view = view_none if @view == ''
+    rescue StandardError => se
+        @view = se.message
+    end
+    flash[:info] = @view
+    respond_to do |format|
+        format.js {}
+    end
+  end
 protected
   def prepare_mode
     mode = params["selection_mode"]

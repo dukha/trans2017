@@ -31,6 +31,8 @@ Translate::Application.routes.draw do
    get 'help/todo', :to => 'help#todo', :as => 'todo'
    get 'help/contents', :to=> 'help#contents', :as => 'contents'
    get 'help/admin_publishing', :to=> 'help#publishing', :as => 'publishing'
+   get 'help/translator_publishing', :to=> "help#translatorpublishing", :as => "translator_publishing_help"
+   get 'help/administrator_publishing', :to => "help#administrator_publishing", :as => 'administrator_publishing_help'
    get 'help/admin_uploading', :to=> 'help#uploading', :as => 'uploading'
    get 'help/translator_ui', :to => 'help#translator_ui', :as => 'translator_ui'
    get 'help/developers_english', :to => 'help#developers_english', :as => 'developers_english'
@@ -73,6 +75,7 @@ Translate::Application.routes.draw do
      post "users/add_invitation", :to => "users#invite_user", :as => :invite_user
    #end
     get "delayed_job/start", :to => "delayed_jobs#start", :as => "start_delayed_jobs_queue"
+    
    resources :languages
    resources :users, :only => [:index]
    resources :whiteboard_types
@@ -128,7 +131,11 @@ Translate::Application.routes.draw do
    #get "calmapp_versions_redis_database/version_alterwithredisdb/:calmapp_versions_redis_database_id" => "calmapp_versions_redis_databases#version_alterwithredisdb", :as => "version_alterredisdb"#, via: :all
    post "calmapp_version/version_publish/:id" => "redis_databases#versionpublish", :as =>"redis_databases_versionpublish" #, :via => :all
    post "calmapp_versions_translation_language/publish/:id" => "calmapp_versions_translation_languages#languagepublish", :as =>"calmapp_versions_translation_languages_languagepublish"
+   # This route publishes a version
    get "calmapp_versions_translation_language/translatorpublish/:id" => "calmapp_versions_translation_languages#translatorpublish", :as => "translator_publish", :defaults => { :format => 'js' }
+   # This route shows the user what and where they can publish
+   get "users/:id/request_translators_dbs", :to=> "users#translatorpublishing", :as => "translator_publishing"
+   
    resources :translation_editor_params
    resources :special_partial_dot_keys
    resources :dot_key_code_translation_editors, :only=> [:index, :edit, :show] 

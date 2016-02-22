@@ -4,5 +4,5 @@
 
 * [Managing Users](<%=user_admin_path%>)
 * [Setting up Translations](<%=admin_applications_versions_languages_path%>)
-* Publishing translations to Redis
+* [Introduction to Publishing](<%=publishing_path%>)
 * Answering user Queries that come via the contacts Form

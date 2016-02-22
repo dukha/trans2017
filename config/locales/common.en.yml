@@ -132,7 +132,7 @@ en:
       error: There were no records found in the database that match the given criteria.
       warning: There were no records found in the database that match the given criteria.
     no_records_found_with_permissions:
-      warning: There were no records found in the database for which you have permission.
+      warning: There were no records found in the database or that match your criteria, for which you have permission.
     application_language_change:
       success: The application language will be changed to %{language} on next refresh or new page.
     capslock_on:

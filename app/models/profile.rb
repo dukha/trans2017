@@ -82,7 +82,7 @@ class Profile < ActiveRecord::Base
     roles= [:translations_read, :translations_write, :contacts_create, :calmapp_versions_translation_languages_read, 
        :redis_databases_read, :redis_instances_read,
       :release_statuses_read, :translation_languages_read, :whiteboards_read, :whiteboards_write,:whiteboards_read, :whiteboards_write,
-      :calmapps_read, :calmapp_versions_read,  :delayed_jobs_read, :calmapp_versions_translation_languages_translatorpublish]
+      :calmapps_read, :calmapp_versions_read,  :delayed_jobs_read, :calmapp_versions_translation_languages_translatorpublish, :users_translatorpublishing]
     Profile.create(:name=>'translator', :roles => roles, :protected_profile => true) 
     
     roles= [:translations_read, :translations_write, :translations_destroy, :contacts_create, :contacts_read, 
@@ -95,7 +95,7 @@ class Profile < ActiveRecord::Base
       :redis_databases_destroy, :redis_instances_read, :redis_instances_write,
       :redis_instances_destroy, :redis_instances_create, :calmapp_versions_translation_languages_read,
       :release_statuses_read, :translation_languages_read, :calmapp_versions_versionpublish,:whiteboards_read, :whiteboards_write,
-      :calmapps_read, :calmapp_versions_read, :calmapp_versions_deepcopy, :calmapp_versions_deepcopyparams,]
+      :calmapps_read, :calmapp_versions_read, :calmapp_versions_deepcopy, :calmapp_versions_deepcopyparams,:calmapp_versions_translation_languages_translatorpublish, :users_translatorpublishing]
     Profile.create(:name=>'developer', :roles => roles, :protected_profile => true)
     
   roles= [  :users_read,
@@ -140,6 +140,7 @@ class Profile < ActiveRecord::Base
  :translations_uploads_write,
  :translations_uploads_create,
  :translations_uploads_destroy,
+ :users_translatorpublishing,
  :contacts_create, :contacts_destroy, :contacts_write, :contacts_destroy,
  :delayed_jobs_read,
  :whiteboards_read, :whiteboards_write]

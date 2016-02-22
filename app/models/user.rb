@@ -25,6 +25,7 @@ class User < ActiveRecord::Base
   has_many :user_profiles, :dependent => :destroy
   #accepts_nested_attributes_for :user_profiles, :reject_if => :all_blank, :allow_destroy => true
   has_many :profiles, :through => :user_profiles
+  
   has_many :translator_jobs, :foreign_key => "translator_id" , :class_name=> "CavsTlTranslator", :dependent => :destroy
   #accepts_nested_attributes_for :translator_jobs, :reject_if => :all_blank, :allow_destroy => true
   has_many :translator_cavs_tls, :through => :translator_jobs, :source => :calmapp_versions_translation_language
@@ -37,7 +38,7 @@ class User < ActiveRecord::Base
   #accepts_nested_attributes_for :developer_jobs, :reject_if => :all_blank, :allow_destroy => true
   has_many :administrator_cavs_tls, :through => :administrator_jobs, :source => :calmapp_versions_translation_language#, :class_name=>"Calmapp"
   
-  after_create :add_cavs_tls, :if => Proc.new {|user| }
+  #after_create :add_cavs_tls, :if => Proc.new {|user| }
   
   # password must be at least 1 non- asci char (*&^) etc and at least 1 numeric unless set by devise_invitable
   def password_complexity
@@ -108,6 +109,18 @@ class User < ActiveRecord::Base
     return application_administrator? || sysadmin?
   end
   
+  def has_user_permission_on_cavtl(calmapp_version_translation_language)
+        return true if profiles.include?(Profile.where{name == 'sysadmin'}.first)
+        return true if developer_cavs_tls.include?(calmapp_version_translation_language)
+        return true if translator_cavs_tls.include?(calmapp_version_translation_language)
+        return true if administrator_cavs_tls.include?(calmapp_version_translation_language)
+        return false
+  end
+  
+  def list_cavtls_for_user
+    return CalmappVersionsTranslationLanguage.all if profiles.include?(Profile.where{name == 'sysadmin'}.first)
+    return (developer_cavs_tls + translator_cavs_tls  + administrator_cavs_tls).uniq
+  end  
   def self.create_root_user
     
     username = "rooter"
@@ -248,6 +261,21 @@ CalmappVersionsTranslationLanguage.new(:translation_language_id =>TranslationLan
    roles << "Administrator" if ! administrator_cavs_tls.empty?
    return roles.join(" or ")
   end
+
+=begin
+ Translators need a special permission to publish their work.
+ They can only publish a version_language to the designated translation test redis
+ This gives the list of what can be published  
+=end  
+  def self.what_translations_can_user_publish user
+    cavs_list = []
+    #binding.pry
+    publishable = user.translator_cavs_tls.each{ |cavtl|
+     translator_rdb = cavtl.calmapp_version_tl.translators_redis_database   
+     cavs_list << translator_rdb unless translator_rdb.nil?
+    }
+    return cavs_list.uniq
+  end
   
   def self.contact_reponders
      responders = User.where{responds_to_contacts == true}.load
@@ -273,10 +301,6 @@ CalmappVersionsTranslationLanguage.new(:translation_language_id =>TranslationLan
    def self.administrator
      return where{administrator == true}
    end
-
-   
-
-
 
 private
   def check_username

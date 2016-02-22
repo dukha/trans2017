@@ -40,6 +40,13 @@
           <%has_role?(:translations_read) do%>
             <li><%= tlink_to("translations", translations_path, :category=>:menu) %></li>
           <%end%>
+          <%has_role?(:users_translatorpublishing) do%>  
+            <li><%= tlink_to("translators_redis", translator_publishing_path(current_user.id), 
+            {:category=>:menu,
+            :remote=> true,
+            :method=> "get"
+            }) %></li>
+          <%end%>
            <!-- This should url should become edit_user_preference_path(current_user.id) when we get the login working -- >
            < % if current_user != nil then % >
              
@@ -48,7 +55,7 @@
       </div>
       
     <%end%>
-    <%if current_user.developer?%> 
+    <%if current_user.developer?  || current_user.sysadmin?%> 
        <div> 
         <%=taccordion_header("developers") %>
           <ul class="menu">
@@ -65,6 +72,13 @@
              <%has_role? :calamapp_versions_translation_languages_languagepublish do%>   
                <li><%= tlink_to("publish_language", calmapp_versions_translation_languages_path, :category=>:menu) %></li>
              <%end%>
+             <%has_role?(:users_translatorpublishing) do%>  
+            <li><%= tlink_to("translators_redis", translator_publishing_path(current_user.id), 
+            {:category=>:menu,
+            :remote=> true,
+            :method=> "get"
+            }) %></li>
+          <%end%>
           </ul>
         </div>
       <%end%>
@@ -189,3 +203,5 @@
       </ul>
       </div>
     </div>
+    
+    <div id= 'show-current-user-translator-redis'></div>

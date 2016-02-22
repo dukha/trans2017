@@ -28,18 +28,28 @@ class CalmappVersionsTranslationLanguagesController < ApplicationController
     end
 
     sorting=sort_list(sortable_attr)
+    #binding.pry
     search_info = init_search(current_user, CalmappVersionsTranslationLanguage.searchable_attr, CalmappVersionsTranslationLanguage.sortable_attr)
     if searchable_attr.nil? || searchable_attr.empty?  
-      @calmapp_versions_translation_languages = CalmappVersionsTranslationLanguage.paginate(:page => params[:page], :per_page=>20)
+      @calmapp_versions_translation_languages = CalmappVersionsTranslationLanguage.all #paginate(:page => params[:page], :per_page=>20)
     else
       search_info = init_search(current_user, searchable_attr, sortable_attr)#init_search(criterion_list(searchable_attr), operator_list( searchable_attr, criterion_list(searchable_attr)),sort_list(sortable_attr))
       #@delayed_jobs = DelayedJob.search(current_user, criterion_list(searchable_attr), operator_list( searchable_attr, criterion_list(searchable_attr)),sort_list(sortable_attr)).paginate(:page => params[:page], :per_page=>15)
-      @calmapp_versions_translation_languages = CalmappVersionsTranslationLanguage.search(current_user, search_info).paginate(:page => params[:page], :per_page=>20)
+      @calmapp_versions_translation_languages = CalmappVersionsTranslationLanguage.search(current_user, search_info)#.paginate(:page => params[:page], :per_page=>20)
     end
+    # now we esnure that only the cavtls that the user has permission to use are selected    
+    permitted_cavtls = current_user.list_cavtls_for_user
+    ids=[]
+    permitted_cavtls.each{|cavtl| ids << cavtl.id}
+    # >> operator in squeel means an IN clause generated for the query
+    @calmapp_versions_translation_languages = @calmapp_versions_translation_languages.where{id >> my{ids}}    
+    #array = @calmapp_versions_translation_languages.to_a
+    #binding.pry
+    #array.delete_if{|cavtl| (!permitted_cavtls.include?(cavtl))}
+    #@calmapp_versions_translation_languages = array
     
-    #@calmapp_versions_translation_languages = CalmappVersionsTranslationLanguage.search(current_user, search_info)
-    #@calmapp_versions_translation_languages = @calmapp_versions_translation_languages.paginate(:page => params[:page], :per_page => 20)
-
+    
+    @calmapp_versions_translation_languages = @calmapp_versions_translation_languages.paginate(:page => params[:page], :per_page=>20) 
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @calmapp_versions_translation_languages }
@@ -239,4 +249,25 @@ class CalmappVersionsTranslationLanguagesController < ApplicationController
 =end   
       params.require(:calmapp_versions_translation_language).permit!
     end
+=begin     
+    def params_with_permissions
+      profiles = current_user.profiles
+      if has_role? :calmapp_versions_translation_languages_read then  
+        return params if profiles.include?(Profile.where{name == 'sysadmin'}.first)
+        dev = true if profiles.include?(Profile.where{name == 'developer'}.first)
+        tran = true if profiles.include?(Profile.where{name == 'translator'}.first)
+        admin = true if profiles.include?(Profile.where{name == 'application_administrator'}.first)
+        if dev
+          current_user.developer_cavs_tls
+        end
+          current_user.administrator_cavs_tls
+          current_user.translator_cavs_tls
+      else
+        
+        
+      end  
+      
+       
+    end
+=end
 end

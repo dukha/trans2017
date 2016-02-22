@@ -141,6 +141,9 @@ authorization do
   role :calmapp_versions_translation_languages_translatorpublish do
     has_permission_on [:calmapp_versions_translation_languages], :to => [:translatorpublish]
   end
+  role :users_translatorpublishing do
+    has_permission_on [:users], :to => [:translatorpublishing]
+  end
   role :users_invite do
     has_permission_on [:users], :to => [:invite_user]
     has_permission_on [:invitations], :to => [ :create, :new, :update, :edit]

@@ -11,7 +11,8 @@
 - [Translator](<%=translator_help_path%>)
 - [Objects](<%=translator_objects_help_path%>)
 - [Process](<%=translation_process_help_path%>)
-- [Substitutions](<%=translation_interpolations_help_path%>) 
+- [Substitutions](<%=translation_interpolations_help_path%>)
+- [Translator Publishing](<%=translator_publishing_help_path%>) 
 ####Developer
 - [Getting Started](<%=developer_help_path%>)
 - [Role of English](<%=role_of_english_help_path%>)
@@ -22,11 +23,17 @@
 - [Redis Databases](<%=redis_databases_help_path%>) 
 - [Redis Instances](<%=redis_instances_help_path%>) 
 - [Setting Up Translations](<%=admin_applications_versions_languages_path%>)
-- [Publishing](<%=publishing_path%>)
+- [Introduction to Publishing](<%=publishing_path%>)
 - [Uploading](<%=uploading_path%>)
 - [Deep Copy](<%=help_deepcopy_path%>)
 - [Deep Delete](<%=help_deepdelete_path%>)
 - [Workflow](<%=admin_workflow_path%>)
+#####Publishing
+    - [Introduction to Publishing](<%=publishing_path%>)
+    - [Setting Up Translator Publishing](<%=admin_applications_versions_languages_path + "#publishing-bookmark"%>)
+    - [Publishing by a Translator](<%=translator_publishing_help_path%>)
+    - [Publishing by an Administrator](<%=administrator_publishing_help_path%>)
+
 ####User Administrator
 - [Users ](<%=user_admin_path%>)
 ####Extra

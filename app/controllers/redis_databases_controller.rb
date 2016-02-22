@@ -139,8 +139,6 @@ class RedisDatabasesController < ApplicationController
  This method publishes the whole application version to the chosen redis database  
 =end
   def versionpublish
-    # 1
-
     begin      
       redis_db = RedisDatabase.find(params[:id])
       count = redis_db.translations_ready_to_publish().count 
