@@ -9,6 +9,7 @@ class Translation < ActiveRecord::Base
   
   validates :dot_key_code, :uniqueness=>{:scope=> :cavs_translation_language_id},  :presence=>true 
   validates :cavs_translation_language_id, :presence => true #:calmapp_versions_translation_language, :presence => true
+  validate :translation, :en_translation_not_nil
   validate :translation,  :valid_json
   validate :translation, :interpolations_correct
   
@@ -41,17 +42,34 @@ class Translation < ActiveRecord::Base
        "number.percentage.format.delimiter",
        "number.human.format.delimiter",
        "number.human.decimal_units.units.unit",
-       "number.format.strip_insignificant_zeros",
+       #"number.format.strip_insignificant_zeros",
        "number.format.significant",
-       "number.currency.format.strip_insignificant_zeros",
-       "number.currency.format.significant", 
+       #"number.currency.format.strip_insignificant_zeros",
+       #"number.currency.format.significant", 
 #cs       
        "number.currency.format.delimiter",
-       "number.human.format.significant",
-       "number.human.format.strip_insignificant_zeros",
+       #"number.human.format.significant",
+       #"number.human.format.strip_insignificant_zeros",
 #fr
-       "number.percentage.format.format"
+       "number.percentage.format.format",
+#calm.en       
+       "application.registrar",
+       "lookups.draft_message.pending_place_reserved.empty_message",
+       "lookups.draft_message.pending_on_wait_list.empty_message"
        ]
+  end
+=begin
+ Boolean translations are written the the relation db as "true" and "false" (not the boolean values) 
+=end
+  def self.boolean_translations
+    return [ 
+    "number.human.format.significant",
+    "number.human.format.strip_insignificant_zeros",
+    "number.currency.format.strip_insignificant_zeros",
+    "number.currency.format.significant", 
+    "number.format.strip_insignificant_zeros",
+    "number.format.significant"
+    ]
   end
   def self.searchable_attr
     %w(iso_code dot_key_code cav_id translation updated_at special_structure cavtl_id)
@@ -65,70 +83,29 @@ class Translation < ActiveRecord::Base
     if Rails.env.development? || Rails.env.test?
       AddOtherLanguageRecordsToVersionJob.set(:wait=> 2.minutes).perform_now(id) 
     else  
-      AddOtherLanguageRecordsToVersionJob.set(:wait=> 2.minutes).perform_later(id)  
+      AddOtherLanguageRecordsToVersionJob.set(:wait=> 5.minutes).perform_later(id)  
     end
     
   end
   
   def do_before_validation
-=begin
-    if translation.nil? || translation == '""' then
-      puts "Before do val "
-      
-      puts "abcnil " + (translation.nil?).to_s
-      puts 'abc"" ' + (translation == "").to_s 
-    end
-=end
-   #binding.pry if translation.nil? && dot_key_code.include?('other_than') 
    english = english_translation_object()
-   if language.iso_code == 'en'
-    if new_record? && special_structure.blank?
-      do_special_structure()
-    end
-   end
-=begin   
-   if translation.nil? || translation == '""' then
-   puts "Before do complete "
-    puts "defnil " + (translation.nil?).to_s
-    puts '"" ' + (translation == "").to_s 
-   end
-=end
-   #binding.pry if translation.nil?
-   #binding.pry if translation == '""'    
-   do_incomplete(english)
-   #do_overwrite(english)
-   ensure_translation_valid_json()
-  if translation.nil? || translation == '""' then 
-   puts "after do val "
-    puts "ghinil " + (translation.nil?).to_s
-    puts '"" ' + (translation == "").to_s 
-  end  
+   if ! english.translation.nil?
+     if language.iso_code == 'en'
+      if new_record? && special_structure.blank?
+        do_special_structure()
+      end
+     end
+         
+     do_incomplete(english)
+     ensure_translation_valid_json()
+   end    
   end
 
-=begin
- @deprecated 
-
-  def do_overwrite(english)
-    persisted_ob = persisted_object
-    persisted_has_data = has_persisted_object_data?(persisted_ob, english.special_structure)
-    overwrite
-    if incomplete
-      if persisted_has_data 
-        overwrite = true
-      else
-        overwrite = true
-      end  
-    else
-      if peristed_has_data
-        overwrite = true
-      else
-        overwrite =false  
-      end
-    end      
-  end  
-=end    
+   
   def do_special_structure
     trans= remove_json()
+    
     if language.iso_code == "en"    
       if trans.is_a? Array then
         if trans.size == 13 then
@@ -148,7 +125,7 @@ class Translation < ActiveRecord::Base
        keys = trans.keys
        not_plural = false
        keys.each{ |k|
-         if not CldrType.PLURALS.include? k
+         if ! CldrType.PLURALS.include?(k)
              not_plural = true
          end
        }  
@@ -160,20 +137,6 @@ class Translation < ActiveRecord::Base
      else
         # the Transaltion is not a special structure
      end
-=begin
-   else
-     # not english: we need to ensure that if the translation is a special structure( in en)
-     # then it gets a proper structure
-     #if english.special_structure
-     case english.special_structure
-     when TRANS_ARRAY_7
-     when TRANS_ARRAY_13_NULL 
-     when TRANS_ORDER_ARRAY
-     when TRANS_HASH
-     when TRANS_ARRAY
-     when TRANS_PLURAL        
-     end
-=end 
    end # english
   end  
 =begin
@@ -195,46 +158,24 @@ class Translation < ActiveRecord::Base
       return Translation.find(id)  
     end
   end 
-=begin
- This method should put the unpersisted data into empty records only
- @todo put the write and completion stuff in  
-@deprecated 
-  def has_persisted_object_data?(persisted, special_structure)
-    persisted = persisted_object()
-    trans = persisted.remove_json
-    has_data = false
-    case special_structure
-      when TRANS_PLURAL, TRANS_HASH
-        if trans.is_a? Hash
-          has_data = true if ! trans.keys.empty?
-        elsif trans.is_a? String
-          has_data = true if ! trans.blank?
-        end      
-               
-      when TRANS_ARRAY_13_NULL, TRANS_ARRAY_7, TRANS_ORDER_ARRAY,TRANS_ARRAY
-        if  trans.size == 0
-          has_data = false  
-        else
-          count = 0
-          trans.each{ |t|
-            if (! t.nil?) && t.length > 0
-              has_data = true 
-              break
-            else
-              count = count + 1
-             end   
-            }       
-         end
-       else
-         if ! trans.blank?
-           has_data = true
-         end 
-       end #when  
-    return has_data
-  end 
-=end   
+
   def do_incomplete(english)
-   trans = remove_json
+   #binding.pry if dot_key_code.include?('number.format.strip_insignificant_zeros')
+   if (translation == "true" || translation == "false")
+     trans = translation
+   else
+     trans = remove_json   
+   end
+   # We want all booleans to have a value
+   if language.iso_code != 'en'
+     if english == "true" || english == "false"
+       #if Translation. boolean_translations.include? dot_key_code
+         if translation.blank?
+           translation = english
+         end
+       #end 
+     end
+   end
    en_t = english.remove_json
    record_en = false
    tl = CalmappVersionsTranslationLanguage.find(cavs_translation_language_id).translation_language
@@ -245,7 +186,7 @@ class Translation < ActiveRecord::Base
        if trans.nil?
          trans = {}
          blank = true
-       elsif not trans.is_a? Hash     
+       elsif ! trans.is_a? Hash     
          if trans.is_a? String
            # translation can be single string: this will be take an an "other" translation and will work
            if trans.blank?
@@ -270,23 +211,23 @@ class Translation < ActiveRecord::Base
              end
            }
          end # not blank
+         #binding.pry pls
          pl.each{ |p|
-           if not trans.keys.include?(p) then
+           if ! trans.keys.include?(p) then
              many_insteadof_other = false
              if trans.keys.include?("many") && en_t.keys.include?("many") then
               many_insteadof_other = true
              end 
-             unless p == "other" && many_insteadof_other 
+             if p == "other" && many_insteadof_other
+               
+           
+               
+             else   
                trans[p] = nil#pnils #'' 
                blank = true  
              end #unless
            end #not trans.keys      
          }
-         puts trans.class.name + " trans hash?"
-         if trans.length == 1 && trans.keys[0] == "other" #&& (not trans.keys[0].blank?)
-           trans = trans.keys[0]
-           blank = false
-         end
        end #hash  
        self.incomplete = blank
      when TRANS_ARRAY_13_NULL
@@ -355,10 +296,9 @@ class Translation < ActiveRecord::Base
     else
       # not a speccial structure
       # however we take care of nulls and "nulls"
-      #pnils if trans == "null" || trans.nil? || trans.blank?
       blank_ok = Translation.valid_empty_string_dot_key_code.include?(dot_key_code)
       blank_not_ok = !(blank_ok)
-       if trans.blank? && blank_ok  
+      if trans.blank? && blank_ok  
         trans = ''
         self.incomplete = false
       elsif trans.blank?  && blank_not_ok
@@ -383,6 +323,19 @@ class Translation < ActiveRecord::Base
 =begin
  Validation 
 =end
+
+  def en_translation_not_nil
+    if language == TranslationLanguage.TL_EN
+      if translation.nil?
+        if ! Translation.valid_empty_string_dot_key_code.include?(dot_key_code) 
+          binding.pry
+          file_clause =  "from file: " + (update_file.nil? ? '' : update_file)
+          errors.add(:translation, "English translation cannot be nil or blank. Check dot_key_code : #{dot_key_code.to_s}. " +  (update_file.nil? ? '' : file_clause ) + " version: " + calmapp_version.description)
+        end
+      end
+    end
+  end
+
   def valid_json
     return if translation.nil?
     if not JSON.is_json? translation
@@ -415,14 +368,19 @@ class Translation < ActiveRecord::Base
       trans_interpolations.each do |ti|
         #if not pre_supplied_by_ar.include?(ti)
           if not en_interpolations.include?(ti)
-            #despite this it throws a StandardError: handled in controller  
-            errors.add(:translation, "Substitution: '" + ti + "' not in English: thus cannot be in your translation. Substitutions must be spelled exactly as in English(including capitals and lowercase).  If your substitution is not in English then delete it or correct the spelling.")
+            #despite this it throws a StandardError: handled in controller 
+            file_clause =   (update_file.nil? ? '' : " File: " + update_file)
+            errors.add(:translation, "Substitution: '" + ti + "' not in English: thus cannot be in your translation : #{language}. Substitutions must be spelled exactly as in English(including capitals and lowercase).  If your substitution is not in English then delete it or correct the spelling." + file_clause + " version: " + calmapp_version.description )
           end # error  
         #end #not pre supplied  
       end # do
     #end # if compare   
   end
   
+  def update_file
+    return (translations_upload_id.nil? ? nil : "File: #{translations_upload.yaml_upload_identifier}")
+  end
+    
   def english_translation_object
     return self if language.iso_code == 'en'
     dkc= self.dot_key_code
@@ -496,7 +454,8 @@ class Translation < ActiveRecord::Base
   @return Language object for this translation
 =end  
   def language
-    return calmapp_versions_translation_language.translation_language
+    
+      return calmapp_versions_translation_language.translation_language unless calmapp_versions_translation_language.nil?
   end 
   
   def language_en?
@@ -712,7 +671,12 @@ class Translation < ActiveRecord::Base
   end
   
   def to_s
-    return dot_key_code + ":" + translation + "(" + language.name + ")"
+    unless language.nil?
+      lang_name = language.name
+    else
+      lang_name = ''  
+    end
+    return dot_key_code.to_s + ":" + translation.to_s + "(" + lang_name.to_s + ")"
   end
 =begin
  The node must be a hash
@@ -753,6 +717,10 @@ class Translation < ActiveRecord::Base
       
       puts e.to_s
     end  
+  end
+  
+  def description
+    return dot_key_code + " " + translation.to_s + " " + calmapp_versions_translation_language.description
   end
   
   def self.english_translation_exists(calmapp_versions_translation_language, dkc)
@@ -911,7 +879,6 @@ class Translation < ActiveRecord::Base
     where("cldr = ?", true)
   }
 =begin
-  The code below does not work
   Correct sql is
   select * from translations t
    inner join calmapp_versions_translation_languages cavtl1 
@@ -929,25 +896,40 @@ class Translation < ActiveRecord::Base
            on cavtl2.translation_language_id = tl2.id 
            and "tl2"."iso_code" = 'da'
            and cavtl2.calmapp_version_id = 1)    
-  The code needed below could be soemthing like that in 
-  add_other_language_records_to_version()
   
   Determines which enlgish translations are not matched in another language
   @return activemodel_relation of result
 =end   
-   scope :translations_not_in_english, ->(calmapp_version_id, language_iso_code){
-=begin     
+   def self.translations_not_in_english(calmapp_version_id, language_iso_code)
+     en_arr = Translation.en_translations(calmapp_version_id)
+     
+     non_en = Translation.xx(calmapp_version_id, language_iso_code).to_a
+     dot_key_codes = []
+     non_en.each{|dkc| dot_key_codes << dkc[:dot_key_code]}
+     puts dot_key_codes
+     #binding.pry
+     missing = en_arr.where{dot_key_code << my{dot_key_codes}}.to_a
+     return missing
+   end  
+
+  
+  #scope :translations_not_in_english, ->(calmapp_version_id, language_iso_code){
+  scope :en_translations, ->(calmapp_version_id){
     join_to_cavs_tls_arr(calmapp_version_id).
     joins_to_tl_arr.
-    where{ tl1.iso_code == 'en' }.
-    where{ cavtl1.calmapp_version_id == my{calmapp_version_id}}.
-    where{ dot_key_code << (Translation.
-      join_to_cavs_tls_arr(calmapp_version_id).
-      joins_to_tl_arr.    
-      where{ tl1.iso_code == my{language_iso_code} }.
-      select{ "dot_key_code" }.all)}
-=end
+      where{ tl1.iso_code == 'en' }.
+    where{ cavtl1.calmapp_version_id == my{calmapp_version_id}}#.
+    #where{ dot_key_code << (Translation.xx(calmapp_version, language_iso_code ).all)}
   }
+  scope :xx, ->(calmapp_version_id, language_iso_code){
+    join_to_cavs_tls_arr(calmapp_version_id,2).
+    joins_to_tl_arr(2).    
+    where{ tl1.iso_code == my{language_iso_code} }.
+    select{ "dot_key_code" } 
+  }
+  
+  
+  
 end
 
 

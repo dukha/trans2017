@@ -35,12 +35,7 @@ class User < ActiveRecord::Base
   has_many :developer_cavs_tls, :through => :developer_jobs, :source => :calmapp_versions_translation_language#, :class_name=>"Calmapp"
   
   has_many :administrator_jobs, :foreign_key => "user_id" , :class_name=> "CavsTlAdministrator", :dependent => :destroy
-  #accepts_nested_attributes_for :developer_jobs, :reject_if => :all_blank, :allow_destroy => true
-  has_many :administrator_cavs_tls, :through => :administrator_jobs, :source => :calmapp_versions_translation_language#, :class_name=>"Calmapp"
-  
-  #after_create :add_cavs_tls, :if => Proc.new {|user| }
-  
-  # password must be at least 1 non- asci char (*&^) etc and at least 1 numeric unless set by devise_invitable
+  has_many :administrator_cavs_tls, :through => :administrator_jobs, :source => :calmapp_versions_translation_language
   def password_complexity
     if via_invitable
       return true
@@ -67,10 +62,6 @@ class User < ActiveRecord::Base
   def self.sortable_attr
     %w(email actual_name user_name)
   end
-  
-
-
-
 =begin
      for declarative auth
      Returns the role symbols of the given user for declarative_auth. 
@@ -252,7 +243,7 @@ CalmappVersionsTranslationLanguage.new(:translation_language_id =>TranslationLan
    end
    
   def self.contact_responders
-     return User.where{responds_to_contacts == true}.load
+     return User.where{responds_to_contacts == true}.to_a#load
    end
   def roles_list
    roles = []
@@ -261,7 +252,16 @@ CalmappVersionsTranslationLanguage.new(:translation_language_id =>TranslationLan
    roles << "Administrator" if ! administrator_cavs_tls.empty?
    return roles.join(" or ")
   end
-
+  
+  def all_cavtl_permissions
+    #binding.pry
+    if sysadmin?
+      arr = CalmappVersionsTranslationLanguage.all
+    else
+      arr = translator_cavs_tls + developer_cavs_tls + administrator_cavs_tls
+    end
+    return arr.uniq
+  end
 =begin
  Translators need a special permission to publish their work.
  They can only publish a version_language to the designated translation test redis
@@ -269,17 +269,13 @@ CalmappVersionsTranslationLanguage.new(:translation_language_id =>TranslationLan
 =end  
   def self.what_translations_can_user_publish user
     cavs_list = []
-    #binding.pry
-    publishable = user.translator_cavs_tls.each{ |cavtl|
+    publishable = user.all_cavtl_permissions.each{ |cavtl|#translator_cavs_tls.each{ |cavtl|
      translator_rdb = cavtl.calmapp_version_tl.translators_redis_database   
      cavs_list << translator_rdb unless translator_rdb.nil?
     }
     return cavs_list.uniq
   end
-  
-  def self.contact_reponders
-     responders = User.where{responds_to_contacts == true}.load
-  end
+ 
  protected
  # https://github.com/plataformatec/devise/wiki/How-To:-Allow-users-to-sign_in-using-their-username-or-email-address
  # Overwrite Devise’s find_for_database_authentication method
@@ -321,15 +317,4 @@ private
     AdminMailer.user_invitation_accepted(self).deliver_later
   end 
    
-=begin 
-private
-  # Others should use current_permission for its lazy initialisation. So making sure no one accesses current_permission_id
-  # this works because active record uses 'method missing' to access the methods dynamically created by active record
-  # Now active record will not get 'method missing' but the private method
-  def current_permission_id
-    self[:current_permission_id]
-  end
-
-
-=end
 end # class

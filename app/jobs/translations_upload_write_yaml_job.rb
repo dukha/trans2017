@@ -2,9 +2,9 @@ class TranslationsUploadWriteYamlJob < BaseJob #ActiveJob::Base
   queue_as :default
 
   def perform(translations_upload_id)
-    #Rails.logger.error "2. TranslationsUploadWriteYamlJob rrr " + Rails.root.to_path
     begin
-    TranslationsUpload.write_yaml(translations_upload_id)  
+    TranslationsUpload.write_yaml(translations_upload_id)
+    puts "Successfully competed " + self.class.name + " translations_upload_id = " + translations_upload_id.to_s  
     rescue => exception
       tu = TranslationsUpload.find(translations_upload_id)
       ExceptionNotifier.notify_exception(exception,

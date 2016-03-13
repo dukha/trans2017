@@ -310,13 +310,19 @@ td.whiteboard{
  
  /* for will_paginate */
 .next_page, .previous_page{
-  font-size:smaller;
+  /*font-size:smaller;*/
   font-weight:600;
 }
 .pagination em, .pagination a{
-  font-size:smaller;
+  /*font-size:smaller;*/
   font-weight:600;
 }
+.pagination a{
+  background-color: #eceae8;
+  padding:4px;
+  margin: 2px;
+}
+
 /* @ deprecated for new rails 3 error handler (set up in application helper) */
 div.errorHeaderCount{
   border-style:solid;

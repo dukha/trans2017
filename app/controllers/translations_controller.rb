@@ -73,7 +73,13 @@ class TranslationsController < ApplicationController
   end #def update
 
   def index
+    if Rails.env == 'development'
+      per_page = 10
+    else
+      per_page = 30
+    end  
     @translations = []
+    #binding.pry
     # We do all our primary IO via activerecord/postgres and only publish to redis....
    
     # to work with best_in_place to edit in the index html table we need to work with eager loading 
@@ -86,24 +92,27 @@ class TranslationsController < ApplicationController
     search_info = prepare_search()
 
     if Translation.valid_criteria?(search_info) then
-  
+      @cnt = 0
+      #binding.pry
       @translations = Translation.search(current_user, search_info, nil, possible_where_clauses_and_params)
       @translations = @translations.each do |t|
         #This will prevent strings appearing in quotes in the user interface
-        
         if JSON.is_json?(t.translation) then
             decoded = ActiveSupport::JSON.decode(t.translation) #unless t.translation.start_with? '{', '['
-        elsif t.translation.nil?
-          decoded = "" #pnilq
+        #elsif t.translation.nil?
+        #  decoded = "" #pnilq
         else
-          msg =  t.translation + " IS NOT JSON: bad data. Translation id = " + t.to_s
+          msg =  t.translation.to_s + " IS NOT JSON: bad data. Translation id = " + t.to_s
           puts msg
           Rails.logger.error( msg)
           decoded = t.translation
         end  
-        unless  decoded.is_a?(Array) || decoded.is_a?(Hash) then
+        unless  decoded.is_a?(Array) || decoded.is_a?(Hash) || decoded.is_a?(TrueClass) || decoded.is_a?(FalseClass) then
           t.translation = decoded
         end
+        if JSON.is_json?(t.english)
+					#mplnils
+				end	
 =begin         this didn't work for attribute 'en_translation'
         decoded = ActiveSupport::JSON.decode(t.attributes["en_translation"])
         if not (decoded.is_a? Array or decoded.is_a? Hash) then
@@ -111,7 +120,7 @@ class TranslationsController < ApplicationController
         end
       
 =end
-      end
+      end #each
     else  
       msg = 'Criteria: '
       flash_now= false
@@ -128,9 +137,9 @@ class TranslationsController < ApplicationController
     end
 
     if @translations.count == 0 then
-      flash[:warning] = "No translations found for the criteria give. Check your criteria."
+      flash[:warning] = "No translations found for the criteria given. Check your criteria."
     end
-    @translations =@translations.paginate(:page => params[:page], :per_page => 30)
+    @translations =@translations.paginate(:page => params[:page], :per_page => per_page)
     # pass data directly to js
     #gon.criteriaHiddenText = t($FA +'show_something', :something=>t($SC))
     #gon.criteriaVisibleText = t($FA +'hide_something', :something=>t($SC))
@@ -197,10 +206,10 @@ class TranslationsController < ApplicationController
     mode = params["selection_mode"]
     extra_where_clauses = []
     extra_where_params = []
-    en_newer_where = "(english.updated_at > translations.updated_at or (translations.incomplete = true))"
+    en_newer_where = "(english.updated_at > translations.updated_at)" #or (translations.incomplete = true))"
     #en_newer_params = [true]
     #en_newer = {en_newer_where => en_newer_params}
-    untranslated_where =  "(translations.translation is null or translations.translation = '' or translations.incomplete = true)"
+    untranslated_where = "(translations.incomplete = true)" #"(translations.translation is null or translations.translation = '' or translations.incomplete = true)"
     #untranslated_params = [true] 
     #untranslated = {untranslated_where => untranslated_params}
     if mode == "untranslated" then

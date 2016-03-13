@@ -4,6 +4,7 @@ class FinishVersionDeepCopyJob< BaseJob
   def perform(old_version_id, new_version_id, user_id, copy_translation_languages, copy_translations)
     begin
     CalmappVersion.finish_deep_copy(old_version_id, new_version_id, user_id, copy_translation_languages, copy_translations )
+    puts "Successfully competed " + self.class.name + " old version_id = " + old_version_id.to_s + " new_version_id " + new_version_id.to_s
     rescue Exception => exception
       ExceptionNotifier.notify_exception(exception,
       {:data=> {:class=> CalmappVersion, 

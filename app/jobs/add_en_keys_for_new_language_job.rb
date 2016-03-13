@@ -6,6 +6,7 @@ class AddEnKeysForNewLanguageJob < BaseJob #ActiveJob::Base
     begin
       cavtl = CalmappVersionsTranslationLanguage.find(cavs_translation_language_id)
       cavtl.add_all_dot_keys_from_en_for_new_translation_language
+      puts "Successfully completed " + self.class.name + " cavtl = " + cavtl.description
     rescue => exception
       ExceptionNotifier.notify_exception(exception,
       :data=> {:class=> CalmappVersionsTranslationLanguage, :id => cavs_translation_language_id,

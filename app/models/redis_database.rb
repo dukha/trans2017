@@ -5,47 +5,21 @@ class RedisDatabase < ActiveRecord::Base
   require 'connection_pool'
   
   attr_reader :pool_connection
-  #attr_accessor :used_by_publishing_translators # now an attribute
-  #validates :with => RedisDbValidator2
-  #belongs_to :calmapp_version
+
   belongs_to :redis_instance#, :dependent => :restrict_with_exception
   belongs_to :calmapp_version, inverse_of: :redis_databases
-  #belongs_to :calmapp_versions_redis_database
-  #has_one :calmapp_versions_redis_database
-  # has_one through does not permit multiple association instances in this direction. 
-  # The association is not an array, even though the reverse association is a has_many through
-  #has_one :calmapp_version, :through => :calmapp_versions_redis_database
   belongs_to :release_status
-  #has_many :uploads_redis_databases
-  #has_many :uploads, :through => :uploads_redis_databases
-  #validates :calmapp_version_id, :presence=>true
-  #validates :calmapp_version_id, :existence => true#, :presence=>true
+  
   validates :redis_db_index, :presence=>true
   validates :redis_db_index, :uniqueness => {:scope=>[:redis_instance]}
   validates :redis_instance_id, :presence=>true
   validates :release_status, :presence=>true, :existence=>true
-  #validates :release_status, :uniqueness=>{:scope=>[:calmapp_version]}
-  #validate :redis_db_index_exists
-  
-  #validates :release_status_id, :existence=>true
   validates :calmapp_version_id,:presence=>true
-  #validates :host,:presence=>true
-  #validates :port, :presence => true
   validates :used_by_publishing_translators, :inclusion => { :in => [1, 0,-1] }
-  #This validation checks whether the redis_db_index is one permitted by the installation.
-  #Returns false if not. Default redis setup is for databases 0-15 to be available.
-  #This can be increased in the redis config file (not via rails)
-  #validates  :redis_db_index, :redis_db => true
   
-  #validates_with Validations::TranslationValidator
-  #after_save :name_database
-  #before_delete -> (model) {model.calmapp_versions_redis_database.destroy}, :unless => model.calmapp_versions_redis_database.nil?}#:delete_calmapp_versions_redis_database
-  #before_destroy :delete_calmapp_versions_redis_database
-  
-  after_create :after_create_method
-  #after_update :after_update_method
-  after_commit :after_commit_method, :on => [:create, :update]
-  before_destroy :before_destroy_method
+  after_create :do_after_create
+  after_commit :do_after_commit, :on => [:create, :update]
+  before_destroy :do_before_destroy
   
 =begin
   used_by_publishing_translators is only an attribute used to adjust calmapp_version.translators_redis_database_id in all circumstances. 
@@ -54,8 +28,8 @@ class RedisDatabase < ActiveRecord::Base
     Or 0 indicting that that translators_redis_database_id is nulled.
     This way is necessary(rather than say a virtual attribute) because id is not available until after save.
 =end  
-  def after_commit_method
-    # We use update_columns here as we don't want to run these this method again!
+  def do_after_commit
+    # We use update_columns here(no callback) as we don't want to run these this method again(in a callback)!
     if used_by_publishing_translators == 1
       calmapp_version.update_columns(:translators_redis_database_id => id)
       update_columns(:used_by_publishing_translators => -1)
@@ -68,13 +42,13 @@ class RedisDatabase < ActiveRecord::Base
 =begin
  See  after_save_method() for explanation.
 =end  
-  def before_destroy_method
+  def do_before_destroy
     calmapp_version.update_columns(:translators_redis_database_id => nil)
   end
 =begin  
   executed after create. Creates a connection pool for redis db and deleted everything from redis database
 =end  
-  def after_create_method   
+  def do_after_create   
     flush_redis()
   end
   
@@ -115,36 +89,7 @@ class RedisDatabase < ActiveRecord::Base
     ": DB Index: " + redis_db_index.to_s
   end
   
-=begin
-  With a new record we cannot directly set calmapp_version.translators_redis_database_id from params 
-  as the id is not known until after create. Thus we do it here.
-  @todo  Probably should do it for update here as well.
-=end
-=begin  
-def set_translators_rdb_in_version
-    if ! used_by_publishing_translators.nil?
-      if Time.now - created_at < 1.minute
-        calmapp_version.translators_redis_database_id = id
-      end  
-    end
-    used_by_publishing_translators = nil
-  end
-=end
-=begin 
-  def connect
 
-    #@connection is a singleton: only 1 connection per database" will need testing in a multiuser situation
-    if ! @connection then
-      @connection = new_connection
-    end
-    return @connection
-  end
-  
-  def new_connection
-    #con = Redis.new :db=> redis_db_index, :password=> redis_instance.password, :host=> redis_instance.host, :port=> redis_instance.port
-    return con
-  end
-=end
   def database_supports_language? language
     if language.is_a?(TranslationLanguage) then
       language = language.id
@@ -189,16 +134,21 @@ def set_translators_rdb_in_version
  does not disconnect 
 =end  
   def publish_one_translation(translation) #, con = nil)
-
     translation = Translation.find(translation) if translation.is_a? Integer
-
+    # we don't publish nil translatons
+    return if translation.translation.nil? 
     dot_key= translation.full_dot_key_code
+    #binding.pry
+    #trans = ActiveSupport::JSON.decode(translation.translation) if JSON.is_json?(translation.translation)   
+    begin
       pool.with{ |con| 
         con.set(dot_key, translation.translation)
         puts "Published " + dot_key + " = " +  con.get(dot_key)
       }
-    #end
-    
+    rescue Redis::CannotConnectError => rcce
+        Rails.logger.error( "Redis Connection Failed in Pool redis_database id = " + id.to_s  + " Re-raising Redis CannotConnectError for " + dot_key)
+        raise rcce
+    end   
   end
 
 =begin
@@ -261,7 +211,6 @@ def set_translators_rdb_in_version
  
    def self.version_language_publish_from_ids(calmapp_version_id, translation_language_id, redis_database_id)
     rdb = RedisDatabase.find(redis_database_id)
-    #binding.pry
     begin
       translations = Translation.version_language_ready_to_publish_from_ids(calmapp_version_id, translation_language_id).load
       rdb.pool.with{|con|

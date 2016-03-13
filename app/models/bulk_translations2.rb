@@ -19,10 +19,14 @@ class BulkTranslations2
     language = calmapp_versions_translation_language.translation_language.iso_code
     plural_same_as_en = calmapp_versions_translation_language.translation_language.plurals_same_as_en?()
     previous_translation = nil
+    binding.pry if hash.keys.include?("restrict_dependent_destroy")
     unless keys.empty?
       keys.each do |k|  
+        
         translation = translation_to_db_from_file(k, hash[k], translation_upload_id, calmapp_versions_translation_language, plural_same_as_en, overwrite)#, plurals)    
+        
         if translation.nil? then  
+          #binding.pry
           #this is the situation where the translation language is not en and the english translation for the saem dot key does not exist
           next if k != keys.last
           return previous_translation unless previous_translation.nil?
@@ -42,9 +46,9 @@ class BulkTranslations2
     msg = "keys written to db >= " + count.to_s
     puts msg
     Rails.logger.info msg
-    msg =  "Different types of plurals in different langauges mean that the above number is not exact"
-    puts msg
-    Rails.logger.info msg
+    #msg =  "Different types of plurals in different langauges mean that the above number is not exact"
+    #puts msg
+    #Rails.logger.info msg
     return translation unless translation.nil?
     return create_new_translation_for_error_return("Something has gone wrong with writing keys to the database. At the end of " + "translations_to_db_from_file." +  " All keys are processed but still continued to the bottom.", calmapp_versions_translation_language.translation_language.name )
   end
@@ -79,7 +83,7 @@ class BulkTranslations2
   Writes all translations for en but for other locales, only translations that have a dot key code already in en
   In the case of plurals, there must be a PARTIAL dot_key_code in en
 =end
-  def self.translation_to_db_from_file(key, translation,translations_upload_id, calmapp_versions_translation_language, plural_same_as_en, overwrite)
+  def self.translation_to_db_from_file(key, translation,translations_upload_id, calmapp_versions_translation_language, plural_same_as_en, overwrite) 
     split_hash= split_full_dot_key_code key
     language = calmapp_versions_translation_language.translation_language.iso_code
     dkc = split_hash[:dot_key_code]
@@ -99,6 +103,7 @@ class BulkTranslations2
       #if key.include? "date.abbr_day_names" 
         #Rails.logger.info("date.abbr_day_names" + en_translation_exists.to_s)
       #end
+      #binding.pry if key.include?("restrict_dependent_destroy") #bbbbbbbbbbbbb
       if en_translation_exists 
         msg = "English translation exists for " + msg_data
       else # no en trans
@@ -120,7 +125,7 @@ class BulkTranslations2
         #if key.include? "date.abbr_day_names" 
           #Rails.logger.info("date.abbr_day_names now " + en_translation_exists.to_s)
         #end
-        
+        #binding.pry if key.include?("restrict_dependent_destroy")#bbbbbbbbbb
         if plurals.include?(split_dkc.last) # en_translation_exists
           #We have a plural that has nothing written to the db yet
           dkc = test_dkc
@@ -159,7 +164,7 @@ class BulkTranslations2
         # if not overwrite or match language and keys count=0 then this code executes
         msg = "Calling new condition : " + msg_data
         Rails.logger.debug msg
-        puts msg
+        puts msg   
         return do_new_condition(dkc, translation, calmapp_versions_translation_language, translations_upload_id, msg_data, plurals)
       end # object is nil
   end  #def
@@ -198,16 +203,20 @@ class BulkTranslations2
     #if dkc.include? ".header"
   
     #end
+   
     if JSON.is_json?(translation)
       t_json = translation
+      no_json =  ActiveSupport::JSON.decode(translation)
     else
       t_json = ActiveSupport::JSON.encode(translation)
+      no_json = translation
     end
     if JSON.is_json?(object.translation)
       tester = ActiveSupport::JSON.decode(object.translation)
     else
       tester = object.translation
     end
+    #binding.pry if (object.translation.is_a?(String) && object.translation.include?("other"))
     if overwrite == Translation.Overwrite[:all] then
             if tester != translation then
               b = object.update_attributes!(
@@ -226,9 +235,10 @@ class BulkTranslations2
             return object
         elsif overwrite == Translation.Overwrite[:continue_unless_blank] then
           #if object.translation.nil? then 
-          
-          if tester.blank?  
+          if tester.blank?
             #We update where the translation is nil anyway
+            #binding.pry if (translation.is_a?(String) &&  object.dot_key_code.include?('distance_in_words'))
+            #binding.pry if object.dot_key_code.include?('distance_in_words')
             b = object.update_attributes!(
                      :translation=> t_json, 
                      :cavs_translation_language_id => calmapp_versions_translation_language.id, 
@@ -238,6 +248,60 @@ class BulkTranslations2
             Rails.logger.info msg
             puts msg
             object.written = true
+          elsif (tester.is_a?(TrueClass) || tester.is_a?(FalseClass))
+              object.update_attributes!(
+                     :translation=> ActiveSupport::JSON.encode(t_json), 
+                     :cavs_translation_language_id => calmapp_versions_translation_language.id, 
+                     :translations_upload_id=> translations_upload_id, 
+                     ) 
+             msg = "overwrite: persisted anyway because boolean cannot be blank: " + msg_data
+            Rails.logger.info msg
+            puts msg
+            object.written = true 
+          elsif ((tester.is_a? Array)  && has_empty_some_values(tester))  
+            #This is a case of hash for translation e.g. plural
+            #binding.pry
+            i=0
+            new_translation = []
+            tester.each{|v|
+                if no_json[i].blank?
+                   new_translation[i] = tester[i]
+                else
+                   new_translation[i] = (tester[i].blank? ? no_json[i] : tester[i])
+                end
+                i += 1 
+            }
+            #binding.pry 
+            object.update_attributes!(
+                     :translation=> ActiveSupport::JSON.encode(new_translation), 
+                     :cavs_translation_language_id => calmapp_versions_translation_language.id, 
+                     :translations_upload_id=> translations_upload_id, 
+                     ) 
+             msg = "overwrite: persisted anyway because (part of) translation blank: " + msg_data
+            Rails.logger.info msg
+            puts msg
+            object.written = true        
+          elsif ((tester.is_a? Hash) && has_empty_some_values(tester))
+            # This is case of an array for translation e.g days of week
+            #binding.pry
+            new_translation = {}
+            tester.each{ |k,v|
+              if no_json[k].blank? 
+                new_translation[k] = tester[k]
+              else
+                new_translation[k] = (tester[k].blank? ? no_json[k] : tester[k])  
+              end 
+            }
+            #binding.pry
+            object.update_attributes!(
+                     :translation=> ActiveSupport::JSON.encode(new_translation), 
+                     :cavs_translation_language_id => calmapp_versions_translation_language.id, 
+                     :translations_upload_id=> translations_upload_id, 
+                     ) 
+             msg = "overwrite: persisted anyway because (part of) translation blank: " + msg_data
+            Rails.logger.info msg
+            puts msg
+            object.written = true                
           else
             # we do nothing here. The translation continues because we don't overwrite an existing translation
             object.written = false
@@ -249,7 +313,7 @@ class BulkTranslations2
         elsif overwrite == Translation.Overwrite[:cancel]
           # object is already in db
           # We write it anyway if translation is null
-          if tester.nil? blank? 
+          if (tester.is_a? String && tester.blank?) || all_empty?(tester) 
             #We update where the translation is nil anyway
             object.update_attributes!(
                     :translation=> t_json, 
@@ -257,7 +321,7 @@ class BulkTranslations2
                     :translations_upload_id=> translations_upload_id, 
                     #plural: plural_value(plurals, plural_key)
                     )
-            msg = "Overwrite: persisted anyway because tranlation blank: translation: " + msg_data
+            msg = "Overwrite: persisted anyway because (part of) tranlation blank: translation: " + msg_data
             Rails.logger.info msg
             puts msg
             object.written = true
@@ -283,7 +347,61 @@ class BulkTranslations2
           return object
         end #overwrite condition 
      end #def
-
+  def self.has_empty_some_values tester
+    if tester.is_a? Array then
+      tester.each{|v|
+        if v.blank?
+          return true
+        end  
+      }
+       return false
+    end
+   
+    
+    if tester.is_a? Hash then
+      tester.each{|k,v|
+        if v.blank?
+          return true
+        end  
+      }
+      return false
+    end
+    # return false here as boolean cannot be blank
+    return false if (tester.is_a?(TrueClass) || Tester.is_a?(FalseClass))
+    return ! tester.blank?
+  end
+=begin  
+  def self.array_has_empty_some_values array
+    if array.is_a? Array then
+      array.each{|v|
+        if v.blank?
+          return true
+        end  
+      }
+    end
+    return false
+  end
+=end  
+  def self.all_empty? tester
+    if tester.is_a?(Array)
+      tester.each{|v|
+        if ! v.blank?
+          return true
+        end  
+      }
+      return false
+    elsif tester.is_a? Hash
+      if tester.is_a? Hash then
+      tester.each{|k,v|
+        if ! v.blank?
+          return true
+        end  
+      }
+      return false
+    end
+      return tester.blank?
+    end
+  end
 =begin
  If the code is a new one for this calmapp_version_translation_language then write the translation with this method
 =end       
@@ -291,11 +409,14 @@ class BulkTranslations2
     msg = "Write new translation: " + msg_data
     puts msg
     Rails.logger.info msg
+   #binding.pry if dkc.include?('number.format.strip_insignificant_zeros')
+    #binding.pry if dkc.include?('significant')#'number.format.strip_insignificant_zeros'
     if JSON.is_json?(translation)
       t_json = translation
     else
       t_json = ActiveSupport::JSON.encode(translation)
     end
+    #binding.pry if dkc.include? 'significant'
     ret_val = Translation.new(
          :cavs_translation_language_id => calmapp_versions_translation_language.id, 
          :dot_key_code=> dkc, 

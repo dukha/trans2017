@@ -13,7 +13,7 @@
 
 ##redis_instance 
 * after_initialize :default values
->>Adds the default port and default maximum databases to the instance)
+>>Adds the default port and default maximum databases to the instance
 
 redis_database
 * after_create :after_create_method

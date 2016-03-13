@@ -64,7 +64,7 @@ Translate::Application.configure do
   # number of complex assets.
   config.assets.debug = true
   # This would configure rails-i18n gem for a limited number of locales
-  config.i18n.available_locales = [:en, :nl, :fr, :cs]
+  config.i18n.available_locales = [:en, :nl, :fr, :cs, :th]
 =begin
   # Only use best-standards-support built into browsers
   config.action_dispatch.best_standards_support = :builtin

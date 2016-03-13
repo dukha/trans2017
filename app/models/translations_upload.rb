@@ -65,6 +65,7 @@ class TranslationsUpload < ActiveRecord::Base
       data  = YAML.load_file(File.join(Rails.root.to_path, TranslationsUpload.uploaded_to_folder, yaml_upload.url))
       plurals= Hash.new
       key_value_pairs = TranslationsUpload.traverse_ruby(data, plurals, calmapp_versions_translation_language.calmapp_version_tl.id )
+      #binding.pry
     rescue Psych::SyntaxError => pse
       error =  PsychSyntaxErrorWrapper.new(pse, yaml_upload_identifier)
       puts error
@@ -77,6 +78,7 @@ class TranslationsUpload < ActiveRecord::Base
     begin
       Translation.transaction do
         puts yaml_upload.url
+        #binding.pry if key_value_pairs.keys.include?("restrict_dependent_destroy")
         t = BulkTranslations2.translations_to_db_from_file(key_value_pairs, id, calmapp_versions_translation_language, duplicates_behavior2)#, plurals)
         if t.errors.count > 0 then
           ret_val = t
@@ -118,12 +120,10 @@ class TranslationsUpload < ActiveRecord::Base
  @param dot_key_values_map contains aall the dot_keys and translations for this file in a hash      
 =end  
   def  self.traverse_ruby( node, plurals, version_id, dot_key_stack=Array.new, dot_key_values_map = Hash.new)#,  container=Hash.new, anchors = Hash.new, in_sequence=nil )     
-    if node.is_a? Hash then
-#as it was on 28 June      
+
+    if node.is_a? Hash then     
       if Translation.plural_hash? node
-        
         store_dot_key_value(dot_key_stack, node.to_json, dot_key_values_map, plurals, true)
-        
       else
     
         node.keys.each do |k|
@@ -137,9 +137,10 @@ class TranslationsUpload < ActiveRecord::Base
     elsif node.is_a? String then
       store_dot_key_value(dot_key_stack, node, dot_key_values_map, plurals)
 
-    elsif (node.is_a? TrueClass ) || (node.is_a? FalseClass) then
-      node = true if node.is_a? TrueClass
-      node = false if node.is_a? FalseClass
+    elsif (node.is_a? TrueClass ) || (node.is_a? FalseClass) || node == "true" || node == "false" then
+      #binding.pry
+      node = true if node.is_a? TrueClass || node == "true"
+      node = false if node.is_a? FalseClass || node == "false"
       #store_dot_key_value(dot_key_stack, node.to_s, dot_key_values_map, plurals)
       store_dot_key_value(dot_key_stack, node, dot_key_values_map, plurals)
     elsif node.is_a? Integer then
@@ -155,6 +156,7 @@ class TranslationsUpload < ActiveRecord::Base
     else
       puts "UNKNOWN CLASS " + node.class.name
     end
+    #binding.pry
     return dot_key_values_map
   end
   # @param plurals is a hash where the keys are dot_key_codes.

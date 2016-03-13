@@ -26,13 +26,6 @@ class CalmappVersion < ActiveRecord::Base
   #after_update :add_english
   before_create :do_before_create,   :if => Proc.new { |cav| cav.copied_from_version.blank? }
 
-  #def only_1_translator_database
-    #count = 0
-    #redis_databases.each{ |rdb| 
-      #count += count if rdb.translators_   
-    #}
-  #end
-
 =begin
 @return a collection of all calmapp names with versions
 =end

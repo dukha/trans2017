@@ -12,8 +12,6 @@
 <div id='criteria' class="criteria" >
   <!-- Use form_tag here because we are not going to work with a model. form_tag doesn't work with formtastic either -->
   <%= form_tag translations_path, :method => 'get', :class=>'formtastic' do %>
-  <!--%= semantic_form_for translations_path, :method => 'get' do |f| % -->
-    <!--%=f.inputs do%-->
     <%= hidden_field_tag :direction, params[:direction] %>
     <%= hidden_field_tag :sort, params[:sort] %>
     
@@ -48,8 +46,8 @@
          <label for="criterion_cav_id", class="criteria-label" ><%=tlabel("calmapp_version", "translation")%></label>
          <%=select_tag(  :operator_cavtl_id, options_for_select(operators_2_options(equal_operator), 
              params[:operator_cavtl_id]),{:include_blank=> false,:class=>'criteria-operators-select', :readonly=>true} )%> 
-         <%=select_tag( :criterion_cavtl_id, options_from_collection_for_select(users_cavs_tls(), "id","description", 
-               params[:criterion_cavtl_id]), {:include_blank=> ((users_cavs_tls().count == 1) ? false: true)})%>
+         <%=select_tag( :criterion_cavtl_id, options_from_collection_for_select(users_cavs_tls(current_user), "id","description", 
+               params[:criterion_cavtl_id]), {:include_blank=> ((users_cavs_tls(current_user).count == 1) ? false: true)})%>
       </li>
       
        <li class="string optional" id="translation_dot_key_code_input">
@@ -76,7 +74,7 @@
 
 
 <%= twill_paginate %>
-<table class="data" style="table-layout: fixed; width: 100%; ">
+<table class="data" style="table-layout: fixed; width: 100%; margin-top:2px; margin-bottom:2px ">
   <!--thead class="ui-widget-header" style = "color:black"-->
   <tr class="dataheader">
     <% if Translation.respond_to? :sortable_attr
@@ -120,8 +118,10 @@
 <% editable_cell_class = "best_in_place"%>
 <!-- < % i = 0 %>  -->
 <tbody class="ui-widget-content">
+  <%# trans is the result of selection ie not all attributes are present, but some extra attributes are there from the select(eg special_structure) %>
+  <% #translation is the activerecord instance with all the db attributes%>
   <% @translations.each do |trans| %>
-  
+     <%#binding.pry%>
      <%translation = Translation.find(trans.id)%>
   <tr class = "<%= cycle('dataeven', 'dataodd') %>"  id = '<%= dom_id(trans)%>'>
       <td class="<%= cell_class%>" style="word-wrap: break-word;<%=width_css[:dot_key_code]%>" ><span style="max-width:20px;"><%= trans.dot_key_code %></span></td>
@@ -130,7 +130,7 @@
         <td class="<%= cell_class%>" style="<%=width_css[:en_translation]%>;word-wrap: break-word;" data-tooltip = "<%=translation_tooltip(trans.attributes)%>"> 
         <%= format_english(trans.attributes) %></td>
       <%end%>
-    
+    <%#binding.pry%>
     <%if has_role? :translations_write%>  
       <!-- you cannot give this td below a class. It messes up bip -->
       <td id= '<%(best_in_place?(trans) ? "best_in_place" : "special-editor")%>' class="editor-container" style="<%=width_css[:translation]%>">
@@ -150,16 +150,17 @@
                         
                options[:collection] = collection?(trans.attributes)
                end%>   
-               <% if type == :boolean then 
-                options[:collection] = {"t" =>true.to_s, "f" =>false.to_s}
+            <% if type == :boolean then 
+                #binding.pry
+                options[:collection] = {"true" =>true.to_s, "false" =>false.to_s}
+                options[:value] = (trans.translation == 'true' ? "true" : "false") 
+                #binding.pry
                end%>
-            <%= best_in_place(trans, :translation, options) %>
+            <%translation.translation = translation.remove_json%> 
+            <%= best_in_place(translation, :translation, options) %>
          
-         <%elsif not trans.attributes["editor"] == nil then%>
+         <%elsif ! trans.attributes["editor"] == nil then%>
          <!-- ARRAY ORDER EDITOR -->
-          <!--input id= 'editor-name' type='hidden' value = '< %=trans.attributes["editor"]%>'   -->
-           <!--%=editor_text_field trans.attributes["editor"] % -->
-           <!--%=english_text_field(trans.attributes)% -->
            <div id = 'local-flash'></div>
           <span id = '<%=trans.dot_key_code%>' class = 'special-anchor' style = "color: blue;   word-wrap: break-word;"><%= trans.translation%></span>
           
@@ -177,8 +178,8 @@
           <!-- plural editor here -->
            <input id= 'editor-name' type= 'hidden' value = 'plural'  >
            <div id = 'local-flash'></div>
-           
-           <%if not JSON.is_json?(trans.translation)
+           <%#binding.pry%>
+           <%unless JSON.is_json?(trans.translation)
 
              trans.translation = ActiveSupport::JSON.encode(trans.translation)
            end %>

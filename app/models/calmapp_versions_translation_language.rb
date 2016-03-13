@@ -32,7 +32,13 @@ class CalmappVersionsTranslationLanguage < ActiveRecord::Base
   after_create :base_locale_translations_for_new_translation_languages, :add_this_to_sysadmin_users
   after_commit :do_after_commit_on_create, :on => :create
   #before_destroy :do_before_destroy
-  
+=begin
+ This class compares by description method 
+ Below implements the Comparable interface
+=end
+  def <=>(another)
+    description <=> another.description
+  end
 =begin
  @deprecated 
 
@@ -111,18 +117,12 @@ class CalmappVersionsTranslationLanguage < ActiveRecord::Base
         
         if File.exists?(file_to_upload) then          
           tu = TranslationsUpload.new(:cavs_translation_language_id=>id, 
-               :yaml_upload=> File.open(file_to_upload) , :description=> "Automatic base locale upload " + base_locale_file_name())
-          
+               :yaml_upload=> File.open(file_to_upload) , :description=> "Automatic base locale upload " + base_locale_file_name())          
           tu.save
-          #binding.pry
-          #if tu.save then
-            #tu.write_file_to_db2 #Translation.Overwrite[:continue_unless_blank]
-          #end #upload saved
         else
           # The file may not exist, in which case we don"t write but warn"
           calmapp_version_tl.warnings=ActiveModel::Errors.new(self) if calmapp_version_tl.warnings.nil?
-          calmapp_version_tl.warnings.add(:base, I18n.t($MS + "base_locale_file_not_found.warning", :folder => TranslationsUpload.base_locales_folder, :file_name=> base_locale_file_name,:fuchs=> "https://github.com/svenfuchs/rails-i18n/tree/master/rails/locale"))
-          #flash.now[:warning] = "The file " + base_locale_file_name + " does not exist in " + File.join(Rails.root, "base_locales") + " You will have to fill in about 160 more translations if you can't find this file. You can also copy and rename a file from a close locale. e.g. copy zh-CN.yml renaming to zh-MY.yml for Mayaysian Chinese."
+          calmapp_version_tl.warnings.add(:base, I18n.t($MS + "base_locale_file_not_found.warning", :folder => TranslationsUpload.base_locales_folder, :file_name=> base_locale_file_name,:fuchs=> "https://github.com/svenfuchs/rails-i18n/tree/master/rails/locale"))          #flash.now[:warning] = "The file " + base_locale_file_name + " does not exist in " + File.join(Rails.root, "base_locales") + " You will have to fill in about 160 more translations if you can't find this file. You can also copy and rename a file from a close locale. e.g. copy zh-CN.yml renaming to zh-MY.yml for Mayaysian Chinese."
           Rails.logger.warn "The file " + base_locale_file_name + " does not exist in " + TranslationsUpload.base_locales_folder + " You will have to fill in about 160 more translations if you can't find this file. You can also copy and rename a file from a close locale. e.g. copy zh-CN.yml renaming to zh-MY.yml for Mayaysian Chinese."
         end # base file exists
    end # not found
@@ -131,9 +131,11 @@ class CalmappVersionsTranslationLanguage < ActiveRecord::Base
   def do_after_commit_on_create
     if translation_language.iso_code != 'en' then
       if Rails.env.development? || Rails.env.test?
-        AddEnKeysForNewLanguageJob.set(:wait=> 2.minutes).perform_now(id)
+        AddEnKeysForNewLanguageJob.perform_now(id)
+        CheckAllEnKeysAvailableInNewLangJob.set(:wait=> 2.minutes).perform_later(id)
       else  
         AddEnKeysForNewLanguageJob.set(:wait=> 2.minutes).perform_later(id)
+        CheckAllEnKeysAvailableInNewLangJob.set(:wait=> 5.minutes).perform_later(id)
       end
       
     end
@@ -161,17 +163,20 @@ class CalmappVersionsTranslationLanguage < ActiveRecord::Base
         incomplete = false
         if test.is_a? Array
           length = test.length
-          foreign_blank = ActiveSupport::JSON.encode([length])
+          foreign_blank = ActiveSupport::JSON.encode( Array.new(length))
           incomplete = true
         elsif test.is_a? Hash
+          
           blank = {}
           if en_t.special_structure == "plural"
+            
             plurals = translation_language.plurals
             plurals.each{ |pl| blank[pl] = nil} #pnils
             #foreign.calmapp_versions_translation_language.translation_language.plurals.each{ |pl| blank[pl]= ''}  
           else
             test.keys.each{ |k| blank[k] = '' }
           end  
+          #binding.pry if en_t.dot_key_code.include?("restrict") #bbbbbbb
           foreign_blank = ActiveSupport::JSON.encode(blank)
           incomplete = true
         else
@@ -182,11 +187,18 @@ class CalmappVersionsTranslationLanguage < ActiveRecord::Base
           end  #pnils
         end #test is   
         if foreign.nil?
-          new_t = Translation.create!(
-             :dot_key_code => en_t.dot_key_code, 
-             :cavs_translation_language_id => cavtl.id,
-             :translation => foreign_blank, 
-             :incomplete=> incomplete)
+          begin
+            new_t = Translation.create(
+               :dot_key_code => en_t.dot_key_code, 
+               :cavs_translation_language_id => cavtl.id,
+               :translation => foreign_blank, 
+               :incomplete=> incomplete)
+           
+           
+             #binding.pry
+         rescue Exception => e
+           #binding.pry   #bbbbbbb
+         end    
         #elsif foreign.translation.blank?      
           #updated_t =  foreign.update_attributes!(:translation => en_t.translation) #unless (f.nil? && (not t.blank?))     
              #:plural_incomplete => plural_incomplete)
@@ -200,6 +212,7 @@ class CalmappVersionsTranslationLanguage < ActiveRecord::Base
         count = count + 1
         # debug return if count == 3
       end # do t
+      #binding.pry #bbbbbbbbb
       msg = "Successful completion of Callback: 'add_all_dot_keys_from_en_for_new_translation_language'. Count = " + count.to_s
       Rails.logger.info(msg)
       puts msg
@@ -244,4 +257,22 @@ class CalmappVersionsTranslationLanguage < ActiveRecord::Base
          cavtl.administrator_jobs.find_each{ |aj| aj.delete}
       end # transaction
   end # def
+  def self.check_all_en_keys_available_in_new_lang(cavs_translation_language_id)
+    cavtl = CalmappVersionsTranslationLanguage.find(cavs_translation_language_id)
+    cavtl.check_all_en_keys_available_in_new_lang
+  end
+  def check_all_en_keys_available_in_new_lang
+    calmapp_version_id = calmapp_version_tl.id
+    language_iso_code = translation_language.iso_code
+    arr = Translation.translations_not_in_english(calmapp_version_id, language_iso_code)
+    arr.each do |en_trans|
+      Translation.create!(
+        :dot_key_code => en_trans.dot_key_code,
+        :translation => new_trans(en_trans),
+        :cavs_translation_language_id => en. cavs_translation_language_id,
+        :incomplete => true    
+      )
+    end   
+  end
+  
 end #class

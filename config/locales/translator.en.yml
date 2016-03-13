@@ -153,7 +153,7 @@ en:
         deepdestroy: "Clicking this will delete all translations for language: %{language}. Make sure that these %{language} will not be needed in future."
         language_publish: "Clicking will publish all the translations for %{language} to a redis database to be immediately used by the main application." 
         translator_publish: "Clicking will publish all the translations for %{language} to a %{redis_database} for a translator to check what they have done. The published data is only for a translator to test."
-      calmapp_versions_redis_databases: Redis databases are where the translations are actually read by the application.
+      calmapp_versions_redis_databases: Redis databases are where the translations are actually read by the application. <span style="color:red;"> If you need to add a new Redis Database and there is no Redis Instance then go to Redis Instances and add a new instance. You may have to get your sysadmin to do this.</span>
       #translation:
         #dot_key_codes: 
           #activemodel_errors_messages_accepted: Tells the user that they must accept, for example, the usage conditions for the soeftware. 
@@ -234,7 +234,7 @@ en:
     developers_new_translations: Developers Translation
     #redis_admins: Redis Administration
     translations_uploads: Translation Uploads
-    translators_redis: What Redis Databases Can I Publish To?
+    translators_redis: What Redis Databases Can I Test Publish To?
     special_partial_dot_keys: Special Keys
     dot_key_code_translation_editors: Editors
     users: Users

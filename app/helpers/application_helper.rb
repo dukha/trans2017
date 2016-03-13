@@ -5,7 +5,7 @@ module ApplicationHelper
 
   
   $APPLICATION_NAME = "Vipassana Translator"
-  $APPLICATION_VERSION ="0.9.0"
+  $APPLICATION_VERSION ="0.9.9"
   
   def titler
     #if @title.nil?
@@ -43,7 +43,6 @@ module ApplicationHelper
       end
     end # do
     flash.discard
-    #binding.pry
     return html.html_safe   
   end
   def markdown_file( path)

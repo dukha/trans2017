@@ -290,7 +290,7 @@ $().ready(function(){
       children["translation"].val(update);
       children['anchor'].text(update) ;
       restoreTd(containerTd);
-      
+      setOriginalTranslation(update, containerTd); 
       //openNextRowEditor(containerTd);
       // Here we open up the next editor after the end of the click
      
@@ -317,8 +317,11 @@ $().ready(function(){
        $.each(rows, function(index, value){
          tds = $(value).find('td');
          key = $(tds[0]).html();
-         textarea = $(tds[1]).find('textarea');
-         $(textarea).val(hash[key]);
+         inputObject = $(tds[1]).find('textarea');
+         if(! isDOM(inputObject)){
+           inputObject = $(tds[1]).find('input');
+         }
+         $(inputObject).val(hash[key]);
       });
     }else{
       
@@ -329,7 +332,9 @@ $().ready(function(){
   var parentTd = function(event){
     return $(event.target).closest(containerSelector)[0];
   };
-  
+/*
+ * This function hides and shows after editing but does not change data
+ */  
   var restoreTd = function(td){
     console.log("in restor td");
     children = getTdChildren(td);
@@ -349,6 +354,13 @@ $().ready(function(){
     }else{
       
     }   
+  };
+/* on save this function sets the origninal translation to the new translation
+ * 
+ */
+  var setOriginalTranslation = function( newTranslationJson, td){
+    children = getTdChildren(td);
+    children['originalTranslation'].val(newTranslationJson);
   };
   /*
    * @param td the cell in which the objects for a translation update are contained
@@ -413,3 +425,12 @@ $().ready(function(){
             editorName: editorName,
             englishTranslation: english };
   };
+  
+  function isDOM (obj) {
+    // DOM, Level2
+    if ("HTMLElement" in window) {
+        return (obj && obj instanceof HTMLElement);
+    }
+    // Older browsers
+    return !!(obj && typeof obj === "object" && obj.nodeType === 1 && obj.nodeName);
+  }

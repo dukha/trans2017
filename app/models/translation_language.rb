@@ -22,8 +22,14 @@ class TranslationLanguage < ActiveRecord::Base
   def english?
     return iso_code == 'en'
   end
-
+=begin
+ Strictly speaking all chinese, korean, vietnamese, japanese, indonesian, thai, burmese, khymer all have "other" plurals
+ However  all chinese, korean, vietnamese, japanese, indonesian use "one_other" in base files: so they stay with "one_other"
+ burmese and kyymer have no base file
+ thai is the only example of a base file which uses other
+=end
  def self.seed
+   
   en =  TranslationLanguage.create!(:plural_sort=>"one_other", :iso_code=> "en", :name=>"English" )
  
    TranslationLanguage.create!(:iso_code=> "nl", :name=>"Dutch", :plural_sort => "one_other")
@@ -31,26 +37,26 @@ class TranslationLanguage < ActiveRecord::Base
    TranslationLanguage.create!(:iso_code=> "fr", :name=>"French", :plural_sort => "one_upto_two_other")
    TranslationLanguage.create!(:iso_code=> "de", :name=>"German", :plural_sort => "one_other")
    TranslationLanguage.create!(:iso_code=> "en-US", :name=>"English(US)", :plural_sort => "one_other")
-   TranslationLanguage.create!(:iso_code=> "zh-Hant", :name=>"Chinese(Traditional)", :plural_sort => "other")
-   TranslationLanguage.create!(:iso_code=> "zh-Hans", :name=>"Chinese(Simplified)", :plural_sort => "other")
+   TranslationLanguage.create!(:iso_code=> "zh-Hant", :name=>"Chinese(Traditional)", :plural_sort => "one_other")
+   TranslationLanguage.create!(:iso_code=> "zh-Hans", :name=>"Chinese(Simplified)", :plural_sort => "one_other")
    TranslationLanguage.create!(:iso_code=> "da", :name=>"Danish", :plural_sort => "one_other")
    TranslationLanguage.create!(:iso_code=> "pt", :name=>"Portuguese", :plural_sort => "one_other")
    TranslationLanguage.create!(:iso_code=> "it", :name=>"Italian", :plural_sort => "one_other")
    TranslationLanguage.create!(:iso_code=> "el", :name=>"Greek", :plural_sort => "one_other")
-   TranslationLanguage.create!(:iso_code=> "ja", :name=>"Japanese", :plural_sort => "other")
+   TranslationLanguage.create!(:iso_code=> "ja", :name=>"Japanese", :plural_sort => "one_other")
    TranslationLanguage.create!(:iso_code=> "sv", :name=>"Swedish", :plural_sort => "one_other")
    TranslationLanguage.create!(:iso_code=> "hu", :name=>"Hungarian", :plural_sort =>"east_slavic")# other?
    TranslationLanguage.create!(:iso_code=> "sr", :name=>"Serbian", :plural_sort => "one_few_many_other") # one_other
-   TranslationLanguage.create!(:iso_code=> "id", :name=>"Indonesian", :plural_sort => "other")
+   TranslationLanguage.create!(:iso_code=> "id", :name=>"Indonesian", :plural_sort => "one_other")
    TranslationLanguage.create!(:iso_code=> "th", :name=>"Thai", :plural_sort => "other")
    TranslationLanguage.create!(:iso_code=> "hi", :name=>"Hindi", :plural_sort =>"onewithzero_other")
    TranslationLanguage.create!(:iso_code=> "ne", :name=>"Nepali", :plural_sort =>"onewithzero_other" )
-   TranslationLanguage.create!(:iso_code=> "ko", :name=>"Korean", :plural_sort => "other")
+   TranslationLanguage.create!(:iso_code=> "ko", :name=>"Korean", :plural_sort => "one_other")
    TranslationLanguage.create!(:iso_code=> "nb", :name=>"Norwegian", :plural_sort => "one_other")
    TranslationLanguage.create!(:iso_code=> "fi", :name=>"Finnish", :plural_sort => "one_other")
    TranslationLanguage.create!(:iso_code=> "en-AU", :name=>"English(Australia)", :plural_sort => "one_other")
    TranslationLanguage.create!(:iso_code=> "en-UK", :name=>"English(UK)", :plural_sort => "one_other")
-   TranslationLanguage.create!(:iso_code=> "zh-HK", :name=>"Chinese(Hong Kong)", :plural_sort => "other")
+   TranslationLanguage.create!(:iso_code=> "zh-HK", :name=>"Chinese(Hong Kong)", :plural_sort => "one_other")
    TranslationLanguage.create!(:iso_code=> "pl", :name=>"Polish", :plural_sort =>"east_slavic")
    TranslationLanguage.create!(:iso_code=> "et", :name=>"Estonian", :plural_sort => "one_other")
    TranslationLanguage.create!(:iso_code=> "lt", :name=>"Lithuanian", :plural_sort =>"west_slavic")
@@ -59,7 +65,7 @@ class TranslationLanguage < ActiveRecord::Base
    TranslationLanguage.create!(:iso_code=> "cs", :name=>"Czech", :plural_sort =>"west_slavic")
    TranslationLanguage.create!(:iso_code=> "sl", :name=>"Slovenian", :plural_sort =>"west_slavic")
    TranslationLanguage.create!(:iso_code=> "kh", :name=>"Khymer", :plural_sort => "other")
-   TranslationLanguage.create!(:iso_code=> "vi", :name=>"Vietnamese", :plural_sort => "other")
+   TranslationLanguage.create!(:iso_code=> "vi", :name=>"Vietnamese", :plural_sort => "one_other")
    TranslationLanguage.create!(:iso_code=> "my", :name=>"Burmese", :plural_sort => "other")
    TranslationLanguage.create!(:iso_code=> "mk", :name=>"Macedonian", :plural_sort => "one_other")
    TranslationLanguage.create!(:iso_code=> "af", :name=>"Afrikaans", :plural_sort => "one_other")

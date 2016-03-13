@@ -103,7 +103,7 @@ class TranslationHint < ActiveRecord::Base
   TranslationHint.create!(:dot_key_code => "number.format.precision",:heading => "Number Format", :example => "", :description => "Number of digits after the decimal for ordinary numbers") # 3
   TranslationHint.create!(:dot_key_code => "number.format.separator",:heading => "Number Format", :example => "", :description => "Decimal character for ordinary numbers") # .
   TranslationHint.create!(:dot_key_code => "number.format.significant",:heading => "Number Format", :example => "", :description =>"Leave as false")#"'false' indicates no proper rounding on easy read numbers. '! 'false'' indicates proper rounding up when needed") # false
-  TranslationHint.create!(:dot_key_code => "number.format.strip_insignificant_zeros",:heading => "Number Format", :example => "1.00 beccomes 1 if this is true", :description => "'false' indictates no extra zeroes that have no meaning") # false
+  TranslationHint.create!(:dot_key_code => "number.format.strip_insignificant_zeros",:heading => "Number Format", :example => "1.00 becomes 1 if this is true", :description => "'false' indictates no extra zeroes that have no meaning") # false
   TranslationHint.create!(:dot_key_code => "number.human.decimal_units.format",:heading => "Easy Read Format", :example => "If the format has the unit(%u) before the number(%n) for billions then we may 40 Billion ", :description => "The order of the number unit and number") # %n %u
   TranslationHint.create!(:dot_key_code => "number.human.decimal_units.units.billion",:heading => "Easy Read Format", :example => "", :description => "Billion") # Billion
   TranslationHint.create!(:dot_key_code => "number.human.decimal_units.units.million",:heading => "Easy Read Format", :example => "", :description => "Million") # Million
@@ -114,7 +114,7 @@ class TranslationHint < ActiveRecord::Base
   TranslationHint.create!(:dot_key_code => "number.human.format.delimiter",:heading => "Easy Read", :example => "", :description => "Blank in English, Ok to leave blank unless youknow that it is needed.") #
   TranslationHint.create!(:dot_key_code => "number.human.format.precision",:heading => "Easy Read", :example => "number_to_human(1200000000) => 1 billion<br>number_to_human(1200000000) with precision 1 gives 1.2 billion", :description => "The number of decimals after the humanised number") # 3
   TranslationHint.create!(:dot_key_code => "number.human.format.significant",:heading => "Easy Read", :example => "", :description => "Leave as true") # true
-  TranslationHint.create!(:dot_key_code => "number.human.format.strip_insignificant_zeros",:heading => "Easy Read", :example => "1.00 beccomes 1 if this is true", :description => "true indictates no extra zeroes that have no meaning") # true
+  TranslationHint.create!(:dot_key_code => "number.human.format.strip_insignificant_zeros",:heading => "Easy Read", :example => "1.00 becomes 1 if this is true", :description => "true indictates no extra zeroes that have no meaning") # true
   
   TranslationHint.create!(:dot_key_code => "number.human.storage_units.format",:heading => "Computer Units", :example => "With %n %u 10 gigabytes becomes '10 GB'<br>With %u %n the user sees 'GB 10'", :description => "Specifies whether the number or the unit name comes first")# %n %u
   TranslationHint.create!(:dot_key_code => "number.human.storage_units.units.byte.one",:heading => "Computer Units", :example => "", :description => "Singular of byte") # Byte

@@ -5,6 +5,7 @@ class AddOtherLanguageRecordsToVersionJob < BaseJob #ActiveJob::Base
     begin
       t = Translation.find(translation_id)
       t.add_other_language_records_to_version
+      puts "Successfully competed " + self.class.name + " translation = " + t.description
     rescue => exception
       #puts "Exception in add_other_language_records_to_version()"
       ExceptionNotifier.notify_exception(exception,

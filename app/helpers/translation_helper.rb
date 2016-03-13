@@ -44,6 +44,7 @@ module TranslationHelper
  @return the correct input control for best in place editing 
 =end   
    def input_control(attrs)
+     #binding.pry
        if (not attrs["en_translation"].nil?) && attrs["en_translation"].length  > 40 && attrs["editor"].nil? then
          return :textarea
        elsif attrs["editor"] == "date_format" then
@@ -59,7 +60,7 @@ module TranslationHelper
          else
            en =   attrs["en_translation"]
          end
-         if en == 't' || en == 'f'
+         if en == 't' || en == 'f' || en == true || en == false
            return :boolean
          end  
        end
@@ -79,11 +80,13 @@ module TranslationHelper
 =begin
   Formats the english transation on the index
 =end   
-   def format_english attributes#, plural   
-     return date_format_example(attributes["en_translation"]) if editor_date_time_select?(attributes)  
+   def format_english attributes#, plural 
+     en = attributes["en_translation"]
+     en =  ActiveSupport::JSON.decode(en) if JSON.is_json?(en) 
+     return date_format_example(en) if editor_date_time_select?(attributes)  
      return "<i>[This plural not used in English]</i>".html_safe if attributes["en_translation"].nil?
      return "<i>[Not used in English, so left blank. It may be left blank in your language too.] </i>".html_safe if attributes["en_translation"].blank?
-     en = attributes["en_translation"]
+     
      special_structure = attributes["special_structure"]
      return format_noneditable(en, special_structure)
    end
@@ -93,33 +96,34 @@ module TranslationHelper
      return format_noneditable(attributes["translation"], attributes["special_structure"])   
    end
    
-   def format_noneditable translation, special_structure
-     object = translation
-     object = ActiveSupport::JSON.decode(translation) if JSON.is_json?(translation)
-     if  object.is_a?(Hash) && (special_structure == Translation::TRANS_PLURAL)   
+   def format_noneditable translation_not_json, special_structure
+     #binding.pry
+     #object = translation
+     #object = ActiveSupport::JSON.decode(translation) if JSON.is_json?(translation)
+     if  translation_not_json.is_a?(Hash) && (special_structure == Translation::TRANS_PLURAL)   
        html = "<table>"
-       object.each{|k, v|
+       translation_not_json.each{|k, v|
          html = html + "<tr><td>" + k + ": "  + v + "</td></tr>" 
        }
        html = html + "</table>"  
        return html.html_safe
-     elsif object.is_a?(Array) && 
+     elsif translation_not_json.is_a?(Array) && 
             (special_structure == Translation::TRANS_ARRAY_13_NULL || 
                 special_structure == Translation::TRANS_ARRAY_7 ||
                 special_structure == Translation::TRANS_ORDER_ARRAY)
        html = "<table>"
-       object.each{ |e|
+       translation_not_json.each{ |e|
          if e.nil?
            next
          end
-         html = html + "<tr><td>" + e.to_s + ((e == object.last) ? "" : ", ") + "</td></tr>"
+         html = html + "<tr><td>" + e.to_s + ((e == translation_not_json.last) ? "" : ", ") + "</td></tr>"
          }
          html = html + "</table>"
          return html.html_safe
      else
-         translation = true.to_s if object == 't' 
-         translation = false.to_s if object == 'f' 
-       return translation.html_safe
+         translation_not_json = true.to_s if translation_not_json == 't' 
+         translation_not_json = false.to_s if translation_not_json == 'f' 
+       return translation_not_json.to_s.html_safe
      end #if..elsif
      
    end
@@ -301,8 +305,10 @@ module TranslationHelper
    
      end
      if t.is_a? Hash then
+      #binding.pry #if attrs.dot_key_code.include?("restrict")
        t.each do |k,v|
          html = html + "<tr><td >" + k + "</td><td >"
+         v = '' if v.nil? #mplnils
          if v.length <= 60 then       
            html = html + text_field_tag( k, v, {:id=> attrs["dot_key_code"]  + "." + k, :size=>35, :name =>"translation_plural[" + k + "]"}) 
          else
@@ -332,11 +338,17 @@ module TranslationHelper
      else
        t = translation
      end
+     if t.nil?
+       
+     end
      html = "<table id = 'plural-viewer'>"
+     
      if t.is_a? Hash then
    
        
        t.each{|k, v|
+         #binding.pry if k.nil? || v.nil?  #mplnils
+         v = '' if v.nil?
          html = html + "<tr><td><b>" + k + "</b>: "  + v + "</td></tr>" 
        }
       
@@ -347,8 +359,9 @@ module TranslationHelper
        return html.html_safe
    end
    
-   def users_cavs_tls
-     arr = current_user.translator_cavs_tls + current_user.developer_cavs_tls + current_user.administrator_cavs_tls
+   def users_cavs_tls(user)
+     arr = user.all_cavtl_permissions.to_a#@translator_cavs_tls + current_user.developer_cavs_tls + current_user.administrator_cavs_tls 
+     arr.sort!
      return arr.uniq
    end   
    private

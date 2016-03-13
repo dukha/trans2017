@@ -17,7 +17,7 @@
                  <%=render :partial => 'shared/calmapp_versions_redis_database_form2', :locals=>{:f=>rd, :cav_redis_db_id => @calmapp_version.translators_redis_database_id}%>          
           <%end%> 
           </div>
-          <p class="inline-hints"><%=t($FH + "calmapp_versions_redis_databases") %></p>
+          <p class="inline-hints"><%=t($FH + "calmapp_versions_redis_databases").html_safe %></p>
                 <%= link_to_add_association t($FA + 'add_redis_database'), f, :redis_databases,
                 {:partial =>  'shared/calmapp_versions_redis_database_form2',
                   :render_options=> {:locals=>{:cav_redis_db_id => @calmapp_version.translators_redis_database_id}},

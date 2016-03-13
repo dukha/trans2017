@@ -82,15 +82,6 @@ class CalmappVersionsTranslationLanguagesController < ApplicationController
   # PATCH/PUT /calmapp_versions_translation_languages/1.json
   def update
     @calmapp_versions_translation_language.assign_attributes(calmapp_versions_translation_language_params)  
-=begin    
-    uploads_attrs = params["calmapp_versions_translation_language"]["translations_uploads_attributes"]
-    uploads_attrs.keys.each{ |k| 
-      if uploads_attrs[k]["_destroy"] != "false"
-        cavtl = TranslationsUpload.find(uploads_attrs[k]["id"]) 
-        cavtl.remove_yaml_upload! if cavtl
-      end
-    }
-=end
     respond_to do |format|
       begin
         if @calmapp_versions_translation_language.save
@@ -159,17 +150,11 @@ class CalmappVersionsTranslationLanguagesController < ApplicationController
  publish_language publishes a single language translations of a particular version to the chosen redis_database  
 =end
   def languagepublish
-    # a 
-    #@calmapp_versions_translation_language_id = params[:id]
-    #calmapp_versions_translation_language = CalmappVersionsTranslationLanguage.find(params[:id])
-    #set_calmapp_versions_translation_language
-    #calmapp_versions_translation_language.translation_language
-    #count = Translation.where{cavs_translation_language_id == calmapp_versions_translation_language.id}.where{incomplete == false}
-    begin
+     begin
       RedisDatabase.validate_redis_db_params(params[:redis_database_id])
   
       redis_db = RedisDatabase.find(params[:redis_database_id])
-      count = redis_db.version_language_ready_to_publish(calmapp_versions_translation_language.translation_language).count  
+      count = redis_db.version_language_ready_to_publish(@calmapp_versions_translation_language.translation_language).count  
       #count = redis_db.publish_version_language(calmapp_versions_translation_language.translation_language)
       if Rails.env.development? || Rails.env.test?
         PublishLanguageToRedisJob.perform_now(@calmapp_versions_translation_language.calmapp_version_tl.id, @calmapp_versions_translation_language.translation_language.id, redis_db.id)
@@ -194,9 +179,6 @@ class CalmappVersionsTranslationLanguagesController < ApplicationController
   end
 
   def translatorpublish
-    #calmapp_versions_translation_language = CalmappVersionsTranslationLanguage.find(params[:id])
-    #set_calmapp_versions_translation_language
-    #binding.pry
     begin
       @redis_database = @calmapp_versions_translation_language.calmapp_version_tl.translators_redis_database
       # We do perform_now() because the translator will want to see the result immediately

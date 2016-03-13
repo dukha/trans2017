@@ -50,6 +50,11 @@ namespace :trans do
   task :translation_demo => ["trans:marks_big_demo"] do
     Demo.translation_demo
   end
+  
+  task :short_seed => [:environment, 'db:migrate'] do
+    require File.join(Rails.root, 'db', "short_seeds.rb").to_s
+    
+  end
 =begin  
   task :start_again_demo => [:environment, 'demo', 'standard_letter_templates:auto_create' ,  'pform_app:students_to_courses','pform_queue:receive']
 

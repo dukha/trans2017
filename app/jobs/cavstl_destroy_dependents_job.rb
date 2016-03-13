@@ -6,6 +6,7 @@ class CavstlDestroyDependentsJob < BaseJob #ActiveJob::Base
     begin
       cavtl = CalmappVersionsTranslationLanguage.find(cavs_translation_language_id)
       cavtl.destroy_dependents #deep_destroy
+      puts "Successfully competed " + self.class.name + " cavtl = " + cavtl.description
     rescue => exception
   
       ExceptionNotifier.notify_exception(exception,
