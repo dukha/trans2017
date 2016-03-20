@@ -19,14 +19,10 @@ class BulkTranslations2
     language = calmapp_versions_translation_language.translation_language.iso_code
     plural_same_as_en = calmapp_versions_translation_language.translation_language.plurals_same_as_en?()
     previous_translation = nil
-    binding.pry if hash.keys.include?("restrict_dependent_destroy")
     unless keys.empty?
       keys.each do |k|  
-        
-        translation = translation_to_db_from_file(k, hash[k], translation_upload_id, calmapp_versions_translation_language, plural_same_as_en, overwrite)#, plurals)    
-        
+        translation = translation_to_db_from_file(k, hash[k], translation_upload_id, calmapp_versions_translation_language, plural_same_as_en, overwrite)#, plurals)     
         if translation.nil? then  
-          #binding.pry
           #this is the situation where the translation language is not en and the english translation for the saem dot key does not exist
           next if k != keys.last
           return previous_translation unless previous_translation.nil?
@@ -98,22 +94,13 @@ class BulkTranslations2
     end
     en_translation_exists = nil
     if language != 'en' then 
-      #puts "lang is not en"
       en_translation_exists = Translation.english_translation_exists(calmapp_versions_translation_language, dkc)
-      #if key.include? "date.abbr_day_names" 
-        #Rails.logger.info("date.abbr_day_names" + en_translation_exists.to_s)
-      #end
-      #binding.pry if key.include?("restrict_dependent_destroy") #bbbbbbbbbbbbb
       if en_translation_exists 
         msg = "English translation exists for " + msg_data
       else # no en trans
-        
         #we may find that a plural has vgotten by the yaml parser.
         # We check again to see if we can shorten the dkc because it is a plura        
         plurals = calmapp_versions_translation_language.translation_language.plurals
-        #if (dkc.include?(".header")) #&& (calmapp_versions_translation_language.translation_language.iso_code == 'ja')
-      
-        #end
         split_dkc = dkc.split('.')
         test_dkc = split_dkc[0..split_dkc.length-2].join('.')
                    #We check the new test_dkc
@@ -122,10 +109,6 @@ class BulkTranslations2
            msg_data = trans_msg_data(translation, language, test_dkc)
            msg = "English translation exists for " + msg_data
         end
-        #if key.include? "date.abbr_day_names" 
-          #Rails.logger.info("date.abbr_day_names now " + en_translation_exists.to_s)
-        #end
-        #binding.pry if key.include?("restrict_dependent_destroy")#bbbbbbbbbb
         if plurals.include?(split_dkc.last) # en_translation_exists
           #We have a plural that has nothing written to the db yet
           dkc = test_dkc
@@ -216,7 +199,6 @@ class BulkTranslations2
     else
       tester = object.translation
     end
-    #binding.pry if (object.translation.is_a?(String) && object.translation.include?("other"))
     if overwrite == Translation.Overwrite[:all] then
             if tester != translation then
               b = object.update_attributes!(
@@ -224,7 +206,6 @@ class BulkTranslations2
                          :cavs_translation_language_id => calmapp_versions_translation_language.id, 
                          :translations_upload_id=> translations_upload_id,   
                          )
-              #translation = translation.to_json
               msg = "Object persisted: old translation: " + object.translation + " replaced with new translation: " + msg_data             
             else
                msg = "Object to be persisted is the same as already stored: " + msg_data
@@ -234,11 +215,8 @@ class BulkTranslations2
             object.written = true
             return object
         elsif overwrite == Translation.Overwrite[:continue_unless_blank] then
-          #if object.translation.nil? then 
           if tester.blank?
             #We update where the translation is nil anyway
-            #binding.pry if (translation.is_a?(String) &&  object.dot_key_code.include?('distance_in_words'))
-            #binding.pry if object.dot_key_code.include?('distance_in_words')
             b = object.update_attributes!(
                      :translation=> t_json, 
                      :cavs_translation_language_id => calmapp_versions_translation_language.id, 
@@ -260,7 +238,6 @@ class BulkTranslations2
             object.written = true 
           elsif ((tester.is_a? Array)  && has_empty_some_values(tester))  
             #This is a case of hash for translation e.g. plural
-            #binding.pry
             i=0
             new_translation = []
             tester.each{|v|
@@ -271,7 +248,6 @@ class BulkTranslations2
                 end
                 i += 1 
             }
-            #binding.pry 
             object.update_attributes!(
                      :translation=> ActiveSupport::JSON.encode(new_translation), 
                      :cavs_translation_language_id => calmapp_versions_translation_language.id, 
@@ -283,7 +259,6 @@ class BulkTranslations2
             object.written = true        
           elsif ((tester.is_a? Hash) && has_empty_some_values(tester))
             # This is case of an array for translation e.g days of week
-            #binding.pry
             new_translation = {}
             tester.each{ |k,v|
               if no_json[k].blank? 
@@ -292,7 +267,6 @@ class BulkTranslations2
                 new_translation[k] = (tester[k].blank? ? no_json[k] : tester[k])  
               end 
             }
-            #binding.pry
             object.update_attributes!(
                      :translation=> ActiveSupport::JSON.encode(new_translation), 
                      :cavs_translation_language_id => calmapp_versions_translation_language.id, 
@@ -409,14 +383,11 @@ class BulkTranslations2
     msg = "Write new translation: " + msg_data
     puts msg
     Rails.logger.info msg
-   #binding.pry if dkc.include?('number.format.strip_insignificant_zeros')
-    #binding.pry if dkc.include?('significant')#'number.format.strip_insignificant_zeros'
     if JSON.is_json?(translation)
       t_json = translation
     else
       t_json = ActiveSupport::JSON.encode(translation)
     end
-    #binding.pry if dkc.include? 'significant'
     ret_val = Translation.new(
          :cavs_translation_language_id => calmapp_versions_translation_language.id, 
          :dot_key_code=> dkc, 

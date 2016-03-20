@@ -138,8 +138,6 @@ class RedisDatabase < ActiveRecord::Base
     # we don't publish nil translatons
     return if translation.translation.nil? 
     dot_key= translation.full_dot_key_code
-    #binding.pry
-    #trans = ActiveSupport::JSON.decode(translation.translation) if JSON.is_json?(translation.translation)   
     begin
       pool.with{ |con| 
         con.set(dot_key, translation.translation)

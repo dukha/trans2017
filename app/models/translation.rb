@@ -160,7 +160,6 @@ class Translation < ActiveRecord::Base
   end 
 
   def do_incomplete(english)
-   #binding.pry if dot_key_code.include?('number.format.strip_insignificant_zeros')
    if (translation == "true" || translation == "false")
      trans = translation
    else
@@ -211,7 +210,6 @@ class Translation < ActiveRecord::Base
              end
            }
          end # not blank
-         #binding.pry pls
          pl.each{ |p|
            if ! trans.keys.include?(p) then
              many_insteadof_other = false
@@ -223,7 +221,7 @@ class Translation < ActiveRecord::Base
            
                
              else   
-               trans[p] = nil#pnils #'' 
+               trans[p] = nil
                blank = true  
              end #unless
            end #not trans.keys      
@@ -328,7 +326,6 @@ class Translation < ActiveRecord::Base
     if language == TranslationLanguage.TL_EN
       if translation.nil?
         if ! Translation.valid_empty_string_dot_key_code.include?(dot_key_code) 
-          binding.pry
           file_clause =  "from file: " + (update_file.nil? ? '' : update_file)
           errors.add(:translation, "English translation cannot be nil or blank. Check dot_key_code : #{dot_key_code.to_s}. " +  (update_file.nil? ? '' : file_clause ) + " version: " + calmapp_version.description)
         end
@@ -907,7 +904,6 @@ class Translation < ActiveRecord::Base
      dot_key_codes = []
      non_en.each{|dkc| dot_key_codes << dkc[:dot_key_code]}
      puts dot_key_codes
-     #binding.pry
      missing = en_arr.where{dot_key_code << my{dot_key_codes}}.to_a
      return missing
    end  

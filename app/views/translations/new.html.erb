@@ -1,3 +1,7 @@
-<h1>Translations#new</h1>
-This is not yet implemented. It will only be for developers
-<p>Find me in app/views/translations/new.html.erb</p>
+<%=theading('new', :model=> "translation", :count=>1 )%>
+
+<%= render 'form' %>
+<%if has_role? :translation_create%>
+<%= tlink_to('new_model', new_translation_path, :model=>  'translation') %> |
+<%end%>
+<%= tlink_to "back", translations_path %>

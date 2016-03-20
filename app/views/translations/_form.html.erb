@@ -1,14 +1,26 @@
-<%= semantic_form_for @translations do |f| %>  
+<%= semantic_form_for @translation do |f| %>  
 
 	<%= f.inputs do %>
 	  <%= f.input :dot_key_code %>
-	  <%if new_record? %>
-	    <%coll = CalmappVersionTranslationLanguage.where{translation_language_id == TranslationLanguage.TL_EN.id}.load.collect {|p| [ t(p.description, p.id ]}%>
-	  <%else%>
-	    <%coll = CalmappVersionTranslationLanguage.all.collect {|p| [ t(p.description, p.id ]}%>
-	  <%end%>
+	  
+	  <%if current_user.profiles.include?(Profile.sysadmin)
+        jobs = CalmappVersionsTranslationLanguage.where{translation_language_id == TranslationLanguage.TL_EN.id}.to_a
+    else    
+      jobs = current_user.developer_jobs.where{cavs_translation_language_id == TranslationLanguage.TL_EN.id}.to_a +   
+             current_user.administrator_jobs.where{cavs_translation_language_id == TranslationLanguage.TL_EN.id}.to_a
+    end
+      jobs.uniq!
+      coll = jobs.collect{|p| [ p.description, p.id ]}    
+  	  
+    %>  
+	  <!--%if new_record?%>   
+	    < %coll = CalmappVersionTranslationLanguage.where{translation_language_id == TranslationLanguage.TL_EN.id}.where{translation_language_id >> (job_ids) }.to_a.collect {|p| [ t(p.description, p.id ]}%>
+	  < %else%>
+	    < %coll = CalmappVersionTranslationLanguage.all.collect {|p| [ t(p.description, p.id ]}%>
+	  < %end% -->
 	  <%= f.input :cavs_translation_language_id,  :as => :select, :collection => coll %>
-	  <%= f.input :translation %>
+	  <%= f.input :translation, :as => :text, :input_html => {:rows =>2}%>
+	  
     
 	<% end %>
 	<%= f.actions do %>

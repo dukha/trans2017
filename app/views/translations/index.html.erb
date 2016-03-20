@@ -121,7 +121,7 @@
   <%# trans is the result of selection ie not all attributes are present, but some extra attributes are there from the select(eg special_structure) %>
   <% #translation is the activerecord instance with all the db attributes%>
   <% @translations.each do |trans| %>
-     <%#binding.pry%>
+
      <%translation = Translation.find(trans.id)%>
   <tr class = "<%= cycle('dataeven', 'dataodd') %>"  id = '<%= dom_id(trans)%>'>
       <td class="<%= cell_class%>" style="word-wrap: break-word;<%=width_css[:dot_key_code]%>" ><span style="max-width:20px;"><%= trans.dot_key_code %></span></td>
@@ -130,7 +130,7 @@
         <td class="<%= cell_class%>" style="<%=width_css[:en_translation]%>;word-wrap: break-word;" data-tooltip = "<%=translation_tooltip(trans.attributes)%>"> 
         <%= format_english(trans.attributes) %></td>
       <%end%>
-    <%#binding.pry%>
+
     <%if has_role? :translations_write%>  
       <!-- you cannot give this td below a class. It messes up bip -->
       <td id= '<%(best_in_place?(trans) ? "best_in_place" : "special-editor")%>' class="editor-container" style="<%=width_css[:translation]%>">
@@ -146,15 +146,12 @@
              :ok_button_class=> "ok", 
              :cancel_button=>"Cancel", :cancel_button_class => "cancel",
              :place_holder=>"Click to edit", :html_attrs=> html_attrs(trans.attributes)}%>
-            <% if type == :select then 
-                        
+            <% if type == :select then                         
                options[:collection] = collection?(trans.attributes)
                end%>   
             <% if type == :boolean then 
-                #binding.pry
                 options[:collection] = {"true" =>true.to_s, "false" =>false.to_s}
                 options[:value] = (trans.translation == 'true' ? "true" : "false") 
-                #binding.pry
                end%>
             <%translation.translation = translation.remove_json%> 
             <%= best_in_place(translation, :translation, options) %>
@@ -178,7 +175,6 @@
           <!-- plural editor here -->
            <input id= 'editor-name' type= 'hidden' value = 'plural'  >
            <div id = 'local-flash'></div>
-           <%#binding.pry%>
            <%unless JSON.is_json?(trans.translation)
 
              trans.translation = ActiveSupport::JSON.encode(trans.translation)

@@ -25,7 +25,7 @@ namespace :update  do
   task :check_plurals => [:environment] do
     puts "begin check_plurals"
     plurals_json = Translation.where{translation =~ "{%"}.where{translation =~ "%}"}
-    #binding.pry
+
     plurals = []
     not_plurals = []
     plurals_json.each do |p|
@@ -61,7 +61,6 @@ namespace :update  do
   end
   
   task :check_nils=> [:environment] do
-    #binding.pry
     nulls = Translation.where{ translation == "null"}.to_a
     puts "bad nulls"
     puts nulls.to_s
@@ -115,7 +114,6 @@ namespace :update  do
   task :check_plurals_copy => [:environment] do
     puts "begin check_plurals_copy"
     plurals_json = Translation.where{translation =~ "{%"}.where{translation =~ "%}"}
-    #binding.pry
     plurals = []
     not_plurals = []
     plurals_json.each do |p|

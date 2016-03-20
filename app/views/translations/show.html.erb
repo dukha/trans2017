@@ -1,10 +1,6 @@
 <p id="notice"><%= notice %></p>
 
-<script type="text/javascript"> 
-  $().ready(function(){
-    $('.best_in_place').best_in_place();
-  });
-</script>
+
 
 <p>
   <b>Dot Key Code</b>
@@ -17,7 +13,9 @@
 
 
 
-<%if has_role? :translation_write%>
-<%= link_to 'Edit', edit_translation_path(@translation) %> |
+<%if has_role? :translations_create%>
+<%= link_to 'Edit', edit_translation_path(@translation) %> | <%=link_to "New Translation", new_translation_path%>
 <%end%>
+<%if has_role? :translations_write%>
 <%= link_to t("formtastic.actions.back"), translations_path %>
+<%end%>

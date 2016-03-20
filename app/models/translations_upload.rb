@@ -35,37 +35,12 @@ class TranslationsUpload < ActiveRecord::Base
       duplicates_behavior2 = Translation.Overwrite[:continue_unless_blank]
     end     
     begin
-=begin      
-      path = Rails.root
-      Rails.logger.info path + " " + Dir.entries(path).to_s
-      path = File.join(Rails.root, TranslationsUpload.uploaded_to_folder) 
-      Rails.logger.info path + " " + Dir.entries(path).to_s
-      arr = yaml_upload.url.split("/")
-      arr.each { |dir| 
-        path = File.join(path, dir)
-        if ! Dir.exist?(path)
-          if !File.exist?(path)
-            Rails.logger.info(path + " does not exist. Big Problem for writing upload.")  
-          else
-            Rails.logger.info(path + " does exist" )  
-          end
-        else 
-          Rails.logger.info path + " " + Dir.entries(path).to_s 
-        end
-        
-        }
-=end       
-      #File.join(Rails.root.to_path, TranslationsUpload.uploaded_to_folder,yaml_upload.url )
-      #Rails.logger.info Rails.root.to_path
-      #Rails.logger.info TranslationsUpload.uploaded_to_folder
-      #Rails.logger.info yaml_upload.url
       path = File.join(Rails.root.to_path, TranslationsUpload.uploaded_to_folder, yaml_upload.url)
       Rails.logger.info path
       Rails.logger.info("Trying to open: " + File.exist?(path).to_s )
       data  = YAML.load_file(File.join(Rails.root.to_path, TranslationsUpload.uploaded_to_folder, yaml_upload.url))
       plurals= Hash.new
       key_value_pairs = TranslationsUpload.traverse_ruby(data, plurals, calmapp_versions_translation_language.calmapp_version_tl.id )
-      #binding.pry
     rescue Psych::SyntaxError => pse
       error =  PsychSyntaxErrorWrapper.new(pse, yaml_upload_identifier)
       puts error
@@ -78,7 +53,6 @@ class TranslationsUpload < ActiveRecord::Base
     begin
       Translation.transaction do
         puts yaml_upload.url
-        #binding.pry if key_value_pairs.keys.include?("restrict_dependent_destroy")
         t = BulkTranslations2.translations_to_db_from_file(key_value_pairs, id, calmapp_versions_translation_language, duplicates_behavior2)#, plurals)
         if t.errors.count > 0 then
           ret_val = t
@@ -138,7 +112,6 @@ class TranslationsUpload < ActiveRecord::Base
       store_dot_key_value(dot_key_stack, node, dot_key_values_map, plurals)
 
     elsif (node.is_a? TrueClass ) || (node.is_a? FalseClass) || node == "true" || node == "false" then
-      #binding.pry
       node = true if node.is_a? TrueClass || node == "true"
       node = false if node.is_a? FalseClass || node == "false"
       #store_dot_key_value(dot_key_stack, node.to_s, dot_key_values_map, plurals)
@@ -156,7 +129,6 @@ class TranslationsUpload < ActiveRecord::Base
     else
       puts "UNKNOWN CLASS " + node.class.name
     end
-    #binding.pry
     return dot_key_values_map
   end
   # @param plurals is a hash where the keys are dot_key_codes.

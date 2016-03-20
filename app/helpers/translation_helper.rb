@@ -44,7 +44,6 @@ module TranslationHelper
  @return the correct input control for best in place editing 
 =end   
    def input_control(attrs)
-     #binding.pry
        if (not attrs["en_translation"].nil?) && attrs["en_translation"].length  > 40 && attrs["editor"].nil? then
          return :textarea
        elsif attrs["editor"] == "date_format" then
@@ -97,9 +96,6 @@ module TranslationHelper
    end
    
    def format_noneditable translation_not_json, special_structure
-     #binding.pry
-     #object = translation
-     #object = ActiveSupport::JSON.decode(translation) if JSON.is_json?(translation)
      if  translation_not_json.is_a?(Hash) && (special_structure == Translation::TRANS_PLURAL)   
        html = "<table>"
        translation_not_json.each{|k, v|
@@ -305,7 +301,6 @@ module TranslationHelper
    
      end
      if t.is_a? Hash then
-      #binding.pry #if attrs.dot_key_code.include?("restrict")
        t.each do |k,v|
          html = html + "<tr><td >" + k + "</td><td >"
          v = '' if v.nil? #mplnils
@@ -347,7 +342,6 @@ module TranslationHelper
    
        
        t.each{|k, v|
-         #binding.pry if k.nil? || v.nil?  #mplnils
          v = '' if v.nil?
          html = html + "<tr><td><b>" + k + "</b>: "  + v + "</td></tr>" 
        }

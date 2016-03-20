@@ -254,6 +254,7 @@ en:
     help_files: User Help
     publishing: Publishing
     help_contents: Help Contents
+    set_up_translators_redis: New Translators Redis
   headings:
     application_subheading: Translator
     write_to_database:

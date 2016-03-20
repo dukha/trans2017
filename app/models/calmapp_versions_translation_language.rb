@@ -171,20 +171,18 @@ class CalmappVersionsTranslationLanguage < ActiveRecord::Base
           if en_t.special_structure == "plural"
             
             plurals = translation_language.plurals
-            plurals.each{ |pl| blank[pl] = nil} #pnils
-            #foreign.calmapp_versions_translation_language.translation_language.plurals.each{ |pl| blank[pl]= ''}  
+            plurals.each{ |pl| blank[pl] = nil}  
           else
             test.keys.each{ |k| blank[k] = '' }
           end  
-          #binding.pry if en_t.dot_key_code.include?("restrict") #bbbbbbb
           foreign_blank = ActiveSupport::JSON.encode(blank)
           incomplete = true
         else
-          if Translation.valid_empty_string_dot_key_code.include?(en_t.dot_key_code) #pnils
-            foreign_blank = '' #pnils
-          else #pnils
-            foreign_blank =  nil # pnils #ActiveSupport::JSON.encode(foreign_blank)
-          end  #pnils
+          if Translation.valid_empty_string_dot_key_code.include?(en_t.dot_key_code) 
+            foreign_blank = '' 
+          else 
+            foreign_blank =  nil 
+          end  
         end #test is   
         if foreign.nil?
           begin
@@ -193,26 +191,16 @@ class CalmappVersionsTranslationLanguage < ActiveRecord::Base
                :cavs_translation_language_id => cavtl.id,
                :translation => foreign_blank, 
                :incomplete=> incomplete)
-           
-           
-             #binding.pry
          rescue Exception => e
-           #binding.pry   #bbbbbbb
+
          end    
-        #elsif foreign.translation.blank?      
-          #updated_t =  foreign.update_attributes!(:translation => en_t.translation) #unless (f.nil? && (not t.blank?))     
-             #:plural_incomplete => plural_incomplete)
-             #puts "New translation = " + new_t.to_s
          else
-           #en_t.tran blank
+
          end     
-         puts "New translation added for dot_key: " + en_t.dot_key_code + " language: " + translation_language.name + " translation: '" + (foreign_blank.nil? ? "Nil": foreign_blank) #unless foreign_blank.nil? #pnil new_t.nil?
-         #puts "Updated translation for dot_key: " + t.dot_key_code + " language: " + translation_language.name + " translation: '" + t.translation + "'" unless updated_t.nil?
+         puts "New translation added for dot_key: " + en_t.dot_key_code + " language: " + translation_language.name + " translation: '" + (foreign_blank.nil? ? "Nil": foreign_blank) 
          puts ""
         count = count + 1
-        # debug return if count == 3
       end # do t
-      #binding.pry #bbbbbbbbb
       msg = "Successful completion of Callback: 'add_all_dot_keys_from_en_for_new_translation_language'. Count = " + count.to_s
       Rails.logger.info(msg)
       puts msg

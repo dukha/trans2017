@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160130055316) do
+ActiveRecord::Schema.define(version: 20160317062431) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -184,6 +184,7 @@ ActiveRecord::Schema.define(version: 20160130055316) do
     t.integer  "cavs_translation_language_id"
     t.string   "special_structure"
     t.boolean  "incomplete",                   default: false
+    t.boolean  "created_manually",             default: false, null: false
   end
 
   add_index "translations", ["cavs_translation_language_id", "dot_key_code"], name: "iu_translations_language_dot_key_code", unique: true, using: :btree

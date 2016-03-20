@@ -12,7 +12,9 @@ class TranslationsController < ApplicationController
   @@model='translation'
   
   def new
+    @translation = Translation.new
   end
+=begin  
    def dev_new
     @translation = Translation.new
     
@@ -21,6 +23,7 @@ class TranslationsController < ApplicationController
       format.html
     end
   end
+=end
   #This update only tested for xhr
   def update
     
@@ -79,7 +82,6 @@ class TranslationsController < ApplicationController
       per_page = 30
     end  
     @translations = []
-    #binding.pry
     # We do all our primary IO via activerecord/postgres and only publish to redis....
    
     # to work with best_in_place to edit in the index html table we need to work with eager loading 
@@ -93,7 +95,6 @@ class TranslationsController < ApplicationController
 
     if Translation.valid_criteria?(search_info) then
       @cnt = 0
-      #binding.pry
       @translations = Translation.search(current_user, search_info, nil, possible_where_clauses_and_params)
       @translations = @translations.each do |t|
         #This will prevent strings appearing in quotes in the user interface
@@ -113,13 +114,6 @@ class TranslationsController < ApplicationController
         if JSON.is_json?(t.english)
 					#mplnils
 				end	
-=begin         this didn't work for attribute 'en_translation'
-        decoded = ActiveSupport::JSON.decode(t.attributes["en_translation"])
-        if not (decoded.is_a? Array or decoded.is_a? Hash) then
-          t.attributes["en_translation"] = decoded
-        end
-      
-=end
       end #each
     else  
       msg = 'Criteria: '
@@ -169,7 +163,14 @@ class TranslationsController < ApplicationController
 
 # Will be needed for developers
   def create
-    
+    @translation = Translation.new(translation_params(:create))
+    @translation.created_manually = true
+    if @translation.save
+      tflash('create', :success, {:model=>@@model, :count=>1}) 
+      redirect_to  translation_path(@translation.id),  notice: "English translation was successfully created: #{@translation.translation}."
+    else
+      render action: 'new', error: @translation.errors.messages.to_s 
+    end
   end
 
   def show
@@ -273,6 +274,7 @@ class TranslationsController < ApplicationController
   end
 =end
   protected
+=begin  
     # This method called when the DB uniqueness constraint is violated
     def record_not_unique exception
       flash.now[:error] = exception.message
@@ -309,6 +311,7 @@ class TranslationsController < ApplicationController
       @developer_param.key_helper=params[:developer_param][:key_helper]
       @rollbacked = true
     end
+=end    
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_translation
@@ -317,8 +320,13 @@ class TranslationsController < ApplicationController
 
     
     # modify for developers
-    def translation_params
-        params.require(:translation).permit(:translation) 
+    def translation_params(action = :update)
+        return params.require(:translation).permit(:translation) if action == :update
+        cavs_translation_language = CalmappVersionsTranslationLanguage.find(params[:translation][:cavs_translation_language_id])
+        if (cavs_translation_language.translation_language_id == TranslationLanguage.TL_EN.id) && action == :create
+          return params.require(:translation).permit(:translation, :cavs_translation_language_id, :dot_key_code, :created_manually)
+        end
+        return nil
     end  
    
 end

@@ -254,7 +254,6 @@ CalmappVersionsTranslationLanguage.new(:translation_language_id =>TranslationLan
   end
   
   def all_cavtl_permissions
-    #binding.pry
     if sysadmin?
       arr = CalmappVersionsTranslationLanguage.all
     else

@@ -1,0 +1,42 @@
+calm:
+  standard:
+    activerecord.models.: 
+      - <model>.
+      - "{\"one\": <singular>, \"other\": <other>}"
+    activerecord.attributes.: 
+      - <model>.
+      - <attribute>
+    formtastic.label.:
+      - <model>.
+      - <attribute>
+    formtastic.hints.:
+      - <model>.
+      - <attribute>
+    formtastic.actions.:
+      - <action>    
+    errors.messges.:
+    headings.:
+    menus.:
+    lookups:
+    message:
+    message_status:
+    tabs.:
+    buttons.:
+    links.:
+    messages.:               
+  easy:  
+    formtastic.label.: 
+      - <attribute>
+    formtastic.hints.:
+      - <attribute>
+comms:
+  standard:
+    activerecord.attributes.: 
+      - <model>.
+      - <attribute>
+    formtastic.actions.:
+      - <action>
+    messges.:
+    lookups.: 
+     
+  
