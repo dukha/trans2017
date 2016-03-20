@@ -101,6 +101,10 @@ module ApplicationHelper
       if time.blank?
         return ''
       else
+        # use js to set a users timezone after login  
+        # var current_time = new Date();
+        #current_time.getTimezoneOffset()
+        # ??add attr_accessor timezone to user and set time by ajax in devise callback :after_database_authentication in model
         #return time.localtime.in_time_zone(current_user.time_zone).strftime("%e-%b-%y %H:%M") if current_user && current_user.time_zone
         return time.localtime.strftime("%e-%b-%y %H:%M")  
       end

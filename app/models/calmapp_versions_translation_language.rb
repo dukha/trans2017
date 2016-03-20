@@ -132,9 +132,11 @@ class CalmappVersionsTranslationLanguage < ActiveRecord::Base
     if translation_language.iso_code != 'en' then
       if Rails.env.development? || Rails.env.test?
         AddEnKeysForNewLanguageJob.perform_now(id)
+        binding.pry
         CheckAllEnKeysAvailableInNewLangJob.set(:wait=> 2.minutes).perform_later(id)
       else  
         AddEnKeysForNewLanguageJob.set(:wait=> 2.minutes).perform_later(id)
+        binding.pry
         CheckAllEnKeysAvailableInNewLangJob.set(:wait=> 5.minutes).perform_later(id)
       end
       
@@ -245,9 +247,9 @@ class CalmappVersionsTranslationLanguage < ActiveRecord::Base
          cavtl.administrator_jobs.find_each{ |aj| aj.delete}
       end # transaction
   end # def
-  def self.check_all_en_keys_available_in_new_lang(cavs_translation_language_id)
+  def self.check_en_keys_available_in_new_lang(cavs_translation_language_id)
     cavtl = CalmappVersionsTranslationLanguage.find(cavs_translation_language_id)
-    cavtl.check_all_en_keys_available_in_new_lang
+    cavtl.check_en_keys_available_in_new_lang
   end
   def check_all_en_keys_available_in_new_lang
     calmapp_version_id = calmapp_version_tl.id
