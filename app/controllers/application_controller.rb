@@ -136,7 +136,8 @@ This function, together with the scope in routes.rb allows the setting of urls l
   def set_locale
     logger.debug "Param locale = " + (params[:locale]==nil ? "nil" : params[:locale].to_s)
     logger.debug "Session locale = " + (session[:locale] ==nil ? "nil" : session[:locale].to_s)
-    I18n.locale = session[:locale] = params[:locale] || session[:locale] || :en #extract_locale_from_accept_language_header
+    #binding.pry
+    I18n.locale = params[:locale] || session[:locale] || :en #extract_locale_from_accept_language_header
     logger.info "Locale set to " + I18n.locale.to_s
   end
 =begin
