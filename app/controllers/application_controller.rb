@@ -18,7 +18,7 @@ class ApplicationController < ActionController::Base
     end
   end 
 =end 
-  before_filter  :set_locale
+  #before_filter  :set_locale
   
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_filter :set_host_from_request
