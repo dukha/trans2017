@@ -200,12 +200,12 @@ class TranslationsUpload < ActiveRecord::Base
   end
   
   def self.write_yaml(id)
-    Logger.new("log/upload.log").info "3. self.write_yaml rrr " + Rails.root.to_path
+    #Logger.new("log/upload.log").info "3. self.write_yaml rrr " + Rails.root.to_path
     tu = TranslationsUpload.find(id)
     if tu.nil?
-      Logger.new("log/upload.log").info "Could not find translation upload with id : "  + id.to_s
+      Rails.logger.info "Could not find translation upload with id : "  + id.to_s
     else
-      Logger.new("log/upload.log").info "Found translation upload " + tu.to_s + " with id " + id.to_s        
+      Rails.logger.info "Found translation upload " + tu.to_s + " with id " + id.to_s        
     end 
     tu.write_yaml_file_to_db()
   end
