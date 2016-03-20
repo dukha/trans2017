@@ -2,7 +2,7 @@ class CheckAllEnKeysAvailableInNewLangJob < BaseJob #ActiveJob::Base
   queue_as :default
 
   def perform(cavs_translation_language_id)
-    binding.pry
+    #binding.pry
     begin
       CalmappVersionsTranslationLanguage.check_en_keys_available_in_new_lang(cavs_translation_language_id)
       puts "Successfully completed " + self.class.name + " cavtl = " + CalmappVersionsTranslationLanguage.find(cavs_translation_language_id).description

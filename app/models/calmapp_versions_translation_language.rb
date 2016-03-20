@@ -130,15 +130,15 @@ class CalmappVersionsTranslationLanguage < ActiveRecord::Base
   
   def do_after_commit_on_create
     if translation_language.iso_code != 'en' then
-      if Rails.env.development? || Rails.env.test?
-        AddEnKeysForNewLanguageJob.perform_now(id)
-        binding.pry
-        CheckAllEnKeysAvailableInNewLangJob.set(:wait=> 2.minutes).perform_later(id)
-      else  
-        AddEnKeysForNewLanguageJob.set(:wait=> 2.minutes).perform_later(id)
-        binding.pry
+      #if Rails.env.development? || Rails.env.test?
+        AddEnKeysForNewLanguageJob.set(:wait=>2.minutes).perform_later(id)
+        #binding.pry
         CheckAllEnKeysAvailableInNewLangJob.set(:wait=> 5.minutes).perform_later(id)
-      end
+      #else  
+        #AddEnKeysForNewLanguageJob.set(:wait=> 2.minutes).perform_later(id)
+        #binding.pry
+        #CheckAllEnKeysAvailableInNewLangJob.set(:wait=> 5.minutes).perform_later(id)
+      #end
       
     end
   end
@@ -251,7 +251,7 @@ class CalmappVersionsTranslationLanguage < ActiveRecord::Base
     cavtl = CalmappVersionsTranslationLanguage.find(cavs_translation_language_id)
     cavtl.check_en_keys_available_in_new_lang
   end
-  def check_all_en_keys_available_in_new_lang
+  def check_en_keys_available_in_new_lang
     calmapp_version_id = calmapp_version_tl.id
     language_iso_code = translation_language.iso_code
     arr = Translation.translations_not_in_english(calmapp_version_id, language_iso_code)
