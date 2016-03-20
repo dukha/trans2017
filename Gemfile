@@ -117,6 +117,8 @@ gem 'whenever'
 # allows storage of keys etc in ENV
 gem 'dotenv-rails'
 
+gem 'ya2yaml'
+
 group :development, :test do
   gem 'rspec-rails'#, '2.8.0'
   # webrat or capybara can be used to simulate a browser. rspec doesn't care which one.
