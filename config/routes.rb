@@ -41,6 +41,8 @@ Translate::Application.routes.draw do
    get 'help/background_processes', :to => 'help#background_processes', :as => 'background_processes'
    get 'help/prerequisites', :to => 'help#prerequisites', :as => 'prerequisites'
    get 'help/workflow', :to => 'help#admin_workflow', :as => 'admin_workflow'
+   
+   
 =begin
    scope "/auth_user/:user_id" do
       resources :permissions
@@ -58,7 +60,7 @@ Translate::Application.routes.draw do
          sessions: "users/sessions", 
          unlocks: "users/unlocks", :invitations => 'users/invitations'}
 =end
-   devise_for :users, :controllers => { :invitations => 'invitations' }
+   devise_for :users, :controllers => { :invitations => 'invitations', sessions: "users/sessions" }
      match '/users/:id', :to => 'users#destroy', :as => :destroy_user, :via => :delete
      #get '/users_select' => 'users#select',      :as => :users_select, via: :all
      #get '/users', :to => 'users#index', :as=> :users
@@ -73,6 +75,7 @@ Translate::Application.routes.draw do
      patch "users/:id/update", :to=> "users#update", :as => :user_update
      #get "users/new_invitation", :to => "users#new_invitation", :as=> :new_user_invitation
      post "users/add_invitation", :to => "users#invite_user", :as => :invite_user
+     get "users/send_timezone_offset", :to => "users#timezone_offset", :as => "send_timezone_offset" 
    #end
     get "delayed_job/start", :to => "delayed_jobs#start", :as => "start_delayed_jobs_queue"
     

@@ -7,7 +7,7 @@
 
 > When the translation is finished then it can be published to an in-memory database, called __Redis__. Normally publication is done by and administrator.
 
-> A developer inserts translation_codes into the application and then provides a translation for each code. The developer can add translations directly to the (relational) database or add them to a file in yaml format which can then be uploaded to the daatabase.
+> A developer inserts translation_codes into the application and then provides a translation for each code. The developer can add translations directly to the (relational) database or add them to a file in yaml format which can then be uploaded to the database.
 
 > An adminstrator normally would create new applications in the database, new application versions and add translation languages. 
 > An administrator also would do uploads of yaml files and publish completed translations

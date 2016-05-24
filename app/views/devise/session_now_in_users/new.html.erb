@@ -1,0 +1,52 @@
+<h2>Sign in</h2>
+
+<%= form_for(resource, :as => resource_name, :url => session_path(resource_name)) do |f| %>
+  <!--div>< = f.label :email %><br />
+  < %= f.email_field :email % ></div -->
+  <%binding.pry%>
+  <div id = 'login'><%= f.label :login %><br />
+  <%= f.text_field :login %></div>
+  <div><%= f.label :password %><br />
+  <%= f.password_field :password %></div>
+
+  <% if devise_mapping.rememberable? -%>
+    <div><%= f.check_box :remember_me %> <%= f.label :remember_me %></div>
+  <% end -%>
+   
+  <div><%= f.submit "Sign in", id: 'sign-in'  %></div>
+  
+<% end %>
+<%binding.pry%>
+<%= render "links" %>
+<script>
+  var tzo = new Date().getTimezoneOffset();
+  var tzoJson = JSON.stringify(tzo)
+  console.log(tzo.toString());
+$(document).ready(function(){
+  console.log("In ready");
+  $('#user_login').focus();
+  
+    
+  $('input#sign-in').click(function(){
+    console.log("In click tzo");
+    //tzo = new Date().getTimezoneOffset();
+    console.log(tzo.toString());
+    
+    $.ajax({url: "<%=send_timezone_offset_path()%>",
+           data: {"tzo": tzoJson},
+           error: function( jqXHR, textStatus, errorThrown ){
+             console.log("Ajax Error timezone offset " +  tzoJson);
+             console.log(textStatus.toString());
+             console.log(errorThrown.toString());
+             console.log(jqXHR.toString());
+           }, // error
+           success: function( data, textStatus, jqXHR ){
+             console.log("Ajax Success timezone_offset");
+           }//success
+           
+    }); //end ajax
+  });//readyh
+  
+  
+});
+</script>

@@ -106,7 +106,25 @@ module ApplicationHelper
         #current_time.getTimezoneOffset()
         # ??add attr_accessor timezone to user and set time by ajax in devise callback :after_database_authentication in model
         #return time.localtime.in_time_zone(current_user.time_zone).strftime("%e-%b-%y %H:%M") if current_user && current_user.time_zone
-        return time.localtime.strftime("%e-%b-%y %H:%M")  
+        # This still gives time on server. We need the users time from the browser
+        # return time.localtime.strftime("%e-%b-%y %H:%M")
+        # in Translator we use timezone offset, which has been placed in session at login
+        # this is from js and for reasons best known to js the offset is in minutes, with -600 meaning UTC + 10
+        #tzo = session[:timezone_offset] 
+        #tzoc = cookies[:timezone_offset] 
+        #tzocp = cookies.permanent[:timezone_offset] 
+        #tzo_calc = -(tzo)
+          binding.pry
+        if ! current_user.nil?
+          tzo = current_user.timezone_offset
+          if ! tzo.nil?
+            if tzo.is_a? Integer 
+              return (time - tzo*60).strftime("%e-%b-%y %H:%M")
+            end
+          end
+          end
+        # if no tzo then return server time  
+        return  time.localtime.strftime("%e-%b-%y %H:%M")    
       end
     end   
   end

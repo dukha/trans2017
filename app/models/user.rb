@@ -17,6 +17,7 @@ class User < ActiveRecord::Base
   validates :username, presence: true
   validate :password_complexity
   validates :country, :phone, presence: true, :if => Proc.new { |record| !record.new_record? }
+  validates :timezone_offset, numericality: { only_integer: true }
   # https://github.com/plataformatec/devise/wiki/How-To:-Allow-users-to-sign_in-using-their-username-or-email-address
   # Virtual attribute for authenticating by either username or email
   # This is in addition to a real persisted field like 'username'
@@ -36,6 +37,11 @@ class User < ActiveRecord::Base
   
   has_many :administrator_jobs, :foreign_key => "user_id" , :class_name=> "CavsTlAdministrator", :dependent => :destroy
   has_many :administrator_cavs_tls, :through => :administrator_jobs, :source => :calmapp_versions_translation_language
+  before_validation do |user|
+    if user.timezone_offset.is_a? String
+      user.timezone = user.timezone.to_i
+    end
+  end
   def password_complexity
     if via_invitable
       return true

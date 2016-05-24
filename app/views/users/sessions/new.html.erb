@@ -1,23 +1,33 @@
 <h2>Sign in</h2>
 
 <%= form_for(resource, :as => resource_name, :url => session_path(resource_name)) do |f| %>
-  <!--div>< = f.label :email %><br />
-  < %= f.email_field :email % ></div -->
-  <div><%= f.label :login %><br />
+
+  <div id = 'login'><%= f.label :login %><br />
   <%= f.text_field :login %></div>
   <div><%= f.label :password %><br />
   <%= f.password_field :password %></div>
+  
+  <input type ='text' name= 'tzo' id = 'tzo'>
 
   <% if devise_mapping.rememberable? -%>
     <div><%= f.check_box :remember_me %> <%= f.label :remember_me %></div>
   <% end -%>
-
-  <div><%= f.submit "Sign in" %></div>
+   
+  <div><%= f.submit "Sign in", id: 'sign-in'  %></div>
+  
 <% end %>
 
 <%= render "links" %>
 <script>
-$().ready(function(){
+  console.log("in script");
+  var tzo = new Date().getTimezoneOffset();
+  var tzoJson = JSON.stringify(tzo)
+  console.log(tzo.toString());
+
+$(document).ready(function(){
+  console.log("In ready");
   $('#user_login').focus();
-});
+  $('input#tzo').val(tzo);
+});  
+
 </script>

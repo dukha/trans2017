@@ -1,8 +1,8 @@
 class UsersController < ApplicationController #Devise::RegistrationsController
 
-  before_action :authenticate_user!
+  before_action :authenticate_user!, except: :timezone_offset
   before_action :set_user, only: [ :edit, :update, :destroy, :unlock_user, :translatorpublishing]
-  filter_access_to :all
+  filter_access_to [:edit, :update, :destroy, :unlock_user, :translatorpublishing, :new,:index,:create]#:all
   @@model ="user"
   
   def index
@@ -52,9 +52,7 @@ class UsersController < ApplicationController #Devise::RegistrationsController
     end
   end
 
-  def reset_user_password
-    
-  end
+
   
   def edit
     
@@ -122,6 +120,35 @@ class UsersController < ApplicationController #Devise::RegistrationsController
     end #rescue  
   end
   
+  def timezone_offset
+    #binding.pry
+    puts "TZO1"
+    tzo = params[:tzo]
+    puts "TZO2 " + tzo
+    if ! tzo.nil?
+      if JSON.is_json?(tzo) then
+        tzo = ActiveSupport::JSON.decode(tzo)
+      end
+      
+=begin      
+      binding.pry
+      puts "TZO3 session" 
+      session[:timezone_offset] = tzo
+      cookies[:timezone_offset] = tzo
+      cookies.permanent[:timezone_offset] = tzo
+      puts "Showing Session offset"
+      puts session[:timezone_offset]
+      puts session[:timezone_offset].is_a? Integer
+      puts cookies[:timezone_offset]
+      puts cookies[:timezone_offset].is_a? Integer
+      puts cookies.permanent[:timezone_offset]
+      puts cookies.permanent[:timezone_offset].is_a? Integer
+=end      
+    end
+    #current_user.timezone_offset = tzo
+    #current_user.save
+    render :nothing => true
+  end
   def translatorpublishing
     begin
       result = User.what_translations_can_user_publish(@user)

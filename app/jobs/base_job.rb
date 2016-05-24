@@ -31,7 +31,9 @@ class BaseJob < ActiveJob::Base
     msg = "Ending job: " + job.class.name
     info msg
   end  
-  
+=begin
+ This is about ensuring that less than 300 mails/hour are sent otherwise mailgun is not happy (we have a free account.) 
+=end  
   def exception_raised message = '', backtrace=nil
     #@@time_last_job_failure = Time.now
     msg = "Exception thrown " + message 

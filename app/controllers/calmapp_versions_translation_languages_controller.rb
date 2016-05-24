@@ -11,6 +11,7 @@ class CalmappVersionsTranslationLanguagesController < ApplicationController
   # GET /calmapp_versions_translation_languages
   # GET /calmapp_versions_translation_languages.json
   def index
+    #binding.pry
     if CalmappVersionsTranslationLanguage.respond_to? :searchable_attr  
       searchable_attr = CalmappVersionsTranslationLanguage.searchable_attr 
     else 
@@ -88,7 +89,12 @@ class CalmappVersionsTranslationLanguagesController < ApplicationController
       
           tflash('update', :success, {:model=>@@model, :count=>1})
           flash[:notice] = "The contents of any uploaded translation files will be written to the database later. At the moment they await processing on a queue."
-          format.html { redirect_to( calmapp_versions_translation_languages_path)}
+          criteria = {"operator_translation_language_id" => params["operator_translation_language_id"],
+            "criterion_translation_language_id" => params["criterion_translation_language_id"],
+            "operator_calmapp_version_id" => params["operator_calmapp_version_id"],
+            "criterion_calmapp_version_id"=> params["criterion_calmapp_version_id"]
+            } 
+          format.html { redirect_to( calmapp_versions_translation_languages_path())}
           format.json { head :no_content }
           format.js {}
         else
