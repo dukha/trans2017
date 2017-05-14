@@ -45,6 +45,11 @@ config.assets.digest = true
   # config.action_mailer.raise_delivery_errors = false
   # this is foir devise. Must be edited for production
   config.action_mailer.default_url_options = { :host => 'localhost:3000' }
+  config.action_mailer.delivery_method = :mailgun
+  config.action_mailer.mailgun_settings= {
+        api_key: Rails.application.secrets.mailgun_api_key, 
+        domain: Rails.application.secrets.mailgun_domain
+  }
   # Enable threaded mode
   # config.threadsafe!
 

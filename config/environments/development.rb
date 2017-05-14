@@ -27,7 +27,7 @@ Translate::Application.configure do
   # sendmail users the sendmail_settings below
   config.action_mailer.default_url_options = {:host => 'localhost:3000'} 
   #config.action_mailer.delivery_method = :sendmail
-  config.action_mailer.delivery_method = :mailgun
+  
   # to use google then uncomment the4 line below (It will sue the smtp_settings below)
   #config.action_mailer.delivery_method = :smtp 
   config.action_mailer.perform_deliveries = true 
@@ -39,12 +39,12 @@ Translate::Application.configure do
     # The -t switch doesn't work in the case of devise_invition
     :arguments => '-i -t' 
   }
-  
-  config.action_mailer.mailgun_settings = {
+  config.action_mailer.delivery_method = :mailgun
+  config.action_mailer.mailgun_settings= {
         api_key: Rails.application.secrets.mailgun_api_key, 
         domain: Rails.application.secrets.mailgun_domain
   }
-  config.action_mailer.smtp_settings = {
+  config.action_mailer.smtp_settings= {
     address: "smtp.gmail.com",
     port: 587,
     domain: Rails.application.secrets.domain_name,
