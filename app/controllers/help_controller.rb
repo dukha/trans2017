@@ -125,4 +125,8 @@ class HelpController < ApplicationController
    @markdown_file = true
   render $APPLICATION_HELP_VIEW_DIR + 'developer/developers_english.html'
   end
+  def redis_installation
+    @markdown_file = true
+  render $APPLICATION_HELP_VIEW_DIR + 'developer/redis_installation.html'
+  end
 end

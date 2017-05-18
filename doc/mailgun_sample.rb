@@ -12,7 +12,7 @@ sandbox server
 sandboxa89c6db3f73e4ad6b3377c7bb91dbeb1.mailgun.org
 
 api_key
-key-47120298e8c9c31b076e5245655e62c7
+#key-47120298e8c9c31b076e5245655e62c7
 
 mg_client = Mailgun::Client.new "key-47120298e8c9c31b076e5245655e62c7"
 
@@ -24,7 +24,7 @@ message_params = {:from    => 'bob@sending_domain.com',
 mg_client.send_message "sandboxa89c6db3f73e4ad6b3377c7bb91dbeb1.mailgun.org", message_params
 
 
-Now via smtp
+#Now via smtp
 
 smtp user = postmaster@sandboxa89c6db3f73e4ad6b3377c7bb91dbeb1.mailgun.org
 smtp pw = 61fdfb39f65575cf4be5f0e325b637a8

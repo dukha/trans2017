@@ -20,14 +20,17 @@ $().ready(function(){
     
  }); // ready
 /*
- * This script sets up the selection mode radio buttons
+ * This  sets up the selection mode radio buttons
  */
-  $(function(){
+/* deprecated 0023
+  //$(function(){
     $( "div#selection_mode" ).buttonset();
-  });
-  
-  
-   
+  //});
+*/  
+  // added 0023
+ function(){
+  	$( "input[name='selection_mode']" ).checkboxradio();
+  }  
   
 /*
  * Script enlarges and restores editing index for translations

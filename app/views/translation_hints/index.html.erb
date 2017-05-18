@@ -104,7 +104,7 @@
                <%= link_edit( edit_translation_hint_path(translation_hint), :translation_hints, {:style=> "width:8%;"}  ) %>
             <%end%>
             <%if has_role? :translation_hints_destroy%>
-              <%= link_destroy( translation_hint, :translation_hints, {:style=> "width:20%;"} ) %>
+              <%= link_destroy( translation_hint, :translation_hints ) %>
             <%end%>
     </tr>
   <% end #do data %>

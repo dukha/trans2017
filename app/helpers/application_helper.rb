@@ -114,7 +114,6 @@ module ApplicationHelper
         #tzoc = cookies[:timezone_offset] 
         #tzocp = cookies.permanent[:timezone_offset] 
         #tzo_calc = -(tzo)
-          binding.pry
         if ! current_user.nil?
           tzo = current_user.timezone_offset
           if ! tzo.nil?

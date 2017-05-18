@@ -17,6 +17,7 @@
 - [Getting Started](<%=developer_help_path%>)
 - [Role of English](<%=role_of_english_help_path%>)
 - [Developers English](<%developers_english_path%>)
+- [Redis Installation](<%=redis_installation_path%>)
 ####Administrator
 - [Administrator](<%=administrator_help_path%>)
 - [Getting Started](<%=admin_getting_started_path%>)

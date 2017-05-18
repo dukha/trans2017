@@ -65,6 +65,7 @@ module Validations
      def validate_each(object,attribute, value)
        #
        #redis_db = Redis.new( :db=> value, :password=>$REDIS_PW, :port=>object.port, :host=> object..host)
+      
        redis_db = Redis.new( :db=> value, :password=>object.redis_instance.password, :port=>object.redis_instance.port, :host=> object.redis_instance.host)
        # the above line doesn't try to connect immediately. You have to do something with it (like ping) to force it to connect.
        redis_db.ping
@@ -87,6 +88,7 @@ module Validations
    class RedisInstanceValidator< ActiveModel::EachValidator
      redis_db = nil
      def validate_each(object,attribute, value)
+        #binding.pry
        redis_db = Redis.new( :db=> 0, :password=>object.password, :port=>object.port, :host=> object.host)
        # the above line doesn't try to connect immediately. You have to do something with it (like ping) to force it to connect.
        redis_db.ping

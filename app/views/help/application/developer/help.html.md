@@ -4,5 +4,5 @@
 
 -  [Role of English](<%=role_of_english_help_path%>)
 -  [Developers English](<%=developers_english_path%>)
-
+-  [Redis Installation](<%=redis_installation_path%>)
 #####Under Construction....

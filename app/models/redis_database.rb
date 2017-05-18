@@ -231,7 +231,9 @@ class RedisDatabase < ActiveRecord::Base
 =end
   def self.demo
     marks_redis = RedisInstance.where { description =="Mark's Desktop Computer"}.first
+=begin 0022    
     ri_integration = integration_instance
+=end
     calm = Calmapp.where(:name=>"calm_registrar").first
     #index = marks_redis.next_index
     RedisDatabase.create!(:redis_instance_id => marks_redis.id, release_status_id: ReleaseStatus.where{status == 'Development' }.first.id, calmapp_version_id: CalmappVersion.where(:calmapp_id => Calmapp.where(:name=>"translator").first.id, :version=>1).first.id, 
@@ -239,19 +241,23 @@ class RedisDatabase < ActiveRecord::Base
     #index = marks_redis.next_index(index)
     RedisDatabase.create!(:redis_instance_id => marks_redis.id, release_status_id: ReleaseStatus.where{status == 'Development' }.first.id, calmapp_version_id: CalmappVersion.where(:calmapp_id => calm.id, :version=>4).first.id, 
     :redis_db_index =>  1, :used_by_publishing_translators => 1)
-    
+=begin 0022
+ There is no integration server at this moment 
+  
     RedisDatabase.create!(:redis_instance_id => ri_integration.id, release_status_id: ReleaseStatus.where{status == 'Integration' }.first.id, calmapp_version_id: CalmappVersion.where(:calmapp_id => Calmapp.where(:name=>"translator").first.id, :version=>1).first.id, 
     :redis_db_index =>  0)#ri_integration.next_index)
     RedisDatabase.create!(:redis_instance_id => ri_integration.id, release_status_id: ReleaseStatus.where{status == 'Integration' }.first.id, calmapp_version_id: CalmappVersion.where(:calmapp_id => calm.id, :version=>4).first.id, 
     :redis_db_index =>  1)
+=end      
   end
   def self.marks_instance
     RedisInstance.where { description =="Mark's Desktop Computer"}.first
   end
+=begin 0022 
   def self.integration_instance
     RedisInstance.where { description == 'Integration Server' }.first
   end
-  
+=end  
   def self.marks_trans_redis
     return RedisDatabase.where{redis_db_index == 0}.
             where{redis_instance_id == my{marks_instance.id}}.
@@ -260,7 +266,7 @@ class RedisDatabase < ActiveRecord::Base
             select{"calmapp_versions_translation_languages.id as cavtl_id, redis_db_index, redis_databases.id as id, redis_instance_id, redis_databases.calmapp_version_id as calmapp_version_id, release_status_id "}.
             first
   end
-  
+=begin  0022
   def self.integration_trans_redis
     return RedisDatabase.where{redis_db_index == 0}.
             where{redis_instance_id == my{integration_instance.id}}.
@@ -269,7 +275,8 @@ class RedisDatabase < ActiveRecord::Base
             select{"calmapp_versions_translation_languages.id as cavtl_id, redis_db_index, redis_databases.id as id, redis_instance_id, redis_databases.calmapp_version_id as calmapp_version_id, release_status_id "}.
             first
   end
-  
+=end  
+=begin
   def self.integration_reg_redis
     return RedisDatabase.where{redis_db_index == 1}.
             where{redis_instance_id == my{integration_instance.id}}.
@@ -278,7 +285,7 @@ class RedisDatabase < ActiveRecord::Base
             select{"calmapp_versions_translation_languages.id as cavtl_id, redis_db_index, redis_databases.id as id, redis_instance_id, redis_databases.calmapp_version_id as calmapp_version_id, release_status_id "}.
             first
   end
-  
+=end 
   def self.trans_uploads_for_demo
     upload_from_dir = upload_dir_for_demo
     files_to_upload =[File.join(upload_from_dir, 'common.en.yml'), 
@@ -304,7 +311,7 @@ class RedisDatabase < ActiveRecord::Base
     redis.version_publish 
     puts "translator published locally via MARKS BIG DEMO" 
   end 
-  
+=begin 0022  
   def self.integ_big_demo
     integ  = integration_trans_redis
     upload_from_dir = upload_dir_for_demo
@@ -321,6 +328,7 @@ class RedisDatabase < ActiveRecord::Base
     integration_reg_redis.version_publish
     puts "reg published on integration via INTEG BIG DEMO"
   end
+=end  
 =begin
 
   # This method takes a key and value, for example from redis and puts it into container, in a form readily converted to yaml

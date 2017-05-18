@@ -38,6 +38,10 @@ class User < ActiveRecord::Base
   has_many :administrator_jobs, :foreign_key => "user_id" , :class_name=> "CavsTlAdministrator", :dependent => :destroy
   has_many :administrator_cavs_tls, :through => :administrator_jobs, :source => :calmapp_versions_translation_language
   before_validation do |user|
+    if user.blank? 
+      #Set AEST as default
+      user.timezone_offset = -600
+    end
     if user.timezone_offset.is_a? String
       user.timezone = user.timezone.to_i
     end
@@ -132,7 +136,7 @@ class User < ActiveRecord::Base
      
       param = {:password => pw,:password_confirmation => pw,:username => username,
         :email => 'root@localhost.localdomain', :actual_name=> 'root', 
-        :country=> 'Australia', :phone => '819999'}
+        :country=> 'Australia', :phone => '819999', :timezone_offset=>-600}
       puts "creating user"
       u = User.create! param
       puts "creating permission"
@@ -158,7 +162,7 @@ class User < ActiveRecord::Base
      User.create_root_user
      pw = Rails.application.secrets.mark#ENV["mark"]#'!1234567'
      param = {:password => pw,:password_confirmation => pw,:username => 'mark',:email => 'mplennon@gmail.com', 
-                :actual_name=> 'Mark Lennon', :country=> 'Australia', :phone => '07 5475 1065', :responds_to_contacts => true}
+                :actual_name=> 'Mark Lennon', :country=> 'Australia', :phone => '07 5475 1065', :responds_to_contacts => true,:timezone_offset=>-600}
      admin = User.create! param
      admin.profiles << Profile.sysadmin
      
@@ -169,13 +173,13 @@ class User < ActiveRecord::Base
   def self.demo
     pw = '!123456!'
     param = {:password => pw,:password_confirmation => pw,:username => 'albert',:email => 'albert@calm.org', 
-              :actual_name=> 'albert', :country=> 'Australia', :phone => '213000'}
+              :actual_name=> 'albert', :country=> 'Australia', :phone => '213000',:timezone_offset=>-600}
     
     albert = User.create! param
     albert.profiles << Profile.sysadmin
     
     param = {:password => pw,:password_confirmation => pw,:username => 'a',:email => 'a@calm.org', 
-              :actual_name=> 'a', :country=> 'Australia', :phone => '2459999'}
+              :actual_name=> 'a', :country=> 'Australia', :phone => '2459999',:timezone_offset=>-600}
     a = User.create! param
     a.profiles << Profile.sysadmin
     
@@ -184,7 +188,8 @@ class User < ActiveRecord::Base
     param[:email]= 'developer@calm.org'
     param[:developer] = true
     param[:country]= 'Australia' 
-    param[:phone] = '456000'
+    param[:phone] = '456000',
+    param[:timezone_offset]= -600
     developer=User.create! param
     developer.profiles << Profile.where {name == "developer"}.first
 
@@ -197,7 +202,8 @@ class User < ActiveRecord::Base
     param[:email]= 'addy@calm.org'
     param[:application_administrator] = true
     param[:country]= 'Australia' 
-    param[:phone] = '111111111'
+    param[:phone] = '111111111',
+    param[:timezone_offset]= -600
     admin=User.create! param
     admin.profiles << Profile.where {name == "application_administrator"}.first
 
@@ -210,7 +216,8 @@ class User < ActiveRecord::Base
     param[:email]= 'translator@calm.org'
     param[:translator] = true
     param[:country]= 'Australia' 
-    param[:phone] = '3400000000'
+    param[:phone] = '3400000000',
+    param[:timezone_offset]= -600
     translator=User.create! param
     translator.profiles << Profile.where {name == "translator"}.first
      

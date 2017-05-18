@@ -17,20 +17,24 @@
     <fieldset class="inputs">
       <ol>
      
-      <%if CalmappVersionsTranslationLanguage.searchable_attr.include?("translation_language_id") %>  
-      <li class="string optional" id="calmapp_versions_translation_language_translation_language_id_input"><label for="criterion_translation_language_id" class="criteria-label" >
-        <%= tlabel( "translation_language_id", "calmapp_versions_translation_language") %> </label>
-           <%=select_tag(  :operator_translation_language_id, options_for_select(operators_2_options(equal_operator), params[:operator_translation_language_id]),{:include_blank=> true,:class=>'criteria-operators-select', :readonly=>true} ) %> 
+    <%if CalmappVersionsTranslationLanguage.searchable_attr.include?("translation_language_id") %>  
+      <li class="string optional" id="calmapp_versions_translation_language_translation_language_id_input">
+      	  <label for="criterion_translation_language_id" class="criteria-label" >
+            <%= tlabel( "translation_language_id", "calmapp_versions_translation_language") %> 
+          </label>
+          <%=select_tag(  :operator_translation_language_id, options_for_select(operators_2_options(equal_operator), params[:operator_translation_language_id]),{:include_blank=> true,:class=>'criteria-operators-select', :readonly=>true} ) %> 
            <!--%=text_field_tag( :criterion_translation_language_id, params[:criterion_translation_language_id])% -->
-           <%=select_tag(:criterion_translation_language_id, options_from_collection_for_select(TranslationLanguage.language_select , "id", "full_name", params[:criterion_translation_language_id]), {:include_blank=>true})%>
+          <%=select_tag(:criterion_translation_language_id, options_from_collection_for_select(TranslationLanguage.language_select , "id", "full_name", params[:criterion_translation_language_id]), {:include_blank=>true})%>
       </li> 
       <%end #if  attribute in searchable %> 
       <%if CalmappVersionsTranslationLanguage.searchable_attr.include?("calmapp_version_id") %>  
-      <li class="string optional" id="calmapp_versions_translation_language_calmapp_version_id_input"><label for="criterion_calmapp_version_id" class="criteria-label" >
-        <%= tlabel( "calmapp_version_id", "calmapp_versions_translation_language") %> </label>
-           <%=select_tag(  :operator_calmapp_version_id, options_for_select(operators_2_options(equal_operator), params[:operator_calmapp_version_id]),{:include_blank=> true,:class=>'criteria-operators-select', :readonly=>true} ) %> 
+      <li class="string optional" id="calmapp_versions_translation_language_calmapp_version_id_input">
+      	<label for="criterion_calmapp_version_id" class="criteria-label" >
+          <%= tlabel( "calmapp_version_id", "calmapp_versions_translation_language") %> 
+        </label>
+        <%=select_tag(  :operator_calmapp_version_id, options_for_select(operators_2_options(equal_operator), params[:operator_calmapp_version_id]),{:include_blank=> true,:class=>'criteria-operators-select', :readonly=>true} ) %> 
            <!--%=text_field_tag( :criterion_calmapp_version_id, params[:criterion_calmapp_version_id])%-->
-           <%=select_tag(:criterion_calmapp_version_id, options_from_collection_for_select(CalmappVersion.version_select , "id", "description", params[:criterion_calmapp_version_id]), {:include_blank=>true})%>
+        <%=select_tag(:criterion_calmapp_version_id, options_from_collection_for_select(CalmappVersion.version_select , "id", "description", params[:criterion_calmapp_version_id]), {:include_blank=>true})%>
       </li> 
       <%end #if  attribute in searchable %> 
      

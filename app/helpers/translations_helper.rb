@@ -100,6 +100,9 @@ module TranslationsHelper
        link_to tlabel, url, options
      else #navigate == false
        #if it is an action which refreshes or ajaxes on the same page (eg Delete) then we use a button
+       if (!tlabel.nil?) && tlabel.length >30
+         options["class"] = "wrap-text"
+       end
        button_to tlabel, url, options
      end  
    end

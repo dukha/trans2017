@@ -39,11 +39,11 @@ Translate::Application.configure do
     # The -t switch doesn't work in the case of devise_invition
     :arguments => '-i -t' 
   }
-  config.action_mailer.delivery_method = :mailgun
-  config.action_mailer.mailgun_settings= {
-        api_key: Rails.application.secrets.mailgun_api_key, 
-        domain: Rails.application.secrets.mailgun_domain
-  }
+  #config.action_mailer.delivery_method = :mailgun
+  #config.action_mailer.mailgun_settings= {
+  #      api_key: Rails.application.secrets.mailgun_api_key, 
+  #      domain: Rails.application.secrets.mailgun_domain
+  #}
   config.action_mailer.smtp_settings= {
     address: "smtp.gmail.com",
     port: 587,

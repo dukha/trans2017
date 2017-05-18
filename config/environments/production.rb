@@ -41,7 +41,7 @@ Translate::Application.configure do
   # fro rails 4 apparently
   config.assets.precompile = ['*.js', '*.js.erb','*.css', '*.css.erb']
 
-  config.action_mailer.delivery_method = :mailgun
+  
   # this is foir devise. Must be edited for production
   config.action_mailer.default_url_options = { :host => 'trans.calm-int-trans.dhamma.org.au' }
   config.action_mailer.default :charset => "utf-8" 
@@ -55,10 +55,13 @@ Translate::Application.configure do
   config.active_support.deprecation = :notify
   #rails 4.2 and higher Keep prod log level as info
   config.log_level = :info
+=begin
+  config.action_mailer.delivery_method = :mailgun
   config.action_mailer.mailgun_settings = {
         api_key: Rails.application.secrets.mailgun_api_key,
         domain: Rails.application.secrets.mailgun_domain
   }
+=end
   #config.i18n.available_locales = [:en, :nl] #fallback2016
   #config ExceptionNotifier
   config.middleware.use ExceptionNotification::Rack,

@@ -1,16 +1,17 @@
 // Place your application-specific JavaScript functions and classes here
 // This file is automatically included by javascript_include_tag :defaults
-//= require jquery
+//=require jquery
+//=require jquery-ui
 // require jquery-2.0.3
 // require jquery-2.1.3
 // require jquery-1.8.0
 // require jquery
 // This script enables stuff in $(document).ready() to fire as normal with turbolinks
 //=require jquery.turbolinks
-//= require jquery_ujs
+//=require jquery_ujs
 
-//= require jquery-ui
-//= require turbolinks
+
+//=require turbolinks
 //
 // require jquery-ui-1.10.3.custom.js
 // ujs has to be in for delete to work and for other rails ajax

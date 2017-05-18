@@ -82,17 +82,21 @@ class RedisInstance < ActiveRecord::Base
   
   def self.demo
     errors = ""
-    marks_redis = RedisInstance.create!(:host=>"45-highfield.internode.on.net", :password => '123456', :port => '6379', :max_databases=>16, :description=> "Mark's Desktop Computer")
+    #Giving the hostname for a localhost does not work anymore. Use localhost or 127.0.0.1
+    #marks_redis = RedisInstance.create!(:host=>"highfield-45-mark", :password => '123456', :port => '6379', :max_databases=>16, :description=> "Mark's Desktop Computer")
+    marks_redis = RedisInstance.create!(:host=>"localhost", :password => '123456', :port => '6379', :max_databases=>16, :description=> "Mark's Desktop Computer")
     if not marks_redis.errors.empty? then
       marks_redis.errors.empty.each { |k,v| errors = errors + ' ' + v}
       raise StandardError.new(errors)
     end
+=begin INTEGRATION SERVER NOT AVAILABLE AT THE MOMENT    0022
     #ri_integration = RedisInstance.create!(:host=>"31.222.138.180", :password => '123456', :port => '6379', :max_databases=>32, :description=>'Integration Server')
     ri_integration = RedisInstance.create!(:host=>"162.13.15.68", :password => Rails.application.secrets.redis_pw, :port => '6379', :max_databases=>32, :description=>'Integration Server')
     if not ri_integration.errors.empty? then
       ri_integration.errors.empty.each { |k,v| errors = errors + ' ' + v}
       raise StandardError.new(errors)
     end
+=end
   end
   
   private

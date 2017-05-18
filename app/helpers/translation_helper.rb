@@ -226,7 +226,6 @@ module TranslationHelper
  @ return a phrase to indicate that the input is checked or not... 
 =end   
    def initialise_selection_mode_radio_buttons(button_value, param_value)
- 
      default_value = "all"
      checked_phrase = "checked = \"true\"".html_safe
      if param_value.nil? && default_value == button_value then

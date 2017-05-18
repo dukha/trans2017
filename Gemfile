@@ -15,7 +15,7 @@ gem 'formtastic'#, '1.2.3'
 gem 'nifty-generators'#, '0.4.6'
 
 # authentication
-gem 'devise'#, '~>2.0.4' 
+gem 'devise', "~>3.5.10"#, '~>2.0.4' 
 gem 'devise_invitable'#, '~> 1.3.4'
 # this gem is a ruby mailhandler that will work with exim or sendmail (and others). Tested on exim4. 
 gem 'mail'# rails 4 depends on 2.5.4 , '~>2.6.1'
@@ -40,6 +40,8 @@ gem 'will_paginate'#,'~>3.0.4'
 # using jquery for ajax, not prototype > rails g jquery:install
 gem 'jquery-rails'#, '~>1.0.12' #, '0.2.7'
 gem 'jquery-ui-rails'
+gem 'jquery-ui-rails'
+gem "jquery-turbolinks"
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
 gem 'turbolinks'
 
@@ -71,7 +73,7 @@ gem 'acts_as_tree'#,'0.1.1'
 gem 'carrierwave'
 
 gem "redis" #, :git => "git://github.com/ezmobius/redis-rb.git"
-
+gem 'connection_pool'
 # Can be used to set up an interface for rabbitmq
 #gem "bunny"
 # runs long running jobs in background
@@ -109,6 +111,7 @@ gem 'unobtrusive_flash'#, '>=3'
 gem 'dotenv-rails'
 gem 'rdiscount'
 gem 'mailgun'
+gem 'ya2yaml'
 group :development, :test do
   gem 'rspec-rails'#, '2.8.0'
   # webrat or capybara can be used to simulate a browser. rspec doesn't care which one.
