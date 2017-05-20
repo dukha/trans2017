@@ -127,7 +127,7 @@ class UsersController < ApplicationController #Devise::RegistrationsController
     puts "TZO2 " + tzo
     if ! tzo.nil?
       if JSON.is_json?(tzo) then
-        tzo = ActiveSupport::JSON.decode(tzo)
+        tzo = ActiveSupport::JSON.decode(tzo).to_i
       end
       
 =begin      

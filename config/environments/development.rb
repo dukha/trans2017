@@ -27,7 +27,7 @@ Translate::Application.configure do
   # sendmail users the sendmail_settings below
   config.action_mailer.default_url_options = {:host => 'localhost:3000'} 
   #config.action_mailer.delivery_method = :sendmail
-  
+=begin  
   # to use google then uncomment the4 line below (It will sue the smtp_settings below)
   #config.action_mailer.delivery_method = :smtp 
   config.action_mailer.perform_deliveries = true 
@@ -53,7 +53,24 @@ Translate::Application.configure do
     user_name: Rails.application.secrets.email_provider_username,
     password: Rails.application.secrets.email_provider_password
   }
-
+=end  
+  config.action_mailer.raise_delivery_errors = false
+  config.action_mailer.default_url_options =  {
+    host: 'localhost:3000'
+  }
+  config.action_mailer.perform_deliveries = true
+  config.action_mailer.delivery_method = :smtp
+  my_domain = "localhost"
+  config.action_mailer.smtp_settings = {
+      :address => "smtp.sparkpostmail.com",
+      :port => 587, # ports 587 and 2525 are also supported with STARTTLS
+      :enable_starttls_auto => true, # detects and uses STARTTLS
+      :user_name => "SMTP_Injection",
+      :password => Rails.application.secrets.sparkpost_api_key, # SMTP password is any valid API key
+      :authentication => 'login',
+      :domain => my_domain, # your domain to identify your server when connecting
+      :from => Rails.application.secrets.email_from
+  }
   # Print deprecation notices to the Rails logger
   config.active_support.deprecation = :log
   

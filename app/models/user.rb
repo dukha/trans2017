@@ -6,17 +6,17 @@ class User < ActiveRecord::Base
          :trackable, :validatable,
          :timeoutable, :lockable, :invitable, :invite_key => {:email=>'', :actual_name=>'' } #,:timeout_in => 10.minutes use value from  config/initializers/devise.rb
   
-  before_validation :check_username
+  before_validation :check_username, :check_invitation
   after_invitation_accepted :notify_admin
 
   validates :email, :username, :uniqueness => true
   validates :email, presence: true
-  validates :actual_name, :uniqueness => true
+  validates :actual_name, :uniqueness => true 
   validates :actual_name, presence: true
   validates :username, :uniqueness => true
   validates :username, presence: true
   validate :password_complexity
-  validates :country, :phone, presence: true, :if => Proc.new { |record| !record.new_record? }
+  validates :country, :phone, presence: true, :if => Proc.new { |record| !record.invitation? }
   validates :timezone_offset, numericality: { only_integer: true }
   # https://github.com/plataformatec/devise/wiki/How-To:-Allow-users-to-sign_in-using-their-username-or-email-address
   # Virtual attribute for authenticating by either username or email
@@ -287,7 +287,23 @@ CalmappVersionsTranslationLanguage.new(:translation_language_id =>TranslationLan
     }
     return cavs_list.uniq
   end
- 
+  
+   def check_invitation
+    if invitation?
+      binding.pry
+      self.timezone_offset = -600
+    end
+  end
+  
+  def invitation?
+    if new_record?
+      if via_invitable
+        return true
+        
+      end
+    end
+    return false
+  end   
  protected
  # https://github.com/plataformatec/devise/wiki/How-To:-Allow-users-to-sign_in-using-their-username-or-email-address
  # Overwrite Devise’s find_for_database_authentication method
@@ -309,7 +325,8 @@ CalmappVersionsTranslationLanguage.new(:translation_language_id =>TranslationLan
    def self.administrator
      return where{administrator == true}
    end
-
+  
+    
 private
   def check_username
 
@@ -322,7 +339,7 @@ private
       end  
     end
   end  
-   
+
   def notify_admin
     puts "NOTIFY ADMIN"
     

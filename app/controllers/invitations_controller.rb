@@ -21,6 +21,7 @@ class InvitationsController < Devise::InvitationsController
   end
   
   def create
+   
     self.resource = invite_resource
     resource_invited = resource.errors.empty?
 
@@ -120,6 +121,8 @@ class InvitationsController < Devise::InvitationsController
     ## don't skip sending emails on invite
     new_params = invite_params
     new_params["via_invitable"] = true
+    #binding.pry
+    
     resource_class.invite!(new_params, current_inviter) #do |u|
       #u.skip_invitation = true
     #end
@@ -138,7 +141,7 @@ class InvitationsController < Devise::InvitationsController
   def configure_permitted_parameters
   # Only add some parameters
   
-  devise_parameter_sanitizer.for(:accept_invitation).concat [:actual_name, :email, :username, :country, :phone, :invited_by_id]
+  devise_parameter_sanitizer.for(:accept_invitation).concat [:actual_name, :email, :username, :country, :phone, :invited_by_id, :timezone_offset]
   # Override accepted parameters
 =begin
   devise_parameter_sanitizer.for(:accept_invitation) do |u|

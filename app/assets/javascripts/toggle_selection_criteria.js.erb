@@ -6,8 +6,8 @@
   var NOT_VISISBLE_RECORDS_EMPTY_DIV_SELECTOR = "div#data-empty";
   var   criteriaHiddenText = "Show Criteria"; //< % =I18n.t($FA +'show_something', :something=>I18n.t($SC))%>";
   var   criteriaVisibleText = "Hide Criteria"; //< % =I18n.t($FA +'hide_something', :something=>I18n.t($SC))%>";
-  $().ready(function(){
-    
+  $(document).ready(function(){
+  //$( window ).load(function() {  
     if( $(NOT_VISISBLE_RECORDS_EMPTY_DIV_SELECTOR).html() =="true"){
        $(CRITERIA_BUTTON_SELECTOR).html(criteriaVisibleText);
        $(CRITERIA_DIV_SELECTOR).slideDown('slow');

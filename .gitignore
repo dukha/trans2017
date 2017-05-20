@@ -24,7 +24,5 @@ public/uploads/translations_upload/yaml_upload*
 public/uploads/tmp/*
 .idea/*
 config/secrets.yml
-.env.development
-.env.test
-.env.local
+.env.production
 .rvmrc

@@ -1,3 +1,4 @@
+# author Ryan J
 # this task is used to setup all the XX ranslations to be eq to their dot_key_codes
 # note that we have to treat the activerecord plurals specially.
 # RAILS_ENV=production bundle exec rake xx:put_keys_in_values --trace
@@ -28,24 +29,14 @@ namespace :xx do
           answer = $stdin.gets.chomp
         end
         dry_run = true if answer.in?(["Y", 'y'])
-        trans_to_adjust = selected_version.translations.where(translation:"\"\"") # all empty translations
+        trans_to_adjust = selected_version.translations.where(incomplete:true) # all empty translations don't worry about plurals because they look fine anyway when we set e.g. "activerecord.models.event" to itself instead of .one and .other settings
         lang = selected_version.translation_language.iso_code
         trans_to_adjust.each do |t|
           new_translation = "\"#{t.dot_key_code}\""
           if dry_run
-            puts "Traslation #{t.dot_key_code} for #{lang} would be updated to #{new_translation}"
+            puts "Translation #{t.dot_key_code} for #{lang} would be updated to #{new_translation}"
           else
-            t.update_attribute(:translation, new_translation ) # for some reason all entries are surrounded by \" chars
-          end
-        end
-        plurals_to_adjust = selected_version.translations.where(translation:"{\"one\":\"\",\"other\":\"\"}")
-        plurals_to_adjust.each do |p|
-          new_translation = p.translation.gsub("one\":\"\"", "one\":\"#{p.dot_key_code}.one\"")
-          new_translation = new_translation.gsub("other\":\"\"", "other\":\"#{p.dot_key_code}.other\"")
-          if dry_run
-            puts "Traslations #{p.dot_key_code} for #{lang} would be updated to #{new_translation}"
-          else
-            p.update_attribute(:translation, new_translation ) # for some reason all entries are surrounded by \" chars
+            t.update_attributes(translation: new_translation, incomplete: false ) # for some reason all entries are surrounded by \" chars
           end
         end
       else

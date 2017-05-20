@@ -1,5 +1,5 @@
 class UserMailer < ApplicationMailer
-  default :from => "#{'translator-notifier'} <#{'translator_app@translator.org'}>"
+  #default :from => "#{'translator-notifier'} <#{'translator_app@translator.org'}>"
   def background_process_fail(user_id, process_name, object_name, error_message)
     @user = User.find(user_id)
     @process_name = process_name
