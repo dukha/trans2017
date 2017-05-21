@@ -61,6 +61,7 @@ Translate::Application.configure do
   config.action_mailer.perform_deliveries = true
   config.action_mailer.delivery_method = :smtp
   my_domain = "localhost"
+=begin
   config.action_mailer.smtp_settings = {
       :address => "smtp.sparkpostmail.com",
       :port => 587, # ports 587 and 2525 are also supported with STARTTLS
@@ -71,6 +72,16 @@ Translate::Application.configure do
       :domain => my_domain, # your domain to identify your server when connecting
       :from => Rails.application.secrets.email_from
   }
+=end
+  config.action_mailer.smtp_settings = 
+          { :address              => "smtp.gmail.com",
+            :port                 => 587,
+            :domain               => my_domain,
+            :user_name            => 'mflennon99',
+            :password             => 'salila00',
+            :authentication       => 'plain',
+            :from => Rails.application.secrets.email_from,
+            :enable_starttls_auto => true  }
   # Print deprecation notices to the Rails logger
   config.active_support.deprecation = :log
   
