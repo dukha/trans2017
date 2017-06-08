@@ -43,10 +43,12 @@ namespace :trans do
   task :marks_big_demo => ["trans:start_again"] do
     Demo.marks_big_demo
   end
-  
+=begin 
+ @deprecated 
   task :integ_big_demo => ["trans:start_again"] do
     Demo.integ_big_demo
   end
+=end
   task :translation_demo => ["trans:marks_big_demo"] do
     Demo.translation_demo
   end
