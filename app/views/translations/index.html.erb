@@ -18,49 +18,52 @@
     <div id="selection_mode" class = "radios" style='margin-left:25%; margin-bottom: 3px;'>
          <fieldset class ='radios' style='border-style:solid; border-color:gray; border-width:1px; padding:2px;'>
             <legend><span>Type of Search</span></legend>
+              <label class="nowrap" for="translation_selection_mode_all">
               <input id="translation_selection_mode_all" name="selection_mode" type="radio" value="all" 
                  <%=initialise_selection_mode_radio_buttons("all", params["selection_mode"])%>/>
-              <label for="translation_selection_mode_all"><%=tlabel("selection_mode_all", "translation")%>
-              </label>
-         
+              <%=tlabel("selection_mode_all", "translation")%>
+              </label>&ensp;
+              <label class="nowrap" for="translation_selection_mode_untranslated">
               <input id="translation_selection_mode_untranslated" name="selection_mode" type="radio" value="untranslated"  
                   <%=initialise_selection_mode_radio_buttons("untranslated", params["selection_mode"])%>/>
-                <label for="translation_selection_mode_untranslated"><%=tlabel("selection_mode_untranslated", "translation")%>
-              </label>
-         
+              <%=tlabel("selection_mode_untranslated", "translation")%>  
+              </label>&ensp;
+              
+              <label class="nowrap" for="translation_selection_mode_en_newer">
               <input id="translation_selection_mode_en_newer" name="selection_mode" type="radio" value="en_newer"  
                     <%=initialise_selection_mode_radio_buttons("en_newer", params["selection_mode"])%>/>
-                 <label for="translation_selection_mode_en_newer"><%=tlabel("selection_mode_en_newer", "translation")%>
-              </label>
+                 <%=tlabel("selection_mode_en_newer", "translation")%>
+              </label>&ensp;
               
+              <label class="nowrap" for="translation_selection_mode_both_untranslated_and_en_newer">
               <input id="translation_selection_mode_both_untranslated_and_en_newer" name="selection_mode" type="radio" value="both_untranslated_and_en_newer" 
                    <%=initialise_selection_mode_radio_buttons("both_untranslated_and_en_newer", params["selection_mode"])%>/>
-                <label for="translation_selection_mode_both_untranslated_and_en_newer">   <%=tlabel("selection_mode_untranslated_and_en_newer", "translation")%>  
+                   <%=tlabel("selection_mode_untranslated_and_en_newer", "translation")%>  
               </label>
             </fieldset>
     </div>  
     
     <fieldset class="inputs">
       <ol>
-      <li class="string optional" id="translation_language_id_input">
+      <li class="string optional flex-container" id="translation_language_id_input">
          <label for="criterion_cav_id", class="criteria-label" ><%=tlabel("calmapp_version", "translation")%></label>
          <%=select_tag(  :operator_cavtl_id, options_for_select(operators_2_options(equal_operator), 
-             params[:operator_cavtl_id]),{:include_blank=> false,:class=>'criteria-operators-select', :readonly=>true} )%> 
+             params[:operator_cavtl_id]),{:include_blank=> false,:class=>'criteria-operators-select flex-item', :readonly=>true} )%> 
          <%=select_tag( :criterion_cavtl_id, options_from_collection_for_select(users_cavs_tls(current_user), "id","description", 
-               params[:criterion_cavtl_id]), {:include_blank=> ((users_cavs_tls(current_user).count == 1) ? false: true)})%>
+               params[:criterion_cavtl_id]), {:include_blank=> ((users_cavs_tls(current_user).count == 1) ? false: true),:class=>"flex-item"})%>
       </li>
       
-       <li class="string optional" id="translation_dot_key_code_input">
+       <li class="string optional flex-container" id="translation_dot_key_code_input">
          <label for="criterion_dot_key_code", class="criteria-label" ><%=tlabel("dot_key_code", "translation")%></label>
          <%=select_tag(  :operator_dot_key_code, options_for_select(operators_2_options(Translation.search_dot_key_code_operators), 
-             params[:operator_dot_key_code]),{:include_blank=> true,:class=>'criteria-operators-select', :readonly=>true} )%> 
-         <%=text_field_tag( :criterion_dot_key_code, params[:criterion_dot_key_code], :style=>"width : 300px;")%>   
+             params[:operator_dot_key_code]),{:include_blank=> true,:class=>'criteria-operators-select flex-item', :readonly=>true} )%> 
+         <%=text_field_tag( :criterion_dot_key_code, params[:criterion_dot_key_code], :style=>"width : 300px;", :class=> "flex-item")%>   
       </li> 
-       <li class="string optional" id="translation_translation_input">
+       <li class="string optional flex-container" id="translation_translation_input">
            <label for="criterion_translation", class="criteria-label"><%=tlabel("translation", "translation")%></label>
            <%=select_tag(  :operator_translation, options_for_select(operators_2_options(Translation.search_translation_operators), 
-               params[:operator_translation]),{:include_blank=> true,:class=>'criteria-operators-select', :readonly=>true} )%> 
-           <%=text_field_tag( :criterion_translation, params[:criterion_translation], :style=>"width : 300px;")%>   
+               params[:operator_translation]),{:include_blank=> true,:class=>'criteria-operators-select flex-item', :readonly=>true} )%> 
+           <%=text_field_tag( :criterion_translation, params[:criterion_translation], :style=>"width : 300px;", :class=> "flex-item")%>   
       </li>
     
      </ol> 
@@ -127,7 +130,7 @@
       <td class="<%= cell_class%>" style="word-wrap: break-word;<%=width_css[:dot_key_code]%>" ><span style="max-width:20px;"><%= trans.dot_key_code %></span></td>
       <!--td class="< %= cell_class %>" style="display:< %=short_key_display%>; ">< %= dot_key_code_last_key(translation.dot_key_code) %></td -->
       <%if @translations[0].attributes['iso_code'] != 'en'%>
-        <td class="<%= cell_class%>" style="<%=width_css[:en_translation]%>;word-wrap: break-word;" data-tooltip = "<%=translation_tooltip(trans.attributes)%>"> 
+        <td class="<%= cell_class + ' has-tooltip'%>" style="<%=width_css[:en_translation]%>;word-wrap: break-word;" data-tooltip = "<%=translation_tooltip(trans.attributes)%>"> 
         <%= format_english(trans.attributes) %></td>
       <%end%>
 
@@ -242,3 +245,5 @@
  
 
 <%= twill_paginate %>
+
+<%= javascript_include_tag "translations.js" %>

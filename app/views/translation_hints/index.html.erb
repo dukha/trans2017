@@ -74,7 +74,7 @@
       sortable_cols = []
     end %>
 
-  <table class="data">
+  <table class="data" style="table-layout: fixed; width:95%;">
     <tr class="dataheader">
       <th class ="dataheader"><%=sortable("dot_key_code","translation_hint", sortable_cols.include?("dot_key_code"))%></th>
       <th class ="dataheader"><%=sortable("heading","translation_hint", sortable_cols.include?("heading"))%></th> 

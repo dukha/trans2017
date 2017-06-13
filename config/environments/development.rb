@@ -80,7 +80,7 @@ Translate::Application.configure do
             :user_name            => 'mflennon99',
             :password             => 'salila00',
             :authentication       => 'plain',
-            :from => Rails.application.secrets.email_from,
+            :mail_from => Rails.application.secrets.email_from,
             :enable_starttls_auto => true  }
   # Print deprecation notices to the Rails logger
   config.active_support.deprecation = :log

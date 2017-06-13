@@ -1,9 +1,15 @@
+//translations.js
 $().ready(function(){
   $("button.ok").click(function(){
     tr = $(this).parents('tr.dataodd', 'tr.dataeven');
   });
+  
 }); //ready
-
+// added 0023a
+ /*
+ * This  sets up the selection mode radio buttons
+ */
+  //$( "input[name='selection_mode']" ).checkboxradio();
 
 /*
  * This script sets up inplace editing
@@ -19,18 +25,8 @@ $().ready(function(){
     });
     
  }); // ready
-/*
- * This  sets up the selection mode radio buttons
- */
-/* deprecated 0023
-  //$(function(){
-    $( "div#selection_mode" ).buttonset();
-  //});
-*/  
-  // added 0023
- function(){
-  	$( "input[name='selection_mode']" ).checkboxradio();
-  }  
+
+
   
 /*
  * Script enlarges and restores editing index for translations
@@ -55,7 +51,7 @@ $().ready(function(){
       toggleHeaderMenu();
       toggleMaxMinImages();
     });
-    
+   
    
   });//ready 
   function toggleHeaderMenu(){
@@ -437,3 +433,18 @@ $().ready(function(){
     // Older browsers
     return !!(obj && typeof obj === "object" && obj.nodeType === 1 && obj.nodeName);
   }
+  /*
+   * This does not work
+   
+   $().ready(function(){
+  	$("td.has-tooltip").tooltip(
+    {
+      disable: true,
+      close: function(){
+         $("td.has-tooltip").tooltip("disable");
+      }
+     });
+	$("td.has-tooltip").click(function(){
+	      $("td.has-tooltip").tooltip("enable").tooltip("open");
+	});
+  }):*/

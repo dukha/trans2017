@@ -31,30 +31,22 @@ class CalmappVersionsTranslationLanguage < ActiveRecord::Base
   # once we have saved a new language then we upload the base file for that translation 
   after_create :base_locale_translations_for_new_translation_languages, :add_this_to_sysadmin_users
   after_commit :do_after_commit_on_create, :on => :create
-  #before_destroy :do_before_destroy
+  
 =begin
  This class compares by description method 
  Below implements the Comparable interface
 =end
+=begin @deprecated
   def <=>(another)
     description <=> another.description
   end
-=begin
- @deprecated 
 
-  def do_before_destroy
-    #CalmappVersionsTranslationLanguage.destroy_dependents(self.id)
-    if translation_language.iso_code != 'en' then
-      #CavstlDestroyDependentsJob.set(:wait=> 2.minutes).perform_later(id)
-      CavstlDestroyDependentsJob.perform_later(id)
-    end
-  end 
-=end
   def self.permitted_for_translators
      #all.load - [TranslationLanguage.TL_EN ]
      en_id = TranslationLanguage.TL_EN.id
      where{translation_language_id != my{en_id} }.load 
   end
+=end
   def self.permitted_for_developers
      #all.load - [TranslationLanguage.TL_EN ]
      en_id = TranslationLanguage.TL_EN.id

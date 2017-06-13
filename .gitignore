@@ -26,3 +26,4 @@ public/uploads/tmp/*
 config/secrets.yml
 .env.production
 .rvmrc
+.env.local

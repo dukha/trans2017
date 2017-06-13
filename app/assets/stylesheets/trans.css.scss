@@ -84,9 +84,46 @@ a img {
   font-style:italic;
 }
 
-
-
-
+.nowrap{
+  white-space: nowrap;
+}
+/*
+ol.criteria{
+  display: table
+}
+ol.criteria > li.criterion {
+  display: table-row;
+}
+ 
+ol.criteria > li.criterion > label.criteria-label{
+  display: table-cell;
+}
+ol.criteria > li.criterion >select.criteria-operators-select{
+  display: table-cell;
+}
+ol.criteria > li.criterion > input.criterion-text{
+  display: table-cell;
+}*/
+.flex-container {
+    display: -webkit-flex;
+    display: flex;
+    /*background-color: cornflowerblue;*/
+    width: 95%;
+    height: 40px;
+    margin: 5px;
+    /*display: list-item;*/
+    -webkit-justify-content: flex-start;
+    justify-content: flex-start;
+}
+.flex-item{
+  
+  
+}
+/* not working div.translation_hint, .ui-helper-hidden-accessible{
+   width:250px; 
+   max-width:250px; 
+   display: inline-block;
+}*/
 /*#CAEAFF;*/
 
 html,body{

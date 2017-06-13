@@ -9,43 +9,51 @@
     <%= hidden_field_tag :direction, params[:direction] %>
     <%= hidden_field_tag :sort, params[:sort] %>
     <div id="selection_mode" class = "radio">
-        
-       <input id="user_selection_mode_all" name="selection_mode" type="radio" value="all" 
-                 <%=initialise_selection_mode_radio_buttons("all", params["selection_mode"])%>/>
-              <label for="user_selection_mode_all"><%=tlabel("selection_mode_all", "user")%>
+    	 <fieldset class ='radios' style='border-style:solid; border-color:gray; border-width:1px; padding:2px;'>
+            <legend><span>Type of Search</span></legend>
+               <label class="nowrap" for="user_selection_mode_all">
+                <input id="user_selection_mode_all" name="selection_mode" type="radio" value="all" 
+                 <%=initialise_selection_mode_radio_buttons("all", params["selection_mode"])%>/>   
+                 <%=tlabel("selection_mode_all", "user")%>          
               </label>
          
-                <input id="user_selection_mode_untranslated" name="selection_mode" type="radio" value="invitee"  
-                  <%=initialise_selection_mode_radio_buttons("invitees", params["selection_mode"])%>/>
-                <label for="user_selection_mode_untranslated"><%=tlabel("selection_mode_invitee", "user")%>
+               <label class="nowrap" for="user_selection_mode_invitee">
+               	<input id="user_selection_mode_invitee" name="selection_mode" type="radio" value="invitee"  
+                  <%=initialise_selection_mode_radio_buttons("invitees", params["selection_mode"])%>/> 
+                  <%=tlabel("selection_mode_invitee", "user")%>                
               </label>
          
-                <input id="user_selection_mode_valid" name="selection_mode" type="radio" value="valid"  
-                    <%=initialise_selection_mode_radio_buttons("valid_users", params["selection_mode"])%>/>
-                 <label for="user_selection_mode_valid"><%=tlabel("selection_mode_valid", "user")%>
+              <label class="nowrap" for="user_selection_mode_valid"> 
+              	<input id="user_selection_mode_valid" name="selection_mode" type="radio" value="valid"  
+                    <%=initialise_selection_mode_radio_buttons("valid_users", params["selection_mode"])%>/> 
+               <%=tlabel("selection_mode_valid", "user")%>      
               </label>
-              
+            </fieldset>  
                 
     </div> 
-    <fieldset class="inputs">
-      <ol>
-      <li class="string optional" id="user_email_input">
-         <label for="criterion_email", class="criteria-label" ><%=tlabel("email", "user")%></label>
+    <fieldset class="inputs" style= "margin-top: 4px;">
+      <ol class = "criteria"> <!--#style="display:table" class= "criteria"-->
+      <li class="string optional flex-container" id="user_email_input"  > <!--#style="display:table-row;"-->
+         <label for="criterion_email", class="criteria-label flex-item"  > <!--#style="float:left; width:200px; display:table-cell;"-->
+         	<%=tlabel("email", "user")%></label>
          <%=select_tag(  :operator_email, options_for_select(operators_2_options(easy_string_operators), 
-             params[:operator_email]),{:include_blank=> true,:class=>'criteria-operators-select', :readonly=>true} )%> 
-         <%=text_field_tag( :criterion_email, params[:criterion_email], :style=>"width : 300px;")%>   
+             params[:operator_email]),{:include_blank=> true,:class=>'criteria-operators-select flex-item', :readonly=>true} )%><!--#, :style=>"float:left; width:200; display:table-cell;" -->
+         <%=text_field_tag( :criterion_email, params[:criterion_email], :class=>"criterion-text flex-item")%>  <!-- #, :style=>"display:table-cell;"-->
+        
       </li>
-      <li class="string optional" id="user_username_input">
-         <label for="criterion_username", class="criteria-label" ><%=tlabel("username", "user")%></label>
+      
+      <li class="string optional  flex-container" id="user_username_input" > <!--style="width:200px; display:table-row;"-->
+         <label for="criterion_username", class="criteria-label flex-item" ><%=tlabel("username", "user")%></label><!--style="display:table-cell;"-->
          <%=select_tag(  :operator_username, options_for_select(operators_2_options(easy_string_operators), 
-             params[:operator_username]),{:include_blank=> true,:class=>'criteria-operators-select', :readonly=>true} )%> 
-         <%=text_field_tag( :criterion_username, params[:criterion_username], :style=>"width : 300px;")%>   
+             params[:operator_username]),{:include_blank=> true,:class=>'criteria-operators-select flex-item', :readonly=>true} )%> 
+         <%=text_field_tag( :criterion_username, params[:criterion_username], :class=>"criterion-text flex-item")%>   <!--, :style=>"display:table-cell;"-->
+        
       </li>
-      <li class="string optional" id="user_username_input">
-         <label for="criterion_actual_name", class="criteria-label" ><%=tlabel("actual_name", "user")%></label>
+      <li class="string optional  flex-container" id="user_username_input" > <!--style="width:200px; display:table-row;"-->
+         <label for="criterion_actual_name", class="criteria-label flex-item"><%=tlabel("actual_name", "user")%></label> <!-- style="display:table-cell;-->
          <%=select_tag(  :operator_actual_name, options_for_select(operators_2_options(easy_string_operators), 
-             params[:operator_actual_name]),{:include_blank=> true,:class=>'criteria-operators-select', :readonly=>true} )%> 
-         <%=text_field_tag( :criterion_actual_name, params[:criterion_actual_name], :style=>"width : 300px;")%>   
+             params[:operator_actual_name]),{:include_blank=> true,:class=>'criteria-operators-select flex-item', :readonly=>true} )%> <!--, :style=>"display:table-cell; width:200px; float:left;"-->
+         <%=text_field_tag( :criterion_actual_name, params[:criterion_actual_name], :class=>"criterion-text flex-item")%>   <!--, :style=>"display:table-cell;"-->
       </li>
       </ol>
      </fieldset>              

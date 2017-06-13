@@ -26,9 +26,14 @@ form.formtastic fieldset > ol > li.optional >input {
   padding-bottom:0px;
 	margin-bottom:0px; 
 }
+form.formtastic fieldset > ol > li.optional >input.flex-item { 
+  padding-bottom:0px;
+  margin: 5px;
+}
 	
 /*form.formtastic fieldset > ol > li fieldset.inputs ol{
   paddding-left:20px;
   border-style:solid;
   background-color:green;
 }*/
+

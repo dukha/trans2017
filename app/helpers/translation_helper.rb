@@ -579,81 +579,84 @@ module TranslationHelper
 =end
      def translation_tooltip attrs
        code = attrs["dot_key_code"]
+       #code_white_space= add_white_space_to_long_code(code, 22)
        #tooltip = t($FH + "translation.dot_key_codes." + code.gsub(".", "_"))
        tooltip = TranslationHint.where{dot_key_code == my{code}}.load
        if not tooltip.empty? then
-         
-         return display_tooltip(tooltip.first)
-      
-       #if tooltip.include?('translation missing') then
-           #return ''     
-       #elsif code == "activemodel.errors.format" then
-     
-         #return t($FH + "translation.dot_key_codes." + code.gsub(".", "_"))
-       
+         tt = TranslationHint.new( :dot_key_code =>code, :heading=>tooltip.first.heading, :example=> tooltip.first.example)
+         #tt.dot_key_code = code_white_space
+         #binding.pry
+         return display_tooltip(tt)
        elsif code.start_with? "activerecord.models." then  
          tt = TranslationHint.new(:dot_key_code => code, :heading=> 'Singular or Plural of an Object', :example=> "'activerecord.model.user.one' asks for the singular of User: ie 'User'<br>'activerecord.model.user.other' asks for the plural of User ie 'Users'", :description=> "Singular and Plurals of different sorts are asked for in this code.<br> 'one' always indictes singular<br> 'few' and 'many' are valid plurals in some languages<br>'other' takes care of all the rest (usually none as well) " )
-         #return display_tooltip(tt)
+        
        elsif code.start_with? "activerecord.attributes." then
          tt = tooltip_label(code)
-         #return display_tooltip(tt)
+         
        elsif code.start_with? "formtastic.labels." then
          tt = tooltip_label(code)
-         #return display_tooltip(tt)
+         
        elsif code.start_with? "formtastic.hints." then
          tt = tooltip_hint(code)
-         #return display_tooltip(tt)
+         
        elsif code.start_with? "formtastic.actions." then
          tt = tooltip_action(code)  
-         #return display_tooltip(tt) 
+          
        elsif code.start_with? "menus."
          tt = TranslationHint.new(:dot_key_code => code, :heading=> "Menu Choice" + tooltip_general_help , :description=> "The user can often go to another page by clicking on a menu item" )
-         #return display_tooltip(tt)
+         
        elsif code.start_with? "tabs."
          tt = TranslationHint.new(:dot_key_code => code, :heading=> "Tab Name" + tooltip_general_help ,  :description=> "Sometime data for a user is put in different 'index cards' hidden behind each other. A user clicks on a tab to move from 1 'index card' to another" )
-         #return display_tooltip(tt)
+        
        elsif code.start_with? "roles.actions."
          tt = TranslationHint.new(:dot_key_code => code, :heading=> "Role Action" + tooltip_general_help , :example=> "Edit Course, Delete Student",:description=> "A user can be given a role consists of a number of actions." )
-         #return display_tooltip(tt)
+         
        elsif code.start_with? "roles."
          tt = TranslationHint.new(:dot_key_code => code, :heading=> "Role" + tooltip_general_help ,:example=> "System Admin, Translator, Scheduler", :description=> "A user role which consists of various actions, must have a name" )
-         #return display_tooltip(tt)
+         
        elsif code.start_with? "lookups."
          tt = TranslationHint.new(:dot_key_code => code, :heading=> "Lookup" + tooltip_general_help , :example=> "Course Type has choices like '10 Day Course', '3 Day Course' etc, ", :description=> "A lookup is needed when a certain attribute has a number of fixed choices. The choices need translation. " )
-         #return display_tooltip(tt)
+         
        elsif code.start_with? "headings."
          tt = TranslationHint.new(:dot_key_code => code, :heading=> "Page Heading" + tooltip_general_help , :example=> "'List of Courses', Student Form", :description=> "The heading on a page in an application" )
-         #return display_tooltip(tt)  
+           
        elsif code.start_with? "commons.search.operator."
          tt = TranslationHint.new(:dot_key_code => code, :heading=> "Search Criterion Operator" + tooltip_general_help , :example=> "'commons.search.operator.starts_with' could be choose to find a name that begins with 'br'. This would find names like 'Bruce', 'Brian'", :description=> "Operators are selected by the user to use in queries for the database. eg 'greater than', 'between', 'equal to' " )
-         #return display_tooltip(tt)     
+            
        elsif code.start_with? "commons."
           tt = TranslationHint.new(:dot_key_code => code, :heading=> "Common Words" + tooltip_general_help , :description=> "Frequently used words that need tranlating." )
-         return display_tooltip(tt) 
+         #return display_tooltip(tt) 
        elsif code.start_with? "simpleform.labels." then
          tt = tooltip_label(code)
          #return display_tooltip(tt)
        elsif code.start_with? "simpleform.hints." then
          tt = tooltip_hint(code)
-         #return display_tooltip(tt)
+         
        elsif code.start_with? "simpleform.placeholders." then
          tt = TranslationHint.new(:dot_key_code => code, :heading=> "PlaceHolder" + tooltip_general_help ,  :description=> "Similar to Label: a word to go into the field where the user is to type before they tyype anything e.g. 'password' " )
-         #return display_tooltip(tt) 
+        
        elsif code.start_with? "simpleform.prompts." then
          tt = TranslationHint.new(:dot_key_code => code, :heading=> "Prompt" + tooltip_general_help , :description=> "Similar to Label: Short few words to tell the user what to do." )
-         #return display_tooltip(tt)
+         
        #elsif code.start_with? "simpleform.include_blanks." then
          #tt = TranslationHint.new(:dot_key_code => code, :heading=> 'Singular or Plural of an Object', :example=> "", :description=> "Singular and Plurals of different sorts are asked for in this code.<br> 'one' always indictes singular<br> 'few' and 'many' are valid plurals in some languages<br>'other' takes care of all the rest (usually none as well) " )
-        # return display_tooltip(tt)  
+         
        elsif code.start_with? "helpers.submit." then
          tt = tooltip_action(code)  
-         #return display_tooltip(tt)                 
+                         
        else
          tt= TranslationHint.new(:dot_key_code => code, :heading=> 'No Tooltip for this code', :description=> "Use the code and English translation to understand what to do")
        end  
        display_tooltip(tt)  
      end
-     
+=begin     
+     def add_white_space_to_long_code(code, len)
+       code = code.split('.').join('. ') 
+       puts "code + whitespace"
+       puts code 
+       return code
+     end 
+=end      
      def display_tooltip translation_hint
    
        if not translation_hint.description.blank?
@@ -669,11 +672,12 @@ module TranslationHelper
         th_heading_html = "<div class='tt-heading'>" + translation_hint.heading + "</div>"
        end
        th_div_open_html = "<div class = 'translation_hint'>" 
+       #binding.pry
        if translation_hint.description.blank? && translation_hint.example.blank? && translation_hint.heading.blank?
          ret_val = th_div_open_html + translation_hint.dot_key_code + "</div>"
        elsif translation_hint.description.blank?  && translation_hint.example.blank?
          ret_val = th_div_open_html + th_heading_html  + "</div>"
-       elsif translation_hint.description.blank?  && translation_hint.heading.example?
+       elsif translation_hint.description.blank?  && translation_hint.heading.blank?
           ret_val = th_div_open_html + th_example_html + "</div>"
        elsif translation_hint.example.blank? && translation_hint.heading.blank?
          #"<div class = 'translation_hint'>" +  th_description_html  + "</div>"

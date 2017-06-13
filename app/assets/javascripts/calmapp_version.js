@@ -1,4 +1,4 @@
-console.log("RDB defined here xx");
+//console.log("RDB defined here xx");
 var RDB = namespace("translator.redis_database");
 
 

@@ -11,7 +11,19 @@
     font: bold 14px "Helvetica Neue", Sans-Serif;
     /*text-transform: uppercase;*/
     box-shadow: 0 0 7px $tooltip-background;
+    opacity: 1; /*$tooltip-opacity;*/
+    width: 250px; /*$tooltip-width;*/ 
+    max-width: 250px; /*$tooltip-max-width;*/
+    display: inline-block;/*$tooltip-display;*/
+    word-wrap: break-word;
   }
+/*  
+  .tt-heading, .tt-example, .tt-description{
+    width:$tooltip-width; 
+    max-width:$tooltip-max-width;
+    display: $tooltip-display;
+  }
+*/  
   .arrow {
     width: 70px;
     height: 16px;

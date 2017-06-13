@@ -90,6 +90,7 @@ class TranslationsController < ApplicationController
     # The array will still paginate provided we have will_paginate/array
     # messy but it works!! 
     require 'will_paginate/array'
+    #binding.pry
     possible_where_clauses_and_params = prepare_mode()
     search_info = prepare_search()
 
