@@ -79,6 +79,7 @@
 <%= twill_paginate %>
 <table class="data" style="table-layout: fixed; width: 100%; margin-top:2px; margin-bottom:2px ">
   <!--thead class="ui-widget-header" style = "color:black"-->
+  <%not_english = (@translations[0].attributes['iso_code'] != 'en')%>
   <tr class="dataheader">
     <% if Translation.respond_to? :sortable_attr
       sortable_cols = Translation.sortable_attr
@@ -86,13 +87,13 @@
       sortable_cols = []
     end %>
     <%header_style = "font-size:1.1em;"%>
-    <%width_css = @translations.empty? ? width_style : width_style(@translations[0].attributes["iso_code"])%>
+    <%width_css = ((@translations.empty?)?(width_style) : width_style(@translations[0].attributes["iso_code"]))%>
 
     <!--th class ="dataheader" style="display:< %=full_key_display%>;"> <%=tlabel('dot_key_code', 'translation') %></th-->
-    <th class ="dataheader" style="display:<%=wrapped_key_display%>;<%=width_css[:dot_key_code]%><%=header_style%>"><%=sortable('dot_key_code', 'translation', sortable_cols.include?("dot_key_code"))%></th>
+    <th class ="dataheader" style="display:<%=wrapped_key_display%>;<%=width_css[:dot_key_code]%>;<%=header_style%>"><%=sortable('dot_key_code', 'translation', sortable_cols.include?("dot_key_code"))%></th>
     <%if not @translations.empty?%>
-      <%if @translations[0].attributes['iso_code'] != 'en' %>
-        <th class ="dataheader"  style= '<%=header_style%><%=width_css[:en_translation]%>'><%=sortable("lower(english.translation)", 'translation', sortable_cols.include?("lower(english.translation)"), "en_translation")%></th> <!--%=tlabel('en_translation', 'translation') % -->
+      <%if not_english %>
+        <th class ="dataheader"  style= '<%=header_style%>;<%=width_css[:en_translation]%>'><%=sortable("lower(english.translation)", 'translation', sortable_cols.include?("lower(english.translation)"), "en_translation")%></th> <!--%=tlabel('en_translation', 'translation') % -->
       <%end%>
       
     <%end%>
@@ -126,10 +127,13 @@
   <% @translations.each do |trans| %>
 
      <%translation = Translation.find(trans.id)%>
+     
+     <%hint_available = not_english  %>
   <tr class = "<%= cycle('dataeven', 'dataodd') %>"  id = '<%= dom_id(trans)%>'>
-      <td class="<%= cell_class%>" style="word-wrap: break-word;<%=width_css[:dot_key_code]%>" ><span style="max-width:20px;"><%= trans.dot_key_code %></span></td>
-      <!--td class="< %= cell_class %>" style="display:< %=short_key_display%>; ">< %= dot_key_code_last_key(translation.dot_key_code) %></td -->
-      <%if @translations[0].attributes['iso_code'] != 'en'%>
+  	
+      <td class="<%= cell_class + (hint_available ?(' hint-available') : '')%>"  style= "word-wrap:break-word;<%=width_css[:dot_key_code]%>" ><span style="max-width:20px;"><%= trans.dot_key_code %></span></td>
+      
+      <%if not_english%>
         <td class="<%= cell_class + ' has-tooltip'%>" style="<%=width_css[:en_translation]%>;word-wrap: break-word;" data-tooltip = "<%=translation_tooltip(trans.attributes)%>"> 
         <%= format_english(trans.attributes) %></td>
       <%end%>

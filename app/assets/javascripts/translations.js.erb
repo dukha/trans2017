@@ -5,8 +5,9 @@ $().ready(function(){
   });
   
 }); //ready
-// added 0023a
+
  /*
+  * // added 0023a
  * This  sets up the selection mode radio buttons
  */
   //$( "input[name='selection_mode']" ).checkboxradio();
@@ -25,9 +26,45 @@ $().ready(function(){
     });
     
  }); // ready
-
-
-  
+ /*
+  * Script that will pop up a view of hint
+  */
+ var cnt = 0;
+ $().ready(function(){
+ 	cnt = 0;
+	$("td.hint-available").click(function(){
+		console.log("in click");
+		console.log(this);
+		
+		//console.log($(this));
+		nextTD = $(this).siblings("td.has-tooltip");
+		if(nextTD ){
+ 		  html = $(nextTD).data("tooltip");
+ 	  }
+ 	 row = $(this).parent("tr");
+ 	
+ 	 if(cnt%2 == 0){
+ 	 	$(row).prepend("<td id = 'copy-hint' style='position: relative;border: 3px solid #73AD21;width:250px; height:250px;word-wrap:break-word; background-color: brown;' >" + html + "</td>");
+        cnt = cnt + 1;
+ 	 }else{
+ 	 	//$("td#copy-hint").remove();
+ 	 	//cnt = cnt -1;
+ 	 }
+ 	 	
+    });	//end click	
+    $(document).keyup(function(e){
+    	console.log("keyup" +e.keyCode.toString());
+    	if(e.keyCode == 27){
+    		console.log("esc");
+    		$("td#copy-hint").remove();
+    		if(cnt%2 ==1){
+    			cnt = cnt - 1;
+    		}
+    	}
+    }); 	
+ 	 	
+ 	  
+ }); //end ready
 /*
  * Script enlarges and restores editing index for translations
  */
