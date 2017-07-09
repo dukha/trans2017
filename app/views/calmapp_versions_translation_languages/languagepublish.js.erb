@@ -1,5 +1,5 @@
-//console.log("b4 flash");
-var flashDivSelector = 'div#tl-publish-flash-<%=@calmapp_versions_translation_language_id.to_s%>';
+//console.log("b4 flash admin");
+var flashDivSelector = 'div#tl-admin-publish-flash-<%=@calmapp_versions_translation_language_id.to_s%>';
 <% flash.each do |name, msg| %>
   //console.log(" in flash");
   $(flashDivSelector).html("<div id = 'flash_<%=name%>'><%= msg.html_safe %></div>")

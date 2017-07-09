@@ -1,7 +1,7 @@
 <p class='pageheading'><%=t($H + "calmapp_versions_translation_languages" +".index.heading")%></p>
 <% cell_class = "data" %>
 <% link_cell_class="link"%> 
-
+<%=text_field_tag("page-name", "cavtl", :style=> "display:none")%>
 <%if CalmappVersionsTranslationLanguage.respond_to?( :searchable_attr ) && CalmappVersionsTranslationLanguage.searchable_attr.any? then %>
 <button id="showHideCriteria" type='button'>x</button>
 
@@ -48,7 +48,7 @@
 <%end%>
 
 <% if @calmapp_versions_translation_languages.count==0 then %>
-  <%=tflash( "no_records_found_with_permission", :warning)%><br/>
+  <%=tflash( "no_records_found_with_permissions", :warning)%><br/>
 <%  else %> 
   
   <%= will_paginate %>
@@ -72,9 +72,14 @@
           
             <th class="linkheader">Translator Test Publishing</th>
         <%end%>
-        <%has_role? :calmapp_versions_translation_languages_languagepublish do%>
         
-          <th class="linkheader">Admin Language Publishing</th>
+         
+            
+         
+        <%if has_role? :calmapp_versions_translation_languages_languagepublish%>
+           <th class="linkheader">Admin Language Publishing</th>
+        <%elsif has_translator_to_production_role? && !(current_user.sysadmin?)%>
+          <th class="linkheader">Translator Publish to Production</th>
         <%end%>
         <% if has_role?(:calmapp_versions_translation_languages_deepdestroy)%>
           <th class="linkheader">Admin Deep Delete</th>
@@ -86,6 +91,7 @@
       <% @calmapp_versions_translation_languages.each do |calmapp_versions_translation_language| %>
         <tr class = "<%= cycle('dataeven', 'dataodd') %>" id = '<%= dom_id(calmapp_versions_translation_language)%>'>
           <td class="<%= cell_class %>"><%= calmapp_versions_translation_language.translation_language.name %></td>
+          
           <td class="<%= cell_class %>"><%= calmapp_versions_translation_language.calmapp_version_tl.description %></td>
           <%has_role? :calmapp_versions_translation_languages_write do%>
             <%= link_edit(edit_calmapp_versions_translation_language_path(calmapp_versions_translation_language), calmapp_versions_translation_language,:edit=>'change_uploads', :category=> :action)%>
@@ -94,6 +100,7 @@
             <td class="<%= link_cell_class %>"><%= tlink_to  'go_to_translations', translations_path + "/?criterion_cavtl_id=" + calmapp_versions_translation_language.id.to_s + "&operator_cavtl_id=eq"%></td>
           <%end%>
           
+          <!--this is translator publish -->
           <%role_permission, no_language_permission, no_redis, is_english = false%>
           <td class="<%= link_cell_class %>" style='width:200px;'>
           <%if not_en?(calmapp_versions_translation_language) || permission_ok_for_en?(calmapp_versions_translation_language)%> 
@@ -120,6 +127,7 @@
                 <%else%>  
                   <%no_redis = true%>
                 <%end #redis db not nil%>
+            
             <%else%>
               <%no_role_permission = true%>  
             <%end #role%>
@@ -136,19 +144,19 @@
              Translators cannot publish English. 
            <%end%>  
            </td> 
+           <!--This is admin publish -->
           <% if has_role? :calmapp_versions_translation_languages_languagepublish %>
             <!--%if  current_user.translator_cavs_tls.include?(calmapp_versions_translation_language)%-->
-            
+           <!--%if has_translatorpublish_role? || has_translator_to_production_role?%--> 
             <td class="<%= link_cell_class %>" style='width:200px;'>
               <% if user_has_language_or_sysadmin(calmapp_versions_translation_language)%>
                 <%if calmapp_versions_translation_language.redis_databases_count > 0%>                
-                <!--This div is for error messages-->
-                  <div id ='tl-publish-flash-<%=calmapp_versions_translation_language.id.to_s%>'></div>
-                  <button id = 'publish' data-tooltip = '<%=t($FH + 'calmapp_versions_translation_language.language_publish', :language=>calmapp_versions_translation_language.translation_language.name)%>'>
+                  <div id ='tl-admin-publish-flash-<%=calmapp_versions_translation_language.id.to_s%>'></div>
+                  <button id = 'admin-publish-language' data-tooltip = '<%=t($FH + 'calmapp_versions_translation_language.language_publish', :language=>calmapp_versions_translation_language.translation_language.name)%>'>
                     <%=t($FA + "publish_language", :language=> calmapp_versions_translation_language.translation_language.name)%>
                   </button>
-                  
-                  <div id = 'publishing-get-database'>
+                   <!--This div is for error messages-->
+                  <div id = 'publishing-get-database-language'>
                   <%=form_tag(calmapp_versions_translation_languages_languagepublish_path(calmapp_versions_translation_language.id), 
                   :remote=> true, 
                   :id=> 'publish-language') do %> 
@@ -156,21 +164,61 @@
                   <label>To Redis Db</label>
                   <%=selection_publishing_dbs(calmapp_versions_translation_language)%>
                   <br>
-                    <input id = 'publish-language' type = 'submit' name ='submit' value='<%=t($FA + 'translation_language_publish',
+                    <input id = 'admin-publish-language' type = 'submit' name ='submit' value='<%=t($FA + 'translation_language_publish',
                           :language=> calmapp_versions_translation_language.translation_language.name )%>'
                            >
                    <%end #form%> 
-                    <img id = 'disappear' src = '/assets/treeview/minus.gif' alt='-' style = 'float:right;'>
+                    <img id = 'disappear-admin' src = '/assets/treeview/minus.gif' alt='-' style = 'float:right;'>
                   </div>
                 <%else%>
                    <%=link_to "Before you can publish, Add a Redis_database", calmapp_versions_path %>    
                 <%end #if redis count%>
+             
              <%else%>
                 You do not have permission to publish this language
              <%end # incldue language %>   
             </td>
           <%end #role%>
-
+          <%#binding.pry%>
+          
+          <!-- This is translator publish to production -->
+          <%if has_translator_to_production_role? && !(current_user.sysadmin?)%> 
+            <td class="<%= link_cell_class %>" style='width:200px;'>
+            	<!--% if user_has_language_or_sysadmin(calmapp_versions_translation_language)%-->
+                <!--%if calmapp_versions_translation_language.redis_databases_count_production > 0%-->                
+                <%if  calmapp_versions_translation_language.calmapp_version_tl.production_redis_database.nil?%>  
+                   <%if has_role? :calmapp_versions_write%>
+                    <%=link_to "Before you can publish to production, Add a Redis_database for Production", calmapp_versions_path %>
+                  <%else%>
+                     Get your administrator to add a Redis database for production before you can do this.
+                  <%end%>      
+                <%else%>
+                  <div id ='tl-production-publish-flash-<%=calmapp_versions_translation_language.id.to_s%>'></div>
+                  <!--button id = 'publish-production' data-tooltip = '<%=t($FH + 'calmapp_versions_translation_language.translator_production_publish', :language=>calmapp_versions_translation_language.translation_language.name)%>'-->
+                    <!--%=t($FA + "publish_language", :language=> calmapp_versions_translation_language.translation_language.name)%-->
+                  <!--/button -->
+                   <!--This div is for error messages-->
+                  <div id = 'publishing-get-database-production'>
+                  <%=form_tag(calmapp_versions_translation_languages_translatorproductionpublish_path(calmapp_versions_translation_language.id), 
+                  :remote=> true, 
+                  :id=> 'publish-language') do %> 
+                    
+                  <!--label>To Redis Db</label-->
+                  <!--%=selection_production_dbs(calmapp_versions_translation_language)% -->
+                  <!--br-->
+                    <input id = 'production-publish-language' class = "wrap-text" type = 'submit' name ='submit' value='<%=t($FA + 'translation_language_publish',
+                          :language=> calmapp_versions_translation_language.translation_language.name, :redis_database => calmapp_versions_translation_language.calmapp_version_tl.production_redis_database.description )%>'
+                           >
+                   <%end #form%> 
+                    <!--img id = 'disappear-production' src = '/assets/treeview/minus.gif' alt='-' style = 'float:right;'-->
+                  </div>
+                
+                 
+                <%end #production_redis_database nil?%>
+             
+              
+            </td> 	
+          <%end%>
           <% if has_role?(:calmapp_versions_translation_languages_deepdestroy)%>
               <td class="<%= link_cell_class %>" style='width:200px;' >
               <%if calmapp_versions_translation_language.translation_language == TranslationLanguage.TL_EN%>
@@ -218,6 +266,9 @@ $(document).ready(function(){
     $(this).remove();
   });
   $('button#publish').on("click", "div.tt" , function(){
+    $(this).remove();
+  });
+  $('button#publish-production').on("click", "div.tt" , function(){
     $(this).remove();
   });
 });

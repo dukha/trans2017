@@ -153,7 +153,8 @@ display/undisplay
   # more at http://pry.github.com/
   gem 'pry-rails'
   gem 'pry-doc'
-  gem 'pry-nav'
+  #gem 'pry-nav'
+  gem 'pry-byebug'
 
   # watchr runs rspec, similar to autotest
   #gem 'watchr'

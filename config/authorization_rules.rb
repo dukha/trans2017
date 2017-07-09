@@ -141,6 +141,9 @@ authorization do
   role :calmapp_versions_translation_languages_translatorpublish do
     has_permission_on [:calmapp_versions_translation_languages], :to => [:translatorpublish]
   end
+  role :calmapp_versions_translation_languages_translatorproductionpublish do
+    has_permission_on [:calmapp_versions_translation_languages], :to => [:translatorproductionpublish]
+  end
   role :users_translatorpublishing do
     has_permission_on [:users], :to => [:translatorpublishing]
   end

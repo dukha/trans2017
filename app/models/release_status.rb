@@ -12,5 +12,12 @@
 class ReleaseStatus < ActiveRecord::Base
   validates :status, :presence =>true
   validates_uniqueness_of :status
-
+  
+  scope :production_database_ids, ->{
+    where{status == "Production"}.select("id")
+    
+  }
+    
+  
+  
 end

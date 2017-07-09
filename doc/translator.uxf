@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<diagram program="umlet" version="12.1">
+<diagram program="umlet" version="12.2">
   <help_text>// Uncomment the following line to change the fontsize:
 // fontsize=14
 
@@ -27,7 +27,7 @@
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>20</x>
+      <x>60</x>
       <y>560</y>
       <w>360</w>
       <h>100</h>
@@ -43,7 +43,7 @@ bg=orange</panel_attributes>
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>320</x>
+      <x>360</x>
       <y>100</y>
       <w>190</w>
       <h>90</h>
@@ -58,7 +58,7 @@ bg=orange</panel_attributes>
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>290</x>
+      <x>330</x>
       <y>470</y>
       <w>330</w>
       <h>80</h>
@@ -73,23 +73,24 @@ bg=yellow</panel_attributes>
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>530</x>
+      <x>590</x>
       <y>190</y>
       <w>270</w>
-      <h>90</h>
+      <h>110</h>
     </coordinates>
     <panel_attributes>*CalmappVersion*
 id:integer
 version:string
 calmapp_id:integer
 translators_redis_database_id:integer
+production_redis_database:integer
 bg=orange</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>680</x>
+      <x>870</x>
       <y>40</y>
       <w>230</w>
       <h>80</h>
@@ -104,7 +105,7 @@ bg=orange</panel_attributes>
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>830</x>
+      <x>1030</x>
       <y>170</y>
       <w>160</w>
       <h>120</h>
@@ -121,8 +122,8 @@ bg=orange</panel_attributes>
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>760</x>
-      <y>440</y>
+      <x>1070</x>
+      <y>480</y>
       <w>240</w>
       <h>110</h>
     </coordinates>
@@ -140,29 +141,29 @@ bg=orange</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>610</x>
+      <x>650</x>
       <y>100</y>
-      <w>70</w>
+      <w>90</w>
       <h>110</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>30;30;50;90</additional_attributes>
+    <additional_attributes>30;30;70;90</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>530</x>
-      <y>250</y>
-      <w>60</w>
-      <h>240</h>
+      <x>570</x>
+      <y>270</y>
+      <w>80</w>
+      <h>220</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>40;30;30;220</additional_attributes>
+    <additional_attributes>60;30;30;200</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>590</x>
+      <x>630</x>
       <y>610</y>
       <w>350</w>
       <h>110</h>
@@ -189,7 +190,7 @@ bg=orange
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>570</x>
+      <x>610</x>
       <y>520</y>
       <w>50</w>
       <h>110</h>
@@ -200,7 +201,7 @@ bg=orange
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>350</x>
+      <x>390</x>
       <y>600</y>
       <w>260</w>
       <h>50</h>
@@ -211,7 +212,7 @@ bg=orange
   <element>
     <type>com.umlet.element.Note</type>
     <coordinates>
-      <x>460</x>
+      <x>500</x>
       <y>740</y>
       <w>540</w>
       <h>250</h>
@@ -261,18 +262,18 @@ fg=white</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>880</x>
+      <x>1080</x>
       <y>260</y>
-      <w>60</w>
-      <h>200</h>
+      <w>170</w>
+      <h>240</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>30;30;40;180</additional_attributes>
+    <additional_attributes>30;30;150;220</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>420</x>
+      <x>460</x>
       <y>160</y>
       <w>100</w>
       <h>330</h>
@@ -283,7 +284,7 @@ fg=white</panel_attributes>
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>560</x>
+      <x>600</x>
       <y>40</y>
       <w>100</w>
       <h>90</h>
@@ -297,7 +298,7 @@ bg=orange</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>150</x>
+      <x>190</x>
       <y>470</y>
       <w>160</w>
       <h>110</h>
@@ -308,7 +309,7 @@ bg=orange</panel_attributes>
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>160</x>
+      <x>200</x>
       <y>0</y>
       <w>160</w>
       <h>160</h>
@@ -328,7 +329,7 @@ bg=orange</panel_attributes>
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>270</x>
+      <x>310</x>
       <y>280</y>
       <w>280</w>
       <h>70</h>
@@ -342,7 +343,7 @@ bg=yellow</panel_attributes>
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>340</x>
+      <x>380</x>
       <y>10</y>
       <w>210</w>
       <h>60</h>
@@ -357,7 +358,7 @@ bg=yellow
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>10</x>
+      <x>50</x>
       <y>350</y>
       <w>280</w>
       <h>130</h>
@@ -375,18 +376,18 @@ bg=orange</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>510</x>
+      <x>550</x>
       <y>40</y>
-      <w>50</w>
+      <w>70</w>
       <h>170</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>30;150;30;30</additional_attributes>
+    <additional_attributes>50;150;30;30</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>290</x>
+      <x>330</x>
       <y>0</y>
       <w>70</w>
       <h>50</h>
@@ -397,10 +398,10 @@ bg=orange</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>630</x>
-      <y>250</y>
-      <w>246</w>
-      <h>210</h>
+      <x>820</x>
+      <y>270</y>
+      <w>330</w>
+      <h>230</h>
     </coordinates>
     <panel_attributes>&lt;&lt;RedisDatabase has one
 CalmappVersion&gt;&gt;
@@ -408,12 +409,12 @@ CalmappVersion&gt;&gt;
 &lt;&lt;CalmappVersion has
 many RedisDatabases&gt;&gt;
 lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>110;30;140;190</additional_attributes>
+    <additional_attributes>30;30;310;210</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>250</x>
+      <x>290</x>
       <y>130</y>
       <w>50</w>
       <h>170</h>
@@ -424,7 +425,7 @@ lt=&lt;&lt;-</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>470</x>
+      <x>510</x>
       <y>320</y>
       <w>50</w>
       <h>170</h>
@@ -435,7 +436,7 @@ lt=&lt;&lt;-</panel_attributes>
   <element>
     <type>com.umlet.element.Note</type>
     <coordinates>
-      <x>40</x>
+      <x>80</x>
       <y>660</y>
       <w>350</w>
       <h>310</h>
@@ -465,7 +466,7 @@ fg=white</panel_attributes>
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>140</x>
+      <x>180</x>
       <y>260</y>
       <w>130</w>
       <h>60</h>
@@ -480,7 +481,7 @@ bg=yellow
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>220</x>
+      <x>260</x>
       <y>130</y>
       <w>50</w>
       <h>150</h>
@@ -491,7 +492,7 @@ bg=yellow
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>190</x>
+      <x>230</x>
       <y>290</y>
       <w>50</w>
       <h>80</h>
@@ -502,7 +503,7 @@ bg=yellow
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>20</x>
+      <x>60</x>
       <y>160</y>
       <w>210</w>
       <h>60</h>
@@ -517,7 +518,7 @@ bg=yellow
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>80</x>
+      <x>120</x>
       <y>10</y>
       <w>100</w>
       <h>170</h>
@@ -528,36 +529,49 @@ bg=yellow
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>200</x>
+      <x>240</x>
       <y>170</y>
-      <w>350</w>
+      <w>370</w>
       <h>100</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>330;80;260;80;260;30;30;30</additional_attributes>
+    <additional_attributes>350;80;260;80;260;30;30;30</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>780</x>
+      <x>910</x>
       <y>90</y>
-      <w>130</w>
-      <h>370</h>
+      <w>270</w>
+      <h>410</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>110;30;30;80;70;350</additional_attributes>
+    <additional_attributes>70;30;30;100;250;390</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>450</x>
-      <y>250</y>
-      <w>330</w>
-      <h>270</h>
+      <x>620</x>
+      <y>270</y>
+      <w>470</w>
+      <h>290</h>
     </coordinates>
     <panel_attributes>&lt;&lt;CalmappVersion has
 one Translators RedisDatabase&gt;&gt;
 lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>200;30;150;130;310;250</additional_attributes>
+    <additional_attributes>90;30;150;110;450;270</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>650</x>
+      <y>270</y>
+      <w>410</w>
+      <h>300</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;CalmappVersion has
+one Production RedisDatabase&gt;&gt;
+lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>30;30;80;180;230;270;390;280</additional_attributes>
   </element>
 </diagram>

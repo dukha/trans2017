@@ -5,7 +5,7 @@ class TranslationLanguage < ActiveRecord::Base
  
  validates :iso_code, :name, :presence => true,:uniqueness => true
  validates :name, :presence => true, :uniqueness => true
- 
+ validates :plural_sort, :presence => true, :inclusion => {:in => CldrType.CLDR_PLURAL_TYPES.keys}
   scope :english_arr, ->{TranslationLanguage.where{iso_code == 'en'}}
   
   def show_me
@@ -46,7 +46,7 @@ class TranslationLanguage < ActiveRecord::Base
    TranslationLanguage.create!(:iso_code=> "ja", :name=>"Japanese", :plural_sort => "one_other")
    TranslationLanguage.create!(:iso_code=> "sv", :name=>"Swedish", :plural_sort => "one_other")
    TranslationLanguage.create!(:iso_code=> "hu", :name=>"Hungarian", :plural_sort =>"east_slavic")# other?
-   TranslationLanguage.create!(:iso_code=> "sr", :name=>"Serbian", :plural_sort => "one_few_many_other") # one_other
+   TranslationLanguage.create!(:iso_code=> "sr", :name=>"Serbian", :plural_sort => "east_slavic") # one_other
    TranslationLanguage.create!(:iso_code=> "id", :name=>"Indonesian", :plural_sort => "one_other")
    TranslationLanguage.create!(:iso_code=> "th", :name=>"Thai", :plural_sort => "other")
    TranslationLanguage.create!(:iso_code=> "hi", :name=>"Hindi", :plural_sort =>"onewithzero_other")

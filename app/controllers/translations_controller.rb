@@ -93,7 +93,7 @@ class TranslationsController < ApplicationController
     #binding.pry
     possible_where_clauses_and_params = prepare_mode()
     search_info = prepare_search()
-
+    
     if Translation.valid_criteria?(search_info) then
       @cnt = 0
       @translations = Translation.search(current_user, search_info, nil, possible_where_clauses_and_params)

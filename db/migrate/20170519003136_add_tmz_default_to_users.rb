@@ -1,5 +1,5 @@
 class AddTmzDefaultToUsers < ActiveRecord::Migration
   def change
-    change_column :users, :timezone_offset, :default => -600
+    change_column_default :users, :timezone_offset, -600
   end
 end

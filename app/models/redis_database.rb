@@ -15,21 +15,28 @@ class RedisDatabase < ActiveRecord::Base
   validates :redis_instance_id, :presence=>true
   validates :release_status, :presence=>true, :existence=>true
   validates :calmapp_version_id,:presence=>true
-  validates :used_by_publishing_translators, :inclusion => { :in => [1, 0,-1] }
+  pub_arr = [1, 0,-1] 
+  validates :used_by_publishing_translators, :inclusion => { :in =>  pub_arr}
+  validates :used_by_production_publishers, :inclusion => { :in => pub_arr }
   
   after_create :do_after_create
-  after_commit :do_after_commit, :on => [:create, :update]
+  
+  
+  
   before_destroy :do_before_destroy
+ 
   
 =begin
-  used_by_publishing_translators is only an attribute used to adjust calmapp_version.translators_redis_database_id in all circumstances. 
+  used_by_publishing_translators used_by_production_publishers are and  only an attributes used to adjust calmapp_version.translators_redis_database_id in all circumstances. 
     After the adjustment it is immediately set to its default value(-1).
     Otherwise its value is 1 indicating that the current id is set in calmapp_version
     Or 0 indicting that that translators_redis_database_id is nulled.
     This way is necessary(rather than say a virtual attribute) because id is not available until after save.
-=end  
+=end 
+=begin 
   def do_after_commit
     # We use update_columns here(no callback) as we don't want to run these this method again(in a callback)!
+    binding.pry
     if used_by_publishing_translators == 1
       calmapp_version.update_columns(:translators_redis_database_id => id)
       update_columns(:used_by_publishing_translators => -1)
@@ -37,13 +44,57 @@ class RedisDatabase < ActiveRecord::Base
       calmapp_version.update_columns(:translators_redis_database_id => nil)
       update_columns(:used_by_publishing_translators => -1)
     end
+    
+    if used_by_production_publishers == 1
+      calmapp_version.update_columns(:production_redis_database_id => id)
+      update_columns(:used_by_production_publishers => -1)
+    elsif used_by_production_publishers == 0 
+      calmapp_version.update_columns(:production_redis_database_id => nil)
+      update_columns(:used_by_production_publishers => -1)
+    end
   end
-
+=end
+=begin  
+  def do_after_save
+    binding.pry
+    if used_by_publishing_translators == 1
+      #calmapp_version.update_columns(:translators_redis_database_id => id)
+      #update_columns(:used_by_publishing_translators => -1)
+      calmapp_version.translators_redis_database_id = id
+      used_by_publishing_translators = -1
+    elsif used_by_publishing_translators == 0  
+      #calmapp_version.update_columns(:translators_redis_database_id => nil)
+      #update_columns(:used_by_publishing_translators => -1)
+      calmapp_version.translators_redis_database_id = nil
+      used_by_publishing_translators= -1
+    end
+    
+    if used_by_production_publishers == 1
+      #calmapp_version.update_columns(:production_redis_database_id => id)
+      #update_columns(:used_by_production_publishers => -1)
+      calmapp_version.production_redis_database_id = id
+      used_by_production_publisher = -1
+    elsif used_by_production_publishers == 0 
+      #calmapp_version.update_columns(:production_redis_database_id => nil)
+      #update_columns(:used_by_production_publishers => -1)
+      calmapp_version.production_redis_database_id = nil
+      used_by_production_publisher = -1
+    end
+  end
+=end 
 =begin
  See  after_save_method() for explanation.
 =end  
   def do_before_destroy
-    calmapp_version.update_columns(:translators_redis_database_id => nil)
+    if id == calmapp_version.translators_redis_database_id
+      calmapp_version.update_columns(:translators_redis_database_id => nil)
+    end
+    if id == calmapp_version.production_redis_database_id
+      calmapp_version.update_columns(:production_redis_database_id => nil)
+    end
+    #calmapp_version.translators_redis_database = nil
+    #calmapp_version.production_redis_database
+    
   end
 =begin  
   executed after create. Creates a connection pool for redis db and deleted everything from redis database

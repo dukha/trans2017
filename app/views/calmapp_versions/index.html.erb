@@ -1,4 +1,5 @@
 <%=theading("listing", :model=>"calmapp_version",:count=>10 )%>
+<%=text_field_tag("page-name", "cav", :style=> "display:none")%>
 <% if CalmappVersion.count==0 then %>
   <%=tflash( "no_records_found", :warning)%><br/>
 <%  else %>
@@ -6,9 +7,10 @@
   <table class="data">
     <tr class="dataheader">
       
-      <th class ="dataheader"><%=tlabel('calmapp_id',  'calmapp_version') %></th>
+      <th class ="dataheader"><%=tlabel('calmapp_id',  'calmapp_version') + "ddd" %></th>
       <th class ="dataheader"><%=tlabel('version','calmapp_version') %></th>
       <%if has_role? :calmapp_versions_write%>
+        
         <th class="linkheader"></th>
       <%end%>
       <%if has_role? :calmapp_versions_redisdbalter%>

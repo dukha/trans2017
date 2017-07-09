@@ -1,41 +1,157 @@
-var publishButtonSelector = "button#publish";
-var publishingGetDbDivSelector = "div#publishing-get-database";
-var publishLanguageSelector = 'input#publish-language';
-var getDbDisappearImgSelector = 'img#disappear';
-$(document).ready(function(){
-  
-  $(publishButtonSelector).click(function(){
-    div = getSiblingPublishingDiv(this);
-    $(div).toggle('slow'); 
-    $(this).toggle('slow');
-  });
-  
-  $(publishLanguageSelector).click(function(){
-    closePublishLanguageDiv(this);
-    return true;
-  });
-  $(getDbDisappearImgSelector).click(function(){
-    closePublishLanguageDiv(this);
-  });  
-  
-  $(publishButtonSelector).show();
-  $(publishingGetDbDivSelector).hide();
-});
+var publishButtonSelector = "button#translator-publish";
+var publishButtonProdSelector = "button#publish-production";
+var publishButtonAdminSelector = "button#admin-publish-language";
 
+var publishingDbDivSelector = "div#publishing-get-database";
+var publishingDbDivProdSelector = "div#publishing-get-database-production";
+var publishingDbDivAdminSelector = "div#publishing-get-database-language";
+
+var publishLanguageSelector = 'input#publish-language';
+var publishLanguageProdSelector = "input#production-publish-language";
+var publishLanguageAdminSelector = "input#admin-publish-language";
+
+var dbDisappearImgSelector = 'img#disappear';
+var dbDisappearImgProdSelector = 'img#disappear-production';
+var dbDisappearImgAdminSelector = 'img#disappear-admin';
+
+
+var page = "" 
+$(document).ready(function(){
+   page = $("#page-name").val();
+   console.log("Page " + page);	
+  if(page=="cavtl"){
+	  $(publishButtonSelector).click(function(){
+	    div = getSiblingPublishingDiv(this,publishingDbDivSelector);
+	    $(div).toggle('slow'); 
+	    $(this).toggle('slow');
+	  });
+	  $(publishButtonAdminSelector).click(function(){
+	    div = getSiblingPublishingDiv(this,publishingDbDivAdminSelector);
+	    $(div).toggle('slow'); 
+	    $(this).toggle('slow');
+	  });
+  }else if(page == "cav"){  
+	  $(publishButtonProdSelector).click(function(){
+	    div = getSiblingPublishingDiv(this,publishingDbDivAdminSelector);
+	    $(div).toggle('slow'); 
+	    $(this).toggle('slow');
+	  });
+  }
+  
+  
+  if(page=="cavtl"){ 
+	  $(publishLanguageSelector).click(function(){
+	    closePublishLanguageDiv(this,publishingDbDivSelector, publishButtonSelector);
+	    return true;
+	  });
+	  
+	  $(publishLanguageAdminSelector).click(function(){
+	    closePublishLanguageDiv(this,publishingDbDivAdminSelector, publishButtonAdminSelector );
+	    return true;
+	  });
+  }else if(page == "cav"){ 
+	  $(publishLanguageProdSelector).click(function(){
+	    closePublishLanguageDiv(this,publishingDbDivProdSelector, publishButtonProdSelector );
+	    return true;
+	  });
+  }
+  if(page=="cavtl"){ 
+	  $(dbDisappearImgSelector).click(function(){
+	    closePublishLanguageDiv(this,publishingDbDivSelector, publishButtonSelector);
+	  });  
+	   
+	  $(dbDisappearImgAdminSelector).click(function(){
+	  	console.log("admin about to disappear");
+	    closePublishLanguageDiv(this, publishingDbDivAdminSelector, publishButtonAdminSelector);
+	  }); 
+  }else if(page == "cav"){
+	  $(dbDisappearImgProdSelector).click(function(){
+	  	console.log("prod about to disappear");
+	    closePublishLanguageDiv(this,publishingDbDivProdSelector,publishButtonProdSelector);
+	  });
+  } 
+  if(page=="cavtl"){ 
+	  console.log("about to show test button");
+	  $(publishButtonSelector).show();
+	  console.log("about to hide test div")
+	  $(publishingDbDivSelector).hide();
+
+	  console.log("about to show admin button");
+	  $(publishButtonAdminSelector).show();
+	  console.log("about to hide admin div");
+	  $(publishingDbDivAdminSelector).hide();
+  }else if(page == "cav"){
+	  console.log("about to show prod button");
+	  $(publishButtonProdSelector).show();
+	  console.log("about to hide prod div");
+	  $(publishingDbDivProdSelector).hide();
+  }
+}); //ready
+*/
 function getTDParent(child){
   return $(child).parents('td')[0]; //(child).parent('td')
 }
 
-function getSiblingPublishingDiv(sibling){
+function getSiblingPublishingDiv(sibling, divSelector){
+  console.log("in " + "getSiblingPublishingDiv" + "(" + sibling.toString() + ", " + divSelector + ")" );
   parent = getTDParent(sibling);
-  div = $(parent).find(publishingGetDbDivSelector);
+  div = $(parent).find(divSelector);
+  console.log("return = " + div.toString());
   return div;
 }
 
-function closePublishLanguageDiv(child){
+function closePublishLanguageDiv(child, divSelector, buttonSelector){
+	console.log("in " + "closePublishLanguageDiv" +"("+ child.toString() + ", " + divSelector + ", " + buttonSelector + ")" )	;
     td = getTDParent(child);
-div = $(td).children(publishingGetDbDivSelector)[0];
-    button = $(td).children(publishButtonSelector)[0];
-    $(div).toggle('slow');
-    $(button).toggle('slow');
+    div = $(td).children(divSelector)[0];
+    button = $(td).find(buttonSelector)[0];
+    $(div).hide('slow');
+    $(button).show('slow');
+    console.log("div hidden: " + div + " button shown " + button)
 }
+
+
+$(document).ready(function(){
+  var page = $("#page-name").val();	
+  console.log("Page " + page);	
+  
+  console.log("about to show admin button");
+  $(publishButtonAdminSelector).show();
+  
+  console.log("about to hide admin div");
+  $(publishingDbDivAdminSelector).hide();
+  //console.log(publishingDbDivAdminSelector);
+  //kids = $(publishingDbDivAdminSelector).find("SELECTOR");
+  //jQuery.each(kids, function(index, ob){console.log(ob)});	
+  console.log("After init")	;
+  
+  $(publishButtonAdminSelector).click(function(){
+      console.log("In publishButtonAdminSelector-click");
+      div = getSiblingPublishingDiv(this,publishingDbDivAdminSelector);
+      $(div).toggle('slow'); 
+      $(this).toggle('slow');
+    });
+    
+  $(publishLanguageAdminSelector).click(function(){
+    console.log("In publishLanguageAdminSelector");
+      closePublishLanguageDiv(this,publishingDbDivAdminSelector, publishButtonAdminSelector );
+      return true;
+    }); 
+  $(dbDisappearImgAdminSelector).click(function(){
+      console.log("admin about to disappear");
+      closePublishLanguageDiv(this, publishingDbDivAdminSelector, publishButtonAdminSelector);
+    }); 
+ /*********end of admin stuff***/
+/******begin test stuff *******/
+    console.log("about to show test button");
+    $(publishButtonSelector).show();
+    console.log("about to hide test div")
+    $(publishingDbDivSelector).hide();
+
+$(publishButtonSelector).click(function(){
+      console.log("In publishButtonSelector-click");
+      div = getSiblingPublishingDiv(this,publishingDbDivSelector);
+      $(div).toggle('slow'); 
+      $(this).toggle('slow');
+    });      
+});	//ready

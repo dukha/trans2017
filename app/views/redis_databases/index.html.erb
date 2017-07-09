@@ -14,7 +14,9 @@
       <th class ="dataheader"><%=tlabel('redis_db_index', 'redis_database') %></th>
     <%end%>
     <!--th class ="dataheader"><%=tlabel('calmapp_version', 'redis_database') %></th-->
-    
+    <%has_role? :redis_databases_write do%>
+    <th class="linkheader"></th> 
+    <%end%>
     <%has_role? :redis_databases_create do%>
     <th class="linkheader"></th> 
     <%end%>

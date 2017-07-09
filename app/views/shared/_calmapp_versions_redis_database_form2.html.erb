@@ -13,10 +13,12 @@
           <%= f.semantic_errors :redis_db_index %>
         </div>
         <div style = "display:table-cell" >
-          <!--%= f.check_box(:used_by_publishing_translators,  {:class => "translator_publishing", :checked => translator_publishing?(f.object).to_s}, "true", "false")%-->
-          <!--%= check_box_tag "calmapp_version[redis_databases_attributes][]", "used_by_publishing_translators", ((translator_publishing?(f.object) == "1") ? true : false) , {:class => "translator_publishing"} %-->
-
-          <%= f.check_box :used_by_publishing_translators, {:class => "translator_publishing", :checked => (!cav_redis_db_id.nil? && cav_redis_db_id == f.object.id) ? "checked" : "false"}%>
+          
+          <%= f.check_box :used_by_publishing_translators, {:class => "translator_publishing", :checked => (!cav_translators_redis_db_id.nil? && cav_translators_redis_db_id == f.object.id) ? "checked" : "false"}%>
+        </div>  
+        
+        <div style = "display:table-cell" >  
+          <%= f.check_box :used_by_production_publishers, {:class => "production_publishing", :checked => (!cav_production_redis_db_id.nil? && cav_production_redis_db_id == f.object.id) ? "checked" : "false"}%>
         </div>  
        <div style = "display:table-cell" >
             <%=link_to_remove_association( t($FA + 'remove_redis_database'), f, { wrapper_class: 'nested-fields' })%>

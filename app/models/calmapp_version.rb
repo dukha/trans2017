@@ -12,9 +12,13 @@ class CalmappVersion < ActiveRecord::Base
   accepts_nested_attributes_for :redis_databases, :reject_if => :all_blank, :allow_destroy => true
   
   belongs_to :translators_redis_database, foreign_key: "translators_redis_database_id", class_name: "RedisDatabase"
-  
+  belongs_to :production_redis_database, foreign_key: "production_redis_database_id", class_name: "RedisDatabase"
   validates  :version,  :presence=>true, :uniqueness=>{:scope =>:calmapp_id}
-  
+  validate :only_1_production_db_for_translators, 
+           :production_db_not_same_as_test_for_translators, 
+           :only_1_test_db_for_translators,
+           :test_db_for_translators_not_prod_release_status,
+           :prod_db_for_translators_prod_release_status
   #validate :only_1_translator_database
   has_many :calmapp_versions_translation_languages, :dependent => :restrict_with_exception, 
             :inverse_of => :calmapp_version_tl,
@@ -25,7 +29,7 @@ class CalmappVersion < ActiveRecord::Base
   # should be after_save, however we can't do this
   #after_update :add_english
   before_create :do_before_create,   :if => Proc.new { |cav| cav.copied_from_version.blank? }
-
+  after_commit :do_after_commit, :on=>[:create, :update]
 =begin
 @return a collection of all calmapp names with versions
 =end
@@ -41,6 +45,101 @@ class CalmappVersion < ActiveRecord::Base
      return name_versions
   end
   
+   def do_after_commit
+    #binding.pry
+    # As we are handling all redis db's for this version then we initialise these 2 columns first
+    update_column("translators_redis_database_id", nil)
+    update_column("production_redis_database_id", nil)
+    redis_databases.each{ |db|
+      #binding.pry
+      
+      if db.used_by_publishing_translators == 1
+        #calmapp_version.update_columns(:translators_redis_database_id => id)
+        #update_columns(:used_by_publishing_translators => -1)
+        update_column("translators_redis_database_id", db.id)
+        db.update_columns(:used_by_publishing_translators => -1)
+      elsif db.used_by_publishing_translators == 0  
+        #calmapp_version.update_columns(:translators_redis_database_id => nil)
+        #update_columns(:used_by_publishing_translators => -1)
+        #update_column("translators_redis_database_id", nil)
+        db.update_columns(:used_by_publishing_translators=> -1)
+      end
+      
+      if db.used_by_production_publishers == 1
+        #calmapp_version.update_columns(:production_redis_database_id => id)
+        #update_columns(:used_by_production_publishers => -1)
+        update_column("production_redis_database_id", db.id)
+        db.update_columns(:used_by_production_publishers => -1)
+      elsif db.used_by_production_publishers == 0 
+        #calmapp_version.update_columns(:production_redis_database_id => nil)
+        #update_columns(:used_by_production_publishers => -1)
+        #update_column("production_redis_database_id", nil)
+        db.update_columns(:used_by_production_publishers => -1)
+      end
+      
+    } #Each
+  end
+  
+  def prod_db_for_translators_prod_release_status
+    puts "in prod_db_for_translators_prod_release_status()"
+    # we have to validate this way as the real produciton db field is set after commit
+    prod_dbs = []
+    redis_databases.each{ |db|
+      if db.used_by_production_publishers == 1 && db.release_status.status != "Production"
+        str = "You cannot declare redis database, #{db.description},  to be used in PRODUCTION if it does not have release status Production (release_status = #{db.release_status.status}"
+        errors.add(:redis_databases, str)   
+      end     
+         
+    }    
+  end
+  def test_db_for_translators_not_prod_release_status
+    puts "in test_db_for_translators_not_prod_release_status()"
+    # we have to validate this way as the real produciton db field is set after commit
+    test_dbs = []
+    redis_databases.each{ |db|
+      if db.used_by_publishing_translators == 1 && db.release_status.status == "Production"
+        #binding.pry
+        str = "You cannot declare redis database, #{db.description},  to be used in TEST if it has release status Production"
+        errors.add(:redis_databases, str)   
+      end     
+         
+    }    
+  end
+  def production_db_not_same_as_test_for_translators
+    puts "in production_db_not_same_as_test_for_translators()"
+     prod_dbs = []
+    redis_databases.each{ |db|
+      str = "#{db.description} is declared as both a test databases for translators and a production database for translator publishing. Remove one of these declarations."
+       puts str
+       #binding.pry
+       errors.add(:redis_databases, str) if(db.used_by_production_publishers == 1 && db.used_by_publishing_translators == 1)
+      }
+  end
+  def only_1_production_db_for_translators
+    puts "in only_1_production_db_for_translators()"
+    prod_dbs = []
+    redis_databases.each{ |db|
+       prod_dbs << db.description if db.used_by_production_publishers == 1
+      
+      }
+    if prod_dbs.count > 1
+      str = prod_dbs.join(", ")
+      errors.add(:redis_databases, "Can only have 1 production redis database(for each Application Version) for translators to publish to: current #{str}")
+    end  
+  end
+  
+  def only_1_test_db_for_translators
+    puts "in only_1_test_db_for_translators()"
+    test_dbs = []
+    redis_databases.each{ |db|
+       test_dbs << db.description if db.used_by_publishing_translators == 1
+      
+      }
+    if test_dbs.count > 1
+      str = test_dbs.join(", ")
+      errors.add(:redis_databases, "Can only have 1 test redis database(for each Application Version) for translators to publish to: current #{str}")
+    end  
+  end
   # return a concatenation of name and version suitable for display
   def calmapp_name_with_version
     return calmapp.name.humanize + " Version:" + version.to_s
@@ -82,11 +181,11 @@ class CalmappVersion < ActiveRecord::Base
   def to_s
     description
   end
-  
+=begin  
   def translators_redis_db
     return RedisDatabase.find(translators_redis_database_id)
   end
-  
+=end  
   def self.version_select
     joins("join calmapps on calmapp_id = calmapps.id ").order( "calmapps.name asc")
   end

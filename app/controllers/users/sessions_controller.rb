@@ -8,18 +8,27 @@ class Users::SessionsController < Devise::SessionsController
 
   # POST /resource/sign_in
    def create
-     puts "sessioon create"
+     #puts "sessioon create"
      super
-     puts 'xxx'
-     puts params
-     puts current_user.username
-     current_user.timezone_offset = params["tzo"]
+     #puts 'xxx'
+     #puts params
+     #puts current_user.usernames
+     if integer?(params["tzo"])
+       current_user.timezone_offset = params["tzo"]
+     else
+        Rails.logger.warn("Could not set timezone offset in creation of session for " + current_user.username + " with tzo = " + params["tzo"]) 
+     end
+     #even if tzo is not in it will use the default anyway
      if ! current_user.save!
-       puts "Error in setting tzo"
+        put5 "Error in setting tzo"
      end
      puts current_user.timezone_offset.to_s
    end
-
+private   
+   
+   def integer?(str)
+    /\A[+-]?\d+\z/ === str
+   end
   # DELETE /resource/sign_out
   # def destroy
   #   super
@@ -32,3 +41,10 @@ class Users::SessionsController < Devise::SessionsController
   #   devise_parameter_sanitizer.for(:sign_in) << :attribute
   # end
 end
+=begin
+def integer? x
+  true if Integer(x) rescue false
+end
+
+
+=end

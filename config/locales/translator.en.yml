@@ -41,7 +41,8 @@ en:
       remove: Remove
       publish: Publish
       publish_language: Publish %{language} 
-      translation_language_publish: Publish %{language} Translations
+      #translation_language_publish: Publish %{language} Translations
+      translation_language_publish: Publish %{language} Translations to %{redis_database} for production
       translator_publish: Publish %{language} to %{redis_database} for Testing
       no_delete: Undeletable
       #
@@ -152,7 +153,8 @@ en:
         uploads: When a YAML file with translations is uploaded, its translations are immediately written to the database.
         deepdestroy: "Clicking this will delete all translations for language: %{language}. Make sure that these %{language} will not be needed in future."
         language_publish: "Clicking will publish all the translations for %{language} to a redis database to be immediately used by the main application." 
-        translator_publish: "Clicking will publish all the translations for %{language} to a %{redis_database} for a translator to check what they have done. The published data is only for a translator to test."
+        translator_publish: "Clicking will publish all the translations for %{language} to redis database: %{redis_database} for a translator to check what they have done. The published data is only for a translator to test."
+        translator_production_publish: "Clicking will publish all the translations for %{language} to a production database which is live: being used by real users. Be very careful that everything is correct before publishing."
       calmapp_versions_redis_databases: Redis databases are where the translations are actually read by the application. <span style="color:red;"> If you need to add a new Redis Database and there is no Redis Instance then go to Redis Instances and add a new instance. You may have to get your sysadmin to do this.</span>
       #translation:
         #dot_key_codes: 
@@ -191,6 +193,7 @@ en:
       translatorpublish: Publish Language to Translator's Db
       administor: Administor
       translatorpublishing: Translator Publishing
+      translatorproductionpublish: Translator Publish to Production
     miscellaneous: Miscellaneous
     redis_instances: Redis Instances
     redis_databases: Redis Databases
@@ -248,7 +251,7 @@ en:
     contact_us: Contact Us
     current_contacts: Current Contacts
     publish_language: Publish a Language
-    translator_publish_language: Publish a Language(for translator testing)
+    translator_publish_language: Publish a Language(for translator testing or translator publishing)
     whiteboard: Whiteboards
     help: Help
     help_files: User Help

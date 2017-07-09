@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160406042922) do
+ActiveRecord::Schema.define(version: 20170617235215) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -23,9 +23,11 @@ ActiveRecord::Schema.define(version: 20160406042922) do
     t.string   "version"
     t.string   "copied_from_version"
     t.integer  "translators_redis_database_id"
+    t.integer  "production_redis_database_id"
   end
 
   add_index "calmapp_versions", ["calmapp_id"], name: "i_calmapp_versions_appliction_id", using: :btree
+  add_index "calmapp_versions", ["production_redis_database_id"], name: "index_calmapp_versions_on_production_redis_database_id", using: :btree
   add_index "calmapp_versions", ["translators_redis_database_id"], name: "index_calmapp_versions_on_translators_redis_database_id", using: :btree
 
   create_table "calmapp_versions_translation_languages", force: :cascade do |t|
@@ -124,6 +126,7 @@ ActiveRecord::Schema.define(version: 20160406042922) do
     t.integer  "release_status_id"
     t.integer  "calmapp_version_id"
     t.integer  "used_by_publishing_translators", default: -1, null: false
+    t.integer  "used_by_production_publishers",  default: -1, null: false
   end
 
   add_index "redis_databases", ["calmapp_version_id"], name: "index_redis_databases_on_calmapp_version_id", using: :btree
@@ -251,7 +254,7 @@ ActiveRecord::Schema.define(version: 20160406042922) do
     t.string   "phone"
     t.string   "country"
     t.boolean  "responds_to_contacts",      default: false
-    t.integer  "timezone_offset"
+    t.integer  "timezone_offset",           default: -600
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree

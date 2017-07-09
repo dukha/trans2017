@@ -5,22 +5,28 @@
 				   <li style="color:red;font-size:150%"><%=@calmapp_version.description.titlecase%> </li>
         <li>
           <%= f.input :translators_redis_database_id, :wrapper_html=>{:style => "display: none;"} %>
+          <%= f.input :production_redis_database_id, :wrapper_html=>{:style => "display: none;"} %>
         <div id = "rdb-table" style="display:table">
           <div id= "header-row" style="display:table-row"> 
              <div style="display:table-cell">Release Status</div>
              <div style="display:table-cell">Redis Instance</div>
-             <div style="display:table-cell">Redis db index</div>
-             <div style="display:table-cell">Used by Publishing Translators </div>
+             <div style="display:table-cell">Redis Db index</div>
+             <div style="display:table-cell">Publishing Translators Db(Test)</div>
+             <div style="display:table-cell">Production Translations Db(Live)</div>
              <div style="display:table-cell"></div>
            </div> 
+          
           <%=f.semantic_fields_for :redis_databases do |rd| %> 
-                 <%=render :partial => 'shared/calmapp_versions_redis_database_form2', :locals=>{:f=>rd, :cav_redis_db_id => @calmapp_version.translators_redis_database_id}%>          
+                 <%=render :partial => 'shared/calmapp_versions_redis_database_form2', :locals=>{:f=>rd, 
+                 	                     :cav_translators_redis_db_id => @calmapp_version.translators_redis_database_id, 
+                 	                     :cav_production_redis_db_id => @calmapp_version.production_redis_database_id}%>          
           <%end%> 
           </div>
           <p class="inline-hints"><%=t($FH + "calmapp_versions_redis_databases").html_safe %></p>
                 <%= link_to_add_association t($FA + 'add_redis_database'), f, :redis_databases,
                 {:partial =>  'shared/calmapp_versions_redis_database_form2',
-                  :render_options=> {:locals=>{:cav_redis_db_id => @calmapp_version.translators_redis_database_id}},
+                  :render_options=> {:locals=>{:cav_translators_redis_db_id => @calmapp_version.translators_redis_database_id, 
+                  	:cav_production_redis_db_id => @calmapp_version.production_redis_database_id}},
                   data: {'association-insertion-method' => "append", "association-insertion-node" => 'div#rdb-table'}
                  }
                 %>       
@@ -33,11 +39,12 @@
   <% end %>
 <% end %>
 <%if has_role? :calmapp_versions_read%>
-<%= tlink_to( "back_to_versions", calmapp_versions_path) %> | 
+	<%= tlink_to( "back_to_versions", calmapp_versions_path) %> | 
 <%end%>
 <%if has_role? :redis_databases_read%>
-<%= tlink_to( "back_to_redis_databases", redis_databases_path) %>
+	<%= tlink_to( "back_to_redis_databases", redis_databases_path) %>
 <%end%>
+
 <script>
   /*
          * Begin getting and setting redis_db_index

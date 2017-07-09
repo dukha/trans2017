@@ -98,7 +98,7 @@ class CalmappsController < ApplicationController
     end #rescue  
   end
 
-  # rails 4 Strong Params needs this: Not tested yet
+
   def calmapp_params
     params.require(:calmapp).permit(:name,  {calmapp_versions_attributes: [:id, :version, :_destroy]})#, :developer_ids => []})
   end

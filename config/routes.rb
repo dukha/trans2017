@@ -134,7 +134,8 @@ Translate::Application.routes.draw do
    get "calmapp_version/version_alterredisdb/:id" => "calmapp_versions#redisdbalter", :as => "version_alterredisdb"#, via: :all
    #get "calmapp_versions_redis_database/version_alterwithredisdb/:calmapp_versions_redis_database_id" => "calmapp_versions_redis_databases#version_alterwithredisdb", :as => "version_alterredisdb"#, via: :all
    post "calmapp_version/version_publish/:id" => "redis_databases#versionpublish", :as =>"redis_databases_versionpublish" #, :via => :all
-   post "calmapp_versions_translation_language/publish/:id" => "calmapp_versions_translation_languages#languagepublish", :as =>"calmapp_versions_translation_languages_languagepublish"
+   post "calmapp_versions_translation_language/publish/:id" => "calmapp_versions_translation_languages#languagepublish", :as =>"calmapp_versions_translation_languages_languagepublish", :defaults => { :format => 'js' }
+   post "calmapp_versions_translation_language/translatorproductionpublish/:id" => "calmapp_versions_translation_languages#translatorproductionpublish", :as =>"calmapp_versions_translation_languages_translatorproductionpublish", :defaults => { :format => 'js' }
    # This route publishes a version
    get "calmapp_versions_translation_language/translatorpublish/:id" => "calmapp_versions_translation_languages#translatorpublish", :as => "translator_publish", :defaults => { :format => 'js' }
    # This route shows the user what and where they can publish

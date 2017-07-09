@@ -1,7 +1,7 @@
 class CalmappVersionsTranslationLanguagesController < ApplicationController
   before_action :authenticate_user!
   filter_access_to :all
-  before_action :set_calmapp_versions_translation_language, only: [:show, :edit, :update, :destroy, :deepdestroy, :languagepublish, :translatorpublish]
+  before_action :set_calmapp_versions_translation_language, only: [:show, :edit, :update, :destroy, :deepdestroy, :languagepublish, :translatorpublish,:translatorproductionpublish]
   require 'translations_helper'
   include TranslationsHelper
   require 'will_paginate/array'
@@ -159,13 +159,13 @@ class CalmappVersionsTranslationLanguagesController < ApplicationController
      begin
       RedisDatabase.validate_redis_db_params(params[:redis_database_id])
   
-      redis_db = RedisDatabase.find(params[:redis_database_id])
-      count = redis_db.version_language_ready_to_publish(@calmapp_versions_translation_language.translation_language).count  
+      @redis_database = RedisDatabase.find(params[:redis_database_id])
+      count = @redis_database.version_language_ready_to_publish(@calmapp_versions_translation_language.translation_language).count  
       #count = redis_db.publish_version_language(calmapp_versions_translation_language.translation_language)
       if Rails.env.development? || Rails.env.test?
-        PublishLanguageToRedisJob.perform_now(@calmapp_versions_translation_language.calmapp_version_tl.id, @calmapp_versions_translation_language.translation_language.id, redis_db.id)
+        PublishLanguageToRedisJob.perform_now(@calmapp_versions_translation_language.calmapp_version_tl.id, @calmapp_versions_translation_language.translation_language.id, @redis_database.id)
       else 
-        PublishLanguageToRedisJob.perform_later(@calmapp_versions_translation_language.calmapp_version_tl.id, @calmapp_versions_translation_language.translation_language.id, redis_db.id)
+        PublishLanguageToRedisJob.perform_later(@calmapp_versions_translation_language.calmapp_version_tl.id, @calmapp_versions_translation_language.translation_language.id, @redis_database.id)
       end
      #if request.xhr? then
         payload = {"result" => count, "status" =>200}
@@ -189,6 +189,7 @@ class CalmappVersionsTranslationLanguagesController < ApplicationController
       @redis_database = @calmapp_versions_translation_language.calmapp_version_tl.translators_redis_database
       # We do perform_now() because the translator will want to see the result immediately
       PublishLanguageToRedisJob.perform_now(@calmapp_versions_translation_language.calmapp_version_tl.id, @calmapp_versions_translation_language.translation_language.id, @redis_database.id)
+       count = @redis_database.version_language_ready_to_publish(@calmapp_versions_translation_language.translation_language).count
       #if request.xhr? then
         payload = {"result" => count, "status" =>200}
         flash[:notice] = "Queued #{count} translations to '#{redis_db.description}' to be published."
@@ -205,7 +206,32 @@ class CalmappVersionsTranslationLanguagesController < ApplicationController
       end
     end  
   end
-  
+=begin
+   * @todo user with permission can publish to production db AT the moment just copied from translatorpublish()
+=end
+  def translatorproductionpublish
+    binding.pry
+    begin
+      @redis_database = @calmapp_versions_translation_language.calmapp_version_tl.production_redis_database
+      # We do perform_now() because the translator will want to see the result immediately
+      count = @redis_database.version_language_ready_to_publish(@calmapp_versions_translation_language.translation_language).count  
+      PublishLanguageToRedisJob.perform_now(@calmapp_versions_translation_language.calmapp_version_tl.id, @calmapp_versions_translation_language.translation_language.id, @redis_database.id)
+      #if request.xhr? then
+      payload = {"result" => count, "status" =>200}
+      flash[:notice] = "Queued #{count} translations to '#{@redis_database.description}' to be published."
+      respond_to do |format|
+        format.js {render layout: false}
+      end
+      #end
+    rescue StandardError=> e
+      payload = {"result" => (e.message + " Try again later."), "status" => 400}
+      flash[:error] = payload["result"] 
+      Rails.logger.error(payload["result"])
+      respond_to do |format|
+          format.js {render layout: false}
+      end
+    end  
+  end
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_calmapp_versions_translation_language

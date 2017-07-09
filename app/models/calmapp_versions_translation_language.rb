@@ -9,6 +9,7 @@ class CalmappVersionsTranslationLanguage < ActiveRecord::Base
   def self.sortable_attr
       []
   end
+  
   belongs_to :calmapp_version_tl, :inverse_of=>:calmapp_versions_translation_languages, :class_name => "CalmappVersion", :foreign_key =>"calmapp_version_id"
   belongs_to :translation_language
   has_many :translations, :foreign_key=> "cavs_translation_language_id"
@@ -40,13 +41,13 @@ class CalmappVersionsTranslationLanguage < ActiveRecord::Base
   def <=>(another)
     description <=> another.description
   end
-
+=end
   def self.permitted_for_translators
      #all.load - [TranslationLanguage.TL_EN ]
      en_id = TranslationLanguage.TL_EN.id
      where{translation_language_id != my{en_id} }.load 
   end
-=end
+
   def self.permitted_for_developers
      #all.load - [TranslationLanguage.TL_EN ]
      en_id = TranslationLanguage.TL_EN.id
@@ -55,13 +56,18 @@ class CalmappVersionsTranslationLanguage < ActiveRecord::Base
   def self.permitted_for_administrators
      all
   end
-  
+ 
   def redis_databases
     return calmapp_version_tl.redis_databases
   end
-  
+ 
   def redis_databases_count
     return redis_databases.count
+  end
+  
+  def redis_databases_count_production
+    #redis_databases.where{releases_status == "Production"}.count
+    production_redis.count
   end
   def description
     return (calmapp_version_tl.description + " " + translation_language.name).titlecase
@@ -70,6 +76,11 @@ class CalmappVersionsTranslationLanguage < ActiveRecord::Base
     return "CAVTL " + calmapp_version_tl.show_me + " " + translation_language.show_me + " cavtl-id = " + id.to_s
   end
   
+  def production_redis
+    #binding.pry
+    return calmapp_version_tl.redis_databases.
+             where{release_status_id.in(ReleaseStatus.production_database_ids)}
+  end
 =begin
  Sysadmin profiled users must have access to all cav_tls for translation purposes 
 =end
@@ -162,8 +173,7 @@ class CalmappVersionsTranslationLanguage < ActiveRecord::Base
         elsif test.is_a? Hash
           
           blank = {}
-          if en_t.special_structure == "plural"
-            
+          if en_t.special_structure == "plural"    
             plurals = translation_language.plurals
             plurals.each{ |pl| blank[pl] = nil}  
           else
@@ -256,5 +266,53 @@ class CalmappVersionsTranslationLanguage < ActiveRecord::Base
       )
     end   
   end
+  
+  def new_trans en_trans
+    if en_trans.special_structure == "plural"
+      translation = {}
+      plurals = entrans.plurals
+      plurals.keys.each{ |v|
+        translation[plurals[v]] = nil 
+      }
+    elsif  en_trans.special_structure == "array7"
+      translation = Array.new(7)
+      
+    elsif  en_trans.special_structure == "array13null"
+      translation = Array.new(13)
+    elsif en_trans.special_structure == "order_array"
+       #arr = ActiveSupport::JSON.decode(en_trans.translation)
+       #size = arr.length
+       translation =  en_trans.translation
+    elsif en_trans.special_structure == "hash"
+       translation = {}
+    elsif en_trans.special_structure == "array"
+      translation = Array.new
+    elsif  is_boolean(en_trans)
+      translation = false
+    else
+      return nil     
+    end       
+  end
+    
+  def is_boolean en_trans
+    val = ActiveSupport::JSON.decode(en_trans.translation)
+    if val.is_a?(TrueClass) || val.is_a?(FalseClass)
+      return true
+    else
+      return false
+    end
+  end 
+  
+  def database_for_translators_production_publishing
+    return nil if calmapp_version_tl.production_redis_database.nil?
+    prod = redis_database.find(calmapp_version_tl.production_redis_database)
+    return prod
+  end   
+  
+  def database_for_translators_test_publishing
+    return nil if calmapp_version_tl.translators_redis_database.nil?
+    test = redis_database.find(calmapp_version_tl.translators_redis_database)
+    return test
+  end  
   
 end #class

@@ -25,15 +25,15 @@ class ApplicationController < ActionController::Base
   
   #after_filter :prepare_unobtrusive_flash
   #rescue_from ActiveRecord::RecordInvalid, :with => :record_invalid
-  rescue_from ActiveRecord::RecordInvalid do |exception|
+  #rescue_from ActiveRecord::RecordInvalid do |exception|
     #tflash[:error] = exception.message
-    render :action => (exception.record.new_record? ? :new : :edit)
-  end
-  rescue_from   InvalidBelongsToAssociation do |exception|
+    #render :action => (exception.record.new_record? ? :new : :edit)
+  #end
+  #rescue_from   InvalidBelongsToAssociation do |exception|
       #tflash[:error] = exception.message
 
-      render :action => (exception.record.new_record? ? :new : :edit)
-  end
+      #render :action => (exception.record.new_record? ? :new : :edit)
+  #end
 =begin  
   rescue_from ActiveRecord::DeleteRestrictionError do |exception|
     

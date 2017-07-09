@@ -6,21 +6,32 @@ module CalmappVersionsTranslationLanguageHelper
     else  
       html = "<select id = 'cavtl" + calmapp_versions_translation_language.id.to_s + "' name = 'redis_database_id' >"
       html << "\n<option value = ''></option>" 
-      dbs.each{ |db|
-        #html << ("\n<option value='" + db.id.to_s + "'>" + db.description + "</option>")  
+      dbs.each{ |db|  
         html << ("\n<option value='" + db.id.to_s + "'>" + db.description + "</option>")  
       }
       html << ("\n</select>")
     end
-    #puts "xxx: " + html
+    
     return html.html_safe
   end
-  
+  def selection_production_dbs calmapp_versions_translation_language
+    dbs = calmapp_versions_translation_language.production_redis
+    if dbs.count == 0 then
+      return ''
+    else  
+      html = "<select id = 'cavtl" + calmapp_versions_translation_language.id.to_s + "' name = 'redis_database_id' >"
+      html << "\n<option value = ''></option>" 
+      dbs.each{ |db|  
+        html << ("\n<option value='" + db.id.to_s + "'>" + db.description + "</option>")  
+      }
+      html << ("\n</select>")
+    end
+    
+    return html.html_safe
+  end
   def not_en?(cavtl)
-    #return cavtl.translation_language == TranslationLanguage.TL_EN if ((current_user.developer_cavs_tls.include?(cavtl)) || current_user.sysadmin?)
-    return cavtl.translation_language != TranslationLanguage.TL_EN #if (!current_user.developer_cavs_tls.include?(cavtl))
-    #return false if current_user.sysadmin?
-    #return true 
+    
+    return cavtl.translation_language != TranslationLanguage.TL_EN 
   end
   
   def permission_ok_for_en? cavtl
@@ -35,12 +46,18 @@ module CalmappVersionsTranslationLanguageHelper
     return current_user.translator_cavs_tls.include?(cavtl)
   end
   
+  
+  
   def user_has_language_or_sysadmin cavtl
     return true if user_has_language?(cavtl)
-    return current_user.profiles.include?(Profile.where{name == 'sysadmin'}.first)  
+    return current_user.sysadmin?#profiles.include?(Profile.where{name == 'sysadmin'}.first)  
   end
   
   def has_translatorpublish_role?
     has_role? :calmapp_versions_translation_languages_translatorpublish
+  end
+  
+  def has_translator_to_production_role?
+    return has_role? :calmapp_versions_translation_languages_translatorproductionpublish
   end
 end
