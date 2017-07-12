@@ -3,7 +3,7 @@
 <%= form_for(resource, :as => resource_name, :url => session_path(resource_name)) do |f| %>
   <!--div>< = f.label :email %><br />
   < %= f.email_field :email % ></div -->
-  <%binding.pry%>
+
   <div id = 'login'><%= f.label :login %><br />
   <%= f.text_field :login %></div>
   <div><%= f.label :password %><br />
@@ -16,7 +16,7 @@
   <div><%= f.submit "Sign in", id: 'sign-in'  %></div>
   
 <% end %>
-<%binding.pry%>
+
 <%= render "links" %>
 <script>
   var tzo = new Date().getTimezoneOffset();

@@ -81,7 +81,7 @@
   <!--thead class="ui-widget-header" style = "color:black"-->
  
   <%not_english = (@translations.empty? ? false : (@translations[0].attributes['iso_code'] != 'en'))%>
-  <%binding.pry%>
+
   <tr class="dataheader">
     <% if Translation.respond_to? :sortable_attr
       sortable_cols = Translation.sortable_attr

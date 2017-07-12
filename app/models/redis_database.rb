@@ -36,7 +36,7 @@ class RedisDatabase < ActiveRecord::Base
 =begin 
   def do_after_commit
     # We use update_columns here(no callback) as we don't want to run these this method again(in a callback)!
-    binding.pry
+    #binding.pry
     if used_by_publishing_translators == 1
       calmapp_version.update_columns(:translators_redis_database_id => id)
       update_columns(:used_by_publishing_translators => -1)
@@ -56,7 +56,7 @@ class RedisDatabase < ActiveRecord::Base
 =end
 =begin  
   def do_after_save
-    binding.pry
+    #binding.pry
     if used_by_publishing_translators == 1
       #calmapp_version.update_columns(:translators_redis_database_id => id)
       #update_columns(:used_by_publishing_translators => -1)

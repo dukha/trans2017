@@ -210,7 +210,7 @@ class CalmappVersionsTranslationLanguagesController < ApplicationController
    * @todo user with permission can publish to production db AT the moment just copied from translatorpublish()
 =end
   def translatorproductionpublish
-    binding.pry
+    #binding.pry
     begin
       @redis_database = @calmapp_versions_translation_language.calmapp_version_tl.production_redis_database
       # We do perform_now() because the translator will want to see the result immediately

@@ -290,7 +290,7 @@ CalmappVersionsTranslationLanguage.new(:translation_language_id =>TranslationLan
   
    def check_invitation
     if invitation?
-      binding.pry
+      b#inding.pry
       self.timezone_offset = -600
     end
   end

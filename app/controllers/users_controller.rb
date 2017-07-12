@@ -131,7 +131,7 @@ class UsersController < ApplicationController #Devise::RegistrationsController
       end
       
 =begin      
-      binding.pry
+      #binding.pry
       puts "TZO3 session" 
       session[:timezone_offset] = tzo
       cookies[:timezone_offset] = tzo

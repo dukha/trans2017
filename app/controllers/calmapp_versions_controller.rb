@@ -219,7 +219,7 @@ class CalmappVersionsController < ApplicationController
      def prepare_params
        return if not params[:calmapp_version]
 =begin
-       binding.pry
+       #binding.pry
        if params[:calmapp_version]["redis_databases_attributes"]
          params[:calmapp_version]["redis_databases_attributes"].each{|k,v|
             next if v["_destroy"] == "true"
