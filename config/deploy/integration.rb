@@ -6,9 +6,9 @@ set :branch, 'master'
 # is considered to be the first unless any hosts have the primary
 # property set.  Don't declare `role :all`, it's a meta role.
 
-role :app, %w{calm-int-trans2.dhamma.org.au}
-role :web, %w{calm-int-trans2.dhamma.org.au}
-role :db,  %w{calm-int-trans2.dhamma.org.au}
+role :app, %w{translate-hz.dhamma.org.au}
+role :web, %w{translate-hz.dhamma.org.au}
+role :db,  %w{translate-hz.dhamma.org.au}
 
 
 # Extended Server Syntax
@@ -17,8 +17,9 @@ role :db,  %w{calm-int-trans2.dhamma.org.au}
 # server list. The second argument is a, or duck-types, Hash and is
 # used to set extended properties on the server.
 
-server 'calm-int-trans2.dhamma.org.au', user: 'calm', roles: %w{web app}, my_property: :my_value
-
+#server 'calm-int-trans2.dhamma.org.au', user: 'calm', roles: %w{web app}, my_property: :my_value
+# in 2017 the new integration server(to become prod) is below
+server 'translate-hz.dhamma.org.au', user: 'calm', roles: %w{web app}, my_property: :my_value
 
 # Custom SSH Options
 # ==================
@@ -34,7 +35,7 @@ server 'calm-int-trans2.dhamma.org.au', user: 'calm', roles: %w{web app}, my_pro
 #  }
 set :ssh_options, {
     forward_agent: true,
-    port: 8022
+    port: 22
 }
 
 

@@ -41,7 +41,7 @@ Translate::Application.configure do
   # fro rails 4 apparently
   config.assets.precompile = ['*.js', '*.js.erb','*.css', '*.css.erb']
 
-  
+  my_domain = "translate-hz.dhamma.org.au"
   # this is foir devise. Must be edited for production
   config.action_mailer.default_url_options = { :host => 'translation.calm-int-trans.dhamma.org.au' }
   config.action_mailer.smtp_settings = {

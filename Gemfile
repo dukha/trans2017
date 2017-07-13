@@ -39,7 +39,7 @@ gem 'will_paginate'#,'~>3.0.4'
 
 # using jquery for ajax, not prototype > rails g jquery:install
 gem 'jquery-rails'#, '~>1.0.12' #, '0.2.7'
-gem 'jquery-ui-rails'
+#gem 'jquery-ui-rails'
 gem 'jquery-ui-rails'
 gem "jquery-turbolinks"
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
@@ -187,7 +187,11 @@ group :test do
   gem 'childprocess'#, '0.3.6'
 end
 group :development do
-  gem 'capistrano'
+  gem 'capistrano-rails'
+  gem 'capistrano-bundler'
+  gem 'capistrano-rvm'
+  gem 'rvm1-capistrano3'
+  gem "whenever"
   
   # better display of exception stuff
   #gem 'better_errors'
