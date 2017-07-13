@@ -581,6 +581,7 @@ module TranslationHelper
        code = attrs["dot_key_code"]
        #code_white_space= add_white_space_to_long_code(code, 22)
        #tooltip = t($FH + "translation.dot_key_codes." + code.gsub(".", "_"))
+       #binding.pry
        tooltip = TranslationHint.where{dot_key_code == my{code}}.load
        if not tooltip.empty? then
          tt = TranslationHint.new( :dot_key_code =>code, :heading=>tooltip.first.heading, :example=> tooltip.first.example)

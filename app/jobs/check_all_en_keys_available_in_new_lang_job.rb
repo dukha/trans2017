@@ -4,7 +4,7 @@ class CheckAllEnKeysAvailableInNewLangJob < BaseJob #ActiveJob::Base
   def perform(cavs_translation_language_id)
     #binding.pry
     begin
-      CalmappVersionsTranslationLanguage.find(cavs_translation_language_id).check_en_keys_available_in_new_lang(cavs_translation_language_id)
+      CalmappVersionsTranslationLanguage.find(cavs_translation_language_id).check_en_keys_available_in_new_lang#(cavs_translation_language_id)
       puts "Successfully completed " + self.class.name + " cavtl = " + CalmappVersionsTranslationLanguage.find(cavs_translation_language_id).description
     rescue => exception
       ExceptionNotifier.notify_exception(exception,

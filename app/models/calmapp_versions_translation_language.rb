@@ -249,10 +249,14 @@ class CalmappVersionsTranslationLanguage < ActiveRecord::Base
          cavtl.administrator_jobs.find_each{ |aj| aj.delete}
       end # transaction
   end # def
+=begin
+  @deprecated
+
   def self.check_en_keys_available_in_new_lang(cavs_translation_language_id)
     cavtl = CalmappVersionsTranslationLanguage.find(cavs_translation_language_id)
     cavtl.check_en_keys_available_in_new_lang
   end
+=end  
   def check_en_keys_available_in_new_lang
     calmapp_version_id = calmapp_version_tl.id
     language_iso_code = translation_language.iso_code

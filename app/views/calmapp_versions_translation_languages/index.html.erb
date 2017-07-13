@@ -164,8 +164,11 @@
                   <label>To Redis Db</label>
                   <%=selection_publishing_dbs(calmapp_versions_translation_language)%>
                   <br>
-                    <input id = 'admin-publish-language' type = 'submit' name ='submit' value='<%=t($FA + 'translation_language_publish',
-                          :language=> calmapp_versions_translation_language.translation_language.name )%>'
+                  
+                    <input id = 'admin-publish-language' class: "text-wrap" type = 'submit' name ='submit' value='<%=t($FA + 'translation_language_publish',
+                          :language=> calmapp_versions_translation_language.translation_language.name, 
+                          #:redis_database => calmapp_versions_translation_language.calmapp_version_tl.translators_redis_database.description) % >'
+                          :redis_database => "qqqqqqqqqq")%>'
                            >
                    <%end #form%> 
                     <img id = 'disappear-admin' src = '/assets/treeview/minus.gif' alt='-' style = 'float:right;'>
