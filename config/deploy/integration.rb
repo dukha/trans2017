@@ -1,4 +1,5 @@
-set :branch, 'master'
+set :branch, 'integration'
+
 
 # Simple Role Syntax
 # ==================
