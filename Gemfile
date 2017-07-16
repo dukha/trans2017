@@ -190,7 +190,7 @@ group :development do
   gem 'capistrano-rails'
   gem 'capistrano-bundler'
   gem 'capistrano-rvm'
-  gem 'rvm1-capistrano3'
+  gem 'rvm1-capistrano3', require: false
   gem "whenever"
   
   # better display of exception stuff

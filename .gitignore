@@ -27,3 +27,4 @@ config/secrets.yml
 .env.production
 .rvmrc
 .env.local
+public/assets/*
