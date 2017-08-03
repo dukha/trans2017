@@ -31,5 +31,6 @@ Click [Translation Process](translation_process)
 Click [Role of English](<%=role_of_english_help_path%>)
 #####To see how to publish your translations in a test application
 Click - [Translator Publishing](<%=translator_publishing_help_path%>) 
+##### [New in Version 1.5](<%=version_15_path%>)
 #####To see what needs to be completed in this application
 Click [Programmers' Todo List](<%=todo_path%>)

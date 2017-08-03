@@ -1,7 +1,7 @@
 class UsersController < ApplicationController #Devise::RegistrationsController
 
   before_action :authenticate_user!, except: :timezone_offset
-  before_action :set_user, only: [ :edit, :update, :destroy, :unlock_user, :translatorpublishing]
+  before_action :set_user, only: [ :edit, :update, :destroy, :unlock_user, :translatorpublishing, :user_own_data_edit, :user_own_data_update]
   filter_access_to [:edit, :update, :destroy, :unlock_user, :translatorpublishing, :new,:index,:create]#:all
   @@model ="user"
   
@@ -57,9 +57,27 @@ class UsersController < ApplicationController #Devise::RegistrationsController
   def edit
     
   end
-
+  
+  def user_own_data_update
+    respond_to do |format|
+      if @user.update(user_params)#params[:user])
+          if @user.id == current_user.id
+            path = root_path
+          else
+            path = users_path
+          end
+          format.html { redirect_to(path, :notice => "User #{@user.username} was successfully updated.") }
+      else
+        format.html { redirect_to :action => "user_own_data_edit" }  
+      end
+    end # format
+  end
+  def user_own_data_edit
+    
+  end
   #update_password PUT /:locale/users/:id/update_password(.:format) {:controller=>"users", :action=>"update"}
   def update   
+    puts "IN USER UPDTE"
     @user.unlock_access! unless !@user.access_locked?
     
     assign_first_premissions = false
@@ -80,7 +98,12 @@ class UsersController < ApplicationController #Devise::RegistrationsController
              :data=> {:message => e.message})
           end
         end
-        format.html { redirect_to(users_path, :notice => "User #{@user.username} was successfully updated.") }
+        if @user.id == current_user.id
+          path = root_path
+        else
+          path = users_path
+        end
+        format.html { redirect_to(path, :notice => "User #{@user.username} was successfully updated.") }
         format.xml  { head :ok }
       else
         format.html { render :action => "edit" }
@@ -157,7 +180,7 @@ class UsersController < ApplicationController #Devise::RegistrationsController
       
       if result.is_a? Array
         result.each{ |rdb|
-          @view = @view + "\n" + rdb.description
+          @view = @view + " | " + rdb.description + " for " + CalmappVersion.find(rdb.calmapp_version_id).calmapp_name_with_version
         }
       end
       @view = view_none if @view == ''
@@ -201,6 +224,10 @@ private
     @user = User.find(params[:id])
   end  
   def  user_params
+    binding.pry
+    personal_attr = [:email,  :remember_me,
+                :username, :login, :actual_name, 
+                :country, :phone]
     standard_attr = [:email,  :remember_me,
                 :username, :login, :actual_name, :translator, :developer, :application_administrator, 
                 :country, :phone, :responds_to_contacts,
@@ -208,12 +235,17 @@ private
                 {:translator_cavs_tl_ids=>[]}, 
                 {:developer_cavs_tl_ids=>[]}, 
                 {:administrator_cavs_tl_ids=>[]} ]
-    if params[:user][:password].blank? && params[:user][:password_confirmation].blank? then
-      #If the user does not try to update the pw, the we don't update to null (fail anyway)
-      return params.require(:user).permit(standard_attr)
-    else
-      return params.require(:user).permit(standard_attr << [:password, :password_confirmation])
-    end 
-  
+     if current_user.id == params[:id].to_s 
+       params.require(:user).permit(personal_attr)
+     else
+      if ! params[:user].blank?            
+        if params[:user][:password].blank? && params[:user][:password_confirmation].blank? then
+          #If the user does not try to update the pw, the we don't update to null (fail anyway)
+          return params.require(:user).permit(standard_attr)
+        else
+          return params.require(:user).permit(standard_attr << [:password, :password_confirmation])
+        end 
+      end
+    end
   end
 end

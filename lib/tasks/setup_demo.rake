@@ -65,6 +65,31 @@ namespace :trans do
     Demo.minimal()
   end
 =end
+
+task :update_profiles_for_translator_15 => :environment do
+  desc "Updates authorization rules to add :translatorproductionpublish, user_own_data_update and user_own_data_edit to all profile"
+  Profile.all.each{|p| 
+    #puts p.id.to_s + ", " +p.rools.to_s; puts ""; 
+    
+    puts p.rools.class.name
+    
+    if p.name == "translator" || p.name == "sysadmin" || p.name == "application_administrator"
+      if p.rools.find_index(:translatorproductionpublish).nil?
+        p.rools << :translatorproductionpublish
+      end  
+    end
+    unless p.name == "guest" || p.name == "recovery_profile" 
+      if p.rools.find_index(:user_own_data_update).nil?
+        p.update_attributes(:rools => (p.rools << :user_own_data_update))
+      end  
+      if p.rools.find_index(:user_own_data_edit).nil?
+        p.update_attributes(:rools => (p.rools << :user_own_data_edit))
+      end 
+    end
+    puts p.name
+    puts p.rools.to_s
+    }
+  end  
 end
 =begin
 namespace :calm35 do

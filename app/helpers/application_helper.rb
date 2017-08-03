@@ -5,7 +5,7 @@ module ApplicationHelper
 
   
   $APPLICATION_NAME = "Vipassana Translator"
-  $APPLICATION_VERSION ="0.9.9"
+  $APPLICATION_VERSION ="0.9.91.5.0"
   
   def titler
     #if @title.nil?

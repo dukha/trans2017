@@ -14,8 +14,10 @@ var dbDisappearImgSelector = 'img#disappear';
 var dbDisappearImgProdSelector = 'img#disappear-production';
 var dbDisappearImgAdminSelector = 'img#disappear-admin';
 
+var redisSelectBoxAdminSelector = 'select.cavtl';
 
-var page = "" 
+var page = "" ;
+/*
 $(document).ready(function(){
    page = $("#page-name").val();
    console.log("Page " + page);	
@@ -107,18 +109,18 @@ function closePublishLanguageDiv(child, divSelector, buttonSelector){
     button = $(td).find(buttonSelector)[0];
     $(div).hide('slow');
     $(button).show('slow');
-    console.log("div hidden: " + div + " button shown " + button)
+    console.log("div hidden: " + div + " button shown " + button);
 }
 
-
-$(document).ready(function(){
-  var page = $("#page-name").val();	
+var ready;
+ready = function(){
+  page = $("#page-name").val();	
   console.log("Page " + page);	
   
   console.log("about to show admin button");
   $(publishButtonAdminSelector).show();
   
-  console.log("about to hide admin div");
+  console.log("about to hide admin div...");
   $(publishingDbDivAdminSelector).hide();
   //console.log(publishingDbDivAdminSelector);
   //kids = $(publishingDbDivAdminSelector).find("SELECTOR");
@@ -130,6 +132,10 @@ $(document).ready(function(){
       div = getSiblingPublishingDiv(this,publishingDbDivAdminSelector);
       $(div).toggle('slow'); 
       $(this).toggle('slow');
+      selectbox = $(div).children(redisSelectBoxAdminSelector );
+      console.log("after selectbox " + selectbox.toString());
+      selected_txt = $(selectbox).value();
+      console.log(selected_txt);
     });
     
   $(publishLanguageAdminSelector).click(function(){
@@ -137,6 +143,7 @@ $(document).ready(function(){
       closePublishLanguageDiv(this,publishingDbDivAdminSelector, publishButtonAdminSelector );
       return true;
     }); 
+    
   $(dbDisappearImgAdminSelector).click(function(){
       console.log("admin about to disappear");
       closePublishLanguageDiv(this, publishingDbDivAdminSelector, publishButtonAdminSelector);
@@ -145,7 +152,7 @@ $(document).ready(function(){
 /******begin test stuff *******/
     console.log("about to show test button");
     $(publishButtonSelector).show();
-    console.log("about to hide test div")
+    console.log("about to hide test div");
     $(publishingDbDivSelector).hide();
 
 $(publishButtonSelector).click(function(){
@@ -154,4 +161,7 @@ $(publishButtonSelector).click(function(){
       $(div).toggle('slow'); 
       $(this).toggle('slow');
     });      
-});	//ready
+};	//ready
+
+$(document).ready(ready);
+$(document).on('page:change', ready);

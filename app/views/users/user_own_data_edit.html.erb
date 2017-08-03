@@ -1,0 +1,10 @@
+
+<%= semantic_form_for(@user, :url => user_update_path(@user.id), html: {:autocomplete=>'off'}) do |f| %>
+  <%= f.inputs do %>
+      <%=render :partial => 'shared/user_basic_attributes', :locals=>{:f=>f}%>
+  <% end %>
+
+  <%= f.actions do %>
+    <%= f.action(:submit) %>
+  <% end %>
+<%end%>

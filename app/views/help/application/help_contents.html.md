@@ -38,6 +38,7 @@
 ####User Administrator
 - [Users ](<%=user_admin_path%>)
 ####Extra
+- [New in Version 1.5](<%=version_15_path%>)
 - [Help Home](<%=application_help_path%>)
 - [App Home](<%=whiteboards_path%>)
 - [Contact Us](<%=contacts_path%>)

@@ -162,13 +162,13 @@
                   :id=> 'publish-language') do %> 
                     
                   <label>To Redis Db</label>
-                  <%=selection_publishing_dbs(calmapp_versions_translation_language)%>
+                  <%=selection_admin_publishing_dbs(calmapp_versions_translation_language)%>
                   <br>
                   
-                    <input id = 'admin-publish-language' class: "text-wrap" type = 'submit' name ='submit' value='<%=t($FA + 'translation_language_publish',
-                          :language=> calmapp_versions_translation_language.translation_language.name, 
-                          #:redis_database => calmapp_versions_translation_language.calmapp_version_tl.translators_redis_database.description) % >'
-                          :redis_database => "qqqqqqqqqq")%>'
+                    <input id = 'admin-publish-language' class: "text-wrap" type = 'submit' name ='submit' 
+                    value='<%=t($FA + 'translation_language_publish_admin',
+                          :language=> calmapp_versions_translation_language.translation_language.name)%>' 
+                          
                            >
                    <%end #form%> 
                     <img id = 'disappear-admin' src = '/assets/treeview/minus.gif' alt='-' style = 'float:right;'>
@@ -209,8 +209,10 @@
                   <!--label>To Redis Db</label-->
                   <!--%=selection_production_dbs(calmapp_versions_translation_language)% -->
                   <!--br-->
-                    <input id = 'production-publish-language' class = "wrap-text" type = 'submit' name ='submit' value='<%=t($FA + 'translation_language_publish',
-                          :language=> calmapp_versions_translation_language.translation_language.name, :redis_database => calmapp_versions_translation_language.calmapp_version_tl.production_redis_database.description )%>'
+                    <input id = 'production-publish-language' class = "wrap-text" type = 'submit' name ='submit' 
+                       value='<%=t($FA + 'translation_language_publish',
+                            :language=> calmapp_versions_translation_language.translation_language.name, 
+                            :redis_database => calmapp_versions_translation_language.calmapp_version_tl.production_redis_database.description )%>')
                            >
                    <%end #form%> 
                     <!--img id = 'disappear-production' src = '/assets/treeview/minus.gif' alt='-' style = 'float:right;'-->

@@ -42,6 +42,7 @@ Translate::Application.routes.draw do
    get 'help/background_processes', :to => 'help#background_processes', :as => 'background_processes'
    get 'help/prerequisites', :to => 'help#prerequisites', :as => 'prerequisites'
    get 'help/workflow', :to => 'help#admin_workflow', :as => 'admin_workflow'
+   get 'help/version_15', :to => "help#version_15", :as => "version_15"
    
    
 =begin
@@ -65,7 +66,9 @@ Translate::Application.routes.draw do
      match '/users/:id', :to => 'users#destroy', :as => :destroy_user, :via => :delete
      #get '/users_select' => 'users#select',      :as => :users_select, via: :all
      #get '/users', :to => 'users#index', :as=> :users
-     get "users/:id/edit_password",   :to => "users#edit",   :as => :edit_password  
+     get "users/:id/edit_password",   :to => "users#edit",   :as => :edit_password
+     get "users/:id/user_own_data_update", :to => "users#user_own_data_update", :as => :user_own_data_update  
+     get "users/:id/user_own_data_edit", :to => "users#user_own_data_edit", :as => :user_own_data_edit
      patch "users/:id/update_password", :to => "users#update", :as => :update_password  
       # for unlocking another user
      patch "users/:id/unlock_user",     :to => "users#unlock_user", :as => :unlock_user

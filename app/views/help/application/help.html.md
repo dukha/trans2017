@@ -19,5 +19,6 @@
 * [Administrators](<%=administrator_help_path%>)
 > Click here for
 >> - [Help Contents](<%=contents_path%>)
+>> - ##### [New in Version 1.5](<%=version_15_path%>)
 >> - [Home](<%=whiteboards_path%>) 
 

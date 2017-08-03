@@ -110,6 +110,10 @@ authorization do
   role :users_write do
     has_permission_on [:users], :to => [:unlock_user]
   end
+  role :users_user_own_data_update do
+    has_permission_on [:users], :to => [:user_own_data_edit]
+    has_permission_on [:users], :to => [:user_own_data_update]
+  end
   role :redis_databases_getunused do
     has_permission_on [:redis_instances],  :to=>[:unused_redis_database_indexes]
   end

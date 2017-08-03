@@ -41,7 +41,7 @@ en:
       remove: Remove
       publish: Publish
       publish_language: Publish %{language} 
-      #translation_language_publish: Publish %{language} Translations
+      translation_language_publish_admin: Publish %{language} Translations
       translation_language_publish: Publish %{language} Translations to %{redis_database} for production
       translator_publish: Publish %{language} to %{redis_database} for Testing
       no_delete: Undeletable

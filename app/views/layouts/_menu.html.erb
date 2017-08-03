@@ -38,7 +38,7 @@
         <ul class="menu">
           
           <%has_role?(:translations_read) do%>
-            <li><%= tlink_to("translations", translations_path, :category=>:menu) %></li>
+            <li><%= tlink_to("translations", translations_path, :category=>:menu, "data-turbolinks"=>"false") %></li>
           <%end%>
           <%has_role?(:users_translatorpublishing) do%>  
             <li><%= tlink_to("translators_redis", translator_publishing_path(current_user.id), 
@@ -102,8 +102,9 @@
                  <%=link_menu(:profiles)%>
                <%end%>
                <%has_role?  :users_read do%> 
-                  <li><%= tlink_to "users", users_path, :category=>:menu %></li>
+                  <li><%= tlink_to "users", users_path, :category=>:menu, "data-turbolinks"=>"false" %></li>
               <%end%>
+                
               <%has_role? :users_invite do%>
               <li><%= tlink_to "new_invitation", new_user_invitation_path, :category=>:menu %></li>
               <%end%>
@@ -127,10 +128,10 @@
               <li><%= tlink_to("calmapp_versions", calmapp_versions_path, :category=>:menu)%></li>
             <%end%> 
             <%has_role? :calmapp_versions_translation_languages_read do%>   
-              <li><%= tlink_to("versions_languages", calmapp_versions_translation_languages_path, :category=>:menu) %></li>
+              <li><%= tlink_to("versions_languages", calmapp_versions_translation_languages_path, :category=>:menu, "data-turbolinks"=>"false") %></li>
             <%end%>
             <%has_role? :calmapp_versions_write do%> 
-              <li><%= tlink_to("calmapp_versions_change_languages", calmapp_versions_path, :category=>:menu)%></li>
+              <li><%= tlink_to("calmapp_versions_change_languages", calmapp_versions_path, :category=>:menu, "data-turbolinks"=>"false")%></li>
             <%end%> 
             <%has_role? :redis_instances_read do%> 
               <li><%= tlink_to("redis_instances", redis_instances_path, :category=>:menu) %></li>
@@ -142,7 +143,7 @@
               <li><%= tlink_to("version_publish", redis_databases_path, :category=>:menu) %></li>
             <%end%>  
             <%has_role? :translations_uploads_read do%>   
-              <li><%= tlink_to("translations_uploads", calmapp_versions_translation_languages_path, :category=>:menu) %></li>
+              <li><%= tlink_to("translations_uploads", calmapp_versions_translation_languages_path, :category=>:menu, "data-turbolinks"=>"false") %></li>
             <%end%>  
             <% if false then %>
               <li><%= tlink_to("redis_admins", redis_admins_path, :category=>:menu) %></li>
@@ -157,10 +158,10 @@
               <li><%= tlink_to("version_publish", redis_databases_path, :category=>:menu) %></li>
             <%end%>  
             <%has_role?  :calmapp_versions_translation_languages_languagepublish do%>   
-              <li><%= tlink_to("publish_language", calmapp_versions_translation_languages_path, :category=>:menu) %></li>
+              <li><%= tlink_to("publish_language", calmapp_versions_translation_languages_path, :category=>:menu, "data-turbolinks"=>"false") %></li>
             <%end%> 
             <%has_role?  :calmapp_versions_translation_languages_translatorpublish do%>   
-              <li><%= tlink_to("translator_publish_language", calmapp_versions_translation_languages_path, :category=>:menu) %></li>
+              <li><%= tlink_to("translator_publish_language", calmapp_versions_translation_languages_path, :category=>:menu, "data-turbolinks"=>"false") %></li>
             <%end%>
         </ul>
       </div>
@@ -168,7 +169,7 @@
       <%= taccordion_header("application_admin") %>
         <ul class="menu">
           <%if  has_role? :delayed_jobs_read%>
-            <li><%= tlink_to("delayed_jobs", delayed_jobs_path, :category=>:menu) %></li>
+            <li><%= tlink_to("delayed_jobs", delayed_jobs_path, :category=>:menu, "data-turbolinks"=>"false") %></li>
           <%end%>
            <%if  has_role? :special_partial_dot_keys_read%>
             <li><%= tlink_to("special_partial_dot_keys", special_partial_dot_keys_path, :category=>:menu) %></li>
@@ -185,7 +186,7 @@
         <ul class="menu">
           <!--li><%= link_to "Change password or email", edit_user_registration_path %></li-->
           <%if(current_user)%>
-            <li><%= link_to "Change password or email", edit_password_path(current_user.id) %></li>
+             <li><%= link_to "Change password or email", user_own_data_edit_path(current_user.id) %></li>
           <%end%>
         </ul>
       </div>

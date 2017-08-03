@@ -1,3 +1,3 @@
 ****
-[Help Contents](<%=contents_path%>) __*|*__ [Home](<%=application_help_path%>) __*|*__ [App Home](<%=whiteboards_path%>) __*|*__ [Substitutions](<%=translation_interpolations_help_path%>) __*|*__ [English](<%=role_of_english_help_path%>) __*|*__ [Translator](<%=getting_started_path%>) __*|*__ [Developer](<%=developer_help_path%>) __*|*__ [Administrator ](<%=administrator_help_path%>) __*|*__ 
+[Help Contents](<%=contents_path%>) __*|*__ [Home](<%=application_help_path%>) __*|*__ [App Home](<%=whiteboards_path%>) __*|*__ [Substitutions](<%=translation_interpolations_help_path%>) __*|*__ [English](<%=role_of_english_help_path%>) __*|*__ [Translator](<%=getting_started_path%>) __*|*__ [Developer](<%=developer_help_path%>) __*|*__ [Administrator ](<%=administrator_help_path%>) __*|*__ [New in Version 1.5](<%=version_15_path%>) __*|*__
 ****

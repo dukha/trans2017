@@ -24,7 +24,7 @@
 
 > This is a special function that administrators can set up for each version.
 > Each version can have 1 nominated Redis database that will be the translators test database. 
-> One redis database can be set aside for test translations so that a transslator can review his/her own translations
+> One redis database can be set aside for test translations so that a translator can review his/her own translations
 > To do this go to __menu__ / __Translation Admin__ / __Application Versions__
 > From here select your version by clicking on __Changes Redis Databases__
 >> This page lists all the redis databases for that version.
@@ -33,4 +33,10 @@
 >>> Click the checkbox under __Used by Publishing Translators__. 
 >>>> Note that only 1 of these databases can be clicked for each Version
 
- 
+#### Version 1.5 
+> In the same way as setting up a translator to publish to Test, an administrator can now also set up a redis database to be a production database which can be published to by translators.
+This is done exactly as above for a test database except that there are more restrictions:
+  * There can be only 1 production database for translators to publish to.
+  * The database to be pulished to must have release status as Production.
+  * The same database may not be nominated as being used to publish to test by translators.
+  
